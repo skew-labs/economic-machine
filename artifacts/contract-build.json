@@ -1,0 +1,20 @@
+{
+  "compiler_version": "0.8.24+commit.e11b9ed9",
+  "compiler_sha256": "fb03a29a517452b9f12bcf459ef37d0a543765bb3bbc911e70a87d6a37c30d5f",
+  "sources": {
+    "MachineCommerceEscrow.sol": "0a977c0492995fb70dec74e3c5ba3eb76907b576616e0eb80f388f6eb73c396b",
+    "TestCommerceToken.sol": "a35b9989bcb305f4001ad052abe0535784bcc36e7b8398038a2e2b504acc6db2"
+  },
+  "contracts": {
+    "MachineCommerceEscrow": {
+      "bytecode_sha256": "1f067d8aff655773aaedacd7144785559186d5520411586fc27837636bb917b5",
+      "bytecode_bytes": 6397
+    },
+    "TestCommerceToken": {
+      "bytecode_sha256": "0f9d8822d8d6231c2af77252b27cf204d53ffac33451eecca023b104f0654c33",
+      "bytecode_bytes": 1533
+    }
+  },
+  "deployment": "NONE",
+  "chain": "PY_EVM_TEST_ONLY"
+}

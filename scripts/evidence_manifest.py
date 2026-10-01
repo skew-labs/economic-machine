@@ -1,0 +1,55 @@
+"""Generate a source/evidence inventory on the authorized remote compute host."""
+
+import hashlib
+import json
+import platform
+import re
+import subprocess
+import time
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def record(path):
+    content = path.read_bytes()
+    lines = content.decode().splitlines()
+    return {"path": str(path.relative_to(ROOT)), "sha256": hashlib.sha256(content).hexdigest(),
+            "physical_lines": len(lines), "nonblank_noncomment_lines": sum(
+                bool(line.strip()) and not line.lstrip().startswith(("#", "//")) for line in lines)}
+
+
+def main():
+    paths = sorted([*ROOT.glob("src/**/*.py"), *ROOT.glob("contracts/*.sol"), *ROOT.glob("tests/*.py"),
+                    *ROOT.glob("scripts/*.py"), *ROOT.glob("web/*")])
+    files = [record(path) for path in paths if path.is_file()]
+    groups = {}
+    for name, prefix in [("core_and_contracts", ("src/", "contracts/")), ("tests", ("tests/",)),
+                         ("scripts", ("scripts/",)), ("web", ("web/",))]:
+        group = [item for item in files if item["path"].startswith(prefix)]
+        groups[name] = {key: sum(item[key] for item in group) for key in ["physical_lines", "nonblank_noncomment_lines"]}
+    evidence = {}
+    passed = set()
+    for filename in ["python-tests.log", "market-tests-final.log", "api-tests-final.log",
+                     "contract-build.json", "agent-purchases.json", "bilateral-agents.json"]:
+        path = ROOT / "artifacts" / filename
+        if path.exists():
+            evidence[filename] = {"sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "bytes": path.stat().st_size}
+            if filename.endswith(".log"):
+                for match in re.finditer(r"^test_\w+ \(([^)]+)\) \.\.\. ok$", path.read_text(), re.MULTILINE):
+                    passed.add(match.group(1))
+    manifest = {"schema_version": "machine-commerce-verification-1", "created_at": int(time.time()),
+                "remote_host": platform.node(), "remote_path": str(ROOT), "files": files, "line_counts": groups,
+                "line_count_definition": "Physical and nonblank/noncomment lines; no claim all lines are original",
+                "evidence": evidence, "passed_test_cases": sorted(passed), "passed_test_count": len(passed),
+                "test_matrix_note": "Unchanged core/EVM/x402 tests plus latest changed market/API checks; no repeated contract build",
+                "source_reuse": [item for item in files if item["path"] in
+                    {"src/economic_machine/values.py", "src/economic_machine/journal.py"}],
+                "service_status": subprocess.check_output(["systemctl", "is-active", "machine-commerce.service"], text=True).strip(),
+                "real_payment": "NOT_CONFIGURED", "contract_deployment": "PY_EVM_TEST_ONLY"}
+    (ROOT / "artifacts/verification.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    print(json.dumps({"line_counts": groups, "evidence_files": list(evidence), "service_status": manifest["service_status"]}, indent=2))
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,266 @@
+{
+  "schema_version": "machine-commerce-verification-1",
+  "created_at": 1790875187,
+  "remote_host": "ns5020955",
+  "remote_path": "/srv/skew/economic-machine-commerce-20261002",
+  "files": [
+    {
+      "path": "contracts/MachineCommerceEscrow.sol",
+      "sha256": "0a977c0492995fb70dec74e3c5ba3eb76907b576616e0eb80f388f6eb73c396b",
+      "physical_lines": 194,
+      "nonblank_noncomment_lines": 167
+    },
+    {
+      "path": "contracts/TestCommerceToken.sol",
+      "sha256": "a35b9989bcb305f4001ad052abe0535784bcc36e7b8398038a2e2b504acc6db2",
+      "physical_lines": 39,
+      "nonblank_noncomment_lines": 35
+    },
+    {
+      "path": "scripts/buyer_agent.py",
+      "sha256": "889769fdbc4576b630d7c8d491a3712c207988431b16f2dec3b7fa71af4d21bd",
+      "physical_lines": 52,
+      "nonblank_noncomment_lines": 46
+    },
+    {
+      "path": "scripts/compile_contracts.py",
+      "sha256": "1f5bde3cd04e6b9d87a9775951e66d9cd5d94997d2d095c8ae44f3f9403281dd",
+      "physical_lines": 56,
+      "nonblank_noncomment_lines": 50
+    },
+    {
+      "path": "scripts/evidence_manifest.py",
+      "sha256": "51940ae5b234c7b524f1c247716c2fd7a294991a2f24df28e517fb6d387a2141",
+      "physical_lines": 55,
+      "nonblank_noncomment_lines": 47
+    },
+    {
+      "path": "scripts/market_agents.py",
+      "sha256": "d68ef04f0d082e80afba923552f0e889616d4d01a83854c4a4e6c6ecf9420e69",
+      "physical_lines": 74,
+      "nonblank_noncomment_lines": 66
+    },
+    {
+      "path": "src/economic_machine/__init__.py",
+      "sha256": "920c7ac39d7fcee77035e5ea9ab9c31421389a2a47ea35ab79fc04f833d53490",
+      "physical_lines": 1,
+      "nonblank_noncomment_lines": 1
+    },
+    {
+      "path": "src/economic_machine/journal.py",
+      "sha256": "a55fb38c9ca390aafd8f6f5e777a32dff2ecaae86df3f5539149eb3d51e2b4e5",
+      "physical_lines": 51,
+      "nonblank_noncomment_lines": 43
+    },
+    {
+      "path": "src/economic_machine/values.py",
+      "sha256": "735b140de0fb014dcd8fdb4302d7461e364a145c46d4d7e6a94b2a38ad1d4688",
+      "physical_lines": 82,
+      "nonblank_noncomment_lines": 65
+    },
+    {
+      "path": "src/machine_commerce/__init__.py",
+      "sha256": "b3ae9a72b021213611737361a3b9e4a2673a0d80fef6ee6fafcd1c03b20e6abf",
+      "physical_lines": 1,
+      "nonblank_noncomment_lines": 1
+    },
+    {
+      "path": "src/machine_commerce/api.py",
+      "sha256": "6abb87ae06d0660aaffa7a87313a98535408f14fe2feaf2a542cfca5e86d8122",
+      "physical_lines": 196,
+      "nonblank_noncomment_lines": 160
+    },
+    {
+      "path": "src/machine_commerce/domain.py",
+      "sha256": "5cd13f3140e188eda10b0ad9ccf2410b0b8916687bed357e0f79456aa9786002",
+      "physical_lines": 124,
+      "nonblank_noncomment_lines": 100
+    },
+    {
+      "path": "src/machine_commerce/market.py",
+      "sha256": "9c4cbb06c9d918505fdbce52fc43f0cac86dcc85762759af18130410f096c677",
+      "physical_lines": 280,
+      "nonblank_noncomment_lines": 253
+    },
+    {
+      "path": "src/machine_commerce/providers.py",
+      "sha256": "89697c986fda74730764ed05b5654672b8ae52827fbab105b669813914352693",
+      "physical_lines": 157,
+      "nonblank_noncomment_lines": 137
+    },
+    {
+      "path": "src/machine_commerce/store.py",
+      "sha256": "30ff199a319ad1b62d78dd5dacd61de4ce320257335fad979dc6bbde8064d6f6",
+      "physical_lines": 333,
+      "nonblank_noncomment_lines": 307
+    },
+    {
+      "path": "src/machine_commerce/x402.py",
+      "sha256": "312c6bc103769ba72394af2356eb35a47cb7dbd32acde23f34d6c6e3d957ddce",
+      "physical_lines": 145,
+      "nonblank_noncomment_lines": 127
+    },
+    {
+      "path": "tests/test_api.py",
+      "sha256": "721874f99c6b844b221f0a77da1f789df236e6cec8b489e22a00b167bc993e90",
+      "physical_lines": 105,
+      "nonblank_noncomment_lines": 91
+    },
+    {
+      "path": "tests/test_commerce.py",
+      "sha256": "19757cd31ba8182d3817d59fdde9a1e2fc47383a2a7b3d535436d57f4177562b",
+      "physical_lines": 208,
+      "nonblank_noncomment_lines": 182
+    },
+    {
+      "path": "tests/test_escrow.py",
+      "sha256": "2601875328ed4a299ddf94ad7cbd57b609f36f40ee97c6039cea50a7864e7ba8",
+      "physical_lines": 152,
+      "nonblank_noncomment_lines": 134
+    },
+    {
+      "path": "tests/test_market.py",
+      "sha256": "71134632ea8309fa67d9d6e61f1ab3d20ced93e40ce6972773226e905ebfb55e",
+      "physical_lines": 169,
+      "nonblank_noncomment_lines": 147
+    },
+    {
+      "path": "tests/test_x402.py",
+      "sha256": "eee4d022852e14dca0d4db61feccb6d3b148c368c765daff1c38d4dba8248937",
+      "physical_lines": 93,
+      "nonblank_noncomment_lines": 80
+    },
+    {
+      "path": "web/app.css",
+      "sha256": "02ead738dc602b957c31e94fdf07a6595e0823f8ad38b3186d89690c3ad3a696",
+      "physical_lines": 13,
+      "nonblank_noncomment_lines": 12
+    },
+    {
+      "path": "web/app.js",
+      "sha256": "db60e1991ccfa846043cc1e9f8c0f433245996db5ae919455134d3414cb8b398",
+      "physical_lines": 301,
+      "nonblank_noncomment_lines": 290
+    },
+    {
+      "path": "web/index.html",
+      "sha256": "1b55d3766ffa3ae8653b998654f897d4d64e500bcb0376e48132af78ffdd2ffd",
+      "physical_lines": 92,
+      "nonblank_noncomment_lines": 88
+    }
+  ],
+  "line_counts": {
+    "core_and_contracts": {
+      "physical_lines": 1603,
+      "nonblank_noncomment_lines": 1396
+    },
+    "tests": {
+      "physical_lines": 727,
+      "nonblank_noncomment_lines": 634
+    },
+    "scripts": {
+      "physical_lines": 237,
+      "nonblank_noncomment_lines": 209
+    },
+    "web": {
+      "physical_lines": 406,
+      "nonblank_noncomment_lines": 390
+    }
+  },
+  "line_count_definition": "Physical and nonblank/noncomment lines; no claim all lines are original",
+  "evidence": {
+    "python-tests.log": {
+      "sha256": "be6dc1cbdf4adac228acc0fed0af37322d55635008527889a313affe6812dfd8",
+      "bytes": 7221
+    },
+    "market-tests-final.log": {
+      "sha256": "291b0ec041ac7e7502e8d5a00b6c4ba3860ad99a1793173a82f85b26ffe3b1e4",
+      "bytes": 1990
+    },
+    "api-tests-final.log": {
+      "sha256": "2344c7e857a66845c6d597a6bee8d29bb10285b39399af66cf04b93669623ecd",
+      "bytes": 1165
+    },
+    "contract-build.json": {
+      "sha256": "cd623a0b4a2fe306d4292783b977a99105ca5bb2bc64c4bd66b013fed707bba9",
+      "bytes": 749
+    },
+    "agent-purchases.json": {
+      "sha256": "c18d88844b52969422f2a60aa37acfc939c596d44da701001ae76f09c069406e",
+      "bytes": 12904
+    },
+    "bilateral-agents.json": {
+      "sha256": "366b80b2e03599786490763a616e000d00e96e3a8714761a140409462abf9856",
+      "bytes": 4302
+    }
+  },
+  "passed_test_cases": [
+    "test_api.APITests.test_api_buyer_scope_csrf_and_request_limits",
+    "test_api.APITests.test_full_purchase_delivery_events_and_downloads",
+    "test_api.APITests.test_malformed_market_fields_are_client_errors",
+    "test_api.APITests.test_sdk_token_and_browser_resume_keep_same_balance",
+    "test_api.APITests.test_static_app_is_new_commerce_product_and_has_csp",
+    "test_api.APITests.test_two_external_agents_negotiate_and_payment_gate_keeps_unpaid",
+    "test_commerce.CommerceTests.test_arbitrum_snapshot_is_source_bound_and_stale_data_is_refunded",
+    "test_commerce.CommerceTests.test_buyer_scoping_and_bearer_expiry",
+    "test_commerce.CommerceTests.test_cancel_does_not_reverse_settled_payment",
+    "test_commerce.CommerceTests.test_concurrent_duplicates_and_budget_reservations_are_atomic",
+    "test_commerce.CommerceTests.test_concurrent_run_has_one_delivery_and_one_payment",
+    "test_commerce.CommerceTests.test_duplicate_order_and_run_pay_exactly_once",
+    "test_commerce.CommerceTests.test_exact_money_rejects_rounding_floats_and_sub_atoms",
+    "test_commerce.CommerceTests.test_expired_policy_and_crashed_worker_are_recovered",
+    "test_commerce.CommerceTests.test_journal_tampering_prevents_new_spend",
+    "test_commerce.CommerceTests.test_order_cap_and_service_allowlist",
+    "test_commerce.CommerceTests.test_provider_failure_and_bad_csv_refund_reservation",
+    "test_commerce.CommerceTests.test_request_size_width_and_missing_keys_rejected",
+    "test_commerce.CommerceTests.test_tampered_result_refunds_without_provider_payment",
+    "test_commerce.CommerceTests.test_verified_delivery_releases_exact_provider_payment_and_fee",
+    "test_escrow.EscrowTests.test_agent_funds_seller_delivers_verifier_settles_exact_token_amounts",
+    "test_escrow.EscrowTests.test_bad_delivery_rejection_refunds_without_seller_income",
+    "test_escrow.EscrowTests.test_budget_per_order_total_and_revocation_are_enforced",
+    "test_escrow.EscrowTests.test_duplicate_payment_and_changed_artifact_rejected",
+    "test_escrow.EscrowTests.test_failed_payout_preserves_delivered_order_and_escrow",
+    "test_escrow.EscrowTests.test_false_return_and_fee_on_transfer_tokens_roll_back_reservation",
+    "test_escrow.EscrowTests.test_timeout_refunds_to_fixed_buyer_and_releases_budget",
+    "test_escrow.EscrowTests.test_unauthorized_funding_delivery_and_settlement_rejected",
+    "test_market.MarketTests.test_bilateral_policy_counter_agrees_without_llm_or_payment",
+    "test_market.MarketTests.test_corrupt_journal_rolls_back_policy_registration",
+    "test_market.MarketTests.test_data_update_invalidates_old_terms_and_creates_new_hash",
+    "test_market.MarketTests.test_duplicate_update_does_not_extend_data_freshness",
+    "test_market.MarketTests.test_each_nonprice_term_can_prevent_agreement",
+    "test_market.MarketTests.test_event_matching_only_evaluates_affected_type_and_no_self_trade",
+    "test_market.MarketTests.test_floor_is_never_crossed_and_total_budget_is_enforced",
+    "test_market.MarketTests.test_foreign_refresh_and_expired_participant_rejected",
+    "test_market.MarketTests.test_invalid_unhashable_and_ambiguous_fields_rejected",
+    "test_market.MarketTests.test_new_demand_does_not_recompute_other_unchanged_buyers",
+    "test_market.MarketTests.test_payment_admission_checks_owner_hash_and_expiry_then_fails_closed",
+    "test_market.MarketTests.test_rejected_terms_are_visible_only_to_participants",
+    "test_market.MarketTests.test_restart_preserves_policies_and_agreements",
+    "test_x402.X402Tests.test_exact_agreed_challenge_is_ready_for_signature_but_unpaid",
+    "test_x402.X402Tests.test_expiry_version_and_ambiguous_options_are_rejected",
+    "test_x402.X402Tests.test_invalid_base64_duplicate_keys_and_test_credits_are_rejected",
+    "test_x402.X402Tests.test_missing_or_wrong_settlement_evidence_cannot_be_reported_as_paid",
+    "test_x402.X402Tests.test_success_header_requires_chain_reconciliation_and_cannot_trigger_retry",
+    "test_x402.X402Tests.test_unsupported_prepaid_flow_or_permit2_cannot_be_silently_admitted",
+    "test_x402.X402Tests.test_untrusted_resource_recipient_asset_price_and_network_cannot_change_terms"
+  ],
+  "passed_test_count": 48,
+  "test_matrix_note": "Unchanged core/EVM/x402 tests plus latest changed market/API checks; no repeated contract build",
+  "source_reuse": [
+    {
+      "path": "src/economic_machine/journal.py",
+      "sha256": "a55fb38c9ca390aafd8f6f5e777a32dff2ecaae86df3f5539149eb3d51e2b4e5",
+      "physical_lines": 51,
+      "nonblank_noncomment_lines": 43
+    },
+    {
+      "path": "src/economic_machine/values.py",
+      "sha256": "735b140de0fb014dcd8fdb4302d7461e364a145c46d4d7e6a94b2a38ad1d4688",
+      "physical_lines": 82,
+      "nonblank_noncomment_lines": 65
+    }
+  ],
+  "service_status": "active",
+  "real_payment": "NOT_CONFIGURED",
+  "contract_deployment": "PY_EVM_TEST_ONLY"
+}

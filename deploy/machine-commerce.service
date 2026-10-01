@@ -1,0 +1,23 @@
+[Unit]
+Description=Economic Machine agent commerce sandbox
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+WorkingDirectory=/srv/skew/economic-machine-commerce-20261002
+Environment=COMMERCE_DB=/var/lib/machine-commerce/commerce.sqlite3
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/srv/skew/economic-machine-commerce-20261002/.venv/bin/uvicorn machine_commerce.api:app_factory --factory --host 127.0.0.1 --port 4260 --workers 1
+StateDirectory=machine-commerce
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
