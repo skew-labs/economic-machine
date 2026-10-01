@@ -30,6 +30,7 @@ class Principal:
     key_id: str | None = None
     scopes: frozenset = frozenset()
     policy_id: str | None = None
+    payment_mandate_id: str | None = None
 
     @property
     def owner(self):
@@ -37,13 +38,15 @@ class Principal:
 
 
 class Access:
-    def __init__(self, store):
-        self.store = store
+    def __init__(self, store, mode="development"):
+        self.store, self.mode = store, mode
         with store.connect() as db:
             # executescript commits implicitly; individual statements retain Store's transaction.
             for statement in SCHEMA.split(";"):
                 if statement.strip():
                     db.execute(statement)
+            if "payment_mandate_id" not in {r[1] for r in db.execute("PRAGMA table_info(api_keys)")}:
+                db.execute("ALTER TABLE api_keys ADD COLUMN payment_mandate_id TEXT")
 
     def _owner(self, db, sid):
         row = db.execute("SELECT * FROM sessions WHERE id=?", (sid,)).fetchone()
@@ -54,7 +57,7 @@ class Access:
     def resolve(self, token):
         if not isinstance(token, str) or not 20 <= len(token) <= 120:
             raise MachineError("credential required")
-        if not token.startswith("em_test_"):
+        if not token.startswith(("em_test_", "em_live_")):
             return Principal(self.store.authenticate(token))
         with self.store.connect() as db:
             row = db.execute("SELECT * FROM api_keys WHERE token_hash=?", (
@@ -64,10 +67,12 @@ class Access:
                 raise MachineError("API key expired, revoked or invalid")
             self._owner(db, row["session_id"])
             db.execute("UPDATE api_keys SET last_used=? WHERE id=?", (now, row["id"]))
-            return Principal(row["session_id"], row["id"], frozenset(json.loads(row["scopes"])), row["policy_id"])
+            return Principal(row["session_id"], row["id"], frozenset(json.loads(row["scopes"])),
+                             row["policy_id"], row["payment_mandate_id"])
 
     def create(self, sid, raw):
-        require_keys(raw, {"name", "scopes", "policy_id", "ttl_seconds"}, "API key")
+        require_keys({k: v for k, v in raw.items() if k != "payment_mandate_id"},
+                     {"name", "scopes", "policy_id", "ttl_seconds"}, "API key")
         name, scopes, ttl, pid = raw["name"], raw["scopes"], raw["ttl_seconds"], raw["policy_id"]
         if not isinstance(name, str) or not 1 <= len(name.strip()) <= 60 or any(ord(c) < 32 for c in name):
             raise MachineError("key name must contain 1 to 60 printable characters")
@@ -80,8 +85,13 @@ class Access:
             identifier(pid, "spending policy id")
         elif pid is not None:
             raise MachineError("only order-writing keys bind a spending policy")
+        mandate_id = raw.get("payment_mandate_id")
+        if mandate_id is not None:
+            identifier(mandate_id, "payment mandate id")
+            if "payments:request" not in scopes:
+                raise MachineError("a payment mandate requires payment permission")
         now, kid = self.store.clock(), "key-" + secrets.token_hex(12)
-        token = "em_test_" + secrets.token_urlsafe(32)
+        token = ("em_live_" if self.mode == "production" else "em_test_") + secrets.token_urlsafe(32)
         with self.store.connect() as db:
             owner = self._owner(db, sid)
             expires = min(now + ttl, owner["expires"])
@@ -90,15 +100,21 @@ class Access:
                 if not policy or policy["expires"] <= now:
                     raise MachineError("active owned spending policy required")
                 expires = min(expires, policy["expires"])
+            if mandate_id:
+                mandate = db.execute("SELECT * FROM payment_mandates WHERE id=? AND owner=?", (mandate_id, sid)).fetchone()
+                if not mandate or mandate["expires"] <= now:
+                    raise MachineError("active owned payment mandate required")
+                expires = min(expires, mandate["expires"])
             count = db.execute("SELECT COUNT(*) FROM api_keys WHERE session_id=? "
                 "AND revoked_at IS NULL AND expires>?", (sid, now)).fetchone()[0]
             if count >= 100:
                 raise MachineError("active API key limit reached; revoke an unused key")
-            db.execute("INSERT INTO api_keys VALUES (?,?,?,?,?,?,?,?,?,NULL,NULL)", (
+            db.execute("INSERT INTO api_keys VALUES (?,?,?,?,?,?,?,?,?,NULL,NULL,?)", (
                 kid, sid, hashlib.sha256(token.encode()).hexdigest(), name.strip(), token[:16],
-                canonical(sorted(scopes)).decode(), pid, now, expires))
+                canonical(sorted(scopes)).decode(), pid, now, expires, mandate_id))
             self.store._event(db, kid + ":created", "API_KEY_CREATED", {
                 "key_id": kid, "session_id": sid, "scopes": sorted(scopes), "policy_id": pid,
+                "payment_mandate_id": mandate_id,
                 "expires": expires, "at": now})
             metadata = self._public(db.execute("SELECT * FROM api_keys WHERE id=?", (kid,)).fetchone())
         return {"key": metadata, "secret": token, "shown_once": True}
@@ -108,8 +124,9 @@ class Access:
             "expired" if row["expires"] <= self.store.clock() else "active")
         return {"id": row["id"], "name": row["name"], "prefix": row["prefix"],
                 "scopes": json.loads(row["scopes"]), "policy_id": row["policy_id"],
+                "payment_mandate_id": row["payment_mandate_id"],
                 "created": row["created"], "expires": row["expires"], "last_used": row["last_used"],
-                "revoked_at": row["revoked_at"], "status": status, "mode": "TEST"}
+                "revoked_at": row["revoked_at"], "status": status, "mode": self.mode.upper()}
 
     def list(self, sid):
         with self.store.connect() as db:
@@ -140,7 +157,7 @@ class Access:
         # Positive route allowlist: future mutations default to owner-only.
         parts = path.strip("/").split("/")
         scope = None
-        if method == "GET" and len(parts) >= 2 and parts[1] in {"workspace", "market", "orders"}:
+        if method == "GET" and len(parts) >= 2 and parts[1] in {"workspace", "market", "orders", "demands", "payments"}:
             scope = "read"
         elif method == "POST":
             if path == "/api/demands":
@@ -149,7 +166,9 @@ class Access:
                 scope = "supplies:write"
             elif path == "/api/orders" or (len(parts) == 4 and parts[1] == "orders" and parts[3] in {"run", "cancel"}):
                 scope = "orders:write"
-            elif len(parts) == 4 and parts[1] == "matches" and parts[3] == "payment-request":
+            elif (path == "/api/payments"
+                  or (len(parts) == 4 and parts[1] == "matches" and parts[3] == "payment-request")
+                  or (len(parts) == 4 and parts[1] == "payments" and parts[3] in {"challenge", "submit", "reconcile", "cancel"})):
                 scope = "payments:request"
         if scope is None or scope not in principal.scopes:
             raise PermissionError("API key does not permit this operation")
@@ -158,3 +177,8 @@ class Access:
     def bind_order(principal, policy_id):
         if not principal.owner and principal.policy_id != policy_id:
             raise PermissionError("order is outside the API key's spending policy")
+
+    @staticmethod
+    def bind_payment(principal, mandate_id):
+        if not principal.owner and (not principal.payment_mandate_id or principal.payment_mandate_id != mandate_id):
+            raise PermissionError("payment is outside the API key's approved mandate")

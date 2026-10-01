@@ -38,6 +38,26 @@ class MarketTests(unittest.TestCase):
         sell = self.market.register(self.seller, "supply", supply(self.now, **seller_changes))
         return buy, sell
 
+    def test_registration_returns_exact_owned_agreements_in_one_transaction(self):
+        self.market.register(self.seller, "supply", supply(self.now))
+        registered = self.market.register(self.buyer, "demand", demand())
+        later = self.market.demand_matches(self.buyer, registered["id"])["matches"]
+        self.assertEqual(registered["matches"], later)
+        self.assertEqual(len(later), 1)
+        self.assertEqual(later[0]["terms"]["buyer_id"], self.buyer)
+        with self.assertRaises(MachineError):
+            self.market.demand_matches(self.seller, registered["id"])
+
+    def test_active_type_admission_cap_is_atomic_and_allows_expired_slots(self):
+        for _ in range(100):
+            self.market.register(self.seller, "supply", supply(self.now))
+        with self.assertRaises(MachineError):
+            self.market.register(self.seller, "supply", supply(self.now))
+        with self.store.connect() as db:
+            self.assertEqual(db.execute("SELECT COUNT(*) FROM supplies").fetchone()[0], 100)
+        self.now += 3601
+        self.market.register(self.seller, "supply", supply(self.now))
+
     def test_bilateral_policy_counter_agrees_without_llm_or_payment(self):
         _, sell = self.pair()
         self.assertEqual(sell["matching"]["pairs_evaluated"], 1)

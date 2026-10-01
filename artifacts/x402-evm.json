@@ -1,0 +1,55 @@
+{
+  "environment": "LOCAL_PYEVM_EPHEMERAL_TEST_TOKEN",
+  "public_chain_payment": false,
+  "customer_signature": "EIP712_TRANSFER_WITH_AUTHORIZATION",
+  "payment": {
+    "id": "payment-28d4926c5e1413323fd46d92",
+    "mandate_id": "mandate-cf8d39bd61898a6a7b233573",
+    "match_id": "match-0a058320a31c2f2189148dfa699b56da",
+    "status": "SETTLED",
+    "reason": null,
+    "terms_hash": "0a058320a31c2f2189148dfa699b56da9002972048eb8aa8aaad829daac52f7a",
+    "amount_atoms": "400000",
+    "network": "eip155:131277322940537",
+    "asset": "0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+    "payer": "0x7e5f4552091a69125d5dfcb7b8c2659029395bdf",
+    "pay_to": "0x2b5ad5c4795c026514f8317c7a215e218dccd6cf",
+    "tx_hash": "0x713fbfa8ebcb27ca7b8f8e20b475a734011bf632b41c821e9793281ba1911a48",
+    "created": 1790881267,
+    "expires": 1790881327,
+    "signing_authority": "CUSTOMER_EXTERNAL",
+    "safe_to_retry_payment": false,
+    "delivery": {
+      "artifact": {
+        "data": {
+          "observed": true
+        },
+        "data_version": "block-1",
+        "terms_hash": "0a058320a31c2f2189148dfa699b56da9002972048eb8aa8aaad829daac52f7a"
+      },
+      "artifact_hash": "49378548da6a2677c6eae9002a3fc859e45d9bf62392b0878875661e3fd2079b",
+      "assurance": "TERMS_AND_VERSION_BINDING_NOT_DATA_TRUTH"
+    },
+    "observation": {
+      "amount_atoms": "400000",
+      "asset": "0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+      "block_hash": "0xa8a7cb52df1f517b2de57cc13024e60a63ecef3cff010ae7204d12668e72d34f",
+      "block_number": 3,
+      "finality": "finalized",
+      "nonce": "0x2e8fe78496170fb8f7b1ebd12fa17719f4b358f8a46b2b8132fb823b94057e3c",
+      "pay_to": "0x2b5ad5c4795c026514f8317c7a215e218dccd6cf",
+      "payer": "0x7e5f4552091a69125d5dfcb7b8c2659029395bdf",
+      "status": "PAID",
+      "tx_hash": "0x713fbfa8ebcb27ca7b8f8e20b475a734011bf632b41c821e9793281ba1911a48"
+    }
+  },
+  "payer_balance_atoms": 1600000,
+  "recipient_balance_atoms": 400000,
+  "mandate": {
+    "reserved": 0,
+    "spent": 400000,
+    "budget": 1000000
+  },
+  "test_merchant": true,
+  "secret_or_signature_stored": false
+}

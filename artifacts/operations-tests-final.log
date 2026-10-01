@@ -1,0 +1,16 @@
+/srv/skew/economic-machine-commerce-20261002/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_anonymous_and_bad_credentials_cannot_create_owner_or_seed_test_money (test_operations.OperationsTests.test_anonymous_and_bad_credentials_cannot_create_owner_or_seed_test_money) ... ok
+test_development_credentials_cannot_become_production_owners (test_operations.OperationsTests.test_development_credentials_cannot_become_production_owners) ... ok
+test_durable_limits_and_cookie_spoofing_cannot_bypass_login_throttle (test_operations.OperationsTests.test_durable_limits_and_cookie_spoofing_cannot_bypass_login_throttle) ... ok
+test_expired_cookie_login_keeps_identity_and_rotates_old_owner_credential (test_operations.OperationsTests.test_expired_cookie_login_keeps_identity_and_rotates_old_owner_credential) ... ok
+test_production_denies_plain_http_and_foreign_origin_mutations (test_operations.OperationsTests.test_production_denies_plain_http_and_foreign_origin_mutations) ... ok
+test_production_requires_https_origin_operator_and_resource_configuration (test_operations.OperationsTests.test_production_requires_https_origin_operator_and_resource_configuration) ... ok
+test_provisioning_cli_writes_private_hash_without_printing_password (test_operations.OperationsTests.test_provisioning_cli_writes_private_hash_without_printing_password) ... ok
+test_removed_operator_cannot_continue_with_an_old_key (test_operations.OperationsTests.test_removed_operator_cannot_continue_with_an_old_key) ... ok
+test_streaming_input_limit_rejects_without_entire_body_buffer (test_operations.OperationsTests.test_streaming_input_limit_rejects_without_entire_body_buffer) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 2.115s
+
+OK

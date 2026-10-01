@@ -1,0 +1,1411 @@
+{
+  "schema": "paired-http-comparison-1",
+  "host": "ns5020955",
+  "seed": 20261002,
+  "suppliers": 64,
+  "trades": 24,
+  "max_direct_concurrency": 8,
+  "transport": "real HTTP on localhost, no injected latency",
+  "setup": {
+    "machine": {
+      "requests": 65,
+      "elapsed_ms": 3160.1494300120976,
+      "purpose": "one-time seller registration; includes owner session request count"
+    },
+    "direct_cached": {
+      "requests": 1,
+      "elapsed_ms": 43.86007599532604,
+      "purpose": "one-time public data-type directory cache"
+    },
+    "direct_scan": {
+      "requests": 0,
+      "elapsed_ms": 0
+    }
+  },
+  "summaries": {
+    "direct_scan": {
+      "trades": 24,
+      "discovery_requests": 24,
+      "negotiation_requests": 1536,
+      "total_trade_requests": 1560,
+      "agreement_ms": {
+        "p50": 417.1203270088881,
+        "p95": 450.1749509945512
+      },
+      "valid_agreements": 18,
+      "eligible_trades": 18,
+      "agreement_rate": 0.75,
+      "eligible_completion_rate": 1.0,
+      "wrong_agreements": 0,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "observed_llm_cost_usd": "0",
+      "requests_including_setup": 1560,
+      "elapsed_including_setup_ms": 10093.465241021477
+    },
+    "direct_cached": {
+      "trades": 24,
+      "discovery_requests": 0,
+      "negotiation_requests": 192,
+      "total_trade_requests": 192,
+      "agreement_ms": {
+        "p50": 67.34560150653124,
+        "p95": 76.32554697920568
+      },
+      "valid_agreements": 18,
+      "eligible_trades": 18,
+      "agreement_rate": 0.75,
+      "eligible_completion_rate": 1.0,
+      "wrong_agreements": 0,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "observed_llm_cost_usd": "0",
+      "requests_including_setup": 193,
+      "elapsed_including_setup_ms": 1661.9405769451987
+    },
+    "machine": {
+      "trades": 24,
+      "discovery_requests": 0,
+      "negotiation_requests": 0,
+      "total_trade_requests": 24,
+      "agreement_ms": {
+        "p50": 54.03354352165479,
+        "p95": 60.57528100791387
+      },
+      "valid_agreements": 18,
+      "eligible_trades": 18,
+      "agreement_rate": 0.75,
+      "eligible_completion_rate": 1.0,
+      "wrong_agreements": 0,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "observed_llm_cost_usd": "0",
+      "requests_including_setup": 89,
+      "elapsed_including_setup_ms": 4430.994713096879
+    }
+  },
+  "paired": {
+    "direct_scan": {
+      "median_machine_latency_ratio": 0.12991138861828538,
+      "bootstrap_95_interval": [
+        0.12535795810160946,
+        0.13290225200285324
+      ]
+    },
+    "direct_cached": {
+      "median_machine_latency_ratio": 0.801320562674419,
+      "bootstrap_95_interval": [
+        0.7553107874543047,
+        0.8624633585462451
+      ]
+    }
+  },
+  "records": [
+    {
+      "trade": 0,
+      "arm": "direct_cached",
+      "input_hash": "40006604b1682adb27a18362221351a2c9a1691db7c0cf5d86d7ff48d7cf33e8",
+      "elapsed_ms": 55.81427298602648,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 0,
+      "arm": "machine",
+      "input_hash": "40006604b1682adb27a18362221351a2c9a1691db7c0cf5d86d7ff48d7cf33e8",
+      "elapsed_ms": 53.83866999181919,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 0,
+      "arm": "direct_scan",
+      "input_hash": "40006604b1682adb27a18362221351a2c9a1691db7c0cf5d86d7ff48d7cf33e8",
+      "elapsed_ms": 463.6235670186579,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 1,
+      "arm": "direct_scan",
+      "input_hash": "60b3deac4bdda601d1ea3d0b9a8210df2561cc7ea7f2684ef79d5a059e2d441a",
+      "elapsed_ms": 450.1749509945512,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4",
+      "expected_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4"
+    },
+    {
+      "trade": 1,
+      "arm": "direct_cached",
+      "input_hash": "60b3deac4bdda601d1ea3d0b9a8210df2561cc7ea7f2684ef79d5a059e2d441a",
+      "elapsed_ms": 68.58477799687535,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4",
+      "expected_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4"
+    },
+    {
+      "trade": 1,
+      "arm": "machine",
+      "input_hash": "60b3deac4bdda601d1ea3d0b9a8210df2561cc7ea7f2684ef79d5a059e2d441a",
+      "elapsed_ms": 60.57528100791387,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4",
+      "expected_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4"
+    },
+    {
+      "trade": 2,
+      "arm": "direct_scan",
+      "input_hash": "e6a434302ed0c274d3d5bc1b54b8bc92c463a124120a5d0e40a2d316068bb4a2",
+      "elapsed_ms": 416.54799098614603,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574",
+      "expected_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574"
+    },
+    {
+      "trade": 2,
+      "arm": "machine",
+      "input_hash": "e6a434302ed0c274d3d5bc1b54b8bc92c463a124120a5d0e40a2d316068bb4a2",
+      "elapsed_ms": 57.55301300087012,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574",
+      "expected_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574"
+    },
+    {
+      "trade": 2,
+      "arm": "direct_cached",
+      "input_hash": "e6a434302ed0c274d3d5bc1b54b8bc92c463a124120a5d0e40a2d316068bb4a2",
+      "elapsed_ms": 74.66312299948186,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574",
+      "expected_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574"
+    },
+    {
+      "trade": 3,
+      "arm": "machine",
+      "input_hash": "d7d693d2bc6815c1769162cd826b5f59c33ac77ad495c4c08c54fedb7611b95f",
+      "elapsed_ms": 51.04310400201939,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a",
+      "expected_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a"
+    },
+    {
+      "trade": 3,
+      "arm": "direct_cached",
+      "input_hash": "d7d693d2bc6815c1769162cd826b5f59c33ac77ad495c4c08c54fedb7611b95f",
+      "elapsed_ms": 78.23622800060548,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a",
+      "expected_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a"
+    },
+    {
+      "trade": 3,
+      "arm": "direct_scan",
+      "input_hash": "d7d693d2bc6815c1769162cd826b5f59c33ac77ad495c4c08c54fedb7611b95f",
+      "elapsed_ms": 444.00815400877036,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a",
+      "expected_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a"
+    },
+    {
+      "trade": 4,
+      "arm": "direct_scan",
+      "input_hash": "fc9af8e1a9c925ceec30b33a52794cfdacc2a52d67425756966d54e91a297621",
+      "elapsed_ms": 425.657048006542,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 4,
+      "arm": "machine",
+      "input_hash": "fc9af8e1a9c925ceec30b33a52794cfdacc2a52d67425756966d54e91a297621",
+      "elapsed_ms": 13.042698003118858,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 4,
+      "arm": "direct_cached",
+      "input_hash": "fc9af8e1a9c925ceec30b33a52794cfdacc2a52d67425756966d54e91a297621",
+      "elapsed_ms": 65.77805598499253,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 5,
+      "arm": "direct_scan",
+      "input_hash": "f0a11bc8452c423214de7da4aebd9b0ea5e409d26ffd3cb58a103a638b15ae0a",
+      "elapsed_ms": 446.02197100175545,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4",
+      "expected_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4"
+    },
+    {
+      "trade": 5,
+      "arm": "machine",
+      "input_hash": "f0a11bc8452c423214de7da4aebd9b0ea5e409d26ffd3cb58a103a638b15ae0a",
+      "elapsed_ms": 55.81623999751173,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4",
+      "expected_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4"
+    },
+    {
+      "trade": 5,
+      "arm": "direct_cached",
+      "input_hash": "f0a11bc8452c423214de7da4aebd9b0ea5e409d26ffd3cb58a103a638b15ae0a",
+      "elapsed_ms": 64.15892098448239,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4",
+      "expected_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4"
+    },
+    {
+      "trade": 6,
+      "arm": "machine",
+      "input_hash": "ad0933435d756725f7ffa2337f5fd7e9a09cd5c067efe804457079354158b789",
+      "elapsed_ms": 57.24204599391669,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784",
+      "expected_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784"
+    },
+    {
+      "trade": 6,
+      "arm": "direct_cached",
+      "input_hash": "ad0933435d756725f7ffa2337f5fd7e9a09cd5c067efe804457079354158b789",
+      "elapsed_ms": 67.86343600833789,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784",
+      "expected_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784"
+    },
+    {
+      "trade": 6,
+      "arm": "direct_scan",
+      "input_hash": "ad0933435d756725f7ffa2337f5fd7e9a09cd5c067efe804457079354158b789",
+      "elapsed_ms": 439.87233299412765,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784",
+      "expected_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784"
+    },
+    {
+      "trade": 7,
+      "arm": "direct_cached",
+      "input_hash": "6a6409e3c531abb5b12c53e1c2bdb693cca56a883c0f7c626c0719552c4ca15d",
+      "elapsed_ms": 70.79022898687981,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1",
+      "expected_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1"
+    },
+    {
+      "trade": 7,
+      "arm": "direct_scan",
+      "input_hash": "6a6409e3c531abb5b12c53e1c2bdb693cca56a883c0f7c626c0719552c4ca15d",
+      "elapsed_ms": 447.77892300044186,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1",
+      "expected_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1"
+    },
+    {
+      "trade": 7,
+      "arm": "machine",
+      "input_hash": "6a6409e3c531abb5b12c53e1c2bdb693cca56a883c0f7c626c0719552c4ca15d",
+      "elapsed_ms": 50.95812800573185,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1",
+      "expected_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1"
+    },
+    {
+      "trade": 8,
+      "arm": "direct_scan",
+      "input_hash": "40006604b1682adb27a18362221351a2c9a1691db7c0cf5d86d7ff48d7cf33e8",
+      "elapsed_ms": 420.9871320053935,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 8,
+      "arm": "machine",
+      "input_hash": "40006604b1682adb27a18362221351a2c9a1691db7c0cf5d86d7ff48d7cf33e8",
+      "elapsed_ms": 54.104507027659565,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 8,
+      "arm": "direct_cached",
+      "input_hash": "40006604b1682adb27a18362221351a2c9a1691db7c0cf5d86d7ff48d7cf33e8",
+      "elapsed_ms": 64.77484598872252,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 9,
+      "arm": "direct_cached",
+      "input_hash": "60b3deac4bdda601d1ea3d0b9a8210df2561cc7ea7f2684ef79d5a059e2d441a",
+      "elapsed_ms": 74.16718400781974,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4",
+      "expected_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4"
+    },
+    {
+      "trade": 9,
+      "arm": "direct_scan",
+      "input_hash": "60b3deac4bdda601d1ea3d0b9a8210df2561cc7ea7f2684ef79d5a059e2d441a",
+      "elapsed_ms": 412.9050279734656,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4",
+      "expected_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4"
+    },
+    {
+      "trade": 9,
+      "arm": "machine",
+      "input_hash": "60b3deac4bdda601d1ea3d0b9a8210df2561cc7ea7f2684ef79d5a059e2d441a",
+      "elapsed_ms": 53.96258001565002,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4",
+      "expected_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4"
+    },
+    {
+      "trade": 10,
+      "arm": "direct_cached",
+      "input_hash": "e6a434302ed0c274d3d5bc1b54b8bc92c463a124120a5d0e40a2d316068bb4a2",
+      "elapsed_ms": 73.85336500010453,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574",
+      "expected_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574"
+    },
+    {
+      "trade": 10,
+      "arm": "direct_scan",
+      "input_hash": "e6a434302ed0c274d3d5bc1b54b8bc92c463a124120a5d0e40a2d316068bb4a2",
+      "elapsed_ms": 417.2384410048835,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574",
+      "expected_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574"
+    },
+    {
+      "trade": 10,
+      "arm": "machine",
+      "input_hash": "e6a434302ed0c274d3d5bc1b54b8bc92c463a124120a5d0e40a2d316068bb4a2",
+      "elapsed_ms": 52.30415900587104,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574",
+      "expected_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574"
+    },
+    {
+      "trade": 11,
+      "arm": "direct_cached",
+      "input_hash": "d7d693d2bc6815c1769162cd826b5f59c33ac77ad495c4c08c54fedb7611b95f",
+      "elapsed_ms": 73.60139201045968,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a",
+      "expected_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a"
+    },
+    {
+      "trade": 11,
+      "arm": "machine",
+      "input_hash": "d7d693d2bc6815c1769162cd826b5f59c33ac77ad495c4c08c54fedb7611b95f",
+      "elapsed_ms": 51.93124798825011,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a",
+      "expected_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a"
+    },
+    {
+      "trade": 11,
+      "arm": "direct_scan",
+      "input_hash": "d7d693d2bc6815c1769162cd826b5f59c33ac77ad495c4c08c54fedb7611b95f",
+      "elapsed_ms": 415.86095601087436,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a",
+      "expected_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a"
+    },
+    {
+      "trade": 12,
+      "arm": "direct_cached",
+      "input_hash": "fc9af8e1a9c925ceec30b33a52794cfdacc2a52d67425756966d54e91a297621",
+      "elapsed_ms": 67.97882600221783,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 12,
+      "arm": "direct_scan",
+      "input_hash": "fc9af8e1a9c925ceec30b33a52794cfdacc2a52d67425756966d54e91a297621",
+      "elapsed_ms": 408.6901010014117,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 12,
+      "arm": "machine",
+      "input_hash": "fc9af8e1a9c925ceec30b33a52794cfdacc2a52d67425756966d54e91a297621",
+      "elapsed_ms": 52.78839002130553,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 13,
+      "arm": "machine",
+      "input_hash": "f0a11bc8452c423214de7da4aebd9b0ea5e409d26ffd3cb58a103a638b15ae0a",
+      "elapsed_ms": 57.64950899174437,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4",
+      "expected_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4"
+    },
+    {
+      "trade": 13,
+      "arm": "direct_cached",
+      "input_hash": "f0a11bc8452c423214de7da4aebd9b0ea5e409d26ffd3cb58a103a638b15ae0a",
+      "elapsed_ms": 76.32554697920568,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4",
+      "expected_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4"
+    },
+    {
+      "trade": 13,
+      "arm": "direct_scan",
+      "input_hash": "f0a11bc8452c423214de7da4aebd9b0ea5e409d26ffd3cb58a103a638b15ae0a",
+      "elapsed_ms": 427.0339919894468,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4",
+      "expected_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4"
+    },
+    {
+      "trade": 14,
+      "arm": "direct_cached",
+      "input_hash": "ad0933435d756725f7ffa2337f5fd7e9a09cd5c067efe804457079354158b789",
+      "elapsed_ms": 63.873862993204966,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784",
+      "expected_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784"
+    },
+    {
+      "trade": 14,
+      "arm": "machine",
+      "input_hash": "ad0933435d756725f7ffa2337f5fd7e9a09cd5c067efe804457079354158b789",
+      "elapsed_ms": 63.2956949993968,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784",
+      "expected_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784"
+    },
+    {
+      "trade": 14,
+      "arm": "direct_scan",
+      "input_hash": "ad0933435d756725f7ffa2337f5fd7e9a09cd5c067efe804457079354158b789",
+      "elapsed_ms": 407.6336559955962,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784",
+      "expected_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784"
+    },
+    {
+      "trade": 15,
+      "arm": "machine",
+      "input_hash": "6a6409e3c531abb5b12c53e1c2bdb693cca56a883c0f7c626c0719552c4ca15d",
+      "elapsed_ms": 56.16998398909345,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1",
+      "expected_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1"
+    },
+    {
+      "trade": 15,
+      "arm": "direct_cached",
+      "input_hash": "6a6409e3c531abb5b12c53e1c2bdb693cca56a883c0f7c626c0719552c4ca15d",
+      "elapsed_ms": 62.11319798603654,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1",
+      "expected_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1"
+    },
+    {
+      "trade": 15,
+      "arm": "direct_scan",
+      "input_hash": "6a6409e3c531abb5b12c53e1c2bdb693cca56a883c0f7c626c0719552c4ca15d",
+      "elapsed_ms": 399.4092040229589,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1",
+      "expected_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1"
+    },
+    {
+      "trade": 16,
+      "arm": "direct_scan",
+      "input_hash": "40006604b1682adb27a18362221351a2c9a1691db7c0cf5d86d7ff48d7cf33e8",
+      "elapsed_ms": 406.2083140015602,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 16,
+      "arm": "machine",
+      "input_hash": "40006604b1682adb27a18362221351a2c9a1691db7c0cf5d86d7ff48d7cf33e8",
+      "elapsed_ms": 51.221889996668324,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 16,
+      "arm": "direct_cached",
+      "input_hash": "40006604b1682adb27a18362221351a2c9a1691db7c0cf5d86d7ff48d7cf33e8",
+      "elapsed_ms": 59.20969700673595,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 17,
+      "arm": "direct_scan",
+      "input_hash": "60b3deac4bdda601d1ea3d0b9a8210df2561cc7ea7f2684ef79d5a059e2d441a",
+      "elapsed_ms": 396.8717849929817,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4",
+      "expected_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4"
+    },
+    {
+      "trade": 17,
+      "arm": "machine",
+      "input_hash": "60b3deac4bdda601d1ea3d0b9a8210df2561cc7ea7f2684ef79d5a059e2d441a",
+      "elapsed_ms": 52.74515398195945,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4",
+      "expected_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4"
+    },
+    {
+      "trade": 17,
+      "arm": "direct_cached",
+      "input_hash": "60b3deac4bdda601d1ea3d0b9a8210df2561cc7ea7f2684ef79d5a059e2d441a",
+      "elapsed_ms": 65.71779600926675,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4",
+      "expected_hash": "3e134212f97f51553787edd34b45b2bbe11328fd128ee2763d4d5cb1078e5cc4"
+    },
+    {
+      "trade": 18,
+      "arm": "direct_cached",
+      "input_hash": "e6a434302ed0c274d3d5bc1b54b8bc92c463a124120a5d0e40a2d316068bb4a2",
+      "elapsed_ms": 54.17051899712533,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574",
+      "expected_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574"
+    },
+    {
+      "trade": 18,
+      "arm": "direct_scan",
+      "input_hash": "e6a434302ed0c274d3d5bc1b54b8bc92c463a124120a5d0e40a2d316068bb4a2",
+      "elapsed_ms": 392.8399769938551,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574",
+      "expected_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574"
+    },
+    {
+      "trade": 18,
+      "arm": "machine",
+      "input_hash": "e6a434302ed0c274d3d5bc1b54b8bc92c463a124120a5d0e40a2d316068bb4a2",
+      "elapsed_ms": 55.25984399719164,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574",
+      "expected_hash": "10f9197eac2c42e5c1d33efde926e46e31f8ecf7ebb7ddeff4ab6613466f5574"
+    },
+    {
+      "trade": 19,
+      "arm": "direct_scan",
+      "input_hash": "d7d693d2bc6815c1769162cd826b5f59c33ac77ad495c4c08c54fedb7611b95f",
+      "elapsed_ms": 424.501166009577,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a",
+      "expected_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a"
+    },
+    {
+      "trade": 19,
+      "arm": "machine",
+      "input_hash": "d7d693d2bc6815c1769162cd826b5f59c33ac77ad495c4c08c54fedb7611b95f",
+      "elapsed_ms": 53.188036021310836,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a",
+      "expected_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a"
+    },
+    {
+      "trade": 19,
+      "arm": "direct_cached",
+      "input_hash": "d7d693d2bc6815c1769162cd826b5f59c33ac77ad495c4c08c54fedb7611b95f",
+      "elapsed_ms": 68.79770301748067,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a",
+      "expected_hash": "afd275ac874fb834b4661b591c4eb4f8e57686eb630bd43f370caf05e0b81b6a"
+    },
+    {
+      "trade": 20,
+      "arm": "machine",
+      "input_hash": "fc9af8e1a9c925ceec30b33a52794cfdacc2a52d67425756966d54e91a297621",
+      "elapsed_ms": 51.23764500604011,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 20,
+      "arm": "direct_scan",
+      "input_hash": "fc9af8e1a9c925ceec30b33a52794cfdacc2a52d67425756966d54e91a297621",
+      "elapsed_ms": 391.9945189845748,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 20,
+      "arm": "direct_cached",
+      "input_hash": "fc9af8e1a9c925ceec30b33a52794cfdacc2a52d67425756966d54e91a297621",
+      "elapsed_ms": 64.04382598702796,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": false,
+      "valid_agreement": false,
+      "incorrect": false,
+      "result_hash": null,
+      "expected_hash": null
+    },
+    {
+      "trade": 21,
+      "arm": "machine",
+      "input_hash": "f0a11bc8452c423214de7da4aebd9b0ea5e409d26ffd3cb58a103a638b15ae0a",
+      "elapsed_ms": 55.05770302261226,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4",
+      "expected_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4"
+    },
+    {
+      "trade": 21,
+      "arm": "direct_scan",
+      "input_hash": "f0a11bc8452c423214de7da4aebd9b0ea5e409d26ffd3cb58a103a638b15ae0a",
+      "elapsed_ms": 396.0545599984471,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4",
+      "expected_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4"
+    },
+    {
+      "trade": 21,
+      "arm": "direct_cached",
+      "input_hash": "f0a11bc8452c423214de7da4aebd9b0ea5e409d26ffd3cb58a103a638b15ae0a",
+      "elapsed_ms": 63.83773000561632,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4",
+      "expected_hash": "d92958e7fca407d7d52e135c36460aca23993ea793b18e1951fea223d37acbe4"
+    },
+    {
+      "trade": 22,
+      "arm": "direct_cached",
+      "input_hash": "ad0933435d756725f7ffa2337f5fd7e9a09cd5c067efe804457079354158b789",
+      "elapsed_ms": 66.82776700472459,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784",
+      "expected_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784"
+    },
+    {
+      "trade": 22,
+      "arm": "machine",
+      "input_hash": "ad0933435d756725f7ffa2337f5fd7e9a09cd5c067efe804457079354158b789",
+      "elapsed_ms": 55.059564008843154,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784",
+      "expected_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784"
+    },
+    {
+      "trade": 22,
+      "arm": "direct_scan",
+      "input_hash": "ad0933435d756725f7ffa2337f5fd7e9a09cd5c067efe804457079354158b789",
+      "elapsed_ms": 424.549259012565,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784",
+      "expected_hash": "aa27e2607ae2d7e63ad0e008720c095412a66ab8a1b106b51ce9712bd5764784"
+    },
+    {
+      "trade": 23,
+      "arm": "direct_scan",
+      "input_hash": "6a6409e3c531abb5b12c53e1c2bdb693cca56a883c0f7c626c0719552c4ca15d",
+      "elapsed_ms": 417.00221301289275,
+      "requests": {
+        "discovery": 1,
+        "negotiation": 64,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1",
+      "expected_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1"
+    },
+    {
+      "trade": 23,
+      "arm": "machine",
+      "input_hash": "6a6409e3c531abb5b12c53e1c2bdb693cca56a883c0f7c626c0719552c4ca15d",
+      "elapsed_ms": 54.80019500828348,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 0,
+        "registration": 1,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1",
+      "expected_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1"
+    },
+    {
+      "trade": 23,
+      "arm": "direct_cached",
+      "input_hash": "6a6409e3c531abb5b12c53e1c2bdb693cca56a883c0f7c626c0719552c4ca15d",
+      "elapsed_ms": 72.89819800644182,
+      "requests": {
+        "discovery": 0,
+        "negotiation": 8,
+        "registration": 0,
+        "agreement_read": 0
+      },
+      "ground_truth_eligible": true,
+      "valid_agreement": true,
+      "incorrect": false,
+      "result_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1",
+      "expected_hash": "18e8bf9728bac9be094fe8209a4488fcf11314982468ac05104474a4b01603b1"
+    }
+  ],
+  "observed_http_requests": {
+    "/api/sessions": 2,
+    "/api/supplies": 64,
+    "/benchmark/directory": 25,
+    "/benchmark/suppliers/0/quote": 27,
+    "/benchmark/suppliers/8/quote": 27,
+    "/benchmark/suppliers/16/quote": 27,
+    "/benchmark/suppliers/24/quote": 27,
+    "/benchmark/suppliers/32/quote": 27,
+    "/benchmark/suppliers/40/quote": 27,
+    "/benchmark/suppliers/48/quote": 27,
+    "/benchmark/suppliers/56/quote": 27,
+    "/api/demands": 24,
+    "/benchmark/suppliers/1/quote": 27,
+    "/benchmark/suppliers/4/quote": 27,
+    "/benchmark/suppliers/7/quote": 27,
+    "/benchmark/suppliers/3/quote": 27,
+    "/benchmark/suppliers/2/quote": 27,
+    "/benchmark/suppliers/6/quote": 27,
+    "/benchmark/suppliers/9/quote": 27,
+    "/benchmark/suppliers/5/quote": 27,
+    "/benchmark/suppliers/10/quote": 27,
+    "/benchmark/suppliers/11/quote": 27,
+    "/benchmark/suppliers/12/quote": 27,
+    "/benchmark/suppliers/13/quote": 27,
+    "/benchmark/suppliers/14/quote": 27,
+    "/benchmark/suppliers/15/quote": 27,
+    "/benchmark/suppliers/17/quote": 27,
+    "/benchmark/suppliers/18/quote": 27,
+    "/benchmark/suppliers/19/quote": 27,
+    "/benchmark/suppliers/20/quote": 27,
+    "/benchmark/suppliers/21/quote": 27,
+    "/benchmark/suppliers/22/quote": 27,
+    "/benchmark/suppliers/23/quote": 27,
+    "/benchmark/suppliers/25/quote": 27,
+    "/benchmark/suppliers/26/quote": 27,
+    "/benchmark/suppliers/27/quote": 27,
+    "/benchmark/suppliers/28/quote": 27,
+    "/benchmark/suppliers/29/quote": 27,
+    "/benchmark/suppliers/30/quote": 27,
+    "/benchmark/suppliers/31/quote": 27,
+    "/benchmark/suppliers/33/quote": 27,
+    "/benchmark/suppliers/34/quote": 27,
+    "/benchmark/suppliers/35/quote": 27,
+    "/benchmark/suppliers/36/quote": 27,
+    "/benchmark/suppliers/37/quote": 27,
+    "/benchmark/suppliers/38/quote": 27,
+    "/benchmark/suppliers/39/quote": 27,
+    "/benchmark/suppliers/41/quote": 27,
+    "/benchmark/suppliers/42/quote": 27,
+    "/benchmark/suppliers/43/quote": 27,
+    "/benchmark/suppliers/44/quote": 27,
+    "/benchmark/suppliers/45/quote": 27,
+    "/benchmark/suppliers/46/quote": 27,
+    "/benchmark/suppliers/47/quote": 27,
+    "/benchmark/suppliers/49/quote": 27,
+    "/benchmark/suppliers/50/quote": 27,
+    "/benchmark/suppliers/51/quote": 27,
+    "/benchmark/suppliers/52/quote": 27,
+    "/benchmark/suppliers/53/quote": 27,
+    "/benchmark/suppliers/54/quote": 27,
+    "/benchmark/suppliers/55/quote": 27,
+    "/benchmark/suppliers/57/quote": 27,
+    "/benchmark/suppliers/58/quote": 27,
+    "/benchmark/suppliers/59/quote": 27,
+    "/benchmark/suppliers/60/quote": 27,
+    "/benchmark/suppliers/61/quote": 27,
+    "/benchmark/suppliers/62/quote": 27,
+    "/benchmark/suppliers/63/quote": 27
+  },
+  "workload": "fixed typed policies, mixed feasible/infeasible prices, identical supplier book",
+  "not_measured": [
+    "WAN performance",
+    "external customer conversion",
+    "live LLM baseline",
+    "provider billing"
+  ],
+  "token_conclusion": "All three code paths use zero LLM tokens; token-cost improvement is not demonstrated.",
+  "registration_note": "Machine's one-time seller registration cost is reported, not excluded from the product's total cost."
+}

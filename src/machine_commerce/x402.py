@@ -61,7 +61,7 @@ class PaymentBinding:
     def validate(self):
         if not isinstance(self.terms_hash, str) or re.fullmatch(r"[0-9a-f]{64}", self.terms_hash) is None:
             raise MachineError("approved agreement hash required")
-        if not isinstance(self.network, str) or re.fullmatch(r"eip155:[1-9][0-9]{0,12}", self.network) is None:
+        if not isinstance(self.network, str) or re.fullmatch(r"eip155:[1-9][0-9]{0,31}", self.network) is None:
             raise MachineError("approved EVM network required")
         if not isinstance(self.resource_url, str):
             raise MachineError("approved HTTPS resource required")

@@ -11,6 +11,7 @@ import secrets
 from economic_machine.values import MachineError, canonical, digest, require_keys
 
 from .domain import bounded_int, money_atoms, money_string
+from .x402 import address
 
 PURPOSES = {"research", "commercial", "automation"}
 LICENSES = {"internal-use", "commercial-use", "redistribution"}
@@ -39,6 +40,15 @@ CREATE TABLE IF NOT EXISTS negotiations (
 """
 
 
+def payment_asset(value):
+    if value == "TEST_CREDIT":
+        return value
+    if not isinstance(value, str) or re.fullmatch(r"eip155:[1-9][0-9]{0,31}/erc20:0x[0-9a-fA-F]{40}", value) is None:
+        raise MachineError("explicit supported settlement asset required")
+    network, asset = value.split("/erc20:")
+    return network + "/erc20:" + address(asset)
+
+
 def data_type(value):
     if not isinstance(value, str) or re.fullmatch(r"[a-z][a-z0-9.-]{1,60}", value) is None:
         raise MachineError("invalid machine-readable data type")
@@ -46,7 +56,7 @@ def data_type(value):
 
 
 def normalize_demand(raw):
-    require_keys(raw, DEMAND_KEYS, "buyer demand")
+    require_keys({k: v for k, v in raw.items() if k != "payment_asset"}, DEMAND_KEYS, "buyer demand")
     if (not isinstance(raw["purpose"], str) or not isinstance(raw["license"], str)
             or raw["purpose"] not in PURPOSES or raw["license"] not in LICENSES):
         raise MachineError("unsupported purpose or license")
@@ -54,6 +64,7 @@ def normalize_demand(raw):
     if unit <= 0 or total <= 0:
         raise MachineError("buyer price limits must be positive")
     return {"data_type": data_type(raw["data_type"]), "purpose": raw["purpose"], "license": raw["license"],
+        "payment_asset": payment_asset(raw.get("payment_asset", "TEST_CREDIT")),
         "units": bounded_int(raw["units"], 1, 10000, "quantity"), "max_unit_atoms": unit,
         "max_total_atoms": total,
         "max_age_seconds": bounded_int(raw["max_age_seconds"], 1, 86400, "data age"),
@@ -63,7 +74,7 @@ def normalize_demand(raw):
 
 
 def normalize_supply(raw, now):
-    require_keys(raw, SUPPLY_KEYS, "seller rules")
+    require_keys({k: v for k, v in raw.items() if k != "payment_asset"}, SUPPLY_KEYS, "seller rules")
     for key in ["name", "version"]:
         if not isinstance(raw[key], str) or not 1 <= len(raw[key]) <= 80:
             raise MachineError("invalid seller name or data version")
@@ -79,6 +90,7 @@ def normalize_supply(raw, now):
     high = bounded_int(raw["max_units"], low, 10000, "maximum units")
     updated = bounded_int(raw["updated_at"], 1, now + 5, "data update time")
     return {"name": raw["name"], "data_type": data_type(raw["data_type"]), "version": raw["version"],
+        "payment_asset": payment_asset(raw.get("payment_asset", "TEST_CREDIT")),
         "ask_atoms": ask, "floor_atoms": floor,
         "discount_bps": bounded_int(raw["discount_bps"], 0, 9000, "discount"),
         "discount_min_units": bounded_int(raw["discount_min_units"], 1, 10000, "discount quantity"),
@@ -93,6 +105,7 @@ def negotiate(demand, supply, now):
     reasons = []
     for ok, code in [
         (demand["data_type"] == supply["data_type"], "DATA_TYPE_MISMATCH"),
+        (demand.get("payment_asset", "TEST_CREDIT") == supply.get("payment_asset", "TEST_CREDIT"), "ASSET_MISMATCH"),
         (demand["purpose"] in supply["purposes"], "PURPOSE_NOT_GRANTED"),
         (demand["license"] in supply["licenses"], "LICENSE_NOT_GRANTED"),
         (supply["min_units"] <= demand["units"] <= supply["max_units"], "QUANTITY_OUTSIDE_RULES"),
@@ -119,7 +132,7 @@ def negotiate(demand, supply, now):
         "data_version": supply["version"], "data_updated_at": supply["updated_at"],
         "purpose": demand["purpose"], "license": demand["license"], "units": demand["units"],
         "unit_price": money_string(counter), "total_price": money_string(total),
-        "asset": "TEST_CREDIT", "refresh_seconds": supply["refresh_seconds"],
+        "asset": demand.get("payment_asset", "TEST_CREDIT"), "refresh_seconds": supply["refresh_seconds"],
         "response_seconds": supply["response_seconds"]}
     trace.append({"actor": "buyer", "kind": "POLICY_ACCEPT", "total_price": terms["total_price"]})
     return {"status": "AGREED", "terms": terms, "terms_hash": digest(terms), "trace": trace,
@@ -141,6 +154,9 @@ class Market:
         rid = kind + "-" + secrets.token_hex(12)
         with self.store.connect() as db:
             self._active(db, sid, now)
+            if db.execute(f"SELECT COUNT(*) FROM {table} WHERE data_type=? AND expires>?", (
+                    body["data_type"], now)).fetchone()[0] >= 100:
+                raise MachineError("active policies per data type reached the admission limit")
             db.execute(f"INSERT INTO {table} VALUES (?,?,?,?,?)", (
                 rid, sid, body["data_type"], canonical(body).decode(), now + body["ttl_seconds"]))
             self.store._event(db, rid, "DEMAND_REGISTERED" if kind == "demand" else "SELLER_RULE_REGISTERED",
@@ -148,7 +164,10 @@ class Market:
             matches = self._match(db, body["data_type"], now,
                                   demand_id=rid if kind == "demand" else None,
                                   supply_id=rid if kind == "supply" else None)
-            return {"id": rid, "policy_hash": digest(body), "matching": matches}
+            result = {"id": rid, "policy_hash": digest(body), "matching": matches}
+            if kind == "demand":
+                result["matches"] = self._demand_matches(db, rid, now)
+            return result
 
     def _match(self, db, kind, now, demand_id=None, supply_id=None):
         # Only the changed record and its indexed counterpart enter negotiation.
@@ -220,28 +239,45 @@ class Market:
 
     def admit(self, sid, match_id, terms_hash):
         """Re-check the agreed version at the payment boundary, without signing."""
-        now = self.store.clock()
+        self.agreement(sid, match_id, terms_hash)
         with self.store.connect() as db:
-            self._active(db, sid, now)
-            row = db.execute("SELECT m.*,s.body AS supply_body,s.expires AS supply_expiry,"
-                "d.expires AS demand_expiry FROM matches m JOIN supplies s ON s.id=m.supply_id "
-                "JOIN demands d ON d.id=m.demand_id WHERE m.id=? AND d.owner=?", (
-                    match_id, sid)).fetchone()
-            if not row or min(row["expires"], row["supply_expiry"], row["demand_expiry"]) <= now:
-                raise MachineError("active buyer agreement required")
-            result = json.loads(row["body"])
-            supply = json.loads(row["supply_body"])
-            if row["terms_hash"] != terms_hash or digest(result["terms"]) != terms_hash:
-                raise MachineError("agreed terms hash required")
-            if (supply["version"] != result["terms"]["data_version"]
-                    or supply["updated_at"] != result["terms"]["data_updated_at"]):
-                raise MachineError("data changed since agreement")
             # TEST_CREDIT has no conversion to a real token. Never fabricate an x402 proof.
             self.store._event(db, match_id + ":payment-request", "PAYMENT_ADMISSION_BLOCKED", {
                 "match_id": match_id, "terms_hash": terms_hash, "reason": "REAL_PAYMENT_NOT_CONFIGURED"})
             return {"status": "BLOCKED", "reason": "REAL_PAYMENT_NOT_CONFIGURED",
                     "terms_hash": terms_hash, "payment_status": "NOT_REQUESTED",
                     "signing_authority": "NONE", "tx_hash": None}
+
+    def agreement(self, sid, match_id, terms_hash, db=None):
+        if db is None:
+            with self.store.connect() as connection:
+                return self.agreement(sid, match_id, terms_hash, connection)
+        now = self.store.clock()
+        self._active(db, sid, now)
+        row = db.execute("SELECT m.*,s.body AS supply_body,s.expires AS supply_expiry,"
+            "d.expires AS demand_expiry FROM matches m JOIN supplies s ON s.id=m.supply_id "
+            "JOIN demands d ON d.id=m.demand_id WHERE m.id=? AND d.owner=?", (match_id, sid)).fetchone()
+        if not row or min(row["expires"], row["supply_expiry"], row["demand_expiry"]) <= now:
+            raise MachineError("active buyer agreement required")
+        result, supply = json.loads(row["body"]), json.loads(row["supply_body"])
+        if row["terms_hash"] != terms_hash or digest(result["terms"]) != terms_hash:
+            raise MachineError("agreed terms hash required")
+        if (supply["version"] != result["terms"]["data_version"]
+                or supply["updated_at"] != result["terms"]["data_updated_at"]):
+            raise MachineError("data changed since agreement")
+        return {"id": row["id"], "expires": row["expires"], **result}
+
+    def demand_matches(self, sid, demand_id):
+        with self.store.connect() as db:
+            row = db.execute("SELECT id FROM demands WHERE id=? AND owner=?", (demand_id, sid)).fetchone()
+            if not row:
+                raise MachineError("owned demand required")
+            return {"matches": self._demand_matches(db, demand_id, self.store.clock())}
+
+    def _demand_matches(self, db, demand_id, now):
+        return [{"id": r["id"], **json.loads(r["body"]), "expires": r["expires"]}
+            for r in db.execute("SELECT * FROM matches WHERE demand_id=? AND expires>? "
+                "ORDER BY rowid DESC LIMIT 100", (demand_id, now))]
 
     def tick(self):
         """Timer events invalidate agreements; timers never invoke an LLM."""

@@ -13,6 +13,9 @@
   background:var(--canvas);
   font-synthesis:none;
 }
+.payment-limits { margin-top:24px; }
+.policy-info { overflow-wrap:anywhere; }
+.receipt-json { white-space:pre-wrap; overflow-wrap:anywhere; }
 * {
   box-sizing:border-box;
 }

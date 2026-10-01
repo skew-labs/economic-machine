@@ -1,0 +1,14 @@
+{
+  "english": true,
+  "mode": "development",
+  "payment_resources_configured": false,
+  "payment_limit_button_disabled": true,
+  "payment_key_requires_mandate": true,
+  "existing_test_balance": "9.84",
+  "existing_test_spent": "0.16",
+  "mobile_width": 390,
+  "document_width": 390,
+  "browser_errors": [],
+  "customer_signature_or_key_created": false,
+  "production_login_browser_tested": false
+}

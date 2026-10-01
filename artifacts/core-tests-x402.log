@@ -1,0 +1,19 @@
+test_arbitrum_snapshot_is_source_bound_and_stale_data_is_refunded (test_commerce.CommerceTests.test_arbitrum_snapshot_is_source_bound_and_stale_data_is_refunded) ... ok
+test_buyer_scoping_and_bearer_expiry (test_commerce.CommerceTests.test_buyer_scoping_and_bearer_expiry) ... ok
+test_cancel_does_not_reverse_settled_payment (test_commerce.CommerceTests.test_cancel_does_not_reverse_settled_payment) ... ok
+test_concurrent_duplicates_and_budget_reservations_are_atomic (test_commerce.CommerceTests.test_concurrent_duplicates_and_budget_reservations_are_atomic) ... ok
+test_concurrent_run_has_one_delivery_and_one_payment (test_commerce.CommerceTests.test_concurrent_run_has_one_delivery_and_one_payment) ... ok
+test_duplicate_order_and_run_pay_exactly_once (test_commerce.CommerceTests.test_duplicate_order_and_run_pay_exactly_once) ... ok
+test_exact_money_rejects_rounding_floats_and_sub_atoms (test_commerce.CommerceTests.test_exact_money_rejects_rounding_floats_and_sub_atoms) ... ok
+test_expired_policy_and_crashed_worker_are_recovered (test_commerce.CommerceTests.test_expired_policy_and_crashed_worker_are_recovered) ... ok
+test_journal_tampering_prevents_new_spend (test_commerce.CommerceTests.test_journal_tampering_prevents_new_spend) ... ok
+test_order_cap_and_service_allowlist (test_commerce.CommerceTests.test_order_cap_and_service_allowlist) ... ok
+test_provider_failure_and_bad_csv_refund_reservation (test_commerce.CommerceTests.test_provider_failure_and_bad_csv_refund_reservation) ... ok
+test_request_size_width_and_missing_keys_rejected (test_commerce.CommerceTests.test_request_size_width_and_missing_keys_rejected) ... ok
+test_tampered_result_refunds_without_provider_payment (test_commerce.CommerceTests.test_tampered_result_refunds_without_provider_payment) ... ok
+test_verified_delivery_releases_exact_provider_payment_and_fee (test_commerce.CommerceTests.test_verified_delivery_releases_exact_provider_payment_and_fee) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.324s
+
+OK

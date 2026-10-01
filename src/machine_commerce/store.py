@@ -56,6 +56,11 @@ CREATE INDEX IF NOT EXISTS orders_session ON orders(session_id,created);
 SEED_BALANCE = 10_000_000
 
 
+class JournalConnection(sqlite3.Connection):
+    # Never survives a transaction. BEGIN IMMEDIATE excludes concurrent writers.
+    journal_verified = False
+
+
 class Store:
     def __init__(self, path, clock):
         self.path, self.clock = Path(path), clock
@@ -64,13 +69,15 @@ class Store:
         try:
             db.execute("PRAGMA journal_mode=WAL")
             db.executescript(SCHEMA)
+            if "initial_balance" not in {r[1] for r in db.execute("PRAGMA table_info(sessions)")}:
+                db.execute("ALTER TABLE sessions ADD COLUMN initial_balance INTEGER NOT NULL DEFAULT 10000000")
             db.commit()
         finally:
             db.close()
 
     @contextmanager
     def connect(self):
-        db = sqlite3.connect(self.path, timeout=10, isolation_level=None)
+        db = sqlite3.connect(self.path, timeout=10, isolation_level=None, factory=JournalConnection)
         db.row_factory = sqlite3.Row
         db.execute("PRAGMA foreign_keys=ON")
         db.execute("PRAGMA busy_timeout=10000")
@@ -85,19 +92,23 @@ class Store:
             db.close()
 
     def _event(self, db, key, kind, payload):
-        # Verify before every mutation; a corrupted chain fails closed.
-        if not verify_journal(db):
-            raise MachineError("journal integrity failed")
+        # Verify once before appending within this exclusive transaction. Never cache across transactions.
+        if not db.journal_verified:
+            if not verify_journal(db):
+                raise MachineError("journal integrity failed")
+            db.journal_verified = True
         return append_event(db, key, kind, digest(payload), digest(payload), payload)
 
-    def create_session(self):
+    def create_session(self, initial_balance=SEED_BALANCE):
+        if type(initial_balance) is not int or initial_balance not in {0, SEED_BALANCE}:
+            raise MachineError("supported initial ledger balance required")
         token = secrets.token_urlsafe(32)
         sid, now = "buyer-" + secrets.token_hex(12), self.clock()
         with self.connect() as db:
-            db.execute("INSERT INTO sessions VALUES (?,?,?,?,?,?,?)", (
-                sid, hashlib.sha256(token.encode()).hexdigest(), now, now + 86400, SEED_BALANCE, 0, 0))
+            db.execute("INSERT INTO sessions VALUES (?,?,?,?,?,?,?,?)", (
+                sid, hashlib.sha256(token.encode()).hexdigest(), now, now + 86400, initial_balance, 0, 0, initial_balance))
             self._event(db, sid + ":created", "SANDBOX_OPENED", {
-                "session_id": sid, "balance_atoms": SEED_BALANCE, "asset": ASSET, "at": now})
+                "session_id": sid, "balance_atoms": initial_balance, "asset": ASSET, "at": now})
         return sid, token
 
     def authenticate(self, token):
@@ -286,7 +297,7 @@ class Store:
 
     def _assert_account(self, db, sid):
         row = db.execute("SELECT * FROM sessions WHERE id=?", (sid,)).fetchone()
-        if row["available"] + row["reserved"] + row["spent"] != SEED_BALANCE:
+        if row["available"] + row["reserved"] + row["spent"] != row["initial_balance"]:
             raise MachineError("buyer capital conservation failed")
         active = db.execute("SELECT COALESCE(SUM(amount),0) FROM orders WHERE session_id=? "
             "AND status NOT IN ('SETTLED','REFUNDED')", (sid,)).fetchone()[0]

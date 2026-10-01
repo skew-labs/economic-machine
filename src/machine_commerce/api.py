@@ -15,19 +15,24 @@ from economic_machine.values import MachineError, require_keys
 from .access import Access
 from .domain import CATALOG, DEFAULT_REQUESTS, now_seconds, terms_hash
 from .market import Market
+from .operations import Operations, Settings
+from .payments import Payments
 from .providers import CommerceEngine, Workers
 from .store import Store
 
 LOGGER = logging.getLogger(__name__)
 
 
-def create_app(db_path=None, clock=now_seconds, workers=None):
+def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, payment_transport=None, payment_chain=None):
     root = Path(__file__).resolve().parents[2]
     web = root / "web"
     store = Store(db_path or os.environ.get("COMMERCE_DB", str(root / "runtime/commerce.sqlite3")), clock)
     engine = CommerceEngine(store, workers or Workers(clock))
     market = Market(store)
-    access = Access(store)
+    settings = (settings or Settings.environment()).validate()
+    payments = Payments(store, market, settings.resources, payment_transport, payment_chain)
+    operations = Operations(store, settings)
+    access = Access(store, settings.mode)
 
     @asynccontextmanager
     async def lifespan(_app):
@@ -40,16 +45,30 @@ def create_app(db_path=None, clock=now_seconds, workers=None):
                     LOGGER.exception("Agreement timer failed; health reports degraded")
                     _app.state.timer_error = "AGREEMENT_TIMER_FAILED"
                 await asyncio.sleep(15)
+        async def payment_recovery():
+            while True:
+                try:
+                    result = await asyncio.to_thread(payments.recover)
+                    _app.state.payment_worker_error = "PAYMENT_RECOVERY_DEGRADED" if result["failures"] else None
+                except Exception:  # noqa: BLE001 - keep recovery alive without exposing authorization material.
+                    _app.state.payment_worker_error = "PAYMENT_RECOVERY_FAILED"
+                await asyncio.sleep(15)
         task = asyncio.create_task(timers())
+        recovery = asyncio.create_task(payment_recovery())
         yield
         task.cancel()
+        recovery.cancel()
         with suppress(asyncio.CancelledError):
             await task
+        with suppress(asyncio.CancelledError):
+            await recovery
 
     app = FastAPI(title="Economic Machine Commerce", docs_url=None, redoc_url=None, lifespan=lifespan)
     app.state.store, app.state.engine = store, engine
     app.state.access = access
+    app.state.market, app.state.payments, app.state.operations = market, payments, operations
     app.state.timer_error = None
+    app.state.payment_worker_error = None
 
     @app.exception_handler(MachineError)
     async def machine_error(_request, exc):
@@ -57,15 +76,31 @@ def create_app(db_path=None, clock=now_seconds, workers=None):
 
     @app.middleware("http")
     async def origin_and_size(request: Request, call_next):
+        if settings.mode == "production" and request.url.path != "/healthz":
+            if request.url.scheme != "https":
+                return JSONResponse({"error": "HTTPS required"}, status_code=403)
+            peer = request.client.host if request.client else "unknown"
+            credential = request.headers.get("authorization", request.cookies.get("machine_buyer", ""))
+            budget = 60 if request.method == "POST" else 600
+            if (not operations.admit_rate("peer:" + peer + request.method, budget * 10)
+                    or not operations.admit_rate("caller:" + (credential or peer) + request.method, budget)):
+                return JSONResponse({"error": "rate limit exceeded"}, status_code=429, headers={"Retry-After": "60"})
+            if request.url.path == "/api/sessions" and not operations.admit_rate("login:" + peer, 5):
+                return JSONResponse({"error": "login rate limit exceeded"}, status_code=429, headers={"Retry-After": "60"})
         if request.method in {"POST", "PUT", "DELETE", "PATCH"}:
             origin = request.headers.get("origin")
-            if origin and urlsplit(origin).netloc != request.headers.get("host"):
+            if origin and ((settings.mode == "production" and origin != settings.origin)
+                           or (settings.mode != "production" and urlsplit(origin).netloc != request.headers.get("host"))):
                 return JSONResponse({"error": "cross-origin mutation rejected"}, status_code=403)
             if not request.headers.get("content-type", "").startswith("application/json"):
                 return JSONResponse({"error": "JSON request required"}, status_code=415)
-            body = await request.body()
-            if len(body) > 50_000:
-                return JSONResponse({"error": "request too large"}, status_code=413)
+            chunks, size = [], 0
+            async for chunk in request.stream():
+                size += len(chunk)
+                if size > 50_000:
+                    return JSONResponse({"error": "request too large"}, status_code=413)
+                chunks.append(chunk)
+            request._body = b"".join(chunks)
         response = await call_next(request)
         response.headers["Cache-Control"] = "no-store"
         response.headers["X-Content-Type-Options"] = "nosniff"
@@ -84,6 +119,8 @@ def create_app(db_path=None, clock=now_seconds, workers=None):
             principal = access.resolve(token)
         except MachineError as exc:
             raise HTTPException(401, str(exc)) from exc
+        if settings.mode == "production" and not operations.known_operator(principal.session_id):
+            raise HTTPException(401, "provisioned operator workspace required")
         try:
             access.authorize(principal, request.method, request.url.path)
         except PermissionError as exc:
@@ -97,12 +134,20 @@ def create_app(db_path=None, clock=now_seconds, workers=None):
         except PermissionError as exc:
             raise HTTPException(403, str(exc)) from exc
 
+    def bind_payment(request, mandate_id):
+        try:
+            access.bind_payment(request.state.principal, mandate_id)
+        except PermissionError as exc:
+            raise HTTPException(403, str(exc)) from exc
+
     @app.get("/healthz")
     def health():
-        return JSONResponse({"status": "degraded" if app.state.timer_error else "ok",
+        degraded = app.state.timer_error or app.state.payment_worker_error
+        return JSONResponse({"status": "degraded" if degraded else "ok", "mode": settings.mode,
                 "timer_error": app.state.timer_error, "product": "economic-machine-commerce",
-                "settlement_mode": "SANDBOX_LEDGER", "onchain_deployment": None,
-                "customer_signing_authority": "NONE"}, status_code=503 if app.state.timer_error else 200)
+                "payment_worker_error": app.state.payment_worker_error, "x402_configured": bool(settings.resources),
+                "settlement_mode": "X402_EIP3009_AND_TEST_LEDGER" if settings.resources else "SANDBOX_LEDGER", "onchain_deployment": None,
+                "customer_signing_authority": "NONE"}, status_code=503 if degraded else 200)
 
     @app.get("/api/catalog")
     def catalog():
@@ -111,18 +156,26 @@ def create_app(db_path=None, clock=now_seconds, workers=None):
                 "settlement_mode": "SANDBOX_LEDGER", "asset": "TEST_CREDIT"}
 
     @app.post("/api/sessions")
-    def sessions(request: Request):
+    def sessions(raw: dict, request: Request):
         # Re-opening a browser never silently resets its existing budget.
         prior = request.cookies.get("machine_buyer")
         if prior:
             try:
                 sid = store.authenticate(prior)
-                return JSONResponse({"snapshot": store.snapshot(sid), "resumed": True})
+                if settings.mode != "production" or operations.known_operator(sid):
+                    return JSONResponse({"snapshot": store.snapshot(sid), "resumed": True})
             except MachineError:
                 pass
-        sid, token = store.create_session()
-        response = JSONResponse({"snapshot": store.snapshot(sid), "api_token": token, "resumed": False})
-        secure = os.environ.get("COMMERCE_SECURE_COOKIE", "0") == "1"
+        if settings.mode == "production":
+            try:
+                sid, token = operations.login(raw)
+            except PermissionError as exc:
+                raise HTTPException(401, str(exc)) from exc
+            response = JSONResponse({"snapshot": store.snapshot(sid), "resumed": False})
+        else:
+            sid, token = store.create_session()
+            response = JSONResponse({"snapshot": store.snapshot(sid), "api_token": token, "resumed": False})
+        secure = settings.mode == "production" or os.environ.get("COMMERCE_SECURE_COOKIE", "0") == "1"
         response.set_cookie("machine_buyer", token, httponly=True, samesite="strict", secure=secure,
                             max_age=86400, path="/")
         return response
@@ -152,6 +205,10 @@ def create_app(db_path=None, clock=now_seconds, workers=None):
     def register_demand(raw: dict, sid=Depends(buyer)):
         return market.register(sid, "demand", raw)
 
+    @app.get("/api/demands/{demand_id}/matches")
+    def demand_matches(demand_id: str, sid=Depends(buyer)):
+        return market.demand_matches(sid, demand_id)
+
     @app.post("/api/supplies")
     def register_supply(raw: dict, sid=Depends(buyer)):
         return market.register(sid, "supply", raw)
@@ -168,10 +225,55 @@ def create_app(db_path=None, clock=now_seconds, workers=None):
 
     @app.post("/api/policies")
     def policy(raw: dict, sid=Depends(buyer)):
+        if settings.mode == "production":
+            raise HTTPException(403, "test-credit policies are disabled; create a real payment mandate")
         return store.create_policy(sid, raw)
+
+    @app.get("/api/payments")
+    def payment_snapshot(sid=Depends(buyer)):
+        return payments.snapshot(sid)
+
+    @app.post("/api/payment-mandates")
+    def create_mandate(raw: dict, sid=Depends(buyer)):
+        return payments.mandate(sid, raw)
+
+    @app.post("/api/payments")
+    def prepare_payment(raw: dict, request: Request, sid=Depends(buyer)):
+        bind_payment(request, raw.get("mandate_id"))
+        return payments.prepare(sid, raw)
+
+    @app.get("/api/payments/{pid}")
+    def payment(pid: str, sid=Depends(buyer)):
+        return payments.get(sid, pid)
+
+    @app.post("/api/payments/{pid}/challenge")
+    def payment_challenge(pid: str, raw: dict, request: Request, sid=Depends(buyer)):
+        require_keys(raw, set(), "payment challenge")
+        bind_payment(request, payments.get(sid, pid)["mandate_id"])
+        return payments.challenge(sid, pid)
+
+    @app.post("/api/payments/{pid}/submit")
+    def submit_payment(pid: str, raw: dict, request: Request, sid=Depends(buyer)):
+        require_keys(raw, {"payment_signature"}, "signed payment submission")
+        bind_payment(request, payments.get(sid, pid)["mandate_id"])
+        return payments.submit(sid, pid, raw["payment_signature"])
+
+    @app.post("/api/payments/{pid}/reconcile")
+    def reconcile_payment(pid: str, raw: dict, request: Request, sid=Depends(buyer)):
+        require_keys(raw, set(), "payment reconciliation")
+        bind_payment(request, payments.get(sid, pid)["mandate_id"])
+        return payments.reconcile(sid, pid)
+
+    @app.post("/api/payments/{pid}/cancel")
+    def cancel_payment(pid: str, raw: dict, request: Request, sid=Depends(buyer)):
+        require_keys(raw, set(), "unsent payment cancellation")
+        bind_payment(request, payments.get(sid, pid)["mandate_id"])
+        return payments.cancel_unsigned(sid, pid)
 
     @app.post("/api/orders")
     def order(raw: dict, request: Request, sid=Depends(buyer)):
+        if settings.mode == "production":
+            raise HTTPException(403, "test-credit orders are disabled in production")
         require_keys(raw, {"policy_id", "offer_id", "request", "idempotency_key"}, "order")
         bind_order(request, raw["policy_id"])
         return store.reserve(sid, **raw)

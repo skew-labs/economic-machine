@@ -1,7 +1,7 @@
 'use strict';
 
 const $ = (id) => document.getElementById(id);
-const state = {view: 'keys', snapshot: null, keys: [], offers: [], expires: null, busy: null, revoke: null, connected: false};
+const state = {view: 'keys', snapshot: null, keys: [], offers: [], expires: null, busy: null, revoke: null, connected: false, mode: 'development', payments: {mandates: [], payments: [], resource_details: []}};
 const names = {'csv-normalize': 'CSV normalization', 'arbitrum-state': 'Arbitrum state data'};
 const scopeNames = {read: 'Read', 'demands:write': 'Demand', 'supplies:write': 'Supply', 'orders:write': 'Orders', 'payments:request': 'Payment requests'};
 const headings = {
@@ -57,7 +57,10 @@ async function api(path, body) {
   let result;
   try { result = await response.json(); } catch { throw new Error('The server returned an unreadable response. Refresh and try again.'); }
   if (!response.ok) {
-    if (response.status === 401) throw new Error('This test workspace has expired. Reload to open a new workspace.');
+    if (response.status === 401) {
+      if (state.mode === 'production' && !$('login-dialog').open) $('login-dialog').showModal();
+      throw new Error(state.mode === 'production' ? 'Sign in to continue.' : 'This test workspace has expired. Reload to open a new workspace.');
+    }
     const detail = result.error || result.detail;
     throw new Error(typeof detail === 'string' ? detail : 'The request was rejected. Check the fields and try again.');
   }
@@ -77,7 +80,8 @@ function setView(view) {
     if (node.dataset.view === view) node.setAttribute('aria-current', 'page');
     else node.removeAttribute('aria-current');
   }
-  const [title, description, action] = headings[view];
+  const [title, description, defaultAction] = headings[view];
+  const action = view === 'funds' && state.mode === 'production' ? 'Create payment limit' : defaultAction;
   $('page-title').textContent = title;
   $('breadcrumb-current').textContent = title;
   $('page-description').textContent = description;
@@ -114,6 +118,7 @@ function renderKeys() {
       const policy = state.snapshot.policies.find((p) => p.id === key.policy_id);
       row.append(el('div', 'policy-info', `Spending policy: ${policy ? policyLabel(policy) : key.policy_id}`));
     }
+    if (key.payment_mandate_id) row.append(el('div', 'policy-info', `Payment limit: ${key.payment_mandate_id.slice(-8)}`));
     list.append(row);
   }
 }
@@ -152,12 +157,14 @@ function renderFunds() {
 }
 function renderActivity() {
   const orders = state.snapshot.orders;
-  $('order-count').textContent = orders.length;
+  const paymentList = $('payment-list');
+  paymentList.replaceChildren();
+  $('order-count').textContent = orders.length + state.payments.payments.length;
   const filter = $('activity-filter').value;
   const visible = orders.filter((order) => filter === 'all' || order.status === filter || (filter === 'pending' && !['SETTLED', 'REFUNDED'].includes(order.status)));
   const list = $('order-list');
   list.replaceChildren();
-  if (!visible.length) {
+  if (!visible.length && !state.payments.payments.length) {
     list.append(empty(orders.length ? 'No transactions in this view' : 'Activity starts with your agents', orders.length ? 'Choose another status to see your transactions.' : 'Orders placed through the API appear here with delivery status and settlement records.'));
     return;
   }
@@ -170,23 +177,65 @@ function renderActivity() {
     row.append(identity, tag(order.status), amount, button('Details', 'quiet', () => showOrder(order)));
     list.append(row);
   }
+  for (const payment of state.payments.payments.filter((p) => filter === 'all' || p.status === filter || (filter === 'pending' && !['SETTLED', 'EXPIRED_UNPAID', 'CANCELLED'].includes(p.status)))) {
+    const row = el('article', 'order-row');
+    const identity = el('div');
+    identity.append(el('h3', '', 'x402 payment'), el('p', '', `${date(payment.created)} · ${payment.id.slice(-8)}`));
+    const amount = el('div', 'order-amount', credits(Number(payment.amount_atoms) / 1e6));
+    amount.append(el('small', '', `${payment.network} token`));
+    row.append(identity, tag(payment.status), amount, button('Details', 'quiet', () => {
+      $('order-subtitle').textContent = 'External payment record';
+      $('order-detail').replaceChildren(el('pre', 'receipt-json', JSON.stringify(payment, null, 2)));
+      $('order-dialog').showModal();
+    }));
+    paymentList.append(row);
+  }
+}
+function renderMandates() {
+  $('mandate-count').textContent = state.payments.mandates.length;
+  $('new-mandate').disabled = !state.payments.resource_details.length;
+  const list = $('mandate-list');
+  list.replaceChildren();
+  if (!state.payments.mandates.length) list.append(empty('Set an external payment limit', state.payments.resource_details.length ? 'Choose an approved resource and payer wallet. Link the limit to an agent key.' : 'An operator must configure an approved x402 resource before enabling payments.'));
+  for (const mandate of state.payments.mandates) {
+    const row = el('article', 'policy-row');
+    const main = el('div', 'row-main');
+    main.append(el('h3', '', `Limit ${mandate.id.slice(-8)}`), tag(mandate.expires > Date.now() / 1000 ? 'active' : 'expired'));
+    const values = el('div', 'policy-values');
+    for (const [label, value] of [['Budget', mandate.budget], ['Held', mandate.reserved], ['Confirmed spending', mandate.spent]]) {
+      const cell = el('div');
+      cell.append(el('span', '', label), el('strong', '', `${credits(value / 1e6)} tokens`));
+      values.append(cell);
+    }
+    row.append(main, values, el('div', 'policy-info', mandate.payer), el('div', 'policy-info', mandate.payment_asset), el('div', 'meter-text', `Expires ${date(mandate.expires)}. Wallet balance is not tracked here.`));
+    list.append(row);
+  }
 }
 function render() {
   renderKeys();
   renderFunds();
   renderActivity();
-  $('workspace-expiry').textContent = `Test workspace expires ${date(state.expires)}`;
+  renderMandates();
+  $('test-funds').hidden = state.mode === 'production';
+  $('test-policies').hidden = state.mode === 'production';
+  $('balance-shortcut').hidden = state.mode === 'production';
+  $('mode-badge').textContent = state.mode === 'production' ? 'Production' : 'Test mode';
+  $('environment-label').textContent = state.mode === 'production' ? 'Production environment' : 'Test environment';
+  $('workspace-expiry').textContent = `Workspace access expires ${date(state.expires)}`;
   $('integrity-status').textContent = state.snapshot.journal_integrity ? 'Ledger integrity verified' : 'Ledger integrity check failed';
 }
 async function refresh() {
   $('refresh').disabled = true;
   try {
-    const [snapshot, credentials, health] = await Promise.all([api('/api/workspace'), api('/api/keys'), api('/healthz')]);
+    const [snapshot, credentials, health, payments] = await Promise.all([api('/api/workspace'), api('/api/keys'), api('/healthz'), api('/api/payments')]);
     state.snapshot = snapshot;
     state.keys = credentials.keys;
     state.expires = credentials.workspace_expires;
+    state.payments = payments;
+    state.mode = health.mode;
     connection(health.status === 'ok', health.status === 'ok' ? 'API connected' : 'API degraded');
     render();
+    setView(state.view);
   } catch (error) {
     connection(false, 'Connection unavailable');
     notify(error.message || 'Connection failed. Refresh to retry.', true);
@@ -222,7 +271,20 @@ function updateKeyPolicy() {
     $('key-policy').append(option);
   } else if (policies.some((p) => p.id === selected)) $('key-policy').value = selected;
   $('key-policy-help').textContent = policies.length ? 'All keys on this policy share one budget.' : 'Create a policy in Funds & limits before enabling order execution.';
-  $('create-key-submit').disabled = needsPolicy && !policies.length;
+  const needsMandate = $('payment-scope').checked;
+  $('key-mandate-field').hidden = !needsMandate;
+  $('key-mandate').required = needsMandate;
+  const mandates = state.payments.mandates.filter((p) => p.expires > Date.now() / 1000);
+  $('key-mandate').replaceChildren();
+  for (const mandate of mandates) {
+    const option = el('option', '', `${mandate.id.slice(-8)} · ${credits(mandate.budget / 1e6)} token budget`);
+    option.value = mandate.id;
+    $('key-mandate').append(option);
+  }
+  if (!mandates.length) $('key-mandate').append(el('option', '', 'No active payment limits'));
+  $('key-mandate-help').textContent = 'Create a payment limit in Funds & limits. Linked keys share its budget.';
+  $('order-scope').disabled = state.mode === 'production';
+  $('create-key-submit').disabled = (needsPolicy && !policies.length) || (needsMandate && !mandates.length);
 }
 async function createKey(event) {
   event.preventDefault();
@@ -232,7 +294,7 @@ async function createKey(event) {
   $('create-key-submit').disabled = true;
   formError('key-error');
   try {
-    const result = await api('/api/keys', {name: $('key-name').value.trim(), scopes, policy_id: scopes.includes('orders:write') ? $('key-policy').value : null, ttl_seconds: Number($('key-lifetime').value)});
+    const result = await api('/api/keys', {name: $('key-name').value.trim(), scopes, policy_id: scopes.includes('orders:write') ? $('key-policy').value : null, payment_mandate_id: scopes.includes('payments:request') ? $('key-mandate').value : null, ttl_seconds: Number($('key-lifetime').value)});
     state.busy = null;
     closeDialog('key-dialog');
     $('key-secret').value = result.secret;
@@ -337,9 +399,10 @@ $('secret-dialog').addEventListener('close', () => { $('key-secret').value = '';
 window.addEventListener('pagehide', () => { $('key-secret').value = ''; });
 $('refresh').addEventListener('click', () => refresh().catch(() => {}));
 $('balance-shortcut').addEventListener('click', () => setView('funds'));
-$('primary-action').addEventListener('click', () => state.view === 'keys' ? openKey() : openPolicy());
+$('primary-action').addEventListener('click', () => state.view === 'keys' ? openKey() : state.mode === 'production' ? openMandate() : openPolicy());
 $('key-form').addEventListener('submit', createKey);
 $('order-scope').addEventListener('change', updateKeyPolicy);
+$('payment-scope').addEventListener('change', updateKeyPolicy);
 $('policy-form').addEventListener('submit', createPolicy);
 $('confirm-revoke').addEventListener('click', revokeKey);
 $('activity-filter').addEventListener('change', renderActivity);
@@ -352,13 +415,61 @@ $('copy-example').addEventListener('click', () => copy(example, () => { $('copy-
 
 async function initialize() {
   try {
+    state.mode = (await api('/healthz')).mode;
     const catalog = await api('/api/catalog');
     state.offers = catalog.offers;
-    await api('/api/sessions', {});
+    try { await api('/api/sessions', {}); }
+    catch (error) {
+      if (state.mode !== 'production') throw error;
+      connection(false, 'Sign in required');
+      if (!$('login-dialog').open) $('login-dialog').showModal();
+      return;
+    }
     await refresh();
   } catch (error) {
     connection(false, 'Connection unavailable');
     notify(error.message || 'Could not connect. Reload to retry.', true);
   }
 }
+function openMandate() {
+  if (!state.payments.resource_details.length) return notify('An operator must configure an approved payment resource.', true);
+  $('mandate-form').reset();
+  formError('mandate-error');
+  $('mandate-resource').replaceChildren();
+  for (const resource of state.payments.resource_details) {
+    const option = el('option', '', `${resource.id} · ${resource.network}`);
+    option.value = resource.id;
+    $('mandate-resource').append(option);
+  }
+  $('mandate-dialog').showModal();
+}
+$('new-mandate').addEventListener('click', openMandate);
+$('mandate-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  state.busy = 'mandate-dialog';
+  $('mandate-submit').disabled = true;
+  try {
+    const resource = state.payments.resource_details.find((r) => r.id === $('mandate-resource').value);
+    await api('/api/payment-mandates', {payer: $('mandate-payer').value, payment_asset: resource.payment_asset, resources: [resource.id], budget: $('mandate-budget').value, max_order: $('mandate-max').value, ttl_seconds: Number($('mandate-lifetime').value)});
+    state.busy = null;
+    closeDialog('mandate-dialog');
+    await refresh();
+  } catch (error) { formError('mandate-error', error.message); }
+  finally { state.busy = null; $('mandate-submit').disabled = false; }
+});
+$('login-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  state.busy = 'login-dialog';
+  $('login-submit').disabled = true;
+  try {
+    await api('/api/sessions', {username: $('login-name').value, password: $('login-password').value});
+    $('login-password').value = '';
+    state.busy = null;
+    closeDialog('login-dialog');
+    notify('');
+    await refresh();
+  } catch (error) { formError('login-error', error.message); }
+  finally { state.busy = null; $('login-submit').disabled = false; }
+});
+$('login-dialog').addEventListener('cancel', (event) => event.preventDefault());
 initialize();

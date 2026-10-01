@@ -1,0 +1,16 @@
+# Install as a systemd drop-in only after configuring real resources and HTTPS.
+# Credential source files must be owner-controlled, outside this checkout.
+[Service]
+Environment=MACHINE_MODE=production
+Environment=MACHINE_PUBLIC_ORIGIN=https://commerce.example.com
+LoadCredential=operators.json:/etc/machine-commerce/operators.json
+LoadCredential=resources.json:/etc/machine-commerce/resources.json
+Environment=MACHINE_OPERATORS_FILE=%d/operators.json
+Environment=MACHINE_RESOURCES_FILE=%d/resources.json
+ExecStart=
+ExecStart=/srv/skew/economic-machine-commerce-20261002/.venv/bin/uvicorn machine_commerce.api:app_factory --factory --host 127.0.0.1 --port 4260 --workers 1 --proxy-headers --forwarded-allow-ips 127.0.0.1
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+LimitNOFILE=4096

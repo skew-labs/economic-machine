@@ -1,5 +1,6 @@
 """Fetch a hash-verified official Solidity compiler and compile on the remote host."""
 
+import argparse
 import hashlib
 import json
 import os
@@ -12,6 +13,9 @@ BASE = "https://raw.githubusercontent.com/ethereum/solc-bin/gh-pages/linux-amd64
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--only", choices=["TestEIP3009Token"])
+    args = parser.parse_args()
     with urllib.request.urlopen(BASE + "list.json", timeout=30) as response:
         listing = json.load(response)
     filename = listing["releases"]["0.8.24"]
@@ -26,7 +30,8 @@ def main():
     if actual != expected:
         raise RuntimeError("official solc binary digest mismatch")
     os.chmod(compiler, 0o755)
-    sources = {path.name: {"content": path.read_text()} for path in (ROOT / "contracts").glob("*.sol")}
+    sources = {path.name: {"content": path.read_text()} for path in (ROOT / "contracts").glob("*.sol")
+               if not args.only or path.stem == args.only}
     request = {"language": "Solidity", "sources": sources,
         "settings": {"optimizer": {"enabled": True, "runs": 200}, "evmVersion": "shanghai",
                      "outputSelection": {"*": {"*": ["abi", "evm.bytecode.object"]}}}}
@@ -36,7 +41,7 @@ def main():
     errors = [error for error in compiled.get("errors", []) if error["severity"] == "error"]
     if errors:
         raise RuntimeError(json.dumps(errors))
-    artifacts = {}
+    artifacts = json.loads((ROOT / "artifacts/contracts.json").read_text()) if args.only else {}
     for contracts in compiled["contracts"].values():
         for name, contract in contracts.items():
             if contract["evm"]["bytecode"]["object"]:
@@ -48,7 +53,8 @@ def main():
         "contracts": {name: {"bytecode_sha256": hashlib.sha256(bytes.fromhex(a["bytecode"])).hexdigest(),
                             "bytecode_bytes": len(a["bytecode"]) // 2} for name, a in artifacts.items()},
         "deployment": "NONE", "chain": "PY_EVM_TEST_ONLY"}
-    (ROOT / "artifacts/contract-build.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    output = "eip3009-build.json" if args.only else "contract-build.json"
+    (ROOT / "artifacts" / output).write_text(json.dumps(manifest, indent=2) + "\n")
     print(json.dumps(manifest, indent=2))
 
 

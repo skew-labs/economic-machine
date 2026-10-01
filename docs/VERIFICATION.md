@@ -1,3 +1,43 @@
+# Current release: x402 runtime and direct-client comparison
+
+All builds/tests/benchmarks below ran only on the authorized Canada server. The Mac performed edits,
+small reads, remote orchestration and browser review.
+
+- 87 changed/integrated test cases pass: payment/transport 22, production operations 9, market 15,
+  ledger/core 14, scoped access 14, API 6 and x402 admission 7. Eight unchanged escrow cases retain prior
+  evidence; they were not recompiled or rerun in this change.
+- Only `TestEIP3009Token.sol` was compiled. Tests execute actual EIP-712 signatures and six-decimal token
+  transfers in ephemeral PyEVM through a merchant fixture. `x402-evm.json` records exact receipt, nonce,
+  payer/recipient balances and mandate reservation/spending. No signature/private key is in the artifact.
+- Wrong signing domain, unfunded payer, wrong signature/value, stale version, wrong asset, duplicate/concurrent
+  submit, lost response, unavailable RPC, wrong claimed tx, bad delivery, restart recovery, shared budget,
+  finalized-unused-nonce expiration and registry changes are covered. Uncertain outcomes keep capital held.
+- Production login/cookies/zero seed, old development credential rejection, removed operator rejection,
+  hashed-password provisioning, session identity rotation, persistent throttles and streaming limits are covered.
+- Scoped static checks pass; JavaScript syntax passes on remote Node. Unmodified extracted primitives were
+  not reformatted or added to this change's lint scope.
+- Controlled paired benchmark: 64 suppliers, 24 trade requests, 72 arm observations. Full-scan/cached-direct/machine
+  trade requests are 1,560/192/24; p50 is 417.12/67.35/54.03 ms. All yield 18 valid agreements and reject
+  six infeasible requests. All use zero LLM tokens. Setup-inclusive totals favor cached direct for the first 24 trades.
+  Raw input/output hashes and measured setup costs remain in `comparison.json`; initial negative result retained.
+- Real TLS/DNS-pinned Arbitrum public RPC read succeeded (`live-chain-read.json`). No wallet or transaction submission.
+- Browser checked the updated English management console, payment-key mandate admission and unchanged existing
+  test balance 9.84/spending 0.16. At 390px the document width is 390px; no browser warnings/errors.
+  No browser key creation or customer signing was performed. Production login was API-tested, not browser-tested.
+- Private service restarted successfully with preserved database; health is development/ok, x402_configured false.
+  Production preflight correctly rejects the current unconfigured development deployment.
+
+Evidence lives on the server in `artifacts/`, with small logs/JSON/screenshots copied locally. `verification.json`
+records hashes and distinguishes this release's tests from cumulative historical checks.
+Public customer deployment, an actual merchant/facilitator, customer wallet signing, public-chain payment,
+off-host backup/restore, incident operations and independent security review remain unproven.
+See [Production](PRODUCTION.md) and [Comparison](COMPARISON.md) for precise boundaries.
+
+The dated records below describe earlier releases; their former payment gaps are superseded by the runtime
+implementation above, while their claimed historical test/ledger evidence remains historical.
+
+---
+
 # 2026-10-02 실행 검증
 
 사용자가 지정한 캐나다 서버의 `/srv/skew/economic-machine-commerce-20261002`에서만

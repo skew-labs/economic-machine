@@ -1,0 +1,23 @@
+{
+  "compiler_version": "0.8.24+commit.e11b9ed9",
+  "compiler_sha256": "fb03a29a517452b9f12bcf459ef37d0a543765bb3bbc911e70a87d6a37c30d5f",
+  "sources": {
+    "TestEIP3009Token.sol": "86f0b23f24aac14f2ae4806b92c215bd53605eb7cb40109ac57cf4b6e40bef95"
+  },
+  "contracts": {
+    "MachineCommerceEscrow": {
+      "bytecode_sha256": "1f067d8aff655773aaedacd7144785559186d5520411586fc27837636bb917b5",
+      "bytecode_bytes": 6397
+    },
+    "TestCommerceToken": {
+      "bytecode_sha256": "0f9d8822d8d6231c2af77252b27cf204d53ffac33451eecca023b104f0654c33",
+      "bytecode_bytes": 1533
+    },
+    "TestEIP3009Token": {
+      "bytecode_sha256": "be1fe5c4ef8e65618b38801669fa16bbf9f86d3c22e327d837aa1d5e15ace36d",
+      "bytecode_bytes": 2024
+    }
+  },
+  "deployment": "NONE",
+  "chain": "PY_EVM_TEST_ONLY"
+}

@@ -1,3 +1,22 @@
+# Current console and access contract
+
+The English console manages API keys, Funds & limits and Activity. Discovery/negotiation run through agent APIs.
+Production adds provisioned operator sign-in; external payment limits bind one payer, token, resource allowlist,
+budget and lifetime to payment-enabled keys. Creating a limit grants no signing authority and moves no funds.
+The console does not present mandate capacity as a wallet balance. Real signatures remain customer-owned.
+
+Payment records distinguish prepared, externally signed submission, reported settlement, independently
+confirmed payment, missing delivery and expired unpaid outcomes. Test credits remain visible only in development.
+No approved real merchant is configured in the active private workspace; payment-limit creation is disabled there.
+A payment-enabled key cannot be created in this UI without an active limit. Production owner and agent credentials
+cannot come from old anonymous development sessions. Read, demand, supply, test order and real payment scopes
+remain separate. Agents cannot issue credentials or increase limits.
+
+Detailed endpoints and external signing sequence: [Production](PRODUCTION.md). The notes below describe the
+original development-console release and should not be treated as public production verification.
+
+---
+
 # Console and agent access
 
 Agents consume the Economic Machine API. People use the console to grant access,
