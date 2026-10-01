@@ -12,6 +12,7 @@ from fastapi.responses import FileResponse, JSONResponse
 
 from economic_machine.values import MachineError, require_keys
 
+from .access import Access
 from .domain import CATALOG, DEFAULT_REQUESTS, now_seconds, terms_hash
 from .market import Market
 from .providers import CommerceEngine, Workers
@@ -26,6 +27,7 @@ def create_app(db_path=None, clock=now_seconds, workers=None):
     store = Store(db_path or os.environ.get("COMMERCE_DB", str(root / "runtime/commerce.sqlite3")), clock)
     engine = CommerceEngine(store, workers or Workers(clock))
     market = Market(store)
+    access = Access(store)
 
     @asynccontextmanager
     async def lifespan(_app):
@@ -46,6 +48,7 @@ def create_app(db_path=None, clock=now_seconds, workers=None):
 
     app = FastAPI(title="Economic Machine Commerce", docs_url=None, redoc_url=None, lifespan=lifespan)
     app.state.store, app.state.engine = store, engine
+    app.state.access = access
     app.state.timer_error = None
 
     @app.exception_handler(MachineError)
@@ -74,11 +77,25 @@ def create_app(db_path=None, clock=now_seconds, workers=None):
 
     def buyer(request: Request):
         auth = request.headers.get("authorization", "")
+        if auth and not auth.startswith("Bearer "):
+            raise HTTPException(401, "Bearer credential required")
         token = auth[7:] if auth.startswith("Bearer ") else request.cookies.get("machine_buyer")
         try:
-            return store.authenticate(token)
+            principal = access.resolve(token)
         except MachineError as exc:
             raise HTTPException(401, str(exc)) from exc
+        try:
+            access.authorize(principal, request.method, request.url.path)
+        except PermissionError as exc:
+            raise HTTPException(403, str(exc)) from exc
+        request.state.principal = principal
+        return principal.session_id
+
+    def bind_order(request, policy_id):
+        try:
+            access.bind_order(request.state.principal, policy_id)
+        except PermissionError as exc:
+            raise HTTPException(403, str(exc)) from exc
 
     @app.get("/healthz")
     def health():
@@ -114,6 +131,19 @@ def create_app(db_path=None, clock=now_seconds, workers=None):
     def workspace(sid=Depends(buyer)):
         return store.snapshot(sid)
 
+    @app.get("/api/keys")
+    def keys(sid=Depends(buyer)):
+        return access.list(sid)
+
+    @app.post("/api/keys")
+    def create_key(raw: dict, sid=Depends(buyer)):
+        return access.create(sid, raw)
+
+    @app.post("/api/keys/{kid}/revoke")
+    def revoke_key(kid: str, raw: dict, sid=Depends(buyer)):
+        require_keys(raw, set(), "key revocation")
+        return access.revoke(sid, kid)
+
     @app.get("/api/market")
     def market_view(sid=Depends(buyer)):
         return market.snapshot(sid)
@@ -141,8 +171,9 @@ def create_app(db_path=None, clock=now_seconds, workers=None):
         return store.create_policy(sid, raw)
 
     @app.post("/api/orders")
-    def order(raw: dict, sid=Depends(buyer)):
+    def order(raw: dict, request: Request, sid=Depends(buyer)):
         require_keys(raw, {"policy_id", "offer_id", "request", "idempotency_key"}, "order")
+        bind_order(request, raw["policy_id"])
         return store.reserve(sid, **raw)
 
     @app.get("/api/orders/{oid}")
@@ -150,11 +181,13 @@ def create_app(db_path=None, clock=now_seconds, workers=None):
         return store.order(sid, oid)
 
     @app.post("/api/orders/{oid}/run")
-    def run_order(oid: str, sid=Depends(buyer)):
+    def run_order(oid: str, request: Request, sid=Depends(buyer)):
+        bind_order(request, store.order(sid, oid)["policy_id"])
         return engine.run(sid, oid)
 
     @app.post("/api/orders/{oid}/cancel")
-    def cancel_order(oid: str, sid=Depends(buyer)):
+    def cancel_order(oid: str, request: Request, sid=Depends(buyer)):
+        bind_order(request, store.order(sid, oid)["policy_id"])
         return store.cancel(sid, oid)
 
     @app.get("/api/orders/{oid}/events")

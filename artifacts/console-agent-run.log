@@ -1,0 +1,1 @@
+{"evidence": "/srv/skew/economic-machine-commerce-20261002/artifacts/console-agent.json", "checks": {"admin_denied": true, "idempotency": true, "shared_cap_enforced": true, "secret_absent_from_metadata": true, "revocation_enforced": true}, "settlement": "SANDBOX_LEDGER", "real_payment": false}

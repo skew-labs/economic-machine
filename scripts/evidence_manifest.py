@@ -31,7 +31,9 @@ def main():
     evidence = {}
     passed = set()
     for filename in ["python-tests.log", "market-tests-final.log", "api-tests-final.log",
-                     "contract-build.json", "agent-purchases.json", "bilateral-agents.json"]:
+                     "access-tests-final.log", "console-api-tests-final.log", "contract-build.json",
+                     "agent-purchases.json", "bilateral-agents.json", "console-agent.json",
+                     "console-browser.json"]:
         path = ROOT / "artifacts" / filename
         if path.exists():
             evidence[filename] = {"sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "bytes": path.stat().st_size}
@@ -42,7 +44,7 @@ def main():
                 "remote_host": platform.node(), "remote_path": str(ROOT), "files": files, "line_counts": groups,
                 "line_count_definition": "Physical and nonblank/noncomment lines; no claim all lines are original",
                 "evidence": evidence, "passed_test_cases": sorted(passed), "passed_test_count": len(passed),
-                "test_matrix_note": "Unchanged core/EVM/x402 tests plus latest changed market/API checks; no repeated contract build",
+                "test_matrix_note": "Prior core/EVM/x402/market evidence plus current access/API checks; unchanged contracts not rebuilt",
                 "source_reuse": [item for item in files if item["path"] in
                     {"src/economic_machine/values.py", "src/economic_machine/journal.py"}],
                 "service_status": subprocess.check_output(["systemctl", "is-active", "machine-commerce.service"], text=True).strip(),

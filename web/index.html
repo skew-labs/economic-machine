@@ -1,92 +1,55 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#142034">
-  <title>Machine Market · Economic Machine</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%232756ff'/%3E%3Cpath d='M12 18h24l-7-7m7 19H12l7 7' stroke='white' stroke-width='3' fill='none'/%3E%3C/svg%3E">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Machine Market | Console</title>
   <link rel="stylesheet" href="/app.css">
   <script src="/app.js" defer></script>
 </head>
 <body>
-  <div class="market-shell matching-mode">
+  <div class="shell">
     <aside class="sidebar">
-      <a class="brand" href="/" aria-label="Machine Market 홈"><span class="brand-mark">⇄</span><span>Machine<br><b>Market</b></span></a>
-      <div class="workspace-label"><span class="workspace-avatar">S</span><div>Skew workspace<small>Economic Machine</small></div></div>
-      <nav class="navigation" aria-label="화면 선택">
-        <button type="button" data-tab="matching" aria-current="page"><span>⇄</span> 수요와 공급</button>
-        <button type="button" data-tab="market"><span>▦</span> 구매 실행 예제</button>
-        <button type="button" data-tab="orders"><span>≡</span> 거래 내역 <small id="order-count">0</small></button>
+      <a class="brand" href="/" aria-label="Economic Machine console">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 9h10v14H3zM19 3h10v14H19zM19 23h10v6H19z" fill="currentColor"/><path d="M13 16h6M24 17v6" stroke="currentColor" stroke-width="2"/></svg>
+        <span>Machine<small>Economic infrastructure</small></span>
+      </a>
+      <div class="workspace"><span class="workspace-icon">P</span><div>Personal workspace<small>Agent commerce</small></div></div>
+      <nav aria-label="Console navigation">
+        <button type="button" data-view="keys" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="9" r="4"/><path d="m11 12 8 8m-4-4 3-3m-6 0 3-3"/></svg>API keys</button>
+        <button type="button" data-view="funds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4zM4 6V4h13v2M15 11h7v5h-7z"/></svg>Funds &amp; limits</button>
+        <button type="button" data-view="activity"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Activity</button>
       </nav>
-      <div class="agents-head">역할과 실행 예제</div>
-      <div class="agent-list">
-        <div class="agent"><span class="avatar buyer">B</span><div><strong>Buyer Agent</strong><small>필요한 데이터와 구매 조건</small></div><span class="agent-status" id="buyer-state">대기</span></div>
-        <div class="agent"><span class="avatar observer">S</span><div><strong>Seller Agent</strong><small>판매 가격 · 갱신 · 사용권</small></div><span class="agent-status">규칙</span></div>
-        <div class="agent"><span class="avatar worker">F</span><div><strong>Format Worker</strong><small>CSV → 정규화 데이터</small></div><span class="agent-status">요청 시</span></div>
-        <div class="agent"><span class="avatar observer">C</span><div><strong>Chain Observer</strong><small>Arbitrum 상태 수집</small></div><span class="agent-status">요청 시</span></div>
-        <div class="agent"><span class="avatar verifier">V</span><div><strong>Verification Clerk</strong><small>납품 검증 · 정산 확인</small></div><span class="agent-status">요청 시</span></div>
-      </div>
-      <div class="sidebar-note"><span class="connection-dot" id="connection-dot"></span><span id="connection-label">엔진 연결 확인 중</span><small>양쪽 거래 규칙을 연결합니다. 결제 전에는 돈을 움직이지 않습니다.</small></div>
+      <div class="sidebar-bottom"><div><span id="connection-dot" class="connection-dot"></span><span id="connection-label">Connecting</span></div><small>Economic Machine API</small><button class="quiet" id="copy-workspace" type="button">Copy workspace ID</button></div>
     </aside>
-
     <main>
-      <header class="topbar"><div class="breadcrumbs">Workspace <span>/</span> Commerce</div><div class="sandbox-badge"><span></span> Sandbox · 테스트 크레딧</div></header>
-      <section class="page-heading"><div><h1 id="page-title">양쪽의 조건이 맞으면, 거래가 시작됩니다.</h1><p id="page-description">구매 수요와 판매 규칙을 등록하면 머신이 매칭하고 협상합니다.</p></div><button class="button secondary" id="refresh" type="button" aria-label="거래 상태 새로고침">↻ 새로고침</button></section>
-
-      <div id="notice" class="notice" role="status" hidden></div>
-      <section id="matching-view">
-        <div class="trade-loop" aria-label="거래 흐름"><span>수요·공급 등록</span><i>›</i><span>매칭</span><i>›</i><span>규칙 협상</span><i>›</i><span>조건 합의</span><i>›</i><span class="loop-last">결제 요청</span></div>
-        <div class="bilateral-rules">
-          <form id="demand-form" class="rule-panel">
-            <div class="rule-heading"><span class="avatar buyer">B</span><div><h2>구매 규칙</h2><p>내 에이전트가 무엇을 사야 하나요?</p></div></div>
-            <label for="demand-type">데이터 종류</label><input id="demand-type" class="request-input" value="arbitrum.block-state" required>
-            <div class="rule-grid"><div><label for="demand-purpose">사용 목적</label><select id="demand-purpose"><option value="research">리서치</option><option value="automation">자동화</option><option value="commercial">상업적 이용</option></select></div><div><label for="demand-license">필요한 사용권</label><select id="demand-license"><option value="internal-use">내부 이용</option><option value="commercial-use">상업적 이용</option><option value="redistribution">재배포</option></select></div></div>
-            <div class="rule-grid"><div><label for="demand-units">구매 수량</label><input id="demand-units" type="number" min="1" max="10000" value="10" required></div><div><label for="demand-unit-price">단가 상한 · credits</label><input id="demand-unit-price" inputmode="decimal" value="0.04" required></div></div>
-            <div class="rule-grid"><div><label for="demand-total">총액 상한 · credits</label><input id="demand-total" inputmode="decimal" value="0.4" required></div><div><label for="demand-age">허용 데이터 나이 · 초</label><input id="demand-age" type="number" min="1" max="86400" value="3600" required></div></div>
-            <div class="rule-grid"><div><label for="demand-refresh">갱신 간격 상한 · 초</label><input id="demand-refresh" type="number" min="1" max="86400" value="60" required></div><div><label for="demand-response">응답 기한 · 초</label><input id="demand-response" type="number" min="1" max="3600" value="30" required></div></div>
-            <p class="rule-note">1시간 동안 유효합니다. 등록은 구매나 결제 승인이 아닙니다.</p><button class="button primary full" type="submit">수요 등록하고 매칭</button>
-          </form>
-          <form id="supply-form" class="rule-panel">
-            <div class="rule-heading"><span class="avatar observer">S</span><div><h2>판매 규칙</h2><p>내 에이전트가 어떤 조건으로 파나요?</p></div></div>
-            <label for="supply-name">공급자 이름</label><input id="supply-name" class="request-input" value="My Data Agent" maxlength="80" required>
-            <div class="rule-grid"><div><label for="supply-type">데이터 종류</label><input id="supply-type" value="arbitrum.block-state" required></div><div><label for="supply-version">데이터 버전</label><input id="supply-version" value="my-data-v1" maxlength="80" required></div></div>
-            <div class="rule-grid"><div><label for="supply-price">판매 단가 · credits</label><input id="supply-price" inputmode="decimal" value="0.05" required></div><div><label for="supply-floor">최저 단가 · 비공개</label><input id="supply-floor" inputmode="decimal" value="0.035" required></div></div>
-            <div class="rule-grid"><div><label for="supply-discount">10개 이상 할인 · %</label><input id="supply-discount" type="number" min="0" max="90" step="0.01" value="20" required></div><div><label for="supply-license">허용 사용권</label><select id="supply-license"><option value="internal-use">내부 이용</option><option value="commercial-use">상업적 이용</option><option value="redistribution">재배포</option></select></div></div>
-            <label for="supply-purpose">허용 사용 목적</label><select id="supply-purpose"><option value="research">리서치</option><option value="automation">자동화</option><option value="commercial">상업적 이용</option></select>
-            <div class="rule-grid"><div><label for="supply-refresh">갱신 간격 · 초</label><input id="supply-refresh" type="number" min="1" max="86400" value="30" required></div><div><label for="supply-response">응답 시간 · 초</label><input id="supply-response" type="number" min="1" max="3600" value="10" required></div></div>
-            <p class="rule-note">최신성은 판매자의 선언입니다. 동일 사용자의 수요·공급은 서로 매칭하지 않습니다.</p><button class="button secondary full" type="submit">판매 규칙 등록</button>
-          </form>
-        </div>
-        <div class="section-heading"><h2>조건이 합의된 거래</h2><span id="match-count">0개</span></div>
-        <div id="matches" class="agreements"></div>
-        <div id="deferred" class="deferred"></div>
-        <div class="section-heading"><h2>등록된 공급</h2><span>공급자가 선언한 조건</span></div><div id="supplies" class="supply-list"></div>
-      </section>
-      <section id="market-view" hidden>
-        <div class="trade-loop" aria-label="거래 흐름"><span>조건·예산</span><i>›</i><span>주문·예약</span><i>›</i><span>서비스 납품</span><i>›</i><span>검증</span><i>›</i><span class="loop-last">대금 지급</span></div>
-        <div class="section-heading"><h2>서비스 마켓</h2><span>구매 대상 2개 · 가격 고정</span></div>
-        <div id="catalog" class="catalog" aria-live="polite"><p class="loading">구매 가능한 서비스를 불러오고 있습니다.</p></div>
-        <div class="agent-run"><div class="agent-run-icon">⇄</div><div><h3>Research Buyer에게 맡기기</h3><p>설정한 예산으로 두 서비스를 구매하고 납품·영수증을 가져옵니다.</p></div><button id="run-agent" class="button primary" type="button" disabled>두 서비스 구매</button></div>
-        <div class="section-heading recent-heading"><h2>최근 거래</h2><button class="text-button" id="show-orders" type="button">거래 내역 보기</button></div>
-        <div id="recent-orders" class="orders-list"></div>
-      </section>
-      <section id="orders-view" hidden><div id="all-orders" class="orders-list"></div></section>
-      <footer class="page-foot">현재 지급은 테스트 크레딧 장부에서 처리됩니다. Arbitrum ERC-20 에스크로 계약은 별도로 검증하며, 이 화면의 거래를 온체인 거래로 표시하지 않습니다.</footer>
+      <header class="topbar"><div class="breadcrumb">Console <span>/</span> <span id="breadcrumb-current">API keys</span></div><div class="topbar-right"><button id="balance-shortcut" class="balance-shortcut" type="button"><span id="top-balance">—</span> credits available</button><span class="mode-badge">Test mode</span><span class="account-avatar" aria-label="Personal workspace">P</span></div></header>
+      <div class="content">
+        <div id="notice" class="notice" role="status" hidden></div>
+        <section class="page-heading"><div><h1 id="page-title">API keys</h1><p id="page-description">Give your agents access. Keep control of what they can spend.</p></div><div class="heading-actions"><button class="button secondary icon-button" id="refresh" type="button" aria-label="Refresh console"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M5 7a8 8 0 0 1 13-2l2 2M4 17l2 2a8 8 0 0 0 13-2"/></svg></button><button class="button primary" id="primary-action" type="button" disabled><span aria-hidden="true">+</span> Create API key</button></div></section>
+        <section id="keys-view">
+          <div class="keys-layout">
+            <div class="panel key-panel"><div class="panel-heading"><h2>Agent credentials <span id="key-count" class="count">0</span></h2><span class="muted">Test environment</span></div><div id="key-list" class="key-list"><div class="empty"><h3>Loading credentials</h3><p>Checking access to your workspace.</p></div></div><div class="panel-foot">Secrets are shown once. Keys can be revoked at any time.</div></div>
+            <aside class="integration"><div class="integration-icon" aria-hidden="true">{ }</div><h2>Connect an agent</h2><p>Create a key, store it in your agent’s environment, and call the API.</p><div class="code-head"><span>Read your workspace</span><button type="button" id="copy-example" class="quiet">Copy</button></div><pre id="api-example"></pre><div class="endpoint"><span>API endpoint</span><code id="api-endpoint"></code></div><details class="api-guide"><summary>Available agent operations</summary><dl><dt>Discovery &amp; negotiation</dt><dd>Register demand or supply rules. The engine matches them when data or conditions change.</dd><dt>Execution</dt><dd>Reserve, run and cancel orders within a linked spending policy.</dd><dt>Settlement records</dt><dd>Read delivered results and ledger receipts. Live x402 payment is not connected.</dd></dl></details><p class="integration-note">Your agents work through the API. This console manages access and capital.</p></aside>
+          </div>
+          <div class="security-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6zM8 12l3 3 5-6"/></svg><div><strong>Permissions and spending limits travel with every key.</strong><p>Order access requires an approved spending policy. Agents cannot issue keys or raise their own limits.</p></div></div>
+        </section>
+        <section id="funds-view" hidden>
+          <div class="funds-ledger"><div class="available"><span>Available balance</span><strong id="balance">—</strong><small>Test credits</small></div><div><span>Held for delivery</span><strong id="reserved">—</strong><small>Released on failure</small></div><div><span>Settled spending</span><strong id="spent">—</strong><small>Verified ledger payments</small></div></div>
+          <div class="funds-layout"><div class="panel"><div class="panel-heading"><h2>Spending policies</h2><span id="policy-count" class="count">0</span></div><div id="policy-list"></div><div class="panel-foot">Keys linked to the same policy share its budget. A policy is a limit, not a deposit.</div></div><aside class="payment-account"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4zM4 6V4h13v2M15 11h7v5h-7z"/></svg><h2>Payment account</h2><span class="tag neutral">Not connected</span><p>No wallet or live payment account is connected to this workspace.</p><dl><dt>Currency</dt><dd>Test credits</dd><dt>Settlement</dt><dd>Internal test ledger</dd><dt>Wallet signing</dt><dd>Not enabled</dd></dl><p class="small-note">Test credits have no monetary value. Deposits and withdrawals are unavailable.</p></aside></div>
+        </section>
+        <section id="activity-view" hidden>
+          <div class="panel"><div class="panel-heading"><h2>Transactions <span id="order-count" class="count">0</span></h2><label class="filter-label">Status<select id="activity-filter"><option value="all">All transactions</option><option value="SETTLED">Settled</option><option value="REFUNDED">Refunded</option><option value="pending">In progress</option></select></label></div><div id="order-list"></div><div class="panel-foot">The latest 100 orders in this workspace. A ledger receipt is not a blockchain transaction.</div></div>
+        </section>
+        <footer class="footer"><span id="workspace-expiry">Test workspace</span><span id="integrity-status">Checking ledger integrity</span></footer>
+      </div>
     </main>
-
-    <aside class="inspector" aria-label="구매 예산과 납품" hidden>
-      <div class="inspector-title"><h2>구매 실행 예제 예산</h2><span class="avatar buyer small">R</span></div>
-      <section class="balance-section"><span class="muted">Research Buyer 보유액</span><strong class="balance"><span id="balance">—</span><small>test credits</small></strong><div class="balance-split"><div><span>예약 중</span><b id="reserved">—</b></div><div><span>지급 완료</span><b id="spent">—</b></div></div></section>
-      <section class="budget-section"><div class="section-heading"><h3>구매 규칙</h3><span id="policy-state" class="tag">설정 전</span></div><form id="policy-form"><label>총 구매 예산<div class="amount-input"><input id="budget" type="text" inputmode="decimal" value="2" maxlength="12" required><span>credits</span></div></label><label>한 번의 구매 한도<div class="amount-input"><input id="max-order" type="text" inputmode="decimal" value="0.25" maxlength="12" required><span>credits</span></div></label><p>마켓의 두 서비스만 구매합니다. 규칙은 1시간 유효하며, 실패한 납품은 환불됩니다.</p><button class="button primary full" id="save-policy" type="submit">예산 설정하고 구매 허용</button></form><div class="budget-meter"><div id="budget-meter-fill"></div></div><small id="budget-remaining" class="muted">예산을 설정하면 구매를 시작할 수 있습니다.</small></section>
-      <section id="delivery-inspector" class="delivery-inspector"><div class="section-heading"><h3>납품과 영수증</h3><span class="tag">대기</span></div><div class="inspector-empty"><span>⌁</span><strong>거래를 선택하세요</strong><p>실제로 받은 결과와 지급 근거를 이곳에서 확인합니다.</p></div></section>
-    </aside>
   </div>
-
-  <dialog id="purchase-dialog" aria-labelledby="purchase-title">
-    <div class="dialog-heading"><div><span id="purchase-provider" class="muted"></span><h2 id="purchase-title">서비스 구매</h2></div><button class="dialog-close" id="close-purchase" type="button" aria-label="구매 창 닫기">×</button></div>
-    <div class="purchase-summary"><div><span>주문 금액</span><strong id="purchase-price"></strong></div><div><span>지급 시점</span><strong>납품 검증 통과 후</strong></div></div>
-    <form id="purchase-form"><div id="request-editor"></div><p class="purchase-rule" id="purchase-rule"></p><button id="purchase-submit" class="button primary full" type="submit">예약하고 서비스 구매</button></form>
-  </dialog>
+  <dialog id="key-dialog" aria-labelledby="key-title"><form id="key-form"><div class="dialog-heading"><div><h2 id="key-title">Create API key</h2><p>Choose what this agent can do.</p></div><button class="close-dialog" type="button" data-close="key-dialog" aria-label="Close key dialog">×</button></div><label for="key-name">Key name</label><input id="key-name" placeholder="e.g. Research agent" maxlength="60" autocomplete="off" required><fieldset class="permissions"><legend>Permissions</legend><label><input type="checkbox" name="scope" value="read" checked><span><strong>Read workspace</strong><small>Balances, agreements, orders and receipts</small></span></label><label><input type="checkbox" name="scope" value="demands:write"><span><strong>Register demand</strong><small>Publish and match buying conditions</small></span></label><label><input type="checkbox" name="scope" value="supplies:write"><span><strong>Manage supply</strong><small>Publish selling rules and data updates</small></span></label><label><input type="checkbox" name="scope" value="orders:write" id="order-scope"><span><strong>Execute orders</strong><small>Reserve, run and cancel under a spending policy</small></span></label><label><input type="checkbox" name="scope" value="payments:request"><span><strong>Request payment</strong><small>Recheck agreed terms; live payment stays blocked</small></span></label></fieldset><div id="key-policy-field" hidden><label for="key-policy">Spending policy</label><select id="key-policy"></select><p class="field-help" id="key-policy-help"></p></div><label for="key-lifetime">Key lifetime</label><select id="key-lifetime"><option value="3600">1 hour</option><option value="28800">8 hours</option><option value="86400">24 hours</option></select><p class="field-help">Keys expire with the workspace or linked policy, whichever comes first.</p><p class="form-error" id="key-error" role="alert" hidden></p><div class="dialog-actions"><button type="button" class="button secondary" data-close="key-dialog">Cancel</button><button type="submit" class="button primary" id="create-key-submit">Create API key</button></div></form></dialog>
+  <dialog id="secret-dialog" aria-labelledby="secret-title"><div class="dialog-heading"><div><h2 id="secret-title">Your API key is ready</h2><p>Copy it now. You will not be able to view it again.</p></div></div><div class="secret-field"><input id="key-secret" readonly aria-label="New API key" autocomplete="off" spellcheck="false"><button type="button" class="button secondary" id="copy-secret">Copy key</button></div><p class="field-help">Store this key in your agent’s environment. Keep it out of shared code and messages.</p><div class="dialog-actions"><button class="button primary" type="button" data-close="secret-dialog">Done</button></div></dialog>
+  <dialog id="revoke-dialog" aria-labelledby="revoke-title"><div class="dialog-heading"><div><h2 id="revoke-title">Revoke API key?</h2><p id="revoke-name"></p></div><button class="close-dialog" type="button" data-close="revoke-dialog" aria-label="Close revocation dialog">×</button></div><p>New requests with this key will be rejected. Existing orders and settled payments stay in your activity.</p><p id="revoke-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button class="button secondary" type="button" data-close="revoke-dialog">Cancel</button><button class="button danger" id="confirm-revoke" type="button">Revoke key</button></div></dialog>
+  <dialog id="policy-dialog" aria-labelledby="policy-title"><form id="policy-form"><div class="dialog-heading"><div><h2 id="policy-title">Create spending policy</h2><p>Set a shared budget for permitted test services.</p></div><button class="close-dialog" type="button" data-close="policy-dialog" aria-label="Close policy dialog">×</button></div><div class="form-grid"><div><label for="policy-budget">Total budget · credits</label><input id="policy-budget" inputmode="decimal" value="2" required></div><div><label for="policy-max">Per-order limit · credits</label><input id="policy-max" inputmode="decimal" value="0.25" required></div></div><fieldset class="permissions"><legend>Allowed services</legend><div id="policy-services"></div></fieldset><label for="policy-lifetime">Policy lifetime</label><select id="policy-lifetime"><option value="3600">1 hour</option><option value="28800">8 hours</option><option value="86400">24 hours</option></select><p class="field-help">This sets a spending limit. Credits are reserved only when an agent creates an order.</p><p class="form-error" id="policy-error" role="alert" hidden></p><div class="dialog-actions"><button class="button secondary" type="button" data-close="policy-dialog">Cancel</button><button class="button primary" type="submit" id="create-policy-submit">Create policy</button></div></form></dialog>
+  <dialog id="order-dialog" class="order-dialog" aria-labelledby="order-title"><div class="dialog-heading"><div><h2 id="order-title">Transaction details</h2><p id="order-subtitle"></p></div><button class="close-dialog" type="button" data-close="order-dialog" aria-label="Close transaction details">×</button></div><div id="order-detail"></div></dialog>
 </body>
 </html>

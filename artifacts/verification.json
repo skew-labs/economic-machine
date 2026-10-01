@@ -1,6 +1,6 @@
 {
   "schema_version": "machine-commerce-verification-1",
-  "created_at": 1790875187,
+  "created_at": 1790877369,
   "remote_host": "ns5020955",
   "remote_path": "/srv/skew/economic-machine-commerce-20261002",
   "files": [
@@ -29,10 +29,16 @@
       "nonblank_noncomment_lines": 50
     },
     {
+      "path": "scripts/console_agent.py",
+      "sha256": "8726210977a854ebec4aacce69e003b11e91b1cebd0a085e6720fede23049cb5",
+      "physical_lines": 63,
+      "nonblank_noncomment_lines": 53
+    },
+    {
       "path": "scripts/evidence_manifest.py",
-      "sha256": "51940ae5b234c7b524f1c247716c2fd7a294991a2f24df28e517fb6d387a2141",
-      "physical_lines": 55,
-      "nonblank_noncomment_lines": 47
+      "sha256": "0c60ed931e9d5eba273b763cb82f2aeb39ca8c3773eebb9d6e79939fa3af82bf",
+      "physical_lines": 57,
+      "nonblank_noncomment_lines": 49
     },
     {
       "path": "scripts/market_agents.py",
@@ -65,10 +71,16 @@
       "nonblank_noncomment_lines": 1
     },
     {
+      "path": "src/machine_commerce/access.py",
+      "sha256": "35d53d61b576a2fbc668114d1a2ba573b99f35e0e7c30a0dae003d48a8b8504b",
+      "physical_lines": 160,
+      "nonblank_noncomment_lines": 140
+    },
+    {
       "path": "src/machine_commerce/api.py",
-      "sha256": "6abb87ae06d0660aaffa7a87313a98535408f14fe2feaf2a542cfca5e86d8122",
-      "physical_lines": 196,
-      "nonblank_noncomment_lines": 160
+      "sha256": "05cdbfeed9a56e15f02fe5945d94e69edfd8e57dfed61d9e7b2d911646997f1e",
+      "physical_lines": 229,
+      "nonblank_noncomment_lines": 189
     },
     {
       "path": "src/machine_commerce/domain.py",
@@ -99,6 +111,12 @@
       "sha256": "312c6bc103769ba72394af2356eb35a47cb7dbd32acde23f34d6c6e3d957ddce",
       "physical_lines": 145,
       "nonblank_noncomment_lines": 127
+    },
+    {
+      "path": "tests/test_access.py",
+      "sha256": "3a4c43d5b125099f225034eb6e82fe22f5690f6148428a7023e40afe0212d716",
+      "physical_lines": 198,
+      "nonblank_noncomment_lines": 173
     },
     {
       "path": "tests/test_api.py",
@@ -132,39 +150,39 @@
     },
     {
       "path": "web/app.css",
-      "sha256": "02ead738dc602b957c31e94fdf07a6595e0823f8ad38b3186d89690c3ad3a696",
-      "physical_lines": 13,
-      "nonblank_noncomment_lines": 12
+      "sha256": "fded09dccbdb909a0f66880f70be5a76047a4505e120ca24b738b73f81edd6a3",
+      "physical_lines": 1244,
+      "nonblank_noncomment_lines": 1243
     },
     {
       "path": "web/app.js",
-      "sha256": "db60e1991ccfa846043cc1e9f8c0f433245996db5ae919455134d3414cb8b398",
-      "physical_lines": 301,
-      "nonblank_noncomment_lines": 290
+      "sha256": "30abb2dfbda85be134bc7956e6d0fc67a7dbad4c260d48a26ea0be7793fdd04b",
+      "physical_lines": 364,
+      "nonblank_noncomment_lines": 360
     },
     {
       "path": "web/index.html",
-      "sha256": "1b55d3766ffa3ae8653b998654f897d4d64e500bcb0376e48132af78ffdd2ffd",
-      "physical_lines": 92,
-      "nonblank_noncomment_lines": 88
+      "sha256": "aafd4a92efb7c38a4f9303af3e42d9468df5879ecf33440138bad46fd72b86e5",
+      "physical_lines": 55,
+      "nonblank_noncomment_lines": 55
     }
   ],
   "line_counts": {
     "core_and_contracts": {
-      "physical_lines": 1603,
-      "nonblank_noncomment_lines": 1396
+      "physical_lines": 1796,
+      "nonblank_noncomment_lines": 1565
     },
     "tests": {
-      "physical_lines": 727,
-      "nonblank_noncomment_lines": 634
+      "physical_lines": 925,
+      "nonblank_noncomment_lines": 807
     },
     "scripts": {
-      "physical_lines": 237,
-      "nonblank_noncomment_lines": 209
+      "physical_lines": 302,
+      "nonblank_noncomment_lines": 264
     },
     "web": {
-      "physical_lines": 406,
-      "nonblank_noncomment_lines": 390
+      "physical_lines": 1663,
+      "nonblank_noncomment_lines": 1658
     }
   },
   "line_count_definition": "Physical and nonblank/noncomment lines; no claim all lines are original",
@@ -181,6 +199,14 @@
       "sha256": "2344c7e857a66845c6d597a6bee8d29bb10285b39399af66cf04b93669623ecd",
       "bytes": 1165
     },
+    "access-tests-final.log": {
+      "sha256": "4fa22c99f1898f2323f4225a81de9761b1b791d8226089f42ee5e56f6b837af0",
+      "bytes": 2450
+    },
+    "console-api-tests-final.log": {
+      "sha256": "0f97dbd44b483d428f803058ee35551565b6c93e6c954f665532fd719c62488e",
+      "bytes": 1165
+    },
     "contract-build.json": {
       "sha256": "cd623a0b4a2fe306d4292783b977a99105ca5bb2bc64c4bd66b013fed707bba9",
       "bytes": 749
@@ -192,9 +218,31 @@
     "bilateral-agents.json": {
       "sha256": "366b80b2e03599786490763a616e000d00e96e3a8714761a140409462abf9856",
       "bytes": 4302
+    },
+    "console-agent.json": {
+      "sha256": "a997538c74950fbe3c2debdf153f43161391c1e9ef68be7cc84d6ed56e3a4d63",
+      "bytes": 8336
+    },
+    "console-browser.json": {
+      "sha256": "12ad52699ed4e3dad9f82b62301cdc10528742d2148d6eda6631d38c06e9f281",
+      "bytes": 665
     }
   },
   "passed_test_cases": [
+    "test_access.AccessTests.test_corrupted_journal_rolls_back_new_key_authority",
+    "test_access.AccessTests.test_demand_and_supply_scopes_admit_only_their_own_routes",
+    "test_access.AccessTests.test_expiry_is_bounded_by_owner_and_policy_and_records_usage",
+    "test_access.AccessTests.test_invalid_bearer_never_falls_back_to_owner_cookie",
+    "test_access.AccessTests.test_key_and_policy_cannot_cross_workspaces",
+    "test_access.AccessTests.test_keys_share_policy_cap_and_idempotent_reservation",
+    "test_access.AccessTests.test_malformed_key_permissions_and_lifetimes_are_rejected",
+    "test_access.AccessTests.test_payment_request_permission_never_grants_live_payment_authority",
+    "test_access.AccessTests.test_persistence_and_restart_preserve_hashed_key_authority",
+    "test_access.AccessTests.test_policy_binding_blocks_creating_running_and_cancelling_other_orders",
+    "test_access.AccessTests.test_read_key_cannot_spend_administer_or_escalate",
+    "test_access.AccessTests.test_revocation_is_immediate_and_idempotent_without_reversing_orders",
+    "test_access.AccessTests.test_scoped_agent_executes_real_worker_and_receipt",
+    "test_access.AccessTests.test_secret_is_returned_once_and_only_hash_is_stored",
     "test_api.APITests.test_api_buyer_scope_csrf_and_request_limits",
     "test_api.APITests.test_full_purchase_delivery_events_and_downloads",
     "test_api.APITests.test_malformed_market_fields_are_client_errors",
@@ -244,8 +292,8 @@
     "test_x402.X402Tests.test_unsupported_prepaid_flow_or_permit2_cannot_be_silently_admitted",
     "test_x402.X402Tests.test_untrusted_resource_recipient_asset_price_and_network_cannot_change_terms"
   ],
-  "passed_test_count": 48,
-  "test_matrix_note": "Unchanged core/EVM/x402 tests plus latest changed market/API checks; no repeated contract build",
+  "passed_test_count": 62,
+  "test_matrix_note": "Prior core/EVM/x402/market evidence plus current access/API checks; unchanged contracts not rebuilt",
   "source_reuse": [
     {
       "path": "src/economic_machine/journal.py",

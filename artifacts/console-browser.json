@@ -1,0 +1,28 @@
+{
+  "schema": "console-browser-check-1",
+  "url": "http://127.0.0.1:4260/",
+  "views": [
+    "API keys",
+    "Funds & limits",
+    "Activity"
+  ],
+  "desktop_connected": true,
+  "visible_balance": "9.84",
+  "held": "0.00",
+  "settled": "0.16",
+  "transactions": 2,
+  "key_dialog_permissions_and_policy_verified": true,
+  "key_creation_not_submitted_in_browser": true,
+  "receipt_download": "order-19f7bfb31b42149ad74e0697-receipt.json",
+  "receipt_settlement": "SANDBOX_LEDGER",
+  "responsive": {
+    "width": 390,
+    "document_width": 390,
+    "views_checked": [
+      "API keys",
+      "Funds & limits"
+    ]
+  },
+  "visible_language": "English",
+  "logs": []
+}
