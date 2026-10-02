@@ -1,0 +1,62 @@
+{
+  "verified": true,
+  "read_only": true,
+  "private_key_required": false,
+  "tx_hash": "0x3aa1cbbb04e18c0a1d07b3c9cc92b255bc7a3bdb6b62080fa1fb933659b11758",
+  "observations": [
+    {
+      "rpc": "https://sepolia-rollup.arbitrum.io/rpc",
+      "chain_id": 421614,
+      "receipt_status": 1,
+      "finalized_block": 314874577,
+      "exact_transfer_logs": 1,
+      "authorization_used_logs": 1,
+      "historical_balances_match": true,
+      "public_snapshot_matches": true
+    },
+    {
+      "rpc": "https://arbitrum-sepolia.drpc.org",
+      "chain_id": 421614,
+      "receipt_status": 1,
+      "finalized_block": 314876165,
+      "exact_transfer_logs": 1,
+      "authorization_used_logs": 1,
+      "historical_balances_match": true,
+      "public_snapshot_matches": true
+    }
+  ],
+  "assurance": "TWO_RPC_FINALIZED_TAGS_NOT_INDEPENDENT_L1_PROOF",
+  "offchain_delivery_assurance": "RECORDED_HTTP_ARTIFACT_HASH_AND_PUBLIC_BLOCK_READBACK",
+  "negative_checks": [
+    {
+      "case": "amount",
+      "rejected": true,
+      "live_rpc_read": false
+    },
+    {
+      "case": "token",
+      "rejected": true,
+      "live_rpc_read": false
+    },
+    {
+      "case": "delivery_hash",
+      "rejected": true,
+      "live_rpc_read": false
+    },
+    {
+      "case": "capital_hold",
+      "rejected": true,
+      "live_rpc_read": false
+    },
+    {
+      "case": "rehashed_false_block_data",
+      "rejected": true,
+      "live_rpc_read": true
+    },
+    {
+      "case": "substituted_recipient",
+      "rejected": true,
+      "live_rpc_read": true
+    }
+  ]
+}

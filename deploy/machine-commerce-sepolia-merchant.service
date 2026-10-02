@@ -1,0 +1,25 @@
+[Unit]
+Description=One approved x402 sale on public Arbitrum Sepolia
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+WorkingDirectory=/srv/skew/economic-machine-commerce-20261002
+Environment=PYTHONDONTWRITEBYTECODE=1
+LoadCredential=sale.json:/var/lib/machine-commerce-sepolia/sale.json
+LoadCredential=seller-wallet.json:/var/lib/machine-commerce-sepolia/seller-wallet.json
+ExecStart=/srv/skew/economic-machine-commerce-20261002/.venv/bin/python scripts/sepolia_merchant.py --config %d/sale.json --key-file %d/seller-wallet.json --db /var/lib/machine-commerce-sepolia-merchant/journal.sqlite3
+StateDirectory=machine-commerce-sepolia-merchant
+StateDirectoryMode=0700
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

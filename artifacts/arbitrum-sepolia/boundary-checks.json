@@ -1,0 +1,23 @@
+{
+  "second_compatible_order_rejected": true,
+  "budget_error": "payment mandate cap exceeded",
+  "budget_http_status": 409,
+  "agent_capital_administration_rejected": true,
+  "admin_http_status": 403,
+  "signature_created": false,
+  "transaction_sent": false,
+  "mandate": {
+    "id": "mandate-307c4dc7751722e1eca083ee",
+    "payer": "0x24d0b9bc844754dd1b22f215ebb06627f7314e79",
+    "payment_asset": "eip155:421614/erc20:0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+    "budget": 10000,
+    "max_order": 10000,
+    "resources": [
+      "sepolia-block"
+    ],
+    "expires": 1791003472,
+    "reserved": 0,
+    "spent": 10000
+  },
+  "checked_at": 1790918202
+}

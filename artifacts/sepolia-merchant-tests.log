@@ -1,0 +1,18 @@
+/srv/skew/economic-machine-commerce-20261002/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_ambiguous_broadcast_keeps_hash_and_never_sends_replacement (test_sepolia_merchant.SepoliaMerchantTests.test_ambiguous_broadcast_keeps_hash_and_never_sends_replacement) ... ok
+test_bad_buyer_signature_cannot_pay (test_sepolia_merchant.SepoliaMerchantTests.test_bad_buyer_signature_cannot_pay) ... ok
+test_changed_terms_order_recipient_and_amount_cannot_spend_gas (test_sepolia_merchant.SepoliaMerchantTests.test_changed_terms_order_recipient_and_amount_cannot_spend_gas) ... ok
+test_expired_or_long_lived_authorization_cannot_pay (test_sepolia_merchant.SepoliaMerchantTests.test_expired_or_long_lived_authorization_cannot_pay) ... ok
+test_live_startup_verifies_domain_without_an_authorization (test_sepolia_merchant.SepoliaMerchantTests.test_live_startup_verifies_domain_without_an_authorization) ... ok
+test_mainnet_wrong_token_and_over_cap_fail_before_signing (test_sepolia_merchant.SepoliaMerchantTests.test_mainnet_wrong_token_and_over_cap_fail_before_signing) ... ok
+test_paid_http_delivery_excludes_signature_and_extra_request_fields (test_sepolia_merchant.SepoliaMerchantTests.test_paid_http_delivery_excludes_signature_and_extra_request_fields) ... ok
+test_parallel_signed_submits_commit_one_transaction (test_sepolia_merchant.SepoliaMerchantTests.test_parallel_signed_submits_commit_one_transaction) ... ok
+test_pending_or_wrong_transfer_never_delivers_data (test_sepolia_merchant.SepoliaMerchantTests.test_pending_or_wrong_transfer_never_delivers_data) ... ok
+test_signed_replay_after_expiry_or_restart_never_broadcasts_again (test_sepolia_merchant.SepoliaMerchantTests.test_signed_replay_after_expiry_or_restart_never_broadcasts_again) ... ok
+test_unsigned_challenge_does_not_sign_or_pay (test_sepolia_merchant.SepoliaMerchantTests.test_unsigned_challenge_does_not_sign_or_pay) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.242s
+
+OK

@@ -1,0 +1,30 @@
+[Unit]
+Description=Economic Machine private Arbitrum Sepolia buyer runtime
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+WorkingDirectory=/srv/skew/economic-machine-commerce-20261002
+Environment=COMMERCE_DB=/var/lib/machine-commerce-sepolia-runtime/runtime.sqlite3
+Environment=MACHINE_MODE=production
+Environment=MACHINE_PUBLIC_ORIGIN=https://machine.148-113-153-116.nip.io
+Environment=MACHINE_OPERATORS_FILE=%d/operators.json
+Environment=MACHINE_RESOURCES_FILE=%d/resources.json
+Environment=PYTHONDONTWRITEBYTECODE=1
+LoadCredential=operators.json:/var/lib/machine-commerce-sepolia/operators.json
+LoadCredential=resources.json:/var/lib/machine-commerce-sepolia/resources.json
+ExecStart=/srv/skew/economic-machine-commerce-20261002/.venv/bin/uvicorn machine_commerce.api:app_factory --factory --host 127.0.0.1 --port 4261 --workers 1 --proxy-headers --forwarded-allow-ips=127.0.0.1 --no-access-log
+StateDirectory=machine-commerce-sepolia-runtime
+StateDirectoryMode=0700
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

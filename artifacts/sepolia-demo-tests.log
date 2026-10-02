@@ -1,0 +1,12 @@
+test_external_signer_refuses_to_repeat_a_transmission_attempt (test_sepolia_demo.SepoliaClientTests.test_external_signer_refuses_to_repeat_a_transmission_attempt) ... ok
+test_login_failure_closes_client (test_sepolia_demo.SepoliaClientTests.test_login_failure_closes_client) ... ok
+test_missing_or_duplicate_current_sale_is_rejected (test_sepolia_demo.SepoliaClientTests.test_missing_or_duplicate_current_sale_is_rejected) ... ok
+test_owner_opens_once_authenticates_and_closes (test_sepolia_demo.SepoliaClientTests.test_owner_opens_once_authenticates_and_closes) ... ok
+test_prepared_local_state_cannot_override_a_transmitted_server_record (test_sepolia_demo.SepoliaClientTests.test_prepared_local_state_cannot_override_a_transmitted_server_record) ... ok
+test_prior_unsigned_offer_does_not_ambiguate_current_registered_sale (test_sepolia_demo.SepoliaClientTests.test_prior_unsigned_offer_does_not_ambiguate_current_registered_sale) ... ok
+test_unsigned_renewal_refuses_an_ambiguous_or_paid_order (test_sepolia_demo.SepoliaClientTests.test_unsigned_renewal_refuses_an_ambiguous_or_paid_order) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.005s
+
+OK

@@ -2,8 +2,11 @@
 
 This release implements a bounded, single-host x402 buyer execution service. It is not a public launch,
 a security audit, a data marketplace with guaranteed stock, or a claim of hedge-fund operational readiness.
-The active Canada-host service remains a private development workspace until real operator credentials,
-an owner-controlled HTTPS origin and approved external resources are configured. No customer payment was sent.
+The original Canada-host service remains a private development workspace. A separate isolated runtime has
+provisioned operators, approved HTTPS resources and production configuration guards for one completed
+Arbitrum Sepolia purchase. [Its finalized x402 proof](ARBITRUM_SEPOLIA.md) records 0.01 Circle test USDC,
+external disposable signing, both balances and delivery. No customer payment or mainnet launch occurred;
+backup/restore, independent security review and the other operational gates remain open.
 
 ## Runtime and capital authority
 

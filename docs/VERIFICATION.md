@@ -1,4 +1,36 @@
-# Latest verification: actual Qwen model loops versus deterministic policies
+# Latest verification: finalized public Arbitrum Sepolia x402 purchase
+
+- All tests, RPC reads, signing, transaction execution and audits ran on the authorized Canada host.
+  Source edits, browser verification and small public evidence copies were the only Mac work.
+- One approved 0.01 Circle test-USDC transaction executed on chain 421614:
+  `0x3aa1cbbb04e18c0a1d07b3c9cc92b255bc7a3bdb6b62080fa1fb933659b11758`.
+  The original development service is unchanged; separate buyer/merchant services isolate this test.
+- Real HTTP policy registration → deterministic price negotiation → shared-capital admission → HTTPS x402 v2
+  challenge → external disposable buyer EIP-712 signature → native USDC `transferWithAuthorization` → delivery
+  → finalized receipt reconciliation ran end to end, without LLM calls or customer keys.
+- Buyer test USDC is 20 → 19.99; seller is 0 → 0.01. Seller spent 0.000008592206624 test ETH for gas;
+  buyer ETH remained zero. The runtime is `SETTLED`, spent 10,000 atoms and reserved zero.
+- Two read-only RPC audits confirm exact Transfer/AuthorizationUsed logs, consumed nonce, canonical finalized
+  receipt, both historical balances and every delivered public-block field. This is RPC-backed finality,
+  not an independent L1 proof or cryptographic guarantee of off-chain data delivery.
+- Eighteen targeted new tests pass (merchant 11, CLI 7); targeted static checks pass. Six corrupted evidence
+  records are rejected, including two requiring live chain reads. A second compatible purchase is rejected
+  after capital exhaustion, and a buyer key cannot administer mandates. No unchanged core/contracts/Qwen
+  suite was rebuilt or rerun.
+- An expired unsigned preparation was cancelled before signing. Submitted payment recovery reused the
+  committed transaction; ambiguous reads did not trigger a replacement payment. PublicNode historical reads
+  were unavailable; dRPC supplied archival balance reads and independently confirmed the same receipt.
+- Root-protected test keys remain on the server. The buyer runtime has no key; the merchant receives only
+  its gas wallet. Public artifacts contain no secret or plaintext payment signature.
+
+[Execution details](ARBITRUM_SEPOLIA.md) and `artifacts/arbitrum-sepolia/` contain the actual agreement,
+submission, receipt, delivery, capital-boundary checks and independent audit. The earlier records below are
+historical; their public-chain payment gap is superseded by this testnet transaction, while customer and
+mainnet launch gates remain open.
+
+---
+
+# Previous verification: actual Qwen model loops versus deterministic policies
 
 - All compute remains on the authorized Canada server. Seventeen new tests pass: eight usage/outcome
   accounting tests, eight provider/workload tests, one long-wait x402 fixture regression. Previously verified

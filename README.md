@@ -23,6 +23,8 @@ LLMs can draft policies or resolve exceptions; routine matching, negotiation, ex
 - Actual Qwen3-32B comparison with bounded repair, measured provider tokens, initial policy cost,
   paid test-token outcomes and independently recalculated evidence.
 - Existing CSV/RPC service examples and separate ERC-20 escrow: test ledger/PyEVM, not public deployments.
+- Public Arbitrum Sepolia x402 v2 purchase: 0.01 Circle test USDC, external disposable buyer signing,
+  separate seller gas payer, finalized receipt, exact balances and delivered data checked through two RPCs.
 
 ## Verification and product result
 
@@ -62,11 +64,16 @@ The existing compiled EIP-3009 test token is reused. [Verification](docs/VERIFIC
 
 ## Live status
 
-The private server is running **development mode**. The x402 runtime is implemented and tested with actual
-EIP-712 signatures and token transfers in ephemeral PyEVM. The merchant/facilitator is a test fixture.
-A real Arbitrum RPC read through the new pinned TLS transport succeeds; that is not a real payment.
-No public merchant registry, customer signature, public-chain payment, public production deployment or
-submission is asserted. Production preflight currently rejects this unconfigured development environment.
+The original private console remains in **development mode**. A separate isolated buyer runtime uses
+production configuration guards for a completed public-testnet x402 purchase. Its approved HTTPS seller
+received 0.01 Circle test USDC on Arbitrum Sepolia; the runtime is `SETTLED`, the hold is zero and the agreed
+block snapshot was delivered. Both the official RPC and dRPC confirm the receipt, nonce and historical
+balances. Eighteen new tests and six evidence-corruption checks pass; unchanged core/contracts were not rerun.
+[Transaction and verification evidence](docs/ARBITRUM_SEPOLIA.md) document the actual path and isolated services.
+
+This uses disposable test wallets, not a customer signature or real-dollar assets. A general public merchant
+registry, customer deployment and competition submission are not asserted. The original development
+environment still fails its production preflight; the testnet runtime does not close the launch gates below.
 
 To activate public capital admission, configure a real HTTPS origin, operator credentials and approved
 merchant/token/recipient registry, then complete the external operation gates in [Production](docs/PRODUCTION.md).

@@ -1,0 +1,68 @@
+{
+  "payment": {
+    "id": "payment-f74ca4a930759f44d9953da7",
+    "mandate_id": "mandate-307c4dc7751722e1eca083ee",
+    "match_id": "match-6f0f2ffc52cd9ed439007f3bcafb9e2c",
+    "status": "SETTLEMENT_REPORTED",
+    "reason": null,
+    "terms_hash": "6f0f2ffc52cd9ed439007f3bcafb9e2c5181a8298f510e2adcf67f1d454db17c",
+    "amount_atoms": "10000",
+    "network": "eip155:421614",
+    "asset": "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+    "payer": "0x24d0b9bc844754dd1b22f215ebb06627f7314e79",
+    "pay_to": "0xd26491d35ed8725ef2bd1e3db1a1f8959ed31e97",
+    "tx_hash": "0x3aa1cbbb04e18c0a1d07b3c9cc92b255bc7a3bdb6b62080fa1fb933659b11758",
+    "created": 1790917072,
+    "expires": 1790917192,
+    "signing_authority": "CUSTOMER_EXTERNAL",
+    "safe_to_retry_payment": false,
+    "delivery": {
+      "artifact": {
+        "data": {
+          "assurance": "APPROVED_RPC_FINALIZED_TAG",
+          "block_hash": "0xfbac7882ee7dd0d6d530ee0a7dd7df76092b701a8add368d5a6b103f22492ea8",
+          "block_number": 314868529,
+          "chain_id": 421614,
+          "gas_used": 2558628,
+          "observed_at": 1790916681,
+          "schema": "arbitrum-finalized-block-snapshot-1",
+          "source": "https://sepolia-rollup.arbitrum.io/rpc",
+          "timestamp": 1790915773,
+          "transactions": 10
+        },
+        "data_version": "block-314868529",
+        "terms_hash": "6f0f2ffc52cd9ed439007f3bcafb9e2c5181a8298f510e2adcf67f1d454db17c"
+      },
+      "artifact_hash": "384cb6a7784d847e88c849e93c8831fa1d3b62fe46784dae14482360aefefc24",
+      "assurance": "TERMS_AND_VERSION_BINDING_NOT_DATA_TRUTH"
+    },
+    "observation": {
+      "status": "PENDING",
+      "tx_hash": "0x3aa1cbbb04e18c0a1d07b3c9cc92b255bc7a3bdb6b62080fa1fb933659b11758"
+    }
+  },
+  "before": {
+    "buyer": {
+      "address": "0x24d0B9Bc844754Dd1b22f215EBb06627f7314E79",
+      "usdc_atoms": 20000000,
+      "eth_wei": 0
+    },
+    "seller": {
+      "address": "0xd26491D35Ed8725Ef2bd1E3DB1A1F8959ed31e97",
+      "usdc_atoms": 0,
+      "eth_wei": 1510000000000000
+    }
+  },
+  "before_block": 314873763,
+  "typed_data_hash": "4e8b763f6bd5c05976c2845c4ffe1d7d348d0e6e9c2ae6199e6cf718c7361f41",
+  "signed_payload_hash": "00c6119ac0eeaf710c71f0c62f2cf6bd27957718bfe36d6c5f9a446c0176807f",
+  "authorization": {
+    "from": "0x24d0b9bc844754dd1b22f215ebb06627f7314e79",
+    "nonce": "0xee7e2e6a1c84974e20f718c9576c4a709f9441c1b9fb5426ca3aa0af3ef0c3d3",
+    "to": "0xd26491d35ed8725ef2bd1e3db1a1f8959ed31e97",
+    "validAfter": "1790917067",
+    "validBefore": "1790917192",
+    "value": "10000"
+  },
+  "external_test_signer": true
+}

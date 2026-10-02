@@ -1,0 +1,115 @@
+{
+  "supply_id": "supply-88dd8e3575bc92865134e9f9",
+  "demand_id": "demand-6361bed784de4148d03ec9e6",
+  "agreement": {
+    "id": "match-6f0f2ffc52cd9ed439007f3bcafb9e2c",
+    "language_model_calls": 0,
+    "payment_status": "NOT_REQUESTED",
+    "reason_codes": [],
+    "status": "AGREED",
+    "terms": {
+      "asset": "eip155:421614/erc20:0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+      "buyer_id": "buyer-2bb7e4ea8f26f7b847881453",
+      "data_type": "arbitrum.finalized-block",
+      "data_updated_at": 1790916681,
+      "data_version": "block-314868529",
+      "demand_id": "demand-6361bed784de4148d03ec9e6",
+      "license": "internal-use",
+      "purpose": "research",
+      "refresh_seconds": 86400,
+      "response_seconds": 10,
+      "schema_version": "machine-trade-terms-1",
+      "seller_id": "buyer-83b048db5ebaf75aca645171",
+      "supply_id": "supply-88dd8e3575bc92865134e9f9",
+      "total_price": "0.01",
+      "unit_price": "0.01",
+      "units": 1
+    },
+    "terms_hash": "6f0f2ffc52cd9ed439007f3bcafb9e2c5181a8298f510e2adcf67f1d454db17c",
+    "trace": [
+      {
+        "actor": "seller",
+        "kind": "OFFER",
+        "unit_price": "0.0125"
+      },
+      {
+        "actor": "seller",
+        "kind": "POLICY_COUNTER",
+        "license": "internal-use",
+        "unit_price": "0.01",
+        "units": 1
+      },
+      {
+        "actor": "buyer",
+        "kind": "POLICY_ACCEPT",
+        "total_price": "0.01"
+      }
+    ],
+    "expires": 1791003081
+  },
+  "payment": {
+    "id": "payment-f74ca4a930759f44d9953da7",
+    "mandate_id": "mandate-307c4dc7751722e1eca083ee",
+    "match_id": "match-6f0f2ffc52cd9ed439007f3bcafb9e2c",
+    "status": "PREPARED",
+    "reason": null,
+    "terms_hash": "6f0f2ffc52cd9ed439007f3bcafb9e2c5181a8298f510e2adcf67f1d454db17c",
+    "amount_atoms": "10000",
+    "network": "eip155:421614",
+    "asset": "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+    "payer": "0x24d0b9bc844754dd1b22f215ebb06627f7314e79",
+    "pay_to": "0xd26491d35ed8725ef2bd1e3db1a1f8959ed31e97",
+    "tx_hash": null,
+    "created": 1790917072,
+    "expires": 1790917192,
+    "signing_authority": "CUSTOMER_EXTERNAL",
+    "safe_to_retry_payment": false,
+    "delivery": null,
+    "observation": null
+  },
+  "mandate": {
+    "id": "mandate-307c4dc7751722e1eca083ee",
+    "payer": "0x24d0b9bc844754dd1b22f215ebb06627f7314e79",
+    "payment_asset": "eip155:421614/erc20:0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+    "budget_atoms": 10000,
+    "max_order_atoms": 10000,
+    "expires": 1791003472,
+    "signing_authority": "CUSTOMER_EXTERNAL"
+  },
+  "buyer_admin_rejected": true,
+  "seller_key": {
+    "id": "key-50a8ed60ef1f2ba799ad7a4c",
+    "name": "Sepolia snapshot seller",
+    "prefix": "em_live_jcjhDehz",
+    "scopes": [
+      "read",
+      "supplies:write"
+    ],
+    "policy_id": null,
+    "payment_mandate_id": null,
+    "created": 1790917072,
+    "expires": 1791003472,
+    "last_used": null,
+    "revoked_at": null,
+    "status": "active",
+    "mode": "PRODUCTION"
+  },
+  "buyer_key": {
+    "id": "key-1307c0b8b94357453e71a1be",
+    "name": "Sepolia data buyer",
+    "prefix": "em_live_-5dUo0gF",
+    "scopes": [
+      "demands:write",
+      "payments:request",
+      "read"
+    ],
+    "policy_id": null,
+    "payment_mandate_id": "mandate-307c4dc7751722e1eca083ee",
+    "created": 1790917072,
+    "expires": 1791003472,
+    "last_used": null,
+    "revoked_at": null,
+    "status": "active",
+    "mode": "PRODUCTION"
+  }
+}
