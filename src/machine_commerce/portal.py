@@ -183,13 +183,14 @@ def create_portal(site_dir=None, proof_path=None):
     async def console():
         html = (ROOT / "web/index.html").read_text()
         version = hashlib.sha256(b"".join((ROOT / "web" / name).read_bytes() for name in
-            ["index.html", "app.css", "app.js", "wallet.js", "console-theme.css"])).hexdigest()[:16]
+            ["index.html", "app.css", "app.js", "wallet.js", "console-theme.css", "assets/ui-icons.svg"])).hexdigest()[:16]
         html = html.replace("Machine Market | Console", "skew | Console")
         html = html.replace('href="/" aria-label="Economic Machine console"', 'href="/commerce/" aria-label="Economic Machine console"')
         html = html.replace("<span>Machine<small>Economic infrastructure</small></span>", "<span>skew<small>Economic Machine</small></span>")
         html = html.replace("</head>", '<meta name="machine-api-prefix" content="/commerce"><link rel="stylesheet" href="/commerce/console-theme.css?v=wallet-20261002-3"></head>')
         html = html.replace('href="/app.css', 'href="/commerce/app.css').replace('src="/app.js', 'src="/commerce/app.js')
         html = html.replace('src="/wallet.js', 'src="/commerce/wallet.js')
+        html = html.replace('href="/assets/ui-icons.svg', 'href="/commerce/assets/ui-icons.svg')
         html = html.replace("wallet-20261002-3", version)
         html = html.replace('<body>', '<body><div class="portal-bar"><a href="/commerce/">← skew Economic Machine</a><a href="/commerce/console?preview=1">Verified workspace</a></div>')
         return HTMLResponse(html, headers={"Cache-Control": "no-store"})
@@ -198,11 +199,14 @@ def create_portal(site_dir=None, proof_path=None):
     async def files(asset):
         if asset in {"app.css", "app.js", "wallet.js", "console-theme.css"}:
             return FileResponse(ROOT / "web" / asset)
-        if asset == "assets/phantom-wallet.png":
+        if asset in {"assets/phantom-wallet.png", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/icon-provenance.json"}:
             return FileResponse(ROOT / "web" / asset)
         if asset in {"", "index.html"}:
             return HTMLResponse((site / "index.html").read_text().replace('<head>', '<head><base href="/commerce/">'))
-        if asset not in {"style.css", "site.js", "favicon.svg", "evidence.json", "assets/nvidia-logo.svg"}:
+        if asset not in {"style.css", "site.js", "favicon.svg", "evidence.json", "assets/nvidia-logo.svg",
+                         "assets/arbitrum-logo.svg", "assets/provider-orbit.svg", "assets/provider-relay.svg",
+                         "assets/provider-archive.svg", "assets/provider-prism.svg", "assets/provider-signal.svg",
+                         "assets/provider-scope.svg"}:
             return JSONResponse({"error": "Not found"}, status_code=404)
         target = site / asset
         return FileResponse(target) if target.is_file() else JSONResponse({"error": "Not found"}, status_code=404)

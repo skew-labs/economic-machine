@@ -1,0 +1,162 @@
+{
+  "desktop": {
+    "icons": [
+      {
+        "h": 21,
+        "ref": "/commerce/assets/ui-icons.svg?v=868f3027f9270175#fingerprint",
+        "stroke": "none",
+        "w": 21
+      },
+      {
+        "h": 20,
+        "ref": "/commerce/assets/ui-icons.svg?v=868f3027f9270175#key",
+        "stroke": "none",
+        "w": 20
+      },
+      {
+        "h": 20,
+        "ref": "/commerce/assets/ui-icons.svg?v=868f3027f9270175#wallet",
+        "stroke": "none",
+        "w": 20
+      },
+      {
+        "h": 20,
+        "ref": "/commerce/assets/ui-icons.svg?v=868f3027f9270175#receipt",
+        "stroke": "none",
+        "w": 20
+      },
+      {
+        "h": 18,
+        "ref": "/commerce/assets/ui-icons.svg?v=868f3027f9270175#wallet",
+        "stroke": "none",
+        "w": 18
+      },
+      {
+        "h": 18,
+        "ref": "/commerce/assets/ui-icons.svg?v=868f3027f9270175#arrows-clockwise",
+        "stroke": "none",
+        "w": 18
+      },
+      {
+        "h": 18,
+        "ref": "/commerce/assets/ui-icons.svg#plus",
+        "stroke": "none",
+        "w": 18
+      },
+      {
+        "h": 30,
+        "ref": "/commerce/assets/ui-icons.svg#key",
+        "stroke": "none",
+        "w": 30
+      },
+      {
+        "h": 28,
+        "ref": "/commerce/assets/ui-icons.svg?v=868f3027f9270175#code",
+        "stroke": "none",
+        "w": 28
+      },
+      {
+        "h": 22,
+        "ref": "/commerce/assets/ui-icons.svg?v=868f3027f9270175#shield-check",
+        "stroke": "none",
+        "w": 22
+      }
+    ],
+    "keyEmptyIcon": "/commerce/assets/ui-icons.svg#key",
+    "overflow": false,
+    "width": 1440
+  },
+  "mobile": {
+    "dialogOpen": true,
+    "iconStyles": [
+      {
+        "h": 18,
+        "ref": "/commerce/assets/ui-icons.svg?v=82e9720810b77d80#x",
+        "stroke": "none",
+        "w": 18
+      },
+      {
+        "h": 18,
+        "ref": "/commerce/assets/ui-icons.svg#arrow-right",
+        "stroke": "none",
+        "w": 18
+      },
+      {
+        "h": 18,
+        "ref": "/commerce/assets/ui-icons.svg#arrow-right",
+        "stroke": "none",
+        "w": 18
+      },
+      {
+        "h": 0,
+        "ref": "/commerce/assets/ui-icons.svg?v=82e9720810b77d80#wallet",
+        "stroke": "none",
+        "w": 0
+      },
+      {
+        "h": 22,
+        "ref": "/commerce/assets/ui-icons.svg?v=82e9720810b77d80#shield-check",
+        "stroke": "none",
+        "w": 22
+      },
+      {
+        "h": 16,
+        "ref": "/commerce/assets/ui-icons.svg?v=82e9720810b77d80#arrow-up-right",
+        "stroke": "none",
+        "w": 16
+      }
+    ],
+    "overflow": false,
+    "width": 390
+  },
+  "landing": {
+    "overflow": false,
+    "providers": [
+      {
+        "h": 36,
+        "loaded": true,
+        "src": "assets/provider-orbit.svg",
+        "w": 36
+      },
+      {
+        "h": 36,
+        "loaded": true,
+        "src": "assets/provider-relay.svg",
+        "w": 36
+      },
+      {
+        "h": 36,
+        "loaded": true,
+        "src": "assets/provider-archive.svg",
+        "w": 36
+      },
+      {
+        "h": 36,
+        "loaded": true,
+        "src": "assets/provider-prism.svg",
+        "w": 36
+      },
+      {
+        "h": 36,
+        "loaded": true,
+        "src": "assets/provider-signal.svg",
+        "w": 36
+      },
+      {
+        "h": 36,
+        "loaded": true,
+        "src": "assets/provider-scope.svg",
+        "w": 36
+      }
+    ],
+    "width": 1440
+  },
+  "consoleErrors": [],
+  "visualChecks": [
+    "all six fixture marks",
+    "filled UI symbols",
+    "MetaMask and Phantom sign-in list",
+    "semantic API-key empty state"
+  ],
+  "noWalletSignatureOrPayment": true
+}

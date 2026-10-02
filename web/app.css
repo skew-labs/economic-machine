@@ -1274,3 +1274,19 @@ input::placeholder {
 @media(max-width:750px){.wallet-account{font-size:11px;padding:8px 12px}.wallet-dialog{padding:26px}.topbar-right{justify-content:flex-end}.topbar-right .mode-badge{margin-right:auto}}
 
 .wallet-dialog .close-dialog {width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#f3f5f7;color:#738194}
+
+/* Phosphor duotone symbols use filled geometry, not inherited outline strokes. */
+svg.ui-icon {width:20px;height:20px;fill:currentColor;stroke:none;stroke-width:0;display:block;flex-shrink:0}
+.sidebar nav .ui-icon {width:20px;height:20px}
+.workspace-icon .ui-icon {width:21px;height:21px}
+.button .ui-icon,.wallet-account .ui-icon {width:18px;height:18px}
+.integration-icon .ui-icon {width:28px;height:28px}
+.security-note .ui-icon,.wallet-signature-note .ui-icon {width:22px;height:22px}
+.empty-icon .ui-icon {width:30px;height:30px}
+.payment-account>.ui-icon {width:28px;height:28px}
+.wallet-provider-logo .ui-icon {width:24px;height:24px}
+.wallet-option-arrow {display:flex;align-items:center}
+.wallet-option-arrow .ui-icon {width:18px;height:18px}
+.close-dialog {display:flex;align-items:center;justify-content:center}
+.close-dialog .ui-icon {width:18px;height:18px}
+.wallet-preview .ui-icon {width:16px;height:16px}

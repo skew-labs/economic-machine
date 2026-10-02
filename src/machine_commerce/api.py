@@ -385,6 +385,10 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     def wallet_logo():
         return FileResponse(web / "assets/phantom-wallet.png")
 
+    @app.get("/assets/ui-icons.svg")
+    def ui_icons():
+        return FileResponse(web / "assets/ui-icons.svg")
+
     return app
 
 

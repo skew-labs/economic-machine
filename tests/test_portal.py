@@ -104,6 +104,8 @@ class PortalHTTP(unittest.TestCase):
         self.assertIn('src="/commerce/app.js?v=', response.text)
         self.assertIn('src="/commerce/wallet.js?v=', response.text)
         self.assertIn('href="/commerce/console-theme.css?v=', response.text)
+        self.assertIn('href="/commerce/assets/ui-icons.svg?v=', response.text)
+        self.assertNotIn('href="/assets/ui-icons.svg', response.text)
         self.assertIn('id="wallet-options"', response.text)
         self.assertNotIn('type="password"', response.text)
         self.assertIn("img-src 'self' data:", response.headers["content-security-policy"])

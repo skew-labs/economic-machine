@@ -1,0 +1,15 @@
+{
+  "remote_host": "Canada 148.113.153.116",
+  "workspace": "/srv/skew/economic-machine-commerce-20261002",
+  "javascript_syntax": [
+    "web/app.js",
+    "site/dist/site.js"
+  ],
+  "ruff": "passed on changed Python and portal test",
+  "targeted_tests": {
+    "passed": 1,
+    "name": "PortalHTTP.test_console_routes_use_authenticated_runtime_prefix"
+  },
+  "svg_and_routes": "remote-verification.json",
+  "scope": "changed icon presentation and asset paths; no repeated financial/model/auth workload; no signing or payment"
+}

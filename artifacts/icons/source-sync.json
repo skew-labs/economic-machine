@@ -1,0 +1,19 @@
+{
+  "matched_files": 24,
+  "all_sources_match": true,
+  "live_reads": {
+    "http://127.0.0.1:4261/assets/ui-icons.svg": {
+      "status": 200,
+      "content_type": "image/svg+xml"
+    },
+    "https://machine.148-113-153-116.nip.io/commerce/healthz": {
+      "status": 200,
+      "content_type": "application/json"
+    },
+    "https://machine.148-113-153-116.nip.io/commerce/assets/ui-icons.svg": {
+      "status": 200,
+      "content_type": "image/svg+xml"
+    }
+  },
+  "transport": "TLS public ingress; standalone sprite checked via trusted loopback proxy headers"
+}

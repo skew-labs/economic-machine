@@ -19,6 +19,16 @@ function el(tag, className = '', text = '') {
   if (text !== '') node.textContent = text;
   return node;
 }
+function uiIcon(name) {
+  const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  icon.setAttribute('class', 'ui-icon');
+  icon.setAttribute('viewBox', '0 0 256 256');
+  icon.setAttribute('aria-hidden', 'true');
+  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  use.setAttribute('href', `${API_PREFIX}/assets/ui-icons.svg#${name}`);
+  icon.append(use);
+  return icon;
+}
 function button(text, className, action) {
   const node = el('button', className, text);
   node.type = 'button';
@@ -103,11 +113,13 @@ function setView(view) {
   $('breadcrumb-current').textContent = title;
   $('page-description').textContent = description;
   $('primary-action').hidden = !action;
-  $('primary-action').replaceChildren(el('span', '', '+'), document.createTextNode(action || ''));
+  $('primary-action').replaceChildren(uiIcon('plus'), document.createTextNode(action || ''));
 }
-function empty(title, description, action, actionText = '') {
+function empty(title, description, action, actionText = '', icon = 'key') {
   const node = el('div', 'empty');
-  node.append(el('div', 'empty-icon', '{ }'), el('h3', '', title), el('p', '', description));
+  const mark = el('div', 'empty-icon');
+  mark.append(uiIcon(icon));
+  node.append(mark, el('h3', '', title), el('p', '', description));
   if (action) node.append(button(actionText, 'button primary', action));
   return node;
 }
@@ -148,7 +160,7 @@ function renderFunds() {
   const list = $('policy-list');
   list.replaceChildren();
   if (!snapshot.policies.length) {
-    list.append(empty('Define a spending boundary', 'Approve a total budget, a per-order limit and the services an agent may use.', openPolicy, 'Create policy'));
+    list.append(empty('Define a spending boundary', 'Approve a total budget, a per-order limit and the services an agent may use.', openPolicy, 'Create policy', 'shield-check'));
     return;
   }
   for (const policy of snapshot.policies) {
@@ -183,7 +195,7 @@ function renderActivity() {
   const list = $('order-list');
   list.replaceChildren();
   if (!visible.length && !state.payments.payments.length) {
-    list.append(empty(orders.length ? 'No transactions in this view' : 'Activity starts with your agents', orders.length ? 'Choose another status to see your transactions.' : 'Orders placed through the API appear here with delivery status and settlement records.'));
+    list.append(empty(orders.length ? 'No transactions in this view' : 'Activity starts with your agents', orders.length ? 'Choose another status to see your transactions.' : 'Orders placed through the API appear here with delivery status and settlement records.', null, '', 'receipt'));
     return;
   }
   for (const order of visible) {
@@ -220,7 +232,7 @@ function renderMandates() {
   $('new-mandate').disabled = !state.payments.resource_details.length;
   const list = $('mandate-list');
   list.replaceChildren();
-  if (!state.payments.mandates.length) list.append(empty('Set an external payment limit', state.payments.resource_details.length ? 'Choose an approved resource and payer wallet. Link the limit to an agent key.' : 'An operator must configure an approved x402 resource before enabling payments.'));
+  if (!state.payments.mandates.length) list.append(empty('Set an external payment limit', state.payments.resource_details.length ? 'Choose an approved resource and payer wallet. Link the limit to an agent key.' : 'An operator must configure an approved x402 resource before enabling payments.', null, '', 'shield-check'));
   for (const mandate of state.payments.mandates) {
     const row = el('article', 'policy-row');
     const main = el('div', 'row-main');
@@ -462,7 +474,7 @@ async function initialize() {
       $('mode-badge').textContent = 'Wallet login';
       $('environment-label').textContent = 'Sign-in required';
       $('balance-shortcut').hidden = true;
-      $('key-list').replaceChildren(empty('Connect your wallet', 'Sign in to manage agent access and payment limits.'));
+      $('key-list').replaceChildren(empty('Connect your wallet', 'Sign in to manage agent access and payment limits.', null, '', 'wallet'));
       if (!$('login-dialog').open) $('login-dialog').showModal();
       return;
     }
@@ -526,12 +538,10 @@ function renderWallets(providers) {
     if (item.icon || item.name === 'Phantom') {
       const image = el('img'); image.src = item.icon || API_PREFIX + '/assets/phantom-wallet.png'; image.alt = ''; logo.append(image);
     } else {
-      const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      icon.setAttribute('viewBox', '0 0 24 24'); icon.setAttribute('aria-hidden', 'true');
-      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path.setAttribute('d', 'M4 7h16v13H4zM4 7V4h13v3M16 12h6v4h-6z'); icon.append(path); logo.append(icon);
+      logo.append(uiIcon('wallet'));
     }
-    option.append(logo, el('span', '', item.name), el('span', 'wallet-option-arrow', '→'));
+    const arrow = el('span', 'wallet-option-arrow'); arrow.append(uiIcon('arrow-right'));
+    option.append(logo, el('span', '', item.name), arrow);
     $('wallet-options').append(option);
   }
 }

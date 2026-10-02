@@ -1,0 +1,29 @@
+{
+  "source": "https://github.com/phosphor-icons/core",
+  "revision": "2b75f3ad12b420c9504ef05df8d2564a28f8500e",
+  "license": "MIT",
+  "icons": [
+    "wallet",
+    "shield-check",
+    "plugs-connected",
+    "receipt",
+    "key",
+    "chart-line-up",
+    "arrows-clockwise",
+    "stack",
+    "code",
+    "check-circle",
+    "arrow-up-right",
+    "arrow-right",
+    "plus",
+    "x",
+    "clock",
+    "fingerprint"
+  ],
+  "arbitrum": {
+    "source": "https://github.com/OffchainLabs/arbitrum-docs/blob/e2d9a57daf250f920f1cbe8a71274595a4a7b70a/static/img/logo.svg",
+    "revision": "e2d9a57daf250f920f1cbe8a71274595a4a7b70a",
+    "usage": "Arbitrum Sepolia network identification"
+  },
+  "providers": "Six original fixture-provider marks. These are example suppliers, not partner logos."
+}
