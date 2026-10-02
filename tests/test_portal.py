@@ -101,8 +101,12 @@ class PortalHTTP(unittest.TestCase):
     def test_console_routes_use_authenticated_runtime_prefix(self):
         response = self.client.get("/console")
         self.assertIn('name="machine-api-prefix" content="/commerce"', response.text)
-        self.assertIn('src="/commerce/app.js"', response.text)
-        self.assertIn('href="/commerce/console-theme.css"', response.text)
+        self.assertIn('src="/commerce/app.js?v=', response.text)
+        self.assertIn('src="/commerce/wallet.js?v=', response.text)
+        self.assertIn('href="/commerce/console-theme.css?v=', response.text)
+        self.assertIn('id="wallet-options"', response.text)
+        self.assertNotIn('type="password"', response.text)
+        self.assertIn("img-src 'self' data:", response.headers["content-security-policy"])
         self.assertIn('base href="/commerce/"', self.client.get("/").text)
         self.assertEqual(self.client.get("/../demo-state.json").status_code, 404)
 

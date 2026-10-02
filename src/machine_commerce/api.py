@@ -1,6 +1,7 @@
 """Buyer-scoped API and app. Public deployment stays in explicit sandbox mode."""
 
 import asyncio
+import ipaddress
 import logging
 import os
 from contextlib import asynccontextmanager, suppress
@@ -19,6 +20,7 @@ from .operations import Operations, Settings
 from .payments import Payments
 from .providers import CommerceEngine, Workers
 from .store import Store
+from .wallet_auth import WalletAuth
 
 LOGGER = logging.getLogger(__name__)
 
@@ -33,6 +35,7 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     payments = Payments(store, market, settings.resources, payment_transport, payment_chain)
     operations = Operations(store, settings)
     access = Access(store, settings.mode)
+    wallet_auth = WalletAuth(store, settings.origin)
 
     @asynccontextmanager
     async def lifespan(_app):
@@ -66,6 +69,7 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     app = FastAPI(title="Economic Machine Commerce", docs_url=None, redoc_url=None, lifespan=lifespan)
     app.state.store, app.state.engine = store, engine
     app.state.access = access
+    app.state.wallet_auth = wallet_auth
     app.state.market, app.state.payments, app.state.operations = market, payments, operations
     app.state.timer_error = None
     app.state.payment_worker_error = None
@@ -80,6 +84,12 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
             if request.url.scheme != "https":
                 return JSONResponse({"error": "HTTPS required"}, status_code=403)
             peer = request.client.host if request.client else "unknown"
+            # Only the trusted loopback reverse proxy can supply the real peer.
+            if peer in {"127.0.0.1", "::1"}:
+                try:
+                    peer = str(ipaddress.ip_address(request.headers.get("x-real-ip", peer)))
+                except ValueError:
+                    pass
             credential = request.headers.get("authorization", request.cookies.get("machine_buyer", ""))
             budget = 60 if request.method == "POST" else 600
             if (not operations.admit_rate("peer:" + peer + request.method, budget * 10)
@@ -87,6 +97,12 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
                 return JSONResponse({"error": "rate limit exceeded"}, status_code=429, headers={"Retry-After": "60"})
             if request.url.path == "/api/sessions" and not operations.admit_rate("login:" + peer, 5):
                 return JSONResponse({"error": "login rate limit exceeded"}, status_code=429, headers={"Retry-After": "60"})
+            if request.method == "POST" and request.url.path.startswith("/api/auth/"):
+                if request.headers.get("origin") != settings.origin:
+                    return JSONResponse({"error": "same-origin wallet sign-in required"}, status_code=403)
+                if not operations.admit_rate("wallet:" + peer + request.url.path, 10):
+                    return JSONResponse({"error": "sign-in rate limit exceeded"}, status_code=429,
+                                        headers={"Retry-After": "60"})
         if request.method in {"POST", "PUT", "DELETE", "PATCH"}:
             origin = request.headers.get("origin")
             if origin and ((settings.mode == "production" and origin != settings.origin)
@@ -119,8 +135,9 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
             principal = access.resolve(token)
         except MachineError as exc:
             raise HTTPException(401, str(exc)) from exc
-        if settings.mode == "production" and not operations.known_operator(principal.session_id):
-            raise HTTPException(401, "provisioned operator workspace required")
+        if settings.mode == "production" and not (operations.known_operator(principal.session_id)
+                                                   or wallet_auth.identity(principal.session_id)):
+            raise HTTPException(401, "authenticated owner workspace required")
         try:
             access.authorize(principal, request.method, request.url.path)
         except PermissionError as exc:
@@ -162,7 +179,7 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
         if prior:
             try:
                 sid = store.authenticate(prior)
-                if settings.mode != "production" or operations.known_operator(sid):
+                if settings.mode != "production" or operations.known_operator(sid) or wallet_auth.identity(sid):
                     return JSONResponse({"snapshot": store.snapshot(sid), "resumed": True})
             except MachineError:
                 pass
@@ -178,6 +195,42 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
         secure = settings.mode == "production" or os.environ.get("COMMERCE_SECURE_COOKIE", "0") == "1"
         response.set_cookie("machine_buyer", token, httponly=True, samesite="strict", secure=secure,
                             max_age=86400, path="/")
+        return response
+
+    @app.post("/api/auth/challenge")
+    def wallet_challenge(raw: dict):
+        result, binding = wallet_auth.challenge(raw)
+        response = JSONResponse(result)
+        response.set_cookie("machine_login", binding, httponly=True, samesite="strict", secure=True,
+                            max_age=300, path="/")
+        return response
+
+    @app.post("/api/auth/verify")
+    def wallet_verify(raw: dict, request: Request):
+        try:
+            sid, token = wallet_auth.verify(raw, request.cookies.get("machine_login"))
+        except PermissionError as exc:
+            raise HTTPException(401, str(exc)) from exc
+        response = JSONResponse({"identity": wallet_auth.identity(sid), "snapshot": store.snapshot(sid)})
+        response.set_cookie("machine_buyer", token, httponly=True, samesite="strict", secure=True,
+                            max_age=86400, path="/")
+        response.delete_cookie("machine_login", path="/", secure=True, httponly=True, samesite="strict")
+        return response
+
+    @app.get("/api/auth/session")
+    def wallet_session(request: Request, sid=Depends(buyer)):
+        if not request.state.principal.owner:
+            raise HTTPException(403, "owner session required")
+        return {"identity": wallet_auth.identity(sid), "buyer_id": sid}
+
+    @app.post("/api/auth/logout")
+    def wallet_logout(raw: dict, request: Request, sid=Depends(buyer)):
+        require_keys(raw, set(), "sign-out")
+        if not request.state.principal.owner:
+            raise HTTPException(403, "owner session required")
+        wallet_auth.logout(sid)
+        response = JSONResponse({"signed_out": True})
+        response.delete_cookie("machine_buyer", path="/", secure=True, httponly=True, samesite="strict")
         return response
 
     @app.get("/api/workspace")
@@ -323,6 +376,14 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     @app.get("/app.js")
     def javascript():
         return FileResponse(web / "app.js")
+
+    @app.get("/wallet.js")
+    def wallet_javascript():
+        return FileResponse(web / "wallet.js")
+
+    @app.get("/assets/phantom-wallet.png")
+    def wallet_logo():
+        return FileResponse(web / "assets/phantom-wallet.png")
 
     return app
 

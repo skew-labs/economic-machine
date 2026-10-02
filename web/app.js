@@ -450,10 +450,19 @@ async function initialize() {
   try {
     state.mode = (await api('/healthz')).mode;
     if (PREVIEW) { await refresh(); return; }
-    try { await api('/api/sessions', {}); }
+    try {
+      if (state.mode === 'production') {
+        const session = await api('/api/auth/session');
+        showWalletIdentity(session.identity);
+      } else await api('/api/sessions', {});
+    }
     catch (error) {
       if (state.mode !== 'production') throw error;
       connection(false, 'Sign in required');
+      $('mode-badge').textContent = 'Wallet login';
+      $('environment-label').textContent = 'Sign-in required';
+      $('balance-shortcut').hidden = true;
+      $('key-list').replaceChildren(empty('Connect your wallet', 'Sign in to manage agent access and payment limits.'));
       if (!$('login-dialog').open) $('login-dialog').showModal();
       return;
     }
@@ -490,20 +499,71 @@ $('mandate-form').addEventListener('submit', async (event) => {
   } catch (error) { formError('mandate-error', error.message); }
   finally { state.busy = null; $('mandate-submit').disabled = false; }
 });
-$('login-form').addEventListener('submit', async (event) => {
-  event.preventDefault();
-  state.busy = 'login-dialog';
-  $('login-submit').disabled = true;
+let activeWallet = null;
+function showWalletIdentity(identity) {
+  state.identity = identity;
+  $('wallet-account-label').textContent = PREVIEW ? 'Recorded workspace' : identity ? `${identity.address.slice(0, 6)}…${identity.address.slice(-4)}` : 'Connect wallet';
+  $('wallet-account').disabled = PREVIEW;
+  $('wallet-logout').hidden = PREVIEW || !identity;
+  if (identity) $('mandate-payer').value = identity.address;
+}
+function walletError(error) {
+  return Number(error.code) === 4001 ? 'Sign-in cancelled. You can connect again.' : error.message || 'Wallet connection failed. Try again.';
+}
+async function walletRequest(path, body) {
+  const response = await fetch(API_PREFIX + path, {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json', Accept: 'application/json'}, body: JSON.stringify(body)});
+  const result = await response.json();
+  if (!response.ok) throw new Error(typeof (result.error || result.detail) === 'string' ? result.error || result.detail : 'Sign-in could not be verified. Try again.');
+  return result;
+}
+function renderWallets(providers) {
+  if (state.busy === 'login-dialog') return;
+  $('wallet-options').replaceChildren();
+  $('wallet-empty').hidden = providers.length > 0;
+  for (const item of [...providers].sort((a, b) => a.name.localeCompare(b.name))) {
+    const option = button('', 'wallet-option', () => connectWallet(item));
+    const logo = el('span', 'wallet-provider-logo');
+    if (item.icon || item.name === 'Phantom') {
+      const image = el('img'); image.src = item.icon || API_PREFIX + '/assets/phantom-wallet.png'; image.alt = ''; logo.append(image);
+    } else {
+      const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      icon.setAttribute('viewBox', '0 0 24 24'); icon.setAttribute('aria-hidden', 'true');
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', 'M4 7h16v13H4zM4 7V4h13v3M16 12h6v4h-6z'); icon.append(path); logo.append(icon);
+    }
+    option.append(logo, el('span', '', item.name), el('span', 'wallet-option-arrow', '→'));
+    $('wallet-options').append(option);
+  }
+}
+async function changedWallet() {
+  if (!state.identity || state.busy === 'login-dialog') return;
+  try { await walletRequest('/api/auth/logout', {}); }
+  finally { location.reload(); }
+}
+async function connectWallet(item) {
+  if (state.busy) return;
+  state.busy = 'login-dialog'; formError('login-error');
+  for (const option of $('wallet-options').querySelectorAll('button')) option.disabled = true;
   try {
-    await api('/api/sessions', {username: $('login-name').value, password: $('login-password').value});
-    $('login-password').value = '';
-    state.busy = null;
-    closeDialog('login-dialog');
-    notify('');
-    state.offers = (await api('/api/catalog')).offers;
-    await refresh();
-  } catch (error) { formError('login-error', error.message); }
-  finally { state.busy = null; $('login-submit').disabled = false; }
+    const result = await WalletBridge.signIn(item.provider, walletRequest, message => { $('wallet-progress').textContent = message; });
+    if (activeWallet?.removeListener) { activeWallet.removeListener('accountsChanged', changedWallet); activeWallet.removeListener('chainChanged', changedWallet); }
+    activeWallet = item.provider;
+    if (activeWallet.on) { activeWallet.on('accountsChanged', changedWallet); activeWallet.on('chainChanged', changedWallet); }
+    showWalletIdentity(result.identity);
+    state.busy = null; closeDialog('login-dialog'); notify('');
+    state.offers = (await api('/api/catalog')).offers; await refresh();
+  } catch (error) { formError('login-error', walletError(error)); }
+  finally {
+    state.busy = null; $('wallet-progress').textContent = '';
+    for (const option of $('wallet-options').querySelectorAll('button')) option.disabled = false;
+  }
+}
+$('wallet-account').addEventListener('click', () => { if (!PREVIEW && !$('login-dialog').open) { formError('login-error'); $('login-dialog').showModal(); } });
+$('wallet-logout').addEventListener('click', async () => {
+  $('wallet-logout').disabled = true;
+  try { await walletRequest('/api/auth/logout', {}); location.reload(); }
+  catch (error) { notify(error.message, true); $('wallet-logout').disabled = false; }
 });
-$('login-dialog').addEventListener('cancel', (event) => event.preventDefault());
+WalletBridge.subscribe(renderWallets);
+showWalletIdentity(null);
 initialize();

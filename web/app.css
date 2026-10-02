@@ -1245,3 +1245,32 @@ input::placeholder {
     transition:none!important;
   }
 }
+/* Shared 24 px icon grid; wallet authentication is an owner action. */
+.wallet-account {display:flex;align-items:center;gap:9px;min-height:40px;padding:9px 14px;border:1px solid var(--line);border-radius:24px;background:white;color:var(--ink);font-size:12px;font-weight:600}
+.wallet-account svg {width:18px;height:18px}
+.wallet-dialog {width:min(440px,calc(100% - 32px));padding:30px;border-radius:24px}
+.wallet-dialog .dialog-heading {margin-bottom:30px}
+.wallet-brand {display:flex;gap:10px;align-items:center;font-size:27px;font-weight:700;letter-spacing:-1px}
+.wallet-brand svg {width:26px;height:26px;stroke:none}
+.wallet-dialog>h2 {font-size:27px;letter-spacing:-1px;font-weight:600}
+.wallet-intro {margin-top:9px;font-size:13px}
+.wallet-options {display:grid;gap:10px;margin-top:26px}
+.wallet-option {display:flex;align-items:center;gap:14px;width:100%;min-height:64px;padding:12px 16px;border:1px solid var(--line);border-radius:14px;background:white;text-align:left;color:var(--ink);font-weight:600;font-size:14px}
+.wallet-option:hover {border-color:#a0aab7;background:#f8f9fb}
+.wallet-provider-logo {display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:#f0f3f6;overflow:hidden;color:#445267}
+.wallet-provider-logo img {width:32px;height:32px;object-fit:contain}
+.wallet-option-arrow {margin-left:auto;color:var(--muted);font-size:20px;font-weight:400}
+.wallet-empty {display:flex;align-items:center;flex-direction:column;text-align:center;border:1px solid var(--line);padding:26px 22px;border-radius:16px;margin-top:26px;background:#f8fafb}
+.wallet-empty>svg {width:28px;height:28px;color:#738196;margin-bottom:14px}
+.wallet-empty strong {font-size:14px;font-weight:600}
+.wallet-empty p {font-size:12px;max-width:260px;margin-top:8px;line-height:1.6}
+.wallet-progress {font-size:12px;color:var(--muted);margin-top:14px;min-height:0}
+.wallet-progress:empty {display:none}
+.wallet-signature-note {display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);margin-top:25px;padding-top:20px;font-size:12px;color:var(--ink)}
+.wallet-signature-note svg {width:20px;height:20px;color:#6d7e91}
+.wallet-signature-note small {display:block;color:var(--muted);margin-top:3px;font-size:11px}
+.wallet-preview {display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-top:24px}
+.wallet-preview:hover {color:var(--ink)}
+@media(max-width:750px){.wallet-account{font-size:11px;padding:8px 12px}.wallet-dialog{padding:26px}.topbar-right{justify-content:flex-end}.topbar-right .mode-badge{margin-right:auto}}
+
+.wallet-dialog .close-dialog {width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#f3f5f7;color:#738194}

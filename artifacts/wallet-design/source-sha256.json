@@ -1,0 +1,15 @@
+{
+  "src/machine_commerce/wallet_auth.py": "13b5f6cb414822fc28d847f09748c8524932484dee768b3110a055f6ddca6b2b",
+  "src/machine_commerce/api.py": "060462d515d7d312062ef06144ae161d371d028e1b6ad0744dd3d339436628db",
+  "src/machine_commerce/portal.py": "2743f0fd1174cee92d86a7a7d893d283a098187ada171bf1390733ba630fa6a0",
+  "web/index.html": "00c4bedf7a6524919c90f5e4a9acc8e26506151cea0d4b68a16ea0be51fe693d",
+  "web/app.js": "638322de4dc26e2dd9714dec343837fd4203a88f75bffa420c2129d271b2c68d",
+  "web/app.css": "081ea490a21b5eb9dcf99a756af374e55be84d3a4b123c33a093e637727ab855",
+  "web/wallet.js": "99b67b22f4377a0adffc3bcb20f822cd12cec9d38aee0ecb02a3c93663017231",
+  "web/assets/phantom-wallet.png": "7e03cc299e9b6f8d98ffde0b6f73e31b8fe68bd5db7dd8e4f84900e04a533063",
+  "tests/test_wallet_auth.py": "43976f2d4ed8f5fbaf196902b64a3c2529191721feb654f22923c44761269244",
+  "tests/test_portal.py": "45f1ac53cfca47a06f7503d27c1493480eb4f92794b3210665ff48fc8204103b",
+  "tests/wallet_client.test.cjs": "f38e3685259bb668f6d48cbea6653cd06ea0b4477546617a84f35cfc29188d2f",
+  "scripts/verify_wallet_login.py": "362ed8fcf59565ecc7c19cdf941bcdcb3aadb7576dba88b1926bdbf4aaca4d93",
+  "docs/PRODUCT_PORTAL.md": "21227cce23e491789fbf0cb69c8e9d9e51389c6f8b9d8fe5724f4f4e6edaa7d5"
+}

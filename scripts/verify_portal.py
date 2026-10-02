@@ -37,7 +37,7 @@ def main():
             assert response.status_code == 200
             assert response.json()["payment_requested"] is False
             result["public_demo_" + scenario] = True
-        for asset in ["", "style.css", "site.js", "favicon.svg", "evidence.json", "assets/commerce-routing.png", "console", "app.js", "app.css", "console-theme.css"]:
+        for asset in ["", "style.css", "site.js", "favicon.svg", "evidence.json", "assets/nvidia-logo.svg", "console", "app.js", "wallet.js", "app.css", "console-theme.css"]:
             assert client.get("/commerce/" + asset).status_code == 200
         result["all_site_console_assets_resolve"] = True
         # Confirm the unrelated root and the original merchant boundary survive.

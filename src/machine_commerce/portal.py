@@ -5,6 +5,7 @@ Authenticated console calls are proxied separately to the existing runtime.
 """
 
 import asyncio
+import hashlib
 import json
 import os
 import tempfile
@@ -64,6 +65,7 @@ def compare(store, case, now):
     registered = market.register(buyer, "demand", demand)
     count = len(registered["matches"])
     return {"scenario": case, "fixture": True, "payment_requested": False,
+            "policy": {"max_total_price": demand["max_total_price"], "max_age_seconds": demand["max_age_seconds"]},
             "suppliers": suppliers, "compatible": count, "language_model_calls": 0,
             "trace_title": "One policy. Six providers. Zero model calls.",
             "trace_summary": f"{count} agreements. Price, freshness and usage rights checked by the running engine."}
@@ -142,6 +144,10 @@ def create_portal(site_dir=None, proof_path=None):
         response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        if request.url.path == "/console":
+            response.headers["Content-Security-Policy"] = (
+                "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
+                "connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
         if request.url.path == "/demo/run":
             response.headers["Access-Control-Allow-Origin"] = "*"
             response.headers["Cache-Control"] = "no-store"
@@ -176,21 +182,27 @@ def create_portal(site_dir=None, proof_path=None):
     @app.get("/console", response_class=HTMLResponse)
     async def console():
         html = (ROOT / "web/index.html").read_text()
+        version = hashlib.sha256(b"".join((ROOT / "web" / name).read_bytes() for name in
+            ["index.html", "app.css", "app.js", "wallet.js", "console-theme.css"])).hexdigest()[:16]
         html = html.replace("Machine Market | Console", "skew | Console")
         html = html.replace('href="/" aria-label="Economic Machine console"', 'href="/commerce/" aria-label="Economic Machine console"')
         html = html.replace("<span>Machine<small>Economic infrastructure</small></span>", "<span>skew<small>Economic Machine</small></span>")
-        html = html.replace("</head>", '<meta name="machine-api-prefix" content="/commerce"><link rel="stylesheet" href="/commerce/console-theme.css"></head>')
-        html = html.replace('href="/app.css"', 'href="/commerce/app.css"').replace('src="/app.js"', 'src="/commerce/app.js"')
+        html = html.replace("</head>", '<meta name="machine-api-prefix" content="/commerce"><link rel="stylesheet" href="/commerce/console-theme.css?v=wallet-20261002-3"></head>')
+        html = html.replace('href="/app.css', 'href="/commerce/app.css').replace('src="/app.js', 'src="/commerce/app.js')
+        html = html.replace('src="/wallet.js', 'src="/commerce/wallet.js')
+        html = html.replace("wallet-20261002-3", version)
         html = html.replace('<body>', '<body><div class="portal-bar"><a href="/commerce/">← skew Economic Machine</a><a href="/commerce/console?preview=1">Verified workspace</a></div>')
         return HTMLResponse(html, headers={"Cache-Control": "no-store"})
 
     @app.get("/{asset:path}")
     async def files(asset):
-        if asset in {"app.css", "app.js", "console-theme.css"}:
+        if asset in {"app.css", "app.js", "wallet.js", "console-theme.css"}:
+            return FileResponse(ROOT / "web" / asset)
+        if asset == "assets/phantom-wallet.png":
             return FileResponse(ROOT / "web" / asset)
         if asset in {"", "index.html"}:
             return HTMLResponse((site / "index.html").read_text().replace('<head>', '<head><base href="/commerce/">'))
-        if asset not in {"style.css", "site.js", "favicon.svg", "evidence.json", "assets/commerce-routing.png", "assets/nvidia-inception.svg"}:
+        if asset not in {"style.css", "site.js", "favicon.svg", "evidence.json", "assets/nvidia-logo.svg"}:
             return JSONResponse({"error": "Not found"}, status_code=404)
         target = site / asset
         return FileResponse(target) if target.is_file() else JSONResponse({"error": "Not found"}, status_code=404)
