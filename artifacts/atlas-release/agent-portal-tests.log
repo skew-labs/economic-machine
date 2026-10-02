@@ -1,0 +1,12 @@
+/srv/skew/economic-machine-commerce-20261002/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_corrupt_or_missing_evidence_cannot_masquerade_as_live_account (test_engine_portal.EnginePortal.test_corrupt_or_missing_evidence_cannot_masquerade_as_live_account) ... ok
+test_engine_redirects_to_one_console_with_correct_assets (test_engine_portal.EnginePortal.test_engine_redirects_to_one_console_with_correct_assets) ... ok
+test_public_compile_bounds_and_invalid_inputs_fail_closed (test_engine_portal.EnginePortal.test_public_compile_bounds_and_invalid_inputs_fail_closed) ... ok
+test_public_playground_runs_the_actual_compiler_without_mutating_runtime (test_engine_portal.EnginePortal.test_public_playground_runs_the_actual_compiler_without_mutating_runtime) ... ok
+test_recorded_accounts_join_actual_settlement_without_fabricated_usage (test_engine_portal.EnginePortal.test_recorded_accounts_join_actual_settlement_without_fabricated_usage) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.086s
+
+OK

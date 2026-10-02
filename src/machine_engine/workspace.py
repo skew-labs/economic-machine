@@ -49,6 +49,8 @@ class Workspace:
         self.native = NativeGate()
         from .program import NativeProgram
         self.native_program = NativeProgram(self.native)
+        from .control import AgentControl
+        self.control = AgentControl(self)
 
     def event(self, db, kind, value):
         if not verify_journal(db):
@@ -190,4 +192,5 @@ class Workspace:
             "payment_scope": "EXTERNAL_DATA_AND_COMPUTE_ONLY", "venue_trades_use_venue_api": True,
             "capital_aggregation": "NO_CROSS_ASSET_VALUATION_WITHOUT_PRICE_EVIDENCE",
             "credential_namespace": self.credential_prefix,
-            "sync_jobs": self.scheduler.status(), "trading": self.trading.status(), "native": self.native.status()}
+            "sync_jobs": self.scheduler.status(), "trading": self.trading.status(), "native": self.native.status(),
+            "control": self.control.status(), "product": "USER_OWNED_AGENT_OPERATIONS_CONSOLE"}

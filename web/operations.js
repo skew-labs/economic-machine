@@ -79,6 +79,7 @@
         : record.trading?.orders.find(
             (order) => order.id === currentPlan?.id,
           ) || null;
+      C.engineStatus?.(record);
       render(C.state.view);
     } catch (error) {
       notify(error.message, true);
@@ -175,6 +176,7 @@
       return;
     }
     if (record.read_only) root.append(banner());
+    window.AgentConsole?.summary(root, record.control || {agents: [], policies: [], runs: []});
     const metrics = el("div", "ops-summary");
     for (const [label, value] of [
       [
@@ -485,6 +487,12 @@
         ? JSON.stringify(currentPlan, null, 2)
         : "Select a policy and compile an order.\n\nThe plan binds instrument rules, price, quantity, policy, expiry and client order ID.",
     );
+    const run = record.control?.runs.find(item => item.order_id === currentPlan?.id);
+    if (run) {
+      const agent = record.control.agents.find(item => item.id === run.agent_id);
+      const team = record.control.policies.find(item => item.id === run.policy_id);
+      right.append(el("p", "ops-record", `${agent?.agent.name || run.agent_id} · ${team?.policy.name || run.policy_id} · held ${run.held_usdt} USDT`));
+    }
     right.append(output);
     const actions = el("div", "ops-actions");
     if (currentPlan?.status === "AWAITING_APPROVAL")
@@ -704,6 +712,13 @@
     const root = byId("ops-agents");
     root.replaceChildren();
     if (!record) return;
+    window.AgentConsole.render(root, record, {request, refresh, writable});
+    const advanced = el("details", "agent-setup");
+    advanced.append(el("summary", "", "Economic IR programs · advanced"));
+    programs(advanced);
+    root.append(advanced);
+  }
+  function programs(root) {
     root.append(
       table(
         "Economic programs",
@@ -848,10 +863,11 @@
       notify(e.message, true);
     }
   });
-  window.EngineConsole = { refresh, render, isView: (view) => views.has(view) };
+  window.EngineConsole = { refresh, render, openOrder: async id => {currentPlan = await request(`/trade/orders/${id}`); C.setView("execution");}, isView: (view) => views.has(view) };
   setInterval(() => {
     if (
       !document.hidden &&
+      !document.querySelector('.ops-view:not([hidden]) details[open] form, .ops-view:not([hidden]) form[data-editing="true"]') &&
       !["INPUT", "SELECT", "TEXTAREA"].includes(
         document.activeElement?.tagName,
       ) &&

@@ -13,7 +13,7 @@ from economic_machine.values import MachineError, canonical, require_keys
 
 from .domain import identifier
 
-SCOPES = frozenset({"read", "demands:write", "supplies:write", "orders:write", "payments:request", "engine:read", "engine:write", "data:read"})
+SCOPES = frozenset({"read", "demands:write", "supplies:write", "orders:write", "payments:request", "engine:read", "engine:write", "data:read", "agents:run"})
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS api_keys (
  id TEXT PRIMARY KEY, session_id TEXT NOT NULL REFERENCES sessions(id),
@@ -31,6 +31,7 @@ class Principal:
     scopes: frozenset = frozenset()
     policy_id: str | None = None
     payment_mandate_id: str | None = None
+    engine_agent_id: str | None = None
 
     @property
     def owner(self):
@@ -47,6 +48,8 @@ class Access:
                     db.execute(statement)
             if "payment_mandate_id" not in {r[1] for r in db.execute("PRAGMA table_info(api_keys)")}:
                 db.execute("ALTER TABLE api_keys ADD COLUMN payment_mandate_id TEXT")
+            if "engine_agent_id" not in {r[1] for r in db.execute("PRAGMA table_info(api_keys)")}:
+                db.execute("ALTER TABLE api_keys ADD COLUMN engine_agent_id TEXT")
 
     def _owner(self, db, sid):
         row = db.execute("SELECT * FROM sessions WHERE id=?", (sid,)).fetchone()
@@ -68,10 +71,10 @@ class Access:
             self._owner(db, row["session_id"])
             db.execute("UPDATE api_keys SET last_used=? WHERE id=?", (now, row["id"]))
             return Principal(row["session_id"], row["id"], frozenset(json.loads(row["scopes"])),
-                             row["policy_id"], row["payment_mandate_id"])
+                             row["policy_id"], row["payment_mandate_id"], row["engine_agent_id"])
 
     def create(self, sid, raw):
-        require_keys({k: v for k, v in raw.items() if k != "payment_mandate_id"},
+        require_keys({k: v for k, v in raw.items() if k not in {"payment_mandate_id", "engine_agent_id"}},
                      {"name", "scopes", "policy_id", "ttl_seconds"}, "API key")
         name, scopes, ttl, pid = raw["name"], raw["scopes"], raw["ttl_seconds"], raw["policy_id"]
         if not isinstance(name, str) or not 1 <= len(name.strip()) <= 60 or any(ord(c) < 32 for c in name):
@@ -86,6 +89,13 @@ class Access:
         elif pid is not None:
             raise MachineError("only order-writing keys bind a spending policy")
         mandate_id = raw.get("payment_mandate_id")
+        engine_agent_id = raw.get("engine_agent_id")
+        if "agents:run" in scopes:
+            identifier(engine_agent_id, "engine agent ID")
+            if not set(scopes) <= {"agents:run", "engine:read"}:
+                raise MachineError("agent-bound keys cannot acquire unbound write permissions")
+        elif engine_agent_id is not None:
+            raise MachineError("an engine agent binding requires agents:run permission")
         if mandate_id is not None:
             identifier(mandate_id, "payment mandate id")
             if "payments:request" not in scopes:
@@ -109,12 +119,13 @@ class Access:
                 "AND revoked_at IS NULL AND expires>?", (sid, now)).fetchone()[0]
             if count >= 100:
                 raise MachineError("active API key limit reached; revoke an unused key")
-            db.execute("INSERT INTO api_keys VALUES (?,?,?,?,?,?,?,?,?,NULL,NULL,?)", (
+            db.execute("INSERT INTO api_keys VALUES (?,?,?,?,?,?,?,?,?,NULL,NULL,?,?)", (
                 kid, sid, hashlib.sha256(token.encode()).hexdigest(), name.strip(), token[:16],
-                canonical(sorted(scopes)).decode(), pid, now, expires, mandate_id))
+                canonical(sorted(scopes)).decode(), pid, now, expires, mandate_id, engine_agent_id))
             self.store._event(db, kid + ":created", "API_KEY_CREATED", {
                 "key_id": kid, "session_id": sid, "scopes": sorted(scopes), "policy_id": pid,
                 "payment_mandate_id": mandate_id,
+                "engine_agent_id": engine_agent_id,
                 "expires": expires, "at": now})
             metadata = self._public(db.execute("SELECT * FROM api_keys WHERE id=?", (kid,)).fetchone())
         return {"key": metadata, "secret": token, "shown_once": True}
@@ -125,6 +136,7 @@ class Access:
         return {"id": row["id"], "name": row["name"], "prefix": row["prefix"],
                 "scopes": json.loads(row["scopes"]), "policy_id": row["policy_id"],
                 "payment_mandate_id": row["payment_mandate_id"],
+                "engine_agent_id": row["engine_agent_id"],
                 "created": row["created"], "expires": row["expires"], "last_used": row["last_used"],
                 "revoked_at": row["revoked_at"], "status": status, "mode": self.mode.upper()}
 
@@ -158,7 +170,13 @@ class Access:
         parts = path.strip("/").split("/")
         scope = None
         if path.startswith("/api/engine/"):
-            if method == "GET" and (path in {"/api/engine/overview", "/api/engine/profiles"}
+            if len(parts) in {4, 5, 6} and parts[2] == "agents" and (
+                    (method == "GET" and (len(parts) == 4 or (len(parts) == 6 and parts[4] == "runs")))
+                    or (method == "POST" and len(parts) == 5 and parts[4] == "runs")):
+                if principal.engine_agent_id != parts[3]:
+                    raise PermissionError("API key is bound to another engine agent")
+                scope = "agents:run"
+            elif method == "GET" and (path in {"/api/engine/overview", "/api/engine/profiles", "/api/engine/control"}
                     or (len(parts) == 5 and parts[2:4] == ["trade", "orders"])):
                 scope = "engine:read"
             elif method == "POST" and (path in {"/api/engine/trade/orders", "/api/engine/usage", "/api/engine/programs/compile", "/api/engine/native/evaluate", "/api/engine/native/programs/compile", "/api/engine/native/programs/evaluate"}

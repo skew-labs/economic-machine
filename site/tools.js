@@ -88,6 +88,7 @@ function coverage(target, report) {
   }
 }
 async function home() {
+  if (!$("home-coverage")) return;
   const report = await atlas();
   $("home-coverage").replaceChildren();
   const c = report.derived.coverage;

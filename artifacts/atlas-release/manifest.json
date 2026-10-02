@@ -1,6 +1,6 @@
 {
   "schema": "machine-release-proof-1",
-  "created_at": 1790966529,
+  "created_at": 1790969937,
   "files": [
     {
       "path": "LICENSE",
@@ -9,8 +9,28 @@
     },
     {
       "path": "README.md",
-      "bytes": 13781,
-      "sha256": "41a52d041f8b137e2bfa2ac22ba2c9e03594a1334a7dd590ccdb12a03f7017b3"
+      "bytes": 14980,
+      "sha256": "aa41e169a2d36f2bb8c04e83b234d02f188bd54e7fccb1c3949ff72e79bce056"
+    },
+    {
+      "path": "artifacts/atlas-release/agent-control-tests.log",
+      "bytes": 15192,
+      "sha256": "4b574a99d5b43f4c066b0ea3b28bc15310077fd490ec35eae525bfb0613c5bb9"
+    },
+    {
+      "path": "artifacts/atlas-release/agent-control-validation.json",
+      "bytes": 8216,
+      "sha256": "c38c897fa10b4b83ca1b0301abc5bae76b0a7ecb8eded1c333fc7319cb5adcc0"
+    },
+    {
+      "path": "artifacts/atlas-release/agent-focused-tests.log",
+      "bytes": 4239,
+      "sha256": "354144f85af26717bf0f17ed2ea9313efaf0865e790cc16f6a97be6a5b97b40a"
+    },
+    {
+      "path": "artifacts/atlas-release/agent-portal-tests.log",
+      "bytes": 1240,
+      "sha256": "13aaa7282839fdd18793621e85160d4716e392c26b21f6a97b2867272fd3532f"
     },
     {
       "path": "artifacts/atlas-release/atlas.json",
@@ -49,13 +69,13 @@
     },
     {
       "path": "artifacts/atlas-release/line-count.json",
-      "bytes": 10212,
-      "sha256": "2e1ffc8db93d9016b5acec71fa156d0ae8e2039070f60f6886d223686c71f5ab"
+      "bytes": 10613,
+      "sha256": "08ac5cecd3a5fe202c2cf0a22dc163189d83d19e814924d5876147bbe2d24417"
     },
     {
       "path": "artifacts/atlas-release/live-web-check.json",
       "bytes": 3903,
-      "sha256": "3280277a90134c264852c62ef22696af7fa09208131b82d817db2a3fc3fab1f0"
+      "sha256": "a874f2cd2dde45c2a530e0ca4b8cae7bb6be17d126f94a4fb55eb36deece74fd"
     },
     {
       "path": "artifacts/atlas-release/native-benchmark.json",
@@ -73,6 +93,21 @@
       "sha256": "451f00b777426773cd44354270d72902f57f03a4298f27509a1795784dcb17fd"
     },
     {
+      "path": "artifacts/atlas-release/screenshots/agent-budget-denial.png",
+      "bytes": 146859,
+      "sha256": "be7defd9e311d01f7b226d47f6b8ac694226b832c68ba469b9a2b39921f6373d"
+    },
+    {
+      "path": "artifacts/atlas-release/screenshots/agent-order-review.png",
+      "bytes": 158446,
+      "sha256": "aa17aef9c8585c8bc00f22e3a25ecc90ec6140b822399784fcf1af285a1add34"
+    },
+    {
+      "path": "artifacts/atlas-release/screenshots/agent-shared-console.png",
+      "bytes": 118599,
+      "sha256": "d9c1f26a3e23bbf3b81e6b3202b20dd8441f39f60e0b24d16a4d23a14d7e9cb8"
+    },
+    {
       "path": "artifacts/atlas-release/screenshots/atlas-a100.png",
       "bytes": 49168,
       "sha256": "1b490b2774f8f4843f1494887a56be848508909a64269c35c445e5f51ccf5184"
@@ -81,6 +116,11 @@
       "path": "artifacts/atlas-release/screenshots/console-data.png",
       "bytes": 82492,
       "sha256": "0c8325724cfff18176923fee23ab7c450f2aac8a65ad319e56fd5feb42b9d0c0"
+    },
+    {
+      "path": "artifacts/atlas-release/screenshots/engine-console-home.png",
+      "bytes": 57630,
+      "sha256": "47f07ab109712415eb01ccf96959dbf1499731220ae7e43c7fa3ffa066fc321f"
     },
     {
       "path": "artifacts/atlas-release/screenshots/home.png",
@@ -126,6 +166,11 @@
       "path": "contracts/TestEIP3009Token.sol",
       "bytes": 1999,
       "sha256": "86f0b23f24aac14f2ae4806b92c215bd53605eb7cb40109ac57cf4b6e40bef95"
+    },
+    {
+      "path": "docs/AGENT_CONTROL.md",
+      "bytes": 7626,
+      "sha256": "2a7bdd267757079e57359307d57808e655ee25b84e9a482ef0e133678bb39351"
     },
     {
       "path": "docs/ATLAS_DATAPASS_NATIVE.md",
@@ -294,8 +339,8 @@
     },
     {
       "path": "scripts/release_proof.py",
-      "bytes": 3357,
-      "sha256": "75fa3c51b05c60c2a5ce3c7608fb94d03df53101e2a51ab4e4258c503680caf0"
+      "bytes": 3557,
+      "sha256": "e4975582f791088b88f8d0eb2ddf8e7378fb9d1ba7c167ebd6130d34aa765f84"
     },
     {
       "path": "scripts/sepolia_demo.py",
@@ -374,13 +419,13 @@
     },
     {
       "path": "site/assets/ui-icons.svg",
-      "bytes": 9157,
-      "sha256": "7c2950580bcfd943e92d2fae0293e3208ee1fcfba75e4b9712ee4879a72e03f7"
+      "bytes": 9470,
+      "sha256": "75ec2f132050fc02e6aa1ebff7127862e4ff8437a936683f9ffb3080173eccb5"
     },
     {
       "path": "site/atlas.html",
-      "bytes": 5194,
-      "sha256": "781db7aa5cb02608468ea7b0c0271ff0418c0c3fbdf7948a8bf93de53bda01b6"
+      "bytes": 5233,
+      "sha256": "09eb5dfe22db88f49a17c38500ce9f2756affc33339651f429522c566e5ca294"
     },
     {
       "path": "site/atlas.json",
@@ -389,13 +434,13 @@
     },
     {
       "path": "site/data-pass.html",
-      "bytes": 4271,
-      "sha256": "ab432043e4e82c49b95095c49be43e225e2ecf280fc0a6fce0c3ced147e9426d"
+      "bytes": 4310,
+      "sha256": "8469442ad313b00e20bf5745708b5e07f840531c6aeac0095d9db544d3edb6d4"
     },
     {
       "path": "site/engine-product.html",
-      "bytes": 4458,
-      "sha256": "3c1cb503795b85a065adac4e7544f92ef999428442968d3506f143dd7d9d8fb2"
+      "bytes": 4478,
+      "sha256": "79f95cfb44676ffd0607f320106cd0e38879310f3fefe62d221721d58c12a68a"
     },
     {
       "path": "site/evidence.html",
@@ -414,13 +459,13 @@
     },
     {
       "path": "site/index.html",
-      "bytes": 8850,
-      "sha256": "923e36e3115cf0492b1e50c084e2bea863961704f99f90b9d698263b0d49ecb9"
+      "bytes": 9809,
+      "sha256": "620ae4837f172f907bb6125cfd81e0e5138753968da9b1345c89ee7e55739761"
     },
     {
       "path": "site/site-lens.html",
-      "bytes": 6091,
-      "sha256": "d25e0de61e0e6490fec83878a609e90d779ff65cdb1d7bd79a7ead2084c206fb"
+      "bytes": 6130,
+      "sha256": "63e15734b61cb694cd35beb554314b1f7787cb20e91f32c8ca5e9520683e139d"
     },
     {
       "path": "site/site.js",
@@ -434,18 +479,18 @@
     },
     {
       "path": "site/tools.css",
-      "bytes": 15577,
-      "sha256": "77f7b145943bb76ed6037b8ab901b82d2a2c60f63cc1326a94fed85c0084cc73"
+      "bytes": 17318,
+      "sha256": "747510e8c7c9864beed0695478020dcc1c2058f7493c8a36b7951f5734d39f5d"
     },
     {
       "path": "site/tools.html",
-      "bytes": 4749,
-      "sha256": "65e9abf58627c443839442639bb8708daa32f51a2d879ae48a29683423798a05"
+      "bytes": 4788,
+      "sha256": "bc2ca9c591eb2f97ba5d9fcff766004e5390512de7fdba716e3733256369f4e4"
     },
     {
       "path": "site/tools.js",
-      "bytes": 9968,
-      "sha256": "990241dd1f4b584971ef0f401c5ca249f70d6b4949a98fdf5dcf892a9f7ee7fb"
+      "bytes": 10003,
+      "sha256": "536c58e6dd8e923750fdd27cd4169e93d37ded640ddfc8b275b8515e1b5a9a8d"
     },
     {
       "path": "src/economic_machine/__init__.py",
@@ -519,13 +564,13 @@
     },
     {
       "path": "src/machine_commerce/access.py",
-      "bytes": 10727,
-      "sha256": "2b6132cb96d945385140bf0bb76c77e76927789e5d34863c2ea5536e1eae5203"
+      "bytes": 12047,
+      "sha256": "d0bab2af43013f5fd1bb7ba4733d08dd43b74398b3215f9c335802425878079c"
     },
     {
       "path": "src/machine_commerce/api.py",
-      "bytes": 22091,
-      "sha256": "89b347c5f6652e7b4258797c788b2290dbbb1c0910781cf4ad8505b44baf6e19"
+      "bytes": 22433,
+      "sha256": "67542f59b0e4e004660524f9dcd86ef2a650dba116cf6e1b4f17bb3694f13675"
     },
     {
       "path": "src/machine_commerce/atlas.py",
@@ -569,8 +614,8 @@
     },
     {
       "path": "src/machine_commerce/portal.py",
-      "bytes": 21299,
-      "sha256": "a70dd7d666e9ac89656e858e59d3fbfb2dc0e128aadd7b1bb9e113fb1b0f554d"
+      "bytes": 21361,
+      "sha256": "66b5dedea82b31119673414538b2ae3a1afb23adc6d3c1a5a1cf72d56d740e5f"
     },
     {
       "path": "src/machine_commerce/providers.py",
@@ -609,8 +654,8 @@
     },
     {
       "path": "src/machine_engine/api.py",
-      "bytes": 10773,
-      "sha256": "9188813a64737080b53f728b3177ed40ac5279128e1c320fee135c0f9666d442"
+      "bytes": 12200,
+      "sha256": "b9f1c3995ee35ebd318c8c663eb10f4702cc32b2713d5f2937ea9c62606452a8"
     },
     {
       "path": "src/machine_engine/broker.py",
@@ -621,6 +666,11 @@
       "path": "src/machine_engine/connections.py",
       "bytes": 12753,
       "sha256": "8b7ba85129f61fc51ef7fa0dbc68750ee0687e88a68344834888193189d6f09e"
+    },
+    {
+      "path": "src/machine_engine/control.py",
+      "bytes": 28645,
+      "sha256": "153529a604a1211cf22d684ee3e95b77cc723d20448ebbca75f389dc986c841c"
     },
     {
       "path": "src/machine_engine/native.py",
@@ -634,8 +684,8 @@
     },
     {
       "path": "src/machine_engine/routes.py",
-      "bytes": 6759,
-      "sha256": "eb1a1ad30c8966e0f51fb233920036ad6f4feb4678329349d3587f12cffe6927"
+      "bytes": 8276,
+      "sha256": "b1f4f3481d826a1fe99852484442d3233ccf87b5eb1ba8b9b2059a7f13227a7e"
     },
     {
       "path": "src/machine_engine/scheduler.py",
@@ -644,18 +694,28 @@
     },
     {
       "path": "src/machine_engine/trading.py",
-      "bytes": 24878,
-      "sha256": "261703acdf5f2ee1cb1b56062005503c611b0c9a103b4a88025b8b9e2c298345"
+      "bytes": 25712,
+      "sha256": "628c81442d1f35b63fe2a75c40ecd84f816fe4843cae3f8b41dcd7db6819310e"
     },
     {
       "path": "src/machine_engine/workspace.py",
-      "bytes": 12185,
-      "sha256": "bddbcf121eab6bda033800a3a3ae5f5a95ca5f92f16d683039ccb052467a514e"
+      "bytes": 12365,
+      "sha256": "b3dbd6adc0164642b35f7a91c82d72b35e8b656faa9c7f1508a1667ad9320957"
+    },
+    {
+      "path": "tests/agent_console_fixture.py",
+      "bytes": 2998,
+      "sha256": "47b0b52d3ab17b388b09ab4b13c06e2c284ec08db4657db4303b6a7d5f861de8"
     },
     {
       "path": "tests/test_access.py",
       "bytes": 11716,
       "sha256": "917b5ad46af9ca01c544c06ccf972e2735a134dffc88b2a361281a7bd476dd7d"
+    },
+    {
+      "path": "tests/test_agent_control.py",
+      "bytes": 19785,
+      "sha256": "0da4a114c52c2872038651c3418377bdde22648f7590b4d33fda3db3db6c262c"
     },
     {
       "path": "tests/test_api.py",
@@ -714,8 +774,8 @@
     },
     {
       "path": "tests/test_engine_portal.py",
-      "bytes": 3935,
-      "sha256": "a1ed68dc3e391dee0d5b740e456a64044df48fdd85adb5e1313a50181fc20eb2"
+      "bytes": 3948,
+      "sha256": "a9f89bde33ac3466d5ca62c794a86486269bbe52f698a34beb795b091d72e0d0"
     },
     {
       "path": "tests/test_engine_workspace.py",
@@ -798,14 +858,19 @@
       "sha256": "f38e3685259bb668f6d48cbea6653cd06ea0b4477546617a84f35cfc29188d2f"
     },
     {
+      "path": "web/agents.js",
+      "bytes": 15404,
+      "sha256": "66501d89b9e812e2b669ee538dfcc13b10801b1438d4dcd7353b436360db0b0c"
+    },
+    {
       "path": "web/app.css",
       "bytes": 24410,
       "sha256": "dfcb1c290266fbfdf64a94b7c25b88fb178abb9b1903c4a2f2e9ea8b0d95dcb8"
     },
     {
       "path": "web/app.js",
-      "bytes": 33066,
-      "sha256": "933a98f9226ebb551ae11f06382b21f7f32316c12369c01a2636ce5935cdb721"
+      "bytes": 34131,
+      "sha256": "bfde0c386588ac31718957890ca01c170dec57897eb265dbd4be46fc211f9384"
     },
     {
       "path": "web/assets/ui-icons.svg",
@@ -824,18 +889,18 @@
     },
     {
       "path": "web/index.html",
-      "bytes": 21649,
-      "sha256": "06841e1de5978935e6ea9acd51043f09271be401cf3128951c795f71d2e40dec"
+      "bytes": 21699,
+      "sha256": "53e70ad6fe65ea980444115f0b99c5b2beb0d5bf073528bcd1dd6aeceed1093a"
     },
     {
       "path": "web/operations.css",
-      "bytes": 7289,
-      "sha256": "ba21783918510c6796d5214f07c0b72d927c09032b6e881981d331c22e631e5a"
+      "bytes": 9031,
+      "sha256": "167f29f7cc199ca0bb045d23d56b0f12936d20d005c7a16d106dd03237a90fe6"
     },
     {
       "path": "web/operations.js",
-      "bytes": 27613,
-      "sha256": "ee93260801940b4f6cb11aa29f76121a81d4a97d87d2c9e44df0cce78cc5a9c8"
+      "bytes": 28686,
+      "sha256": "1dde29f3b60ff57a16bc9d3c17ea8c6e38d1a60582268f31e5ce8b47b1036c01"
     },
     {
       "path": "web/submission.css",
@@ -864,8 +929,9 @@
     "arbitrum_datapass_public_deployment": "NOT_DEPLOYED",
     "live_new_datapass_purchases": 0,
     "native_authority": "CANDIDATE_ONLY",
+    "agent_control": "SAME_ENGINE_DATABASE_SHARED_USDT_TURNOVER",
     "raw_archives_publicly_resold": false
   },
   "assurance": "SOURCE_AUDIT_PLUS_REPRODUCIBLE_LOCAL_EVM_AND_NATIVE_TESTS_NOT_PRODUCTION_CERTIFICATION",
-  "manifest_sha256": "a59b91f8c60fd176a800ac72a380f33886ad0846cae7096014dafdbfaba16070"
+  "manifest_sha256": "f597217c6c0666de9ecebab9560112161edddf2346e0aeb2dcedc2f720bdaff1"
 }

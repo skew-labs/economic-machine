@@ -1,7 +1,7 @@
 # Economic Machine
 
-An open-source deterministic runtime and user-owned operations console for agents.
-Connect accounts, inspect balances and orders, bound each agent's capital, and replay its decisions.
+An open-source console to connect your APIs and run multiple agents under shared budgets and rules.
+The console is the control surface of the Economic Machine engine, with one workspace and execution ledger.
 LLMs interpret intent or handle unknown states; the kernel handles typed state, allowed transitions,
 invariants, capital reservations and verifiable receipts.
 
@@ -23,6 +23,23 @@ venue adapters remain separate work. See [the unified runtime contract](docs/UNI
 
 Exchange trades belong to your exchange adapter. The separate x402 commerce layer is for purchasing
 external data and compute; it is not a toll on every operation or a mandatory payment path for venue trading.
+
+## One console, one engine
+
+Connect your exchange, wallet, data or AI API. Register named agents such as ALPHA, VAULT and WATCH
+against the same connections and an immutable shared policy. Agent-bound API keys admit only that
+agent's declared tasks; they cannot change rules, create keys or approve/transmit orders. Sync,
+C++ native candidates and venue-order preparation all enter the same durable run ledger.
+
+Two agents cannot independently consume the same shared USDT turnover envelope. Holds are reserved
+before planning, rechecked before approval and dispatch, retained on ambiguous venue outcomes,
+and converted to observed turnover once reconciliation reaches a terminal result. Pausing the agent
+or its shared policy blocks future preparation and transmission. The owner can withdraw an unsent plan;
+unknown transmitted orders require reconciliation, not a blind retry or reservation release.
+
+USDT venue turnover, USD reported AI costs and token-specific external service payments retain their
+own units and accounting. The control layer does not invoke an LLM or authorize live trading by itself.
+[Agent controls and reproducible checks](docs/AGENT_CONTROL.md).
 
 ## Compute tools and native execution
 

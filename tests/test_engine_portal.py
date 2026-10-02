@@ -29,7 +29,7 @@ class EnginePortal(unittest.TestCase):
         response = self.client.get("/console")
         self.assertEqual(response.status_code, 200)
         self.assertIn('name="machine-api-prefix" content="/commerce"', response.text)
-        for asset in ["operations.css", "operations.js", "assets/ui-icons.svg"]:
+        for asset in ["operations.css", "operations.js", "agents.js", "assets/ui-icons.svg"]:
             self.assertIn("/commerce/" + asset, response.text)
             self.assertEqual(self.client.get("/" + asset).status_code, 200)
         self.assertIn("frame-ancestors 'none'", response.headers["content-security-policy"])

@@ -306,7 +306,12 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
         return access.list(sid)
 
     @app.post("/api/keys")
-    def create_key(raw: dict, sid=Depends(buyer)):
+    def create_key(raw: dict, request: Request, sid=Depends(buyer)):
+        if raw.get("engine_agent_id") is not None:
+            agent = engine_workspace(request, sid).control.agent(raw["engine_agent_id"], active=True)
+            ttl = raw.get("ttl_seconds")
+            if type(ttl) is int:
+                raw = raw | {"ttl_seconds": min(ttl, agent["policy_expires_at"] - int(clock()))}
         return access.create(sid, raw)
 
     @app.post("/api/keys/{kid}/revoke")

@@ -1,0 +1,246 @@
+{
+  "schema": "machine-agent-control-verification-1",
+  "checked_at": 1790969178,
+  "tests": 93,
+  "test_log_sha256": "4b574a99d5b43f4c066b0ea3b28bc15310077fd490ec35eae525bfb0613c5bb9",
+  "public_http": {
+    "/console": {
+      "status": 200,
+      "sha256": "b0d620e506f48c6e1eb78f309dfa3de852ded9c9af3f1738a62e5f2f11983069"
+    },
+    "/agents.js": {
+      "status": 200,
+      "sha256": "66501d89b9e812e2b669ee538dfcc13b10801b1438d4dcd7353b436360db0b0c"
+    },
+    "/operations.js": {
+      "status": 200,
+      "sha256": "1dde29f3b60ff57a16bc9d3c17ea8c6e38d1a60582268f31e5ce8b47b1036c01"
+    },
+    "/": {
+      "status": 200,
+      "sha256": "83a5bfd993b93ef54db5547553f7808e02c078b81d1df16375792ec31b13cd61"
+    },
+    "/api/engine/control": {
+      "status": 401,
+      "sha256": "290c0c9b03b9c3d8aeed98504947b808a357827dd137287b3ba999da8edda2e9"
+    }
+  },
+  "browser_fixture_engine_readback": {
+    "policies": [
+      {
+        "id": "shared-policy-7186ba60309ff5d02059381a",
+        "policy": {
+          "allowed_operations": [
+            "SYNC_CONNECTION",
+            "PLAN_VENUE_ORDER"
+          ],
+          "connection_ids": [
+            "connection-ab4747e209d12fad4a587891"
+          ],
+          "expires_at": 1791055414,
+          "max_active_runs": 2,
+          "max_order_usdt": "10",
+          "name": "TEAM",
+          "turnover_limit_usdt": "15",
+          "venue_policy_ids": [
+            "venue-policy-03af494f3338cb8e2e263abb",
+            "venue-policy-b9d0c48eb6f6787e54ed16d7"
+          ]
+        },
+        "status": "ACTIVE",
+        "spent_usdt": "0",
+        "held_usdt": "10",
+        "remaining_usdt": "5",
+        "budget_basis": "GROSS_VENUE_TURNOVER_USDT_NOT_WALLET_CASH"
+      }
+    ],
+    "agents": [
+      {
+        "id": "agent-1b81c97a4c745f6ef01ac713",
+        "agent": {
+          "connection_ids": [
+            "connection-ab4747e209d12fad4a587891"
+          ],
+          "name": "ALPHA",
+          "operations": [
+            "SYNC_CONNECTION",
+            "PLAN_VENUE_ORDER"
+          ],
+          "policy_id": "shared-policy-7186ba60309ff5d02059381a",
+          "role": "Trader"
+        },
+        "status": "ACTIVE"
+      },
+      {
+        "id": "agent-4aafbad03a442cfcb4ffc62c",
+        "agent": {
+          "connection_ids": [
+            "connection-ab4747e209d12fad4a587891"
+          ],
+          "name": "VAULT",
+          "operations": [
+            "SYNC_CONNECTION",
+            "PLAN_VENUE_ORDER"
+          ],
+          "policy_id": "shared-policy-7186ba60309ff5d02059381a",
+          "role": "Treasury"
+        },
+        "status": "ACTIVE"
+      }
+    ],
+    "runs": [
+      {
+        "id": "run-8b433b0084865403bbd67069",
+        "agent_id": "agent-1b81c97a4c745f6ef01ac713",
+        "policy_id": "shared-policy-7186ba60309ff5d02059381a",
+        "connection_id": "connection-ab4747e209d12fad4a587891",
+        "operation": "PLAN_VENUE_ORDER",
+        "status": "AWAITING_APPROVAL",
+        "held_usdt": "10",
+        "charged_usdt": "0",
+        "order_id": "venue-order-92e65d34db88079f768a1c91",
+        "result": null,
+        "error_code": null,
+        "created_at": 1790969102,
+        "updated_at": 1790969102,
+        "input_hash": "5f8a8e2bf96bf7c4e60c1254c807d9aafee8b3c009b79d059a7e7976a1964184",
+        "dispatch_authority": "OWNER_PER_ORDER_ONLY"
+      }
+    ],
+    "local_keys": [],
+    "workspace_store": "SAME_ENGINE_DATABASE",
+    "payments_scope": "EXTERNAL_SERVICES_ONLY",
+    "budget_units": "USDT_TURNOVER_SEPARATE_FROM_USD_API_COST_AND_USDC_PAYMENTS"
+  },
+  "journal_integrity": true,
+  "live_transmission_enabled": false,
+  "new_financial_transmissions": 0,
+  "signatures_created": 0,
+  "fixture_assurance": "ISOLATED_VENUE_ADAPTERS_NOT_CUSTOMER_ACCOUNTS",
+  "site_commit": "0041a1c379156af3df4aeff4f42e6ff2e745755b",
+  "site_deployment": "appgdep_6ac006ef23a4819192e3168151636349",
+  "latest_focused_tests": 22,
+  "new_agent_tests": 17,
+  "unique_related_test_cases": 94,
+  "focused_log_sha256": "354144f85af26717bf0f17ed2ea9313efaf0865e790cc16f6a97be6a5b97b40a",
+  "current_source_database_readback": {
+    "policies": [
+      {
+        "id": "shared-policy-7186ba60309ff5d02059381a",
+        "policy": {
+          "allowed_operations": [
+            "SYNC_CONNECTION",
+            "PLAN_VENUE_ORDER"
+          ],
+          "connection_ids": [
+            "connection-ab4747e209d12fad4a587891"
+          ],
+          "expires_at": 1791055414,
+          "max_active_runs": 2,
+          "max_order_usdt": "10",
+          "name": "TEAM",
+          "turnover_limit_usdt": "15",
+          "venue_policy_ids": [
+            "venue-policy-03af494f3338cb8e2e263abb",
+            "venue-policy-b9d0c48eb6f6787e54ed16d7"
+          ]
+        },
+        "status": "ACTIVE",
+        "spent_usdt": "0",
+        "held_usdt": "10",
+        "remaining_usdt": "5",
+        "budget_basis": "GROSS_VENUE_TURNOVER_USDT_NOT_WALLET_CASH"
+      }
+    ],
+    "agents": [
+      {
+        "id": "agent-1b81c97a4c745f6ef01ac713",
+        "agent": {
+          "connection_ids": [
+            "connection-ab4747e209d12fad4a587891"
+          ],
+          "name": "ALPHA",
+          "operations": [
+            "SYNC_CONNECTION",
+            "PLAN_VENUE_ORDER"
+          ],
+          "policy_id": "shared-policy-7186ba60309ff5d02059381a",
+          "role": "Trader"
+        },
+        "status": "ACTIVE"
+      },
+      {
+        "id": "agent-4aafbad03a442cfcb4ffc62c",
+        "agent": {
+          "connection_ids": [
+            "connection-ab4747e209d12fad4a587891"
+          ],
+          "name": "VAULT",
+          "operations": [
+            "SYNC_CONNECTION",
+            "PLAN_VENUE_ORDER"
+          ],
+          "policy_id": "shared-policy-7186ba60309ff5d02059381a",
+          "role": "Treasury"
+        },
+        "status": "ACTIVE"
+      }
+    ],
+    "runs": [
+      {
+        "id": "run-8b433b0084865403bbd67069",
+        "agent_id": "agent-1b81c97a4c745f6ef01ac713",
+        "policy_id": "shared-policy-7186ba60309ff5d02059381a",
+        "connection_id": "connection-ab4747e209d12fad4a587891",
+        "operation": "PLAN_VENUE_ORDER",
+        "status": "EXPIRED_UNSENT",
+        "held_usdt": "10",
+        "charged_usdt": "0",
+        "order_id": "venue-order-92e65d34db88079f768a1c91",
+        "result": {
+          "id": "venue-order-92e65d34db88079f768a1c91",
+          "status": "EXPIRED_UNSENT",
+          "plan": {
+            "client_order_id": "em-cc4a47fd762887521bb083fb",
+            "connection_id": "connection-ab4747e209d12fad4a587891",
+            "expires_at": 1790969162,
+            "fee_reserve_bps": "20",
+            "instrument_hash": "1185462fc629158ea92f8652222c9897c7236484835684f30bd1e5be096b11c9",
+            "notional_usdt": "10",
+            "policy_hash": "9291fdc4f46d055fa378b4ccada853e59435fe70a0e271754f62ed794a3fb076",
+            "policy_id": "venue-policy-03af494f3338cb8e2e263abb",
+            "price": "100",
+            "profile": "binance-spot",
+            "quantity": "0.1",
+            "reduce_only": false,
+            "request_id": "agent-run-8b433b0084865403bbd67069",
+            "side": "BUY",
+            "symbol": "BTCUSDT",
+            "time_in_force": "IOC"
+          },
+          "plan_hash": "3f7fc893cdf6d312a2da0157b3576a8e02ec4af169ad18ec1898d04dd0b641eb",
+          "reserved_usdt": "0",
+          "filled_quantity": "0",
+          "filled_quote_usdt": "0",
+          "venue_order_id": null,
+          "error_code": null,
+          "updated_at": 1790969102,
+          "commission_assurance": "NOT_RECONCILED_FROM_VENUE_TRADE_HISTORY",
+          "budget_basis": "GROSS_TURNOVER_NOT_WALLET_BALANCE"
+        },
+        "error_code": null,
+        "created_at": 1790969102,
+        "updated_at": 1790969102,
+        "input_hash": "5f8a8e2bf96bf7c4e60c1254c807d9aafee8b3c009b79d059a7e7976a1964184",
+        "dispatch_authority": "OWNER_PER_ORDER_ONLY"
+      }
+    ],
+    "local_keys": [],
+    "workspace_store": "SAME_ENGINE_DATABASE",
+    "payments_scope": "EXTERNAL_SERVICES_ONLY",
+    "budget_units": "USDT_TURNOVER_SEPARATE_FROM_USD_API_COST_AND_USDC_PAYMENTS"
+  },
+  "same_agent_and_order_status": true,
+  "final_checked_at": 1790969937,
+  "final_public_source_matches": true
+}

@@ -8,17 +8,17 @@ let recordedWorkspace;
 const $ = (id) => document.getElementById(id);
 const state = {view: 'overview', snapshot: null, keys: [], offers: [], expires: null, busy: null, revoke: null, connected: false, mode: 'development', payments: {mandates: [], payments: [], resource_details: []}};
 const names = {'csv-normalize': 'CSV normalization', 'arbitrum-state': 'Arbitrum state data', 'apac-compute-brief': 'Atlas APAC Compute Brief'};
-const scopeNames = {read: 'Read', 'demands:write': 'Demand', 'supplies:write': 'Supply', 'orders:write': 'Orders', 'payments:request': 'Payment requests'};
+const scopeNames = {read: 'Read', 'demands:write': 'Demand', 'supplies:write': 'Supply', 'orders:write': 'Orders', 'payments:request': 'Payment requests', 'agents:run': 'Bound agent tasks'};
 const headings = {
   overview: ['Overview', 'Accounts, positions and execution in one workspace.', null],
   connections: ['Connections', 'Your credentials stay in your environment.', null],
-  agents: ['Agents & limits', 'Economic programs with bounded capital and deterministic receipts.', null],
+  agents: ['Agents & limits', 'Named agents. Shared budgets and rules. One execution history.', null],
   execution: ['Execution', 'Compile a bounded order. Review the exact plan before transmission.', null],
   playground: ['Playground', 'Typed economic programs. Deterministic validation.', null],
   usage: ['API usage', 'Reported consumption, with its source attached.', null],
   data: ['Data licenses', 'Version-bound compute intelligence. Wallet-owned access.', null],
   keys: ['API keys', 'Give your agents access. Keep control of what they can spend.', 'Create API key'],
-  funds: ['Funds & limits', 'Set the boundaries. Your agents operate within them.', 'Create policy'],
+  funds: ['Service payments', 'External data and compute purchases. Limits stay in their own currency.', 'Create policy'],
   activity: ['Activity', 'Track execution, delivery and settlement in your workspace.', null]
 };
 
@@ -132,6 +132,7 @@ function setView(view) {
   $('breadcrumb-current').textContent = title;
   $('page-description').textContent = description;
   $('primary-action').hidden = !action;
+  $('balance-shortcut').hidden = LOCAL_ENGINE || Boolean(window.EngineConsole?.isView(view));
   $('primary-action').replaceChildren(uiIcon('plus'), document.createTextNode(action || ''));
   window.EngineConsole?.render(view);
   window.DataConsole?.render(view);
@@ -169,6 +170,7 @@ function renderKeys() {
       const policy = state.snapshot.policies.find((p) => p.id === key.policy_id);
       row.append(el('div', 'policy-info', `Spending policy: ${policy ? policyLabel(policy) : key.policy_id}`));
     }
+    if (key.engine_agent_id) row.append(el('div', 'policy-info', `Bound agent: ${key.engine_agent_id}`));
     if (key.payment_mandate_id) row.append(el('div', 'policy-info', `Payment limit: ${key.payment_mandate_id.slice(-8)}`));
     list.append(row);
   }
@@ -488,6 +490,9 @@ async function initialize() {
       document.body.classList.add('local-engine');
       $('connection-label').textContent = 'Owner token required';
       $('mode-badge').textContent = 'Self-hosted';
+      $('copy-workspace').hidden = true;
+      $('workspace-expiry').textContent = 'Self-hosted engine';
+      $('integrity-status').textContent = 'Unlock to inspect journal';
       $('local-owner-access').hidden = false;
       return;
     }
@@ -608,6 +613,17 @@ $('wallet-logout').addEventListener('click', async () => {
 WalletBridge.subscribe(renderWallets);
 showWalletIdentity(null);
 window.MachineConsole = {api, state, notify, el, uiIcon, button, setView, API_PREFIX, PREVIEW, LOCAL_ENGINE,
+  engineStatus: record => {
+    if (LOCAL_ENGINE) {
+      connection(true, 'Owner connected');
+      $('workspace-expiry').textContent = 'Self-hosted engine';
+      $('integrity-status').textContent = record.runtime?.journal_integrity ? 'Engine journal verified' : 'Engine journal verification failed';
+    } else if (record.read_only) {
+      $('workspace-expiry').textContent = 'Historical payment evidence';
+      $('integrity-status').textContent = 'No live agent workspace connected';
+    }
+  },
+  showSecret: secret => { $('key-secret').value = secret; $('copy-secret').textContent = 'Copy key'; $('secret-dialog').showModal(); },
   getWallet: () => activeWallet,
   unlock: async token => {localOwnerToken = token; await api('/api/engine/overview'); await refresh();}};
 window.addEventListener('DOMContentLoaded', initialize, {once: true});

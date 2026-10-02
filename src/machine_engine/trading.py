@@ -106,7 +106,7 @@ class Trading:
             self.work.event(db, "VENUE_POLICY_PAUSED", {"id": pid})
         return {"id": pid, "status": "PAUSED", "existing_orders": "RECONCILE_OR_CANCEL"}
 
-    def plan(self, raw):
+    def plan(self, raw, *, control_run_id=None):
         require_keys(
             raw,
             {
@@ -178,6 +178,8 @@ class Trading:
         }
         with self.work.runtime.connect() as db:
             db.execute("BEGIN IMMEDIATE")
+            if control_run_id is not None:
+                self.work.control.before_plan_commit(db, control_run_id, notional)
             current, _ = self.connection(db, policy["connection_id"])
             if current["version"] != version:
                 raise MachineError("CONNECTION_CHANGED_DURING_PLAN")
@@ -204,12 +206,15 @@ class Trading:
                 ),
             )
             self.work.event(db, "VENUE_PLAN_CREATED", {"id": oid, "plan_hash": digest(plan)})
+            if control_run_id is not None:
+                self.work.control.attach_plan(db, control_run_id, oid)
             return self.public(db.execute("SELECT * FROM engine_trade_orders WHERE id=?", (oid,)).fetchone())
 
     def approve(self, oid, plan_hash):
         with self.work.runtime.connect() as db:
             db.execute("BEGIN IMMEDIATE")
             row = self.get(db, oid)
+            self.work.control.authorize_order(db, oid)
             if row["plan_hash"] != plan_hash or digest(json.loads(row["plan"])) != plan_hash:
                 raise MachineError("EXACT_PLAN_APPROVAL_REQUIRED")
             if row["status"] != "AWAITING_APPROVAL" or json.loads(row["plan"])["expires_at"] <= int(
@@ -221,6 +226,7 @@ class Trading:
                 (int(self.work.clock()), oid),
             )
             self.work.event(db, "VENUE_PLAN_OWNER_APPROVED", {"id": oid, "plan_hash": plan_hash})
+            self.work.control.observe_order(db, oid, "APPROVED")
         return self.order(oid)
 
     def dispatch(self, oid):
@@ -245,6 +251,7 @@ class Trading:
             db.execute("BEGIN IMMEDIATE")
             row = self.get(db, oid)
             current, _ = self.connection(db, row["connection_id"])
+            self.work.control.authorize_order(db, oid)
             policy_row = db.execute(
                 "SELECT * FROM engine_trade_policies WHERE id=?", (row["policy_id"],)
             ).fetchone()
@@ -286,6 +293,7 @@ class Trading:
                 "VENUE_ORDER_TRANSMITTING",
                 {"id": oid, "plan_hash": row["plan_hash"], "reserved": decstr(required)},
             )
+            self.work.control.observe_order(db, oid, "TRANSMITTING")
         try:
             result = broker.submit(plan)
         except VenueRejected:
@@ -352,6 +360,7 @@ class Trading:
                     (int(self.work.clock()), oid),
                 )
                 self.work.event(db, "VENUE_OUTCOME_UNKNOWN", {"id": oid, "reserved": row["reserved"]})
+                self.work.control.observe_order(db, oid, "UNKNOWN", row["filled_quote"])
         return self.order(oid)
 
     def reject(self, oid):
@@ -363,6 +372,7 @@ class Trading:
                     (oid,),
                 )
                 self.work.event(db, "VENUE_ORDER_REJECTED", {"id": oid})
+                self.work.control.observe_order(db, oid, "REJECTED")
         return self.order(oid)
 
     def observe(self, oid, result):
@@ -455,6 +465,7 @@ class Trading:
                     "evidence_hash": digest(result),
                 },
             )
+            self.work.control.observe_order(db, oid, status, decstr(quote))
         return self.order(oid)
 
     def reconcile(self, oid):
@@ -481,6 +492,7 @@ class Trading:
             plan = json.loads(row["plan"])
             db.execute("UPDATE engine_trade_orders SET status='CANCEL_PENDING' WHERE id=?", (oid,))
             self.work.event(db, "VENUE_CANCEL_REQUESTED", {"id": oid})
+            self.work.control.observe_order(db, oid, "CANCEL_PENDING", row["filled_quote"])
         try:
             result = self.broker_factory(body, clock=self.work.clock).cancel(plan)
             return self.observe(oid, result)

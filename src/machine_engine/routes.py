@@ -10,6 +10,42 @@ def engine_routes(workspace_dependency, *, require_owner=None):
     router = APIRouter(prefix="/api/engine")
     owner = [Depends(require_owner)] if require_owner else []
 
+    @router.get("/control")
+    def control_status(work=Depends(workspace_dependency)):
+        return work.control.status()
+
+    @router.post("/control-policies", dependencies=owner)
+    def control_policy(raw: dict, work=Depends(workspace_dependency)):
+        return work.control.policy(raw)
+
+    @router.post("/control-policies/{pid}/pause", dependencies=owner)
+    def control_pause(pid: str, work=Depends(workspace_dependency)):
+        return work.control.pause_policy(pid)
+
+    @router.post("/agents", dependencies=owner)
+    def create_agent(raw: dict, work=Depends(workspace_dependency)):
+        return work.control.register(raw)
+
+    @router.get("/agents/{aid}")
+    def get_agent(aid: str, work=Depends(workspace_dependency)):
+        return work.control.agent(aid)
+
+    @router.post("/agents/{aid}/pause", dependencies=owner)
+    def pause_agent(aid: str, work=Depends(workspace_dependency)):
+        return work.control.pause_agent(aid)
+
+    @router.post("/agents/{aid}/runs")
+    def run_agent(aid: str, raw: dict, work=Depends(workspace_dependency)):
+        return work.control.run(aid, raw)
+
+    @router.get("/agents/{aid}/runs/{rid}")
+    def agent_run(aid: str, rid: str, work=Depends(workspace_dependency)):
+        return work.control.get_run(aid, rid)
+
+    @router.post("/agents/{aid}/runs/{rid}/withdraw", dependencies=owner)
+    def withdraw_run(aid: str, rid: str, work=Depends(workspace_dependency)):
+        return work.control.withdraw(aid, rid)
+
     @router.get("/overview")
     def overview(work=Depends(workspace_dependency)):
         return work.overview()
@@ -154,6 +190,7 @@ class HostedWorkspaces:
                 path, clock=self.clock, credential_prefix="ENGINE_" + path.stem[:20].upper() + "_"
             )
             work.scheduler.run_once()
+            work.control.recover_once()
             for oid in work.trading.pending_ids(limit=1):
                 work.trading.reconcile(oid)
             count += 1

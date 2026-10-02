@@ -21,7 +21,7 @@ from .workspace import Workspace, now_iso
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = {"app.js", "app.css", "wallet.js", "console-theme.css", "operations.js", "operations.css",
-          "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt"}
+          "agents.js", "data.js", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt"}
 
 
 def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:8800", workspace=None, clock=time.time):
@@ -45,6 +45,7 @@ def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:880
         async def reconcile_orders():
             while True:
                 try:
+                    await asyncio.to_thread(work.control.recover_once)
                     for oid in work.trading.pending_ids():
                         await asyncio.to_thread(work.trading.reconcile, oid)
                 except Exception:  # noqa: BLE001 - bounded retry, no exception or credentials logged.
@@ -69,8 +70,19 @@ def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:880
         if request.url.path.startswith("/api/"):
             if request.headers.get("Origin") not in {None, origin}:
                 return JSONResponse({"error": "LOCAL_ORIGIN_REQUIRED"}, status_code=403)
-            if not hmac.compare_digest(request.headers.get("Authorization", "").encode(), ("Bearer " + token).encode()):
-                return JSONResponse({"error": "LOCAL_OWNER_AUTH_REQUIRED"}, status_code=401)
+            authorization = request.headers.get("Authorization", "")
+            if not hmac.compare_digest(authorization.encode(), ("Bearer " + token).encode()):
+                try:
+                    if not authorization.startswith("Bearer "):
+                        raise MachineError("AGENT_KEY_REQUIRED")
+                    aid = work.control.resolve_key(authorization.removeprefix("Bearer "))
+                except MachineError:
+                    return JSONResponse({"error": "LOCAL_OWNER_OR_AGENT_AUTH_REQUIRED"}, status_code=401)
+                parts = request.url.path.strip("/").split("/")
+                own_agent = len(parts) in {4, 5, 6} and parts[:3] == ["api", "engine", "agents"] and parts[3] == aid
+                allowed = own_agent and ((request.method == "GET" and (len(parts) == 4 or (len(parts) == 6 and parts[4] == "runs"))) or (request.method == "POST" and len(parts) == 5 and parts[4] == "runs"))
+                if not allowed:
+                    return JSONResponse({"error": "AGENT_BOUND_OPERATION_ONLY"}, status_code=403)
             body = bytearray()
             async for part in request.stream():
                 body.extend(part)
@@ -105,6 +117,17 @@ def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:880
     @app.get("/api/engine/profiles")
     def profiles():
         return {"profiles": PROFILES, "secret_storage": "USER_ENVIRONMENT_ONLY"}
+
+    @app.post("/api/engine/agents/{aid}/keys")
+    async def agent_key(aid, request: Request):
+        data = await raw(request)
+        require_keys(data, {"ttl_seconds"}, "local agent key")
+        return work.control.issue_key(aid, data["ttl_seconds"])
+
+    @app.post("/api/engine/agent-keys/{kid}/revoke")
+    async def revoke_agent_key(kid, request: Request):
+        require_keys(await raw(request), set(), "local key revocation")
+        return work.control.revoke_key(kid)
 
     @app.post("/api/engine/connections")
     async def connect(request: Request):
@@ -173,17 +196,18 @@ def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:880
         html = (ROOT / "web/index.html").read_text().replace("</head>", '<meta name="engine-auth" content="LOCAL_OWNER_TOKEN"><meta name="engine-mode" content="SELF_HOSTED"></head>')
         return HTMLResponse(html)
 
+    from .routes import engine_routes
+    router = engine_routes(lambda: work)
+    existing = {route.path for route in app.routes}
+    router.routes = [route for route in router.routes if route.path not in existing]
+    app.include_router(router)
+
     @app.get("/{asset:path}")
     def assets(asset):
         if asset not in ASSETS:
             return JSONResponse({"error": "NOT_FOUND"}, status_code=404)
         return FileResponse(ROOT / "web" / asset)
 
-    from .routes import engine_routes
-    router = engine_routes(lambda: work)
-    existing = {route.path for route in app.routes}
-    router.routes = [route for route in router.routes if route.path not in existing]
-    app.include_router(router)
     return app
 
 

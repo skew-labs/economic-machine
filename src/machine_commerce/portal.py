@@ -185,7 +185,6 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
 
     @app.get("/demo/atlas")
     async def atlas(version: str | None = None):
-        from .atlas import load_report
         from .datapass import DataProducts
         try:
             async with gate:
@@ -337,13 +336,14 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         html = (ROOT / "web/index.html").read_text()
         html = html.replace('  <link rel="stylesheet" href="/operations.css?v=wallet-20261002-3">', '')
         version = hashlib.sha256(b"".join((ROOT / "web" / name).read_bytes() for name in
-            ["index.html", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "data.js", "assets/ui-icons.svg"])).hexdigest()[:16]
+            ["index.html", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "data.js", "assets/ui-icons.svg"])).hexdigest()[:16]
         html = html.replace("Machine Market | Console", "skew | Console")
         html = html.replace('href="/" aria-label="Economic Machine console"', 'href="/commerce/" aria-label="Economic Machine console"')
         html = html.replace("<span>Machine<small>Economic infrastructure</small></span>", "<span>skew<small>Economic Machine</small></span>")
         html = html.replace("</head>", '<meta name="machine-api-prefix" content="/commerce"><link rel="stylesheet" href="/commerce/console-theme.css?v=wallet-20261002-3"><link rel="stylesheet" href="/commerce/operations.css?v=wallet-20261002-3"></head>')
         html = html.replace('href="/app.css', 'href="/commerce/app.css').replace('src="/app.js', 'src="/commerce/app.js')
         html = html.replace('src="/wallet.js', 'src="/commerce/wallet.js')
+        html = html.replace('src="/agents.js', 'src="/commerce/agents.js')
         html = html.replace('src="/operations.js', 'src="/commerce/operations.js').replace('href="/operations.css', 'href="/commerce/operations.css')
         html = html.replace('src="/data.js', 'src="/commerce/data.js')
         html = html.replace('href="/assets/ui-icons.svg', 'href="/commerce/assets/ui-icons.svg')
@@ -359,7 +359,7 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         if asset in {"tools.css", "tools.js", "tools.html", "atlas.html", "site-lens.html", "data-pass.html", "engine-product.html", "atlas.json", "evidence.html"}:
             target = site / asset
             return FileResponse(target) if target.is_file() else JSONResponse({"error": "Not found"}, status_code=404)
-        if asset in {"app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "data.js", "submission.css", "submission.js"}:
+        if asset in {"app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "data.js", "submission.css", "submission.js"}:
             return FileResponse(ROOT / "web" / asset)
         if asset in {"assets/phantom-wallet.png", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/icon-provenance.json"}:
             return FileResponse(ROOT / "web" / asset)

@@ -1,19 +1,19 @@
 {
   "schema": "machine-line-audit-1",
   "engine_implementation": {
-    "files": 59,
-    "physical": 14178,
-    "nonblank": 13229
+    "files": 61,
+    "physical": 15119,
+    "nonblank": 14121
   },
   "tests": {
-    "files": 34,
-    "physical": 5891,
-    "nonblank": 5243
+    "files": 36,
+    "physical": 6398,
+    "nonblank": 5703
   },
   "operational_scripts": {
     "files": 29,
-    "physical": 3278,
-    "nonblank": 2921
+    "physical": 3280,
+    "nonblank": 2923
   },
   "implementation_files": [
     {
@@ -88,13 +88,13 @@
     },
     {
       "path": "src/machine_commerce/access.py",
-      "physical": 194,
-      "nonblank": 175
+      "physical": 212,
+      "nonblank": 193
     },
     {
       "path": "src/machine_commerce/api.py",
-      "physical": 472,
-      "nonblank": 402
+      "physical": 477,
+      "nonblank": 407
     },
     {
       "path": "src/machine_commerce/atlas.py",
@@ -178,8 +178,8 @@
     },
     {
       "path": "src/machine_engine/api.py",
-      "physical": 219,
-      "nonblank": 189
+      "physical": 243,
+      "nonblank": 210
     },
     {
       "path": "src/machine_engine/broker.py",
@@ -190,6 +190,11 @@
       "path": "src/machine_engine/connections.py",
       "physical": 223,
       "nonblank": 201
+    },
+    {
+      "path": "src/machine_engine/control.py",
+      "physical": 623,
+      "nonblank": 590
     },
     {
       "path": "src/machine_engine/native.py",
@@ -203,8 +208,8 @@
     },
     {
       "path": "src/machine_engine/routes.py",
-      "physical": 171,
-      "nonblank": 129
+      "physical": 208,
+      "nonblank": 157
     },
     {
       "path": "src/machine_engine/scheduler.py",
@@ -213,13 +218,18 @@
     },
     {
       "path": "src/machine_engine/trading.py",
-      "physical": 536,
-      "nonblank": 514
+      "physical": 548,
+      "nonblank": 526
     },
     {
       "path": "src/machine_engine/workspace.py",
-      "physical": 193,
-      "nonblank": 179
+      "physical": 196,
+      "nonblank": 182
+    },
+    {
+      "path": "web/agents.js",
+      "physical": 177,
+      "nonblank": 174
     },
     {
       "path": "web/app.css",
@@ -228,8 +238,8 @@
     },
     {
       "path": "web/app.js",
-      "physical": 613,
-      "nonblank": 609
+      "physical": 629,
+      "nonblank": 625
     },
     {
       "path": "web/console-theme.css",
@@ -243,18 +253,18 @@
     },
     {
       "path": "web/index.html",
-      "physical": 84,
-      "nonblank": 83
+      "physical": 85,
+      "nonblank": 84
     },
     {
       "path": "web/operations.css",
-      "physical": 419,
-      "nonblank": 419
+      "physical": 428,
+      "nonblank": 427
     },
     {
       "path": "web/operations.js",
-      "physical": 864,
-      "nonblank": 862
+      "physical": 880,
+      "nonblank": 878
     },
     {
       "path": "web/submission.css",
@@ -314,9 +324,19 @@
   ],
   "test_files": [
     {
+      "path": "tests/agent_console_fixture.py",
+      "physical": 78,
+      "nonblank": 67
+    },
+    {
       "path": "tests/test_access.py",
       "physical": 209,
       "nonblank": 183
+    },
+    {
+      "path": "tests/test_agent_control.py",
+      "physical": 429,
+      "nonblank": 393
     },
     {
       "path": "tests/test_api.py",
