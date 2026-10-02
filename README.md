@@ -20,6 +20,8 @@ LLMs can draft policies or resolve exceptions; routine matching, negotiation, ex
 - Production configuration gate, provisioned operator login, secure cookies, durable rate limits,
   streaming request limits, bounded DNS-pinned HTTPS egress and sandbox spending disabled in production.
 - Remote benchmark against both full-scan direct clients and cached direct clients, with identical trade policies.
+- Actual Qwen3-32B comparison with bounded repair, measured provider tokens, initial policy cost,
+  paid test-token outcomes and independently recalculated evidence.
 - Existing CSV/RPC service examples and separate ERC-20 escrow: test ledger/PyEVM, not public deployments.
 
 ## Verification and product result
@@ -27,7 +29,7 @@ LLMs can draft policies or resolve exceptions; routine matching, negotiation, ex
 All compute runs on the owner-selected Canada server at `/srv/skew/economic-machine-commerce-20261002`.
 The Mac is used only for editing, small reads, browser review and remote orchestration.
 
-The latest controlled comparison uses 64 suppliers and 24 paired trade requests over real localhost HTTP.
+The original all-code comparison uses 64 suppliers and 24 paired trade requests over real localhost HTTP.
 It measures requests and agreement latency, not real customer purchases or WAN performance.
 
 | Method | Trade requests | Agreement p50 / p95 | Valid agreements |
@@ -38,13 +40,25 @@ It measures requests and agreement latency, not real customer purchases or WAN p
 
 The engine uses 87.5% fewer trade requests than the cached client, with a paired median latency ratio 0.801
 (bootstrap 95% interval 0.755–0.862). All three paths use zero LLM tokens: token savings and higher agreement
-rate are **not demonstrated**. All 18 feasible trades succeed and all six infeasible trades are rejected.
+rate were **not demonstrated by that all-code experiment**. All 18 feasible trades succeed and all six infeasible trades are rejected.
 Initial seller registration costs 65 requests/3.16 s; including setup, the engine takes 4.43 s versus 1.66 s
 for the cached direct client over this first 24-trade workload. Warm-path gains are not a cold-start victory.
 See [comparison methodology](docs/COMPARISON.md) and [raw evidence](artifacts/comparison.json).
 
-Current changed/integrated checks: 87 passing cases; eight unchanged escrow cases retain prior evidence.
-Only the new EIP-3009 test token was compiled. [Verification](docs/VERIFICATION.md) records the execution scope.
+The real-model follow-up uses the live Kiln Qwen3-32B API. In its fixed fast-mode workload, the per-event
+Qwen loop completes 10/24 feasible trades versus 24/24 for the engine, with verified x402 test-token
+payment/delivery. Tokens including initial policy interpretation fall from 122,242 to 417: **99.66% less**.
+The cached direct code client also completes 24/24 with 417 startup tokens; this is an advantage over the
+measured model loop, not over every possible direct agent. See [live-model methodology and boundaries](docs/QWEN_COMPARISON.md).
+
+The additional thinking-mode study uses 16 distinct requests: under a predeclared five-second agreement
+budget the engine completes 12/12 feasible orders versus 0/12; Qwen produces six compatible choices late.
+Startup-inclusive token reduction is 99.13%. Both completed studies reconcile 82 actual ephemeral test-token
+payments. These controlled outcomes do not establish real-customer conversion or public-chain performance.
+
+The prior runtime release has 87 passing cases and eight unchanged historical escrow cases. This follow-up
+adds 17 targeted tests and independently checks both studies; it does not rerun the unchanged core suite.
+The existing compiled EIP-3009 test token is reused. [Verification](docs/VERIFICATION.md) records the scope.
 
 ## Live status
 

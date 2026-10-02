@@ -1,5 +1,8 @@
 # Direct connections versus Economic Machine
 
+This file preserves the original all-code study. The subsequent [real Qwen comparison](QWEN_COMPARISON.md)
+measures actual provider tokens and paid test-token outcomes; its conclusions are specific to those model baselines.
+
 The reproducible remote experiment is `scripts/compare_routes.py`; `artifacts/comparison.json` contains all
 72 per-arm records, input/result hashes, request counters, setup costs and paired statistics.
 The prior two-request implementation's result is retained in `comparison-before.json`.

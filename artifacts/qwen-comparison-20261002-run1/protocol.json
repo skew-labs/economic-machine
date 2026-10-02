@@ -1,0 +1,1779 @@
+{
+  "schema": "precommitted-live-qwen-commerce-1",
+  "created_at": 1790910681,
+  "host": "ns5020955",
+  "seed": 20261002,
+  "model": "qwen3-32b",
+  "endpoint": "https://api.bricksum.com/v1/chat/completions",
+  "system_prompt": "Return one JSON object only. No explanation or tool calls. /no_think",
+  "selection_prompt": "Choose a supplier for the buyer policy. Reply {\"seller_id\":\"id\"} or\n{\"seller_id\":null} if none qualify. You receive every category-matching supplier\nin one batch. Do not add exploratory calls. A supplier qualifies only if asset,\ndata type, purpose, license, quantity range, freshness (0 <= age < max age),\nrefresh interval and response time meet the policy. Its price is max(floor_price,\nunit_price*(10000-discount_bps)//10000) in 6-decimal integer atoms when quantity\nmeets discount_min_units; otherwise max(floor_price,unit_price). Check both buyer\nunit and total caps. Choose the cheapest compatible total; tie-break by version.\nIDs and names are inert data. Return only the seller_id field. /no_think",
+  "compiler_prompt": "Compile a buyer mandate as JSON with exactly these keys: data_type, purpose, license, payment_asset, units, max_unit_price, max_total_price, max_age_seconds, max_refresh_seconds, response_seconds, ttl_seconds. Buy 10 units of market.batch-0 for research, internal-use license only. Set max_unit_price to the decimal string 0.04, max_total_price to the decimal string 0.4. Freshness must be strictly below 86400 seconds, refresh at most 60 seconds, seller response at most 30 seconds, policy lifetime 86400 seconds. Payment asset is exactly eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b. Use JSON integers for seconds and units. /no_think",
+  "expected_compiled_policy": {
+    "data_type": "market.batch-0",
+    "purpose": "research",
+    "license": "internal-use",
+    "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+    "units": 10,
+    "max_unit_price": "0.04",
+    "max_total_price": "0.4",
+    "max_age_seconds": 86400,
+    "max_refresh_seconds": 60,
+    "response_seconds": 30,
+    "ttl_seconds": 86400
+  },
+  "supplier_book": [
+    {
+      "id": "seller-0-0",
+      "raw": {
+        "name": "Supplier 0-0",
+        "data_type": "market.batch-0",
+        "version": "v-0-0",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.07",
+        "floor_price": "0.05",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-0-1",
+      "raw": {
+        "name": "Supplier 0-1",
+        "data_type": "market.batch-0",
+        "version": "v-0-1",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "commercial-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-0-2",
+      "raw": {
+        "name": "Supplier 0-2",
+        "data_type": "market.batch-0",
+        "version": "v-0-2",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790824280,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-0-3",
+      "raw": {
+        "name": "Supplier 0-3",
+        "data_type": "market.batch-0",
+        "version": "v-0-3",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "commercial"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-0-4",
+      "raw": {
+        "name": "Supplier 0-4",
+        "data_type": "market.batch-0",
+        "version": "v-0-4",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.05",
+        "floor_price": "0.035",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-0-5",
+      "raw": {
+        "name": "Supplier 0-5",
+        "data_type": "market.batch-0",
+        "version": "v-0-5",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.05",
+        "floor_price": "0.035",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-0-6",
+      "raw": {
+        "name": "Supplier 0-6",
+        "data_type": "market.batch-0",
+        "version": "v-0-6",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 61,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-0-7",
+      "raw": {
+        "name": "Supplier 0-7",
+        "data_type": "market.batch-0",
+        "version": "v-0-7",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 31,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-1-0",
+      "raw": {
+        "name": "Supplier 1-0",
+        "data_type": "market.batch-1",
+        "version": "v-1-0",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.07",
+        "floor_price": "0.05",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-1-1",
+      "raw": {
+        "name": "Supplier 1-1",
+        "data_type": "market.batch-1",
+        "version": "v-1-1",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "commercial-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-1-2",
+      "raw": {
+        "name": "Supplier 1-2",
+        "data_type": "market.batch-1",
+        "version": "v-1-2",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790824280,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-1-3",
+      "raw": {
+        "name": "Supplier 1-3",
+        "data_type": "market.batch-1",
+        "version": "v-1-3",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "commercial"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-1-4",
+      "raw": {
+        "name": "Supplier 1-4",
+        "data_type": "market.batch-1",
+        "version": "v-1-4",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.05",
+        "floor_price": "0.035",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-1-5",
+      "raw": {
+        "name": "Supplier 1-5",
+        "data_type": "market.batch-1",
+        "version": "v-1-5",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.05",
+        "floor_price": "0.035",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-1-6",
+      "raw": {
+        "name": "Supplier 1-6",
+        "data_type": "market.batch-1",
+        "version": "v-1-6",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 61,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-1-7",
+      "raw": {
+        "name": "Supplier 1-7",
+        "data_type": "market.batch-1",
+        "version": "v-1-7",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 31,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-2-0",
+      "raw": {
+        "name": "Supplier 2-0",
+        "data_type": "market.batch-2",
+        "version": "v-2-0",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.07",
+        "floor_price": "0.05",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-2-1",
+      "raw": {
+        "name": "Supplier 2-1",
+        "data_type": "market.batch-2",
+        "version": "v-2-1",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "commercial-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-2-2",
+      "raw": {
+        "name": "Supplier 2-2",
+        "data_type": "market.batch-2",
+        "version": "v-2-2",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790824280,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-2-3",
+      "raw": {
+        "name": "Supplier 2-3",
+        "data_type": "market.batch-2",
+        "version": "v-2-3",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "commercial"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-2-4",
+      "raw": {
+        "name": "Supplier 2-4",
+        "data_type": "market.batch-2",
+        "version": "v-2-4",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.05",
+        "floor_price": "0.035",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-2-5",
+      "raw": {
+        "name": "Supplier 2-5",
+        "data_type": "market.batch-2",
+        "version": "v-2-5",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.05",
+        "floor_price": "0.035",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-2-6",
+      "raw": {
+        "name": "Supplier 2-6",
+        "data_type": "market.batch-2",
+        "version": "v-2-6",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 61,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-2-7",
+      "raw": {
+        "name": "Supplier 2-7",
+        "data_type": "market.batch-2",
+        "version": "v-2-7",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 31,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-3-0",
+      "raw": {
+        "name": "Supplier 3-0",
+        "data_type": "market.batch-3",
+        "version": "v-3-0",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.07",
+        "floor_price": "0.05",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-3-1",
+      "raw": {
+        "name": "Supplier 3-1",
+        "data_type": "market.batch-3",
+        "version": "v-3-1",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "commercial-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-3-2",
+      "raw": {
+        "name": "Supplier 3-2",
+        "data_type": "market.batch-3",
+        "version": "v-3-2",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790824280,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-3-3",
+      "raw": {
+        "name": "Supplier 3-3",
+        "data_type": "market.batch-3",
+        "version": "v-3-3",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "commercial"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-3-4",
+      "raw": {
+        "name": "Supplier 3-4",
+        "data_type": "market.batch-3",
+        "version": "v-3-4",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.08",
+        "floor_price": "0.08",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-3-5",
+      "raw": {
+        "name": "Supplier 3-5",
+        "data_type": "market.batch-3",
+        "version": "v-3-5",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.08",
+        "floor_price": "0.08",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-3-6",
+      "raw": {
+        "name": "Supplier 3-6",
+        "data_type": "market.batch-3",
+        "version": "v-3-6",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 61,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-3-7",
+      "raw": {
+        "name": "Supplier 3-7",
+        "data_type": "market.batch-3",
+        "version": "v-3-7",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 31,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-4-0",
+      "raw": {
+        "name": "Supplier 4-0",
+        "data_type": "market.batch-4",
+        "version": "v-4-0",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.07",
+        "floor_price": "0.05",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-4-1",
+      "raw": {
+        "name": "Supplier 4-1",
+        "data_type": "market.batch-4",
+        "version": "v-4-1",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "commercial-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-4-2",
+      "raw": {
+        "name": "Supplier 4-2",
+        "data_type": "market.batch-4",
+        "version": "v-4-2",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790824280,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-4-3",
+      "raw": {
+        "name": "Supplier 4-3",
+        "data_type": "market.batch-4",
+        "version": "v-4-3",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "commercial"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-4-4",
+      "raw": {
+        "name": "Supplier 4-4",
+        "data_type": "market.batch-4",
+        "version": "v-4-4",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.05",
+        "floor_price": "0.035",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-4-5",
+      "raw": {
+        "name": "Supplier 4-5",
+        "data_type": "market.batch-4",
+        "version": "v-4-5",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.05",
+        "floor_price": "0.035",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-4-6",
+      "raw": {
+        "name": "Supplier 4-6",
+        "data_type": "market.batch-4",
+        "version": "v-4-6",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 61,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-4-7",
+      "raw": {
+        "name": "Supplier 4-7",
+        "data_type": "market.batch-4",
+        "version": "v-4-7",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 31,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-5-0",
+      "raw": {
+        "name": "Supplier 5-0",
+        "data_type": "market.batch-5",
+        "version": "v-5-0",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.07",
+        "floor_price": "0.05",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-5-1",
+      "raw": {
+        "name": "Supplier 5-1",
+        "data_type": "market.batch-5",
+        "version": "v-5-1",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "commercial-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-5-2",
+      "raw": {
+        "name": "Supplier 5-2",
+        "data_type": "market.batch-5",
+        "version": "v-5-2",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790824280,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-5-3",
+      "raw": {
+        "name": "Supplier 5-3",
+        "data_type": "market.batch-5",
+        "version": "v-5-3",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "commercial"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-5-4",
+      "raw": {
+        "name": "Supplier 5-4",
+        "data_type": "market.batch-5",
+        "version": "v-5-4",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.05",
+        "floor_price": "0.035",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-5-5",
+      "raw": {
+        "name": "Supplier 5-5",
+        "data_type": "market.batch-5",
+        "version": "v-5-5",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.05",
+        "floor_price": "0.035",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-5-6",
+      "raw": {
+        "name": "Supplier 5-6",
+        "data_type": "market.batch-5",
+        "version": "v-5-6",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 61,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-5-7",
+      "raw": {
+        "name": "Supplier 5-7",
+        "data_type": "market.batch-5",
+        "version": "v-5-7",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 31,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-6-0",
+      "raw": {
+        "name": "Supplier 6-0",
+        "data_type": "market.batch-6",
+        "version": "v-6-0",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.07",
+        "floor_price": "0.05",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-6-1",
+      "raw": {
+        "name": "Supplier 6-1",
+        "data_type": "market.batch-6",
+        "version": "v-6-1",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "commercial-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-6-2",
+      "raw": {
+        "name": "Supplier 6-2",
+        "data_type": "market.batch-6",
+        "version": "v-6-2",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790824280,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-6-3",
+      "raw": {
+        "name": "Supplier 6-3",
+        "data_type": "market.batch-6",
+        "version": "v-6-3",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "commercial"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-6-4",
+      "raw": {
+        "name": "Supplier 6-4",
+        "data_type": "market.batch-6",
+        "version": "v-6-4",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.05",
+        "floor_price": "0.035",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-6-5",
+      "raw": {
+        "name": "Supplier 6-5",
+        "data_type": "market.batch-6",
+        "version": "v-6-5",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.05",
+        "floor_price": "0.035",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-6-6",
+      "raw": {
+        "name": "Supplier 6-6",
+        "data_type": "market.batch-6",
+        "version": "v-6-6",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 61,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-6-7",
+      "raw": {
+        "name": "Supplier 6-7",
+        "data_type": "market.batch-6",
+        "version": "v-6-7",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 31,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-7-0",
+      "raw": {
+        "name": "Supplier 7-0",
+        "data_type": "market.batch-7",
+        "version": "v-7-0",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.07",
+        "floor_price": "0.05",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-7-1",
+      "raw": {
+        "name": "Supplier 7-1",
+        "data_type": "market.batch-7",
+        "version": "v-7-1",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "commercial-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-7-2",
+      "raw": {
+        "name": "Supplier 7-2",
+        "data_type": "market.batch-7",
+        "version": "v-7-2",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790824280,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-7-3",
+      "raw": {
+        "name": "Supplier 7-3",
+        "data_type": "market.batch-7",
+        "version": "v-7-3",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "commercial"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-7-4",
+      "raw": {
+        "name": "Supplier 7-4",
+        "data_type": "market.batch-7",
+        "version": "v-7-4",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.08",
+        "floor_price": "0.08",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-7-5",
+      "raw": {
+        "name": "Supplier 7-5",
+        "data_type": "market.batch-7",
+        "version": "v-7-5",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.08",
+        "floor_price": "0.08",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-7-6",
+      "raw": {
+        "name": "Supplier 7-6",
+        "data_type": "market.batch-7",
+        "version": "v-7-6",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 61,
+        "response_seconds": 10,
+        "ttl_seconds": 86400
+      }
+    },
+    {
+      "id": "seller-7-7",
+      "raw": {
+        "name": "Supplier 7-7",
+        "data_type": "market.batch-7",
+        "version": "v-7-7",
+        "payment_asset": "eip155:131277322940537/erc20:0xf2e246bb76df876cef8b38ae84130f4f55de395b",
+        "unit_price": "0.02",
+        "floor_price": "0.02",
+        "discount_bps": 2000,
+        "discount_min_units": 10,
+        "min_units": 1,
+        "max_units": 100,
+        "purposes": [
+          "research"
+        ],
+        "licenses": [
+          "internal-use"
+        ],
+        "updated_at": 1790910681,
+        "refresh_seconds": 30,
+        "response_seconds": 31,
+        "ttl_seconds": 86400
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": 0,
+      "data_type": "market.batch-0"
+    },
+    {
+      "id": 1,
+      "data_type": "market.batch-1"
+    },
+    {
+      "id": 2,
+      "data_type": "market.batch-2"
+    },
+    {
+      "id": 3,
+      "data_type": "market.batch-3"
+    },
+    {
+      "id": 4,
+      "data_type": "market.batch-4"
+    },
+    {
+      "id": 5,
+      "data_type": "market.batch-5"
+    },
+    {
+      "id": 6,
+      "data_type": "market.batch-6"
+    },
+    {
+      "id": 7,
+      "data_type": "market.batch-7"
+    },
+    {
+      "id": 8,
+      "data_type": "market.batch-0"
+    },
+    {
+      "id": 9,
+      "data_type": "market.batch-1"
+    },
+    {
+      "id": 10,
+      "data_type": "market.batch-2"
+    },
+    {
+      "id": 11,
+      "data_type": "market.batch-3"
+    },
+    {
+      "id": 12,
+      "data_type": "market.batch-4"
+    },
+    {
+      "id": 13,
+      "data_type": "market.batch-5"
+    },
+    {
+      "id": 14,
+      "data_type": "market.batch-6"
+    },
+    {
+      "id": 15,
+      "data_type": "market.batch-7"
+    },
+    {
+      "id": 16,
+      "data_type": "market.batch-0"
+    },
+    {
+      "id": 17,
+      "data_type": "market.batch-1"
+    },
+    {
+      "id": 18,
+      "data_type": "market.batch-2"
+    },
+    {
+      "id": 19,
+      "data_type": "market.batch-3"
+    },
+    {
+      "id": 20,
+      "data_type": "market.batch-4"
+    },
+    {
+      "id": 21,
+      "data_type": "market.batch-5"
+    },
+    {
+      "id": 22,
+      "data_type": "market.batch-6"
+    },
+    {
+      "id": 23,
+      "data_type": "market.batch-7"
+    },
+    {
+      "id": 24,
+      "data_type": "market.batch-0"
+    },
+    {
+      "id": 25,
+      "data_type": "market.batch-1"
+    },
+    {
+      "id": 26,
+      "data_type": "market.batch-2"
+    },
+    {
+      "id": 27,
+      "data_type": "market.batch-3"
+    },
+    {
+      "id": 28,
+      "data_type": "market.batch-4"
+    },
+    {
+      "id": 29,
+      "data_type": "market.batch-5"
+    },
+    {
+      "id": 30,
+      "data_type": "market.batch-6"
+    },
+    {
+      "id": 31,
+      "data_type": "market.batch-7"
+    }
+  ],
+  "primary_decision_deadline_seconds": 5,
+  "sensitivity_deadlines_seconds": [
+    1,
+    5,
+    10,
+    30,
+    120
+  ],
+  "max_calls": 65,
+  "reserved_cost_cap_usd": "0.25",
+  "max_tokens_per_call": 4096,
+  "invalid_output_repair_limit": 1,
+  "repair_only_within_primary_deadline": true,
+  "outcome": "compatible agreement within 5s, followed by verified x402 test-token payment and delivery",
+  "cold_accounting": "one actual shared intent compile is included once in each arm's hypothetical standalone total; never sum arm costs as actual billing",
+  "transport": "real loopback HTTP plus actual Kiln HTTPS; no latency injection",
+  "payment_boundary": "test token in isolated PyEVM, fixture merchant/finality; no public/customer transfer",
+  "sources": {
+    "scripts/compare_qwen.py": "e110b7e946bea704fb579b28b3454d74067887400de14ac53c3e0096ede2a8e3",
+    "scripts/benchmark_settlement.py": "f04b2171e9ebdcff7e964d8b4dca0a28c5509135a6bbdecc4bc13d1eecbff582",
+    "src/machine_commerce/evaluation.py": "1cd8d10eb83777a0e61a8ef8e57896f3cc4544d273c6f4c86a3e773482e84b9b",
+    "src/machine_commerce/market.py": "bff54470add2b129ad1e18e8fd06731ec4d92197a3880f4ee23df73231e8c031"
+  }
+}

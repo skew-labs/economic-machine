@@ -1,4 +1,33 @@
-# Current release: x402 runtime and direct-client comparison
+# Latest verification: actual Qwen model loops versus deterministic policies
+
+- All compute remains on the authorized Canada server. Seventeen new tests pass: eight usage/outcome
+  accounting tests, eight provider/workload tests, one long-wait x402 fixture regression. Previously verified
+  unchanged core/contracts were not rerun or recompiled. Four evidence-corruption cases are rejected for
+  each completed live-model study; scoped static checks pass.
+- Real Kiln Qwen3-32B requests, bounded repairs and actual provider IDs/token/USD usage are retained.
+  Fast mode: 32 events, 24 feasible; direct Qwen completes 10/24 versus machine/direct-code 24/24;
+  startup tokens 122,242 versus 417, a 99.66% reduction relative to that model loop.
+- Thinking mode: 16 distinct events, 12 feasible; declared 5s agreement budget yields 0/12 direct-Qwen
+  versus 12/12 machine/direct-code. Six model choices are compatible but late. Startup tokens 48,122
+  versus 417, a 99.13% reduction. One-time engine registration costs 6.09s and is separately reported.
+- Both completed runs verify 82 distinct EIP-3009 test-token payments, delivery, nonce/transfer receipts,
+  one signed transmission each and exact recipient/mandate accounting. No customer/public-chain payment.
+- An independent evaluator recalculates raw-policy eligibility without the engine predicate and checks
+  source commitments, record allocation, every actual model attempt and balance conservation. Sources are
+  snapshotted before calls. Remote SQLite agreement/payment stores additionally preserve cross-boundary terms.
+- Initial thinking attempt stopped on a stale test-chain clock. UNKNOWN remained held; the fixture clock
+  synchronization and 300s regression fixed the test setup. Its 10 calls / 27,019 tokens remain in evidence.
+  Including that failed attempt, research totals are 92 calls / 197,383 tokens / reported USD 0.01873144.
+- Current private service is still active and healthy in development mode, without real x402 configuration.
+  Benchmarks use isolated state and ports; no service database migration or public deployment occurred.
+
+[Method, limitations and raw evidence](QWEN_COMPARISON.md) distinguish controlled success from customer
+conversion, initial policy cost from hot tokens, and model cost from total hosting/operation cost.
+The earlier verification record below is historical and retained.
+
+---
+
+# Previous release: x402 runtime and direct-client comparison
 
 All builds/tests/benchmarks below ran only on the authorized Canada server. The Mac performed edits,
 small reads, remote orchestration and browser review.

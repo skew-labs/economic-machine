@@ -1,0 +1,28 @@
+All checks passed!
+/srv/skew/economic-machine-commerce-20261002/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_budget_cap_blocks_before_transmitting (test_qwen_comparison.MeterTests.test_budget_cap_blocks_before_transmitting) ... ok
+test_output_truncation_still_counts_charged_tokens (test_qwen_comparison.MeterTests.test_output_truncation_still_counts_charged_tokens) ... ok
+test_real_protocol_usage_fields_are_saved_without_secrets (test_qwen_comparison.MeterTests.test_real_protocol_usage_fields_are_saved_without_secrets) ... ok
+test_request_cap_blocks_before_transmitting (test_qwen_comparison.MeterTests.test_request_cap_blocks_before_transmitting) ... ok
+test_thinking_baseline_gets_larger_budget_and_official_sampling (test_qwen_comparison.MeterTests.test_thinking_baseline_gets_larger_budget_and_official_sampling) ... ok
+test_transport_failure_keeps_unknown_billing (test_qwen_comparison.MeterTests.test_transport_failure_keeps_unknown_billing) ... ok
+test_predefined_constraints_have_24_of_32_feasible_events (test_qwen_comparison.WorkloadTests.test_predefined_constraints_have_24_of_32_feasible_events) ... ok
+test_robustness_book_has_unique_categories_and_same_constraints (test_qwen_comparison.WorkloadTests.test_robustness_book_has_unique_categories_and_same_constraints) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.165s
+
+OK
+Traceback (most recent call last):
+  File "/srv/skew/economic-machine-commerce-20261002/scripts/audit_qwen_comparison.py", line 146, in <module>
+    main()
+  File "/srv/skew/economic-machine-commerce-20261002/scripts/audit_qwen_comparison.py", line 141, in main
+    (args.directory / "audit.json").write_text(json.dumps(result, indent=2) + "\n")
+  File "/usr/lib/python3.12/pathlib.py", line 1049, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'artifacts/qwen-comparison-20261002-run1/audit.json'

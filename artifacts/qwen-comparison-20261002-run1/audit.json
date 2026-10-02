@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "protocol_hash": "c75970dad6e7a1bf0679b41eca79e3cac03fea43d91b4324a2f3eb29e8da7141",
+  "source_snapshots": 4,
+  "independent_policy_predicate": true,
+  "provider_calls_verified": 65,
+  "records_verified": 96,
+  "unique_test_token_payments": 58,
+  "all_payment_balances_reconciled": true,
+  "counts": {
+    "direct_qwen": {
+      "eligible": 24,
+      "primary_success": 10
+    },
+    "direct_code": {
+      "eligible": 24,
+      "primary_success": 24
+    },
+    "machine": {
+      "eligible": 24,
+      "primary_success": 24
+    }
+  },
+  "public_customer_conversion_proven": false,
+  "http_engine_to_payment_economic_terms_verified": 24,
+  "isolation_identity_fields_excluded": [
+    "buyer_id",
+    "seller_id",
+    "demand_id",
+    "supply_id"
+  ]
+}
