@@ -1,0 +1,58 @@
+{
+  "cli_server": true,
+  "owner_auth": true,
+  "origin_boundary": true,
+  "private_database": true,
+  "policy_compile": true,
+  "program_hash": "c58670f968b74558a3861218a1e31a9fab78a2e7eae7cf36e90aa73b86412ef8",
+  "financial_submission": false,
+  "signatures_created": 0,
+  "live_public_wallet": {
+    "assets": [
+      {
+        "decimals": 18,
+        "quantity": "0",
+        "symbol": "ETH",
+        "connection_id": "connection-d0006b98fba68e7ee6e0cab5",
+        "connection": "Public disposable test buyer",
+        "network": "eip155:421614",
+        "observed_at": 1790953029,
+        "stale": false
+      },
+      {
+        "decimals": 6,
+        "quantity": "19.99",
+        "symbol": "USDC",
+        "connection_id": "connection-d0006b98fba68e7ee6e0cab5",
+        "connection": "Public disposable test buyer",
+        "network": "eip155:421614",
+        "observed_at": 1790953029,
+        "stale": false
+      }
+    ],
+    "snapshot": {
+      "address": "0x24d0b9bc844754dd1b22f215ebb06627f7314e79",
+      "assets": [
+        {
+          "decimals": 18,
+          "quantity": "0",
+          "symbol": "ETH"
+        },
+        {
+          "decimals": 6,
+          "quantity": "19.99",
+          "symbol": "USDC"
+        }
+      ],
+      "assurance": "RPC_FINALIZED_TAG",
+      "block_number": 315012953,
+      "network": "eip155:421614",
+      "observed_at": 1790953029,
+      "orders": [],
+      "positions": [],
+      "read_only": true,
+      "source_hash": "1d31a7099cf97827bd4c2276fcfd55032524b64c4e4e8ea35f6aaaa6ecdc4838"
+    },
+    "read_only": true
+  }
+}

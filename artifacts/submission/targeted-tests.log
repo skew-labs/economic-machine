@@ -1,0 +1,27 @@
+/srv/skew/economic-machine-commerce-20261002/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_budget_age_and_license_each_reject_the_same_offer (test_submission_evidence.ReplayAndHTTP.test_budget_age_and_license_each_reject_the_same_offer) ... ok
+test_closed_inputs_do_not_become_payments (test_submission_evidence.ReplayAndHTTP.test_closed_inputs_do_not_become_payments) ... ok
+test_evidence_and_delivery_are_exact_read_only_downloads (test_submission_evidence.ReplayAndHTTP.test_evidence_and_delivery_are_exact_read_only_downloads) ... ok
+test_missing_corrupt_or_tampered_evidence_is_unavailable (test_submission_evidence.ReplayAndHTTP.test_missing_corrupt_or_tampered_evidence_is_unavailable) ... ok
+test_original_policy_replays_without_execution_authority (test_submission_evidence.ReplayAndHTTP.test_original_policy_replays_without_execution_authority) ... ok
+test_submission_assets_and_csp_are_bound_to_portal (test_submission_evidence.ReplayAndHTTP.test_submission_assets_and_csp_are_bound_to_portal) ... ok
+test_actual_runtime_chain_and_delivery_are_joined (test_submission_evidence.TradeEvidence.test_actual_runtime_chain_and_delivery_are_joined) ... ok
+test_capital_and_expiry_are_real_record_values (test_submission_evidence.TradeEvidence.test_capital_and_expiry_are_real_record_values) ... ok
+test_changed_terms_or_merchant_request_are_rejected (test_submission_evidence.TradeEvidence.test_changed_terms_or_merchant_request_are_rejected) ... ok
+test_delivery_must_match_the_original_received_payload (test_submission_evidence.TradeEvidence.test_delivery_must_match_the_original_received_payload) ... ok
+test_historical_balances_are_labelled_preserved_not_fresh (test_submission_evidence.TradeEvidence.test_historical_balances_are_labelled_preserved_not_fresh) ... ok
+test_journal_and_transition_order_are_required (test_submission_evidence.TradeEvidence.test_journal_and_transition_order_are_required) ... ok
+test_modified_public_bundle_fails_closed (test_submission_evidence.TradeEvidence.test_modified_public_bundle_fails_closed) ... ok
+test_payer_recipient_and_nonce_are_bound (test_submission_evidence.TradeEvidence.test_payer_recipient_and_nonce_are_bound) ... ok
+test_public_projection_cannot_leak_added_credential_fields (test_submission_evidence.TradeEvidence.test_public_projection_cannot_leak_added_credential_fields) ... ok
+test_rehashed_terms_still_must_match_policy (test_submission_evidence.TradeEvidence.test_rehashed_terms_still_must_match_policy) ... ok
+test_signature_must_match_both_payer_and_runtime_payload (test_submission_evidence.TradeEvidence.test_signature_must_match_both_payer_and_runtime_payload) ... ok
+test_two_distinct_rpc_receipts_are_required (test_submission_evidence.TradeEvidence.test_two_distinct_rpc_receipts_are_required) ... ok
+test_unfinalized_or_wrong_runtime_receipt_is_rejected (test_submission_evidence.TradeEvidence.test_unfinalized_or_wrong_runtime_receipt_is_rejected) ... ok
+test_wrong_trade_cannot_borrow_another_transaction (test_submission_evidence.TradeEvidence.test_wrong_trade_cannot_borrow_another_transaction) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.125s
+
+OK

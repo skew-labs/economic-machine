@@ -1,0 +1,34 @@
+{
+  "schema_version": "econ-isa-3",
+  "program_id": "treasury-graph-demo-001",
+  "owner_id": "demo-owner",
+  "agent_id": "VAULT",
+  "network": "economic-testnet-sim",
+  "sandbox": {
+    "asset": "USDT",
+    "capital_limit": "500",
+    "max_exposure": "400",
+    "max_total_cost": "10",
+    "max_daily_loss": "20",
+    "allowed_protocols": ["venue_A", "venue_B"],
+    "expires_at": "2026-09-30T00:00:00+00:00"
+  },
+  "instructions": [
+    {"op": "OBSERVE", "path": "risk.coverage_ratio", "as": "coverage", "max_age_ms": 3600000},
+    {"op": "BRANCH", "register": "coverage", "comparison": "GTE", "value": "1.5", "unit": "ratio", "if_true": 2, "if_false": 9},
+    {"op": "QUOTE", "asset": "USDT", "amount": "200", "max_age_ms": 3600000},
+    {"op": "SCORE", "objective": "MIN_TOTAL_COST", "as": "best_route"},
+    {"op": "ALLOCATE", "asset": "USDT", "amount": "200", "route_register": "best_route"},
+    {"op": "SIMULATE"},
+    {"op": "VERIFY"},
+    {"op": "PREPARE"},
+    {"op": "SETTLE"},
+    {"op": "QUOTE", "asset": "USDT", "amount": "100", "max_age_ms": 3600000},
+    {"op": "SCORE", "objective": "MIN_TOTAL_COST", "as": "best_route"},
+    {"op": "ALLOCATE", "asset": "USDT", "amount": "100", "route_register": "best_route"},
+    {"op": "SIMULATE"},
+    {"op": "VERIFY"},
+    {"op": "PREPARE"},
+    {"op": "SETTLE"}
+  ]
+}

@@ -1,0 +1,981 @@
+{
+  "schema_version": "economic-isa-conformance-1",
+  "spec_hash": "5a9a8e30b6e0ff2a2052096bffdf79847a757ba982e0cce6ca31ebe983451e31",
+  "vectors": [
+    {
+      "next_phase": null,
+      "opcode": "ABORT",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ALLOCATE",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ASSERT",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "BRANCH",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ESCALATE",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "GUARD",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "HOLD",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "OBSERVE",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PREPARE",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PRICE",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "QUOTE",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SCORE",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SETTLE",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SIMULATE",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "VERIFY",
+      "phase": "ABORTED"
+    },
+    {
+      "next_phase": "ABORTED",
+      "opcode": "ABORT",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ALLOCATE",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ASSERT",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "BRANCH",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": "ESCALATED",
+      "opcode": "ESCALATE",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "GUARD",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": "HELD",
+      "opcode": "HOLD",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "OBSERVE",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PREPARE",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PRICE",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "QUOTE",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SCORE",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SETTLE",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": "SIMULATED",
+      "opcode": "SIMULATE",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "VERIFY",
+      "phase": "ALLOCATED"
+    },
+    {
+      "next_phase": "ABORTED",
+      "opcode": "ABORT",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ALLOCATE",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": "ASSERTING",
+      "opcode": "ASSERT",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": "ASSERTING",
+      "opcode": "BRANCH",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": "ESCALATED",
+      "opcode": "ESCALATE",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": "ASSERTING",
+      "opcode": "GUARD",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": "HELD",
+      "opcode": "HOLD",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "OBSERVE",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PREPARE",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PRICE",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": "QUOTED",
+      "opcode": "QUOTE",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SCORE",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SETTLE",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SIMULATE",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "VERIFY",
+      "phase": "ASSERTING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ABORT",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ALLOCATE",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ASSERT",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": null,
+      "opcode": "BRANCH",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ESCALATE",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": null,
+      "opcode": "GUARD",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": null,
+      "opcode": "HOLD",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": null,
+      "opcode": "OBSERVE",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PREPARE",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PRICE",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": null,
+      "opcode": "QUOTE",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SCORE",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SETTLE",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SIMULATE",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": null,
+      "opcode": "VERIFY",
+      "phase": "AWAITING_AUTHORIZATION"
+    },
+    {
+      "next_phase": "ABORTED",
+      "opcode": "ABORT",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ALLOCATE",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ASSERT",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "BRANCH",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": "ESCALATED",
+      "opcode": "ESCALATE",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "GUARD",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": "HELD",
+      "opcode": "HOLD",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": "OBSERVING",
+      "opcode": "OBSERVE",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PREPARE",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": "OBSERVING",
+      "opcode": "PRICE",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": "QUOTED",
+      "opcode": "QUOTE",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SCORE",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SETTLE",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SIMULATE",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "VERIFY",
+      "phase": "CREATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ABORT",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ALLOCATE",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ASSERT",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "BRANCH",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ESCALATE",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "GUARD",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "HOLD",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "OBSERVE",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PREPARE",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PRICE",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "QUOTE",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SCORE",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SETTLE",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SIMULATE",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "VERIFY",
+      "phase": "ESCALATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ABORT",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ALLOCATE",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ASSERT",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": null,
+      "opcode": "BRANCH",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ESCALATE",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": null,
+      "opcode": "GUARD",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": null,
+      "opcode": "HOLD",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": null,
+      "opcode": "OBSERVE",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PREPARE",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PRICE",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": null,
+      "opcode": "QUOTE",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SCORE",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SETTLE",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SIMULATE",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": null,
+      "opcode": "VERIFY",
+      "phase": "HELD"
+    },
+    {
+      "next_phase": "ABORTED",
+      "opcode": "ABORT",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ALLOCATE",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": "ASSERTING",
+      "opcode": "ASSERT",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": "ASSERTING",
+      "opcode": "BRANCH",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": "ESCALATED",
+      "opcode": "ESCALATE",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": "ASSERTING",
+      "opcode": "GUARD",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": "HELD",
+      "opcode": "HOLD",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": "OBSERVING",
+      "opcode": "OBSERVE",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PREPARE",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": "OBSERVING",
+      "opcode": "PRICE",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": "QUOTED",
+      "opcode": "QUOTE",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SCORE",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SETTLE",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SIMULATE",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": null,
+      "opcode": "VERIFY",
+      "phase": "OBSERVING"
+    },
+    {
+      "next_phase": "ABORTED",
+      "opcode": "ABORT",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ALLOCATE",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ASSERT",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "BRANCH",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": "ESCALATED",
+      "opcode": "ESCALATE",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "GUARD",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "HOLD",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "OBSERVE",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PREPARE",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PRICE",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "QUOTE",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SCORE",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": "AWAITING_AUTHORIZATION",
+      "opcode": "SETTLE",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SIMULATE",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "VERIFY",
+      "phase": "PREPARED"
+    },
+    {
+      "next_phase": "ABORTED",
+      "opcode": "ABORT",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ALLOCATE",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ASSERT",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "BRANCH",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": "ESCALATED",
+      "opcode": "ESCALATE",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "GUARD",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": "HELD",
+      "opcode": "HOLD",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "OBSERVE",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PREPARE",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PRICE",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "QUOTE",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": "SCORED",
+      "opcode": "SCORE",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SETTLE",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SIMULATE",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "VERIFY",
+      "phase": "QUOTED"
+    },
+    {
+      "next_phase": "ABORTED",
+      "opcode": "ABORT",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": "ALLOCATED",
+      "opcode": "ALLOCATE",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ASSERT",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "BRANCH",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": "ESCALATED",
+      "opcode": "ESCALATE",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "GUARD",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": "HELD",
+      "opcode": "HOLD",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "OBSERVE",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PREPARE",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PRICE",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "QUOTE",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SCORE",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SETTLE",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SIMULATE",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "VERIFY",
+      "phase": "SCORED"
+    },
+    {
+      "next_phase": "ABORTED",
+      "opcode": "ABORT",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ALLOCATE",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ASSERT",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "BRANCH",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": "ESCALATED",
+      "opcode": "ESCALATE",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "GUARD",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": "HELD",
+      "opcode": "HOLD",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "OBSERVE",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PREPARE",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PRICE",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "QUOTE",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SCORE",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SETTLE",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SIMULATE",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": "VERIFIED",
+      "opcode": "VERIFY",
+      "phase": "SIMULATED"
+    },
+    {
+      "next_phase": "ABORTED",
+      "opcode": "ABORT",
+      "phase": "VERIFIED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ALLOCATE",
+      "phase": "VERIFIED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "ASSERT",
+      "phase": "VERIFIED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "BRANCH",
+      "phase": "VERIFIED"
+    },
+    {
+      "next_phase": "ESCALATED",
+      "opcode": "ESCALATE",
+      "phase": "VERIFIED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "GUARD",
+      "phase": "VERIFIED"
+    },
+    {
+      "next_phase": "HELD",
+      "opcode": "HOLD",
+      "phase": "VERIFIED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "OBSERVE",
+      "phase": "VERIFIED"
+    },
+    {
+      "next_phase": "PREPARED",
+      "opcode": "PREPARE",
+      "phase": "VERIFIED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "PRICE",
+      "phase": "VERIFIED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "QUOTE",
+      "phase": "VERIFIED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SCORE",
+      "phase": "VERIFIED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SETTLE",
+      "phase": "VERIFIED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "SIMULATE",
+      "phase": "VERIFIED"
+    },
+    {
+      "next_phase": null,
+      "opcode": "VERIFY",
+      "phase": "VERIFIED"
+    }
+  ]
+}

@@ -3,6 +3,7 @@
 import hashlib
 import json
 import re
+from datetime import UTC
 from decimal import Decimal, InvalidOperation
 from typing import Any
 
@@ -64,14 +65,14 @@ def ident(value: Any, label: str) -> str:
 
 
 def utc(value: Any) -> str:
-    from datetime import datetime, timezone
+    from datetime import datetime
     if not isinstance(value, str):
         raise MachineError("UTC timestamp string required")
     try:
         parsed = datetime.fromisoformat(value)
     except ValueError as exc:
         raise MachineError("invalid timestamp") from exc
-    if parsed.tzinfo is None or parsed.utcoffset() != timezone.utc.utcoffset(parsed):
+    if parsed.tzinfo is None or parsed.utcoffset() != UTC.utcoffset(parsed):
         raise MachineError("timestamp must be UTC")
     return parsed.isoformat()
 

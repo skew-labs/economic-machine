@@ -1,0 +1,19 @@
+{
+  "inspected_files": 247,
+  "historical_blobs": 238,
+  "findings": [],
+  "line_counts": {
+    "implementation": {
+      "physical_lines": 13894,
+      "nonblank_lines": 12997,
+      "files": 67
+    },
+    "tests": {
+      "physical_lines": 4050,
+      "nonblank_lines": 3587,
+      "files": 22
+    }
+  },
+  "count_scope": "Physical and nonblank source lines; excludes JSON, fixtures, logs, images, dependencies and Git objects.",
+  "assurance": "Pattern and private-file inspection; not a universal secret detector or security audit."
+}

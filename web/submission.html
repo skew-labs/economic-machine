@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Economic Machine — A completed Arbitrum trade</title>
+    <link rel="stylesheet" href="/commerce/submission.css?v=trade-20261002-1" />
+    <script src="/commerce/submission.js?v=trade-20261002-1" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to trade</a>
+    <header class="wrap">
+      <a class="brand" href="/commerce/" aria-label="skew Economic Machine home"
+        ><svg viewBox="0 0 34 30" aria-hidden="true">
+          <path
+            d="M11 2h8L10 28H2zM25 2h7l-9 26h-7z"
+            fill="currentColor"
+          /></svg
+        ><span>skew<small>Economic Machine</small></span></a
+      >
+      <nav aria-label="Product navigation">
+        <a href="/commerce/#engine">Engine</a
+        ><a href="/commerce/console">Console</a>
+      </nav>
+    </header>
+    <main id="main" class="wrap">
+      <section class="intro">
+        <div>
+          <div class="network">
+            <img
+              src="/commerce/assets/arbitrum-logo.svg"
+              width="20"
+              height="24"
+              alt=""
+            /><span>Arbitrum Sepolia · Recorded purchase</span>
+          </div>
+          <h1>One policy.<br />A completed trade.</h1>
+          <p>
+            Buyer conditions, a signed payment and delivered data.<br />Linked
+            to the same agreement.
+          </p>
+        </div>
+        <div class="intro-actions">
+          <a
+            class="button primary"
+            id="chain-link"
+            href="https://sepolia.arbiscan.io/tx/0x3aa1cbbb04e18c0a1d07b3c9cc92b255bc7a3bdb6b62080fa1fb933659b11758"
+            target="_blank"
+            rel="noopener"
+            >View on Arbiscan
+            <svg class="icon" viewBox="0 0 256 256" aria-hidden="true">
+              <use
+                href="/commerce/assets/ui-icons.svg#arrow-up-right"
+              ></use></svg></a
+          ><a
+            class="text-link"
+            href="/commerce/demo/trade"
+            target="_blank"
+            rel="noopener"
+            >Inspect the evidence JSON</a
+          >
+        </div>
+      </section>
+      <p id="load-status" class="record-note" role="status">
+        Loading verified trade evidence…
+      </p>
+      <section class="trade-grid" aria-label="Buying conditions and agreement">
+        <form id="policy-form" class="policy">
+          <h2>Buying conditions</h2>
+          <p class="small">Replay the original decision at purchase time.</p>
+          <label for="budget">Total budget · test USDC</label
+          ><input id="budget" inputmode="decimal" value="0.01" required /><label
+            for="freshness"
+            >Maximum data age</label
+          ><select id="freshness">
+            <option value="86400">24 hours</option>
+            <option value="60">60 seconds</option>
+            <option value="5">5 seconds</option></select
+          ><label for="license">Usage right</label
+          ><select id="license">
+            <option value="internal-use">Internal research</option>
+            <option value="commercial-use">Commercial use</option></select
+          ><button class="button primary" id="replay" type="submit" disabled>
+            Replay policy
+          </button>
+          <p class="small">No new wallet signature or payment.</p>
+        </form>
+        <div class="agreement">
+          <div class="section-top">
+            <h2>Selected provider</h2>
+            <span class="status" id="agreement-status">Checking</span>
+          </div>
+          <div class="provider">
+            <div class="provider-mark">
+              <svg class="icon" viewBox="0 0 256 256" aria-hidden="true">
+                <use href="/commerce/assets/ui-icons.svg#stack"></use>
+              </svg>
+            </div>
+            <div>
+              <h3 id="supplier">Sepolia Chain Observer</h3>
+              <p id="version" class="small">Public finalized-block snapshot</p>
+            </div>
+          </div>
+          <div class="prices">
+            <div><span>Seller ask</span><strong id="ask">—</strong></div>
+            <svg class="icon" viewBox="0 0 256 256" aria-hidden="true">
+              <use href="/commerce/assets/ui-icons.svg#arrow-right"></use>
+            </svg>
+            <div>
+              <span>Policy counter</span><strong id="counter">—</strong>
+            </div>
+            <div class="discount">
+              <span>Rule discount</span><strong id="discount">—</strong>
+            </div>
+          </div>
+          <dl class="terms">
+            <div>
+              <dt>Quantity</dt>
+              <dd id="units">—</dd>
+            </div>
+            <div>
+              <dt>Payment</dt>
+              <dd>Circle test USDC</dd>
+            </div>
+            <div>
+              <dt>Usage</dt>
+              <dd>Internal research</dd>
+            </div>
+            <div>
+              <dt>Model calls</dt>
+              <dd id="model-calls">—</dd>
+            </div>
+          </dl>
+          <div
+            class="replay-result"
+            id="replay-result"
+            role="status"
+            aria-live="polite"
+          >
+            The original policy and agreement are being verified.
+          </div>
+          <details class="hash-detail">
+            <summary>Agreed terms</summary>
+            <code id="terms-hash"></code>
+          </details>
+        </div>
+      </section>
+      <section class="execution">
+        <div class="section-top">
+          <h2>From authorization to delivery</h2>
+          <span id="trade-state" class="status">Checking</span>
+        </div>
+        <div class="execution-flow">
+          <article>
+            <span class="step-icon"
+              ><svg class="icon" viewBox="0 0 256 256" aria-hidden="true">
+                <use
+                  href="/commerce/assets/ui-icons.svg#fingerprint"
+                ></use></svg
+            ></span>
+            <h3>Buyer signs</h3>
+            <p>
+              EIP-3009 authorization.<br />Recovered from the actual token call.
+            </p>
+            <strong id="signature-result">Checking…</strong>
+            <details>
+              <summary>Signer &amp; authorization</summary>
+              <dl>
+                <dt>Buyer</dt>
+                <dd><code id="signer"></code></dd>
+                <dt>Payload hash</dt>
+                <dd><code id="authorization-hash"></code></dd>
+              </dl>
+              <p class="small">
+                External disposable buyer wallet, signed by operator CLI. This
+                record is not a customer browser signature.
+              </p>
+            </details>
+          </article>
+          <article>
+            <span class="step-icon"
+              ><svg class="icon" viewBox="0 0 256 256" aria-hidden="true">
+                <use href="/commerce/assets/ui-icons.svg#receipt"></use></svg
+            ></span>
+            <h3>Arbitrum settles</h3>
+            <p>
+              Exact transfer and consumed nonce.<br />Two independent RPC
+              readbacks.
+            </p>
+            <strong id="settled-amount">Checking…</strong>
+            <details>
+              <summary>Transaction &amp; state</summary>
+              <dl>
+                <dt>Transaction</dt>
+                <dd><code id="tx-hash"></code></dd>
+                <dt>Receipt block</dt>
+                <dd id="receipt-block"></dd>
+                <dt>Capital hold</dt>
+                <dd id="capital-hold"></dd>
+                <dt>Confirmed spending</dt>
+                <dd id="capital-spent"></dd>
+              </dl>
+            </details>
+          </article>
+          <article>
+            <span class="step-icon"
+              ><svg class="icon" viewBox="0 0 256 256" aria-hidden="true">
+                <use
+                  href="/commerce/assets/ui-icons.svg#check-circle"
+                ></use></svg
+            ></span>
+            <h3>Buyer receives data</h3>
+            <p>
+              Same version. Same terms.<br />Public block fields independently
+              checked.
+            </p>
+            <strong id="delivery-result">Checking…</strong>
+            <details>
+              <summary>Delivery &amp; artifact hash</summary>
+              <pre id="artifact"></pre>
+              <code id="artifact-hash"></code
+              ><a class="text-link" href="/commerce/demo/trade/artifact"
+                >Download delivered JSON</a
+              >
+            </details>
+          </article>
+        </div>
+      </section>
+      <section class="balances">
+        <h2>Capital reconciled</h2>
+        <div><span>Buyer before</span><strong id="buyer-before">—</strong></div>
+        <div><span>Buyer after</span><strong id="buyer-after">—</strong></div>
+        <div>
+          <span>Seller received</span><strong id="seller-received">—</strong>
+        </div>
+        <p class="small">
+          Historical balances from the preserved earlier two-RPC audit; not
+          fresh balance reads. Test tokens have no monetary value.
+        </p>
+      </section>
+      <section class="records">
+        <details>
+          <summary>Runtime transition record</summary>
+          <p class="small">
+            Verified local event hash chain. Integrity of the recorded runtime,
+            not external data truth.
+          </p>
+          <ol id="timeline"></ol>
+        </details>
+        <details>
+          <summary>Deployment &amp; verification scope</summary>
+          <p>
+            Economic Machine and its independent seller run as hosted services.
+            This purchase executed Circle test USDC’s EIP-3009 contract on
+            Arbitrum Sepolia. The separate escrow contract has not been publicly
+            deployed.
+          </p>
+          <p>
+            This page replays an already completed agent purchase. It does not
+            authorize another transaction. x402 delivery is not atomic with
+            payment, and RPC finality is not an independent Ethereum proof.
+            Competition eligibility remains subject to organizer review.
+          </p>
+          <dl>
+            <dt>Payment token contract</dt>
+            <dd><code id="token-address"></code></dd>
+            <dt>Evidence checked</dt>
+            <dd id="checked-at"></dd>
+            <dt>Bundle hash</dt>
+            <dd><code id="bundle-hash"></code></dd>
+          </dl>
+        </details>
+      </section>
+    </main>
+    <footer class="wrap">
+      <span>Economic Machine · Arbitrum Open House Singapore</span
+      ><a href="/commerce/console?preview=1">Recorded workspace</a>
+    </footer>
+  </body>
+</html>

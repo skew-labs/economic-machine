@@ -9,6 +9,13 @@ The runtime is `SETTLED`: 10,000 atoms spent, zero reserved. Historical balances
 nonce, exact transfer logs and delivered block fields were independently checked. The proof and audit are
 saved; explorer `Success` alone was not used to release the hold.
 
+The [joined purchase viewer](https://machine.148-113-153-116.nip.io/commerce/submission) now ties the
+runtime's authorization payload hash to the signature recovered from the actual token transaction,
+and joins buyer conditions, seller policy, mandate, received artifact and finalized reconciliation.
+Current receipt/signature/block readbacks are separated from the preserved earlier historical-balance
+audit. A public RPC no longer serves the required old account state; historical balances are not labelled
+as freshly rechecked. See [submission scope](ARBITRUM_SUBMISSION.md).
+
 ## Transaction
 
 | Field | Observed value |

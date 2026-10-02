@@ -1,0 +1,45 @@
+{
+  "owner_id": "demo-owner",
+  "network": "economic-testnet-sim",
+  "sequence": 0,
+  "as_of": "2026-09-25T12:00:00+00:00",
+  "facts": {
+    "risk.coverage_ratio": {
+      "value": "1.6",
+      "unit": "ratio",
+      "quality": "VALID",
+      "source_id": "synthetic_risk_fixture",
+      "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "observed_at": "2026-09-25T12:00:00+00:00"
+    }
+  },
+  "balances": {"USDT": "1000"},
+  "exposures": {"VAULT": {"USDT": "100"}},
+  "daily_losses": {"VAULT": {"USDT": "5"}},
+  "quotes": {
+    "quote_A": {
+      "quote_id": "quote_A",
+      "protocol": "venue_A",
+      "asset": "USDT",
+      "amount": "200",
+      "fee": "2",
+      "slippage_cost": "2",
+      "gas_cost": "1",
+      "observed_at": "2026-09-25T12:00:00+00:00",
+      "expires_at": "2026-09-25T13:00:00+00:00",
+      "source_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "quote_B": {
+      "quote_id": "quote_B",
+      "protocol": "venue_B",
+      "asset": "USDT",
+      "amount": "200",
+      "fee": "1",
+      "slippage_cost": "1",
+      "gas_cost": "1",
+      "observed_at": "2026-09-25T12:00:00+00:00",
+      "expires_at": "2026-09-25T13:00:00+00:00",
+      "source_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  }
+}

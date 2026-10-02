@@ -1,0 +1,489 @@
+{
+  "record": {
+    "proof": {
+      "schema": "public-arbitrum-sepolia-x402-proof-1",
+      "verified": true,
+      "mainnet": false,
+      "chain_id": 421614,
+      "token": "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+      "test_usdc": "0.01",
+      "tx_hash": "0x3aa1cbbb04e18c0a1d07b3c9cc92b255bc7a3bdb6b62080fa1fb933659b11758",
+      "explorer": "https://sepolia.arbiscan.io/tx/0x3aa1cbbb04e18c0a1d07b3c9cc92b255bc7a3bdb6b62080fa1fb933659b11758",
+      "payment_id": "payment-f74ca4a930759f44d9953da7",
+      "terms_hash": "6f0f2ffc52cd9ed439007f3bcafb9e2c5181a8298f510e2adcf67f1d454db17c",
+      "receipt_block": 314873781,
+      "receipt_block_hash": "0x115dbceb71fcb5668ff7afe80872ba9810dbd5e5381fe732530644097102fcc9",
+      "rpc_finalized_block": 314874577,
+      "finality_assurance": "RPC_FINALIZED_TAG_NOT_INDEPENDENT_L1_PROOF",
+      "independent_rpc": "https://arbitrum-sepolia.drpc.org",
+      "before_block": 314873763,
+      "before": {
+        "buyer": {
+          "address": "0x24d0B9Bc844754Dd1b22f215EBb06627f7314E79",
+          "usdc_atoms": 20000000,
+          "eth_wei": 0
+        },
+        "seller": {
+          "address": "0xd26491D35Ed8725Ef2bd1E3DB1A1F8959ed31e97",
+          "usdc_atoms": 0,
+          "eth_wei": 1510000000000000
+        }
+      },
+      "after_at_receipt_block": {
+        "buyer": {
+          "address": "0x24d0B9Bc844754Dd1b22f215EBb06627f7314E79",
+          "usdc_atoms": 19990000,
+          "eth_wei": 0
+        },
+        "seller": {
+          "address": "0xd26491D35Ed8725Ef2bd1E3DB1A1F8959ed31e97",
+          "usdc_atoms": 10000,
+          "eth_wei": 1501407793376000
+        }
+      },
+      "balance_deltas": {
+        "buyer": {
+          "usdc_atoms": -10000,
+          "eth_wei": 0
+        },
+        "seller": {
+          "usdc_atoms": 10000,
+          "eth_wei": -8592206624000
+        }
+      },
+      "authorization_nonce": "0xee7e2e6a1c84974e20f718c9576c4a709f9441c1b9fb5426ca3aa0af3ef0c3d3",
+      "nonce_consumed": true,
+      "artifact": {
+        "data": {
+          "assurance": "APPROVED_RPC_FINALIZED_TAG",
+          "block_hash": "0xfbac7882ee7dd0d6d530ee0a7dd7df76092b701a8add368d5a6b103f22492ea8",
+          "block_number": 314868529,
+          "chain_id": 421614,
+          "gas_used": 2558628,
+          "observed_at": 1790916681,
+          "schema": "arbitrum-finalized-block-snapshot-1",
+          "source": "https://sepolia-rollup.arbitrum.io/rpc",
+          "timestamp": 1790915773,
+          "transactions": 10
+        },
+        "data_version": "block-314868529",
+        "terms_hash": "6f0f2ffc52cd9ed439007f3bcafb9e2c5181a8298f510e2adcf67f1d454db17c"
+      },
+      "artifact_hash": "384cb6a7784d847e88c849e93c8831fa1d3b62fe46784dae14482360aefefc24",
+      "data_truth_scope": "PUBLIC_BLOCK_HASH_READBACK",
+      "mandate": {
+        "id": "mandate-307c4dc7751722e1eca083ee",
+        "payer": "0x24d0b9bc844754dd1b22f215ebb06627f7314e79",
+        "payment_asset": "eip155:421614/erc20:0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+        "budget": 10000,
+        "max_order": 10000,
+        "resources": [
+          "sepolia-block"
+        ],
+        "expires": 1791003472,
+        "reserved": 0,
+        "spent": 10000
+      },
+      "seller_broadcasts": 1,
+      "replayed_submit_did_not_pay_again": true,
+      "buyer_runtime_custody": "NONE",
+      "customer_wallet_used": false,
+      "language_model_calls": 0,
+      "unsigned_preparations": [
+        {
+          "payment_id": "payment-326256f01da5ad15ef535b19",
+          "status": "CANCELLED",
+          "signature_transmitted": false
+        }
+      ],
+      "checked_at": 1790918514
+    },
+    "payment": {
+      "id": "payment-f74ca4a930759f44d9953da7",
+      "owner": "buyer-2bb7e4ea8f26f7b847881453",
+      "mandate_id": "mandate-307c4dc7751722e1eca083ee",
+      "match_id": "match-6f0f2ffc52cd9ed439007f3bcafb9e2c",
+      "idempotency_key": "public-sepolia-sale-2",
+      "input_hash": "d526e4585a0d733f0f88f51631bcb56903f3dce4d60e4385e33d894285eba5b3",
+      "body": {
+        "accepted": {
+          "amount": "10000",
+          "asset": "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+          "extra": {
+            "assetTransferMethod": "eip3009",
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxTimeoutSeconds": 120,
+          "network": "eip155:421614",
+          "payTo": "0xd26491d35ed8725ef2bd1e3db1a1f8959ed31e97",
+          "scheme": "exact"
+        },
+        "authorization": {
+          "from": "0x24d0b9bc844754dd1b22f215ebb06627f7314e79",
+          "nonce": "0xee7e2e6a1c84974e20f718c9576c4a709f9441c1b9fb5426ca3aa0af3ef0c3d3",
+          "to": "0xd26491d35ed8725ef2bd1e3db1a1f8959ed31e97",
+          "validAfter": "1790917067",
+          "validBefore": "1790917192",
+          "value": "10000"
+        },
+        "binding": {
+          "amount_atoms": 10000,
+          "asset": "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+          "expires": 1790917192,
+          "max_timeout_seconds": 120,
+          "network": "eip155:421614",
+          "pay_to": "0xd26491d35ed8725ef2bd1e3db1a1f8959ed31e97",
+          "resource_url": "https://machine.148-113-153-116.nip.io/commerce-sepolia/data",
+          "terms_hash": "6f0f2ffc52cd9ed439007f3bcafb9e2c5181a8298f510e2adcf67f1d454db17c",
+          "token_name": "USD Coin",
+          "token_version": "2"
+        },
+        "profile_hash": "883b6a838e9422042ffa942734eda37bc1a175c91cdfbad7a3a0b44808bf5641",
+        "request": {
+          "data_version": "block-314868529",
+          "license": "internal-use",
+          "purpose": "research",
+          "terms_hash": "6f0f2ffc52cd9ed439007f3bcafb9e2c5181a8298f510e2adcf67f1d454db17c",
+          "units": 1
+        },
+        "resource_id": "sepolia-block",
+        "start_block": 314873770
+      },
+      "status": "SETTLED",
+      "signature_hash": "00c6119ac0eeaf710c71f0c62f2cf6bd27957718bfe36d6c5f9a446c0176807f",
+      "tx_hash": "0x3aa1cbbb04e18c0a1d07b3c9cc92b255bc7a3bdb6b62080fa1fb933659b11758",
+      "delivery": {
+        "artifact": {
+          "data": {
+            "assurance": "APPROVED_RPC_FINALIZED_TAG",
+            "block_hash": "0xfbac7882ee7dd0d6d530ee0a7dd7df76092b701a8add368d5a6b103f22492ea8",
+            "block_number": 314868529,
+            "chain_id": 421614,
+            "gas_used": 2558628,
+            "observed_at": 1790916681,
+            "schema": "arbitrum-finalized-block-snapshot-1",
+            "source": "https://sepolia-rollup.arbitrum.io/rpc",
+            "timestamp": 1790915773,
+            "transactions": 10
+          },
+          "data_version": "block-314868529",
+          "terms_hash": "6f0f2ffc52cd9ed439007f3bcafb9e2c5181a8298f510e2adcf67f1d454db17c"
+        },
+        "artifact_hash": "384cb6a7784d847e88c849e93c8831fa1d3b62fe46784dae14482360aefefc24",
+        "assurance": "TERMS_AND_VERSION_BINDING_NOT_DATA_TRUTH"
+      },
+      "observation": {
+        "amount_atoms": "10000",
+        "asset": "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+        "block_hash": "0x115dbceb71fcb5668ff7afe80872ba9810dbd5e5381fe732530644097102fcc9",
+        "block_number": 314873781,
+        "finality": "finalized",
+        "nonce": "0xee7e2e6a1c84974e20f718c9576c4a709f9441c1b9fb5426ca3aa0af3ef0c3d3",
+        "pay_to": "0xd26491d35ed8725ef2bd1e3db1a1f8959ed31e97",
+        "payer": "0x24d0b9bc844754dd1b22f215ebb06627f7314e79",
+        "status": "PAID",
+        "tx_hash": "0x3aa1cbbb04e18c0a1d07b3c9cc92b255bc7a3bdb6b62080fa1fb933659b11758"
+      },
+      "reason": null,
+      "created": 1790917072,
+      "updated": 1790918147
+    },
+    "match": {
+      "id": "match-6f0f2ffc52cd9ed439007f3bcafb9e2c",
+      "demand_id": "demand-6361bed784de4148d03ec9e6",
+      "supply_id": "supply-88dd8e3575bc92865134e9f9",
+      "terms_hash": "6f0f2ffc52cd9ed439007f3bcafb9e2c5181a8298f510e2adcf67f1d454db17c",
+      "body": {
+        "language_model_calls": 0,
+        "payment_status": "NOT_REQUESTED",
+        "reason_codes": [],
+        "status": "AGREED",
+        "terms": {
+          "asset": "eip155:421614/erc20:0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+          "buyer_id": "buyer-2bb7e4ea8f26f7b847881453",
+          "data_type": "arbitrum.finalized-block",
+          "data_updated_at": 1790916681,
+          "data_version": "block-314868529",
+          "demand_id": "demand-6361bed784de4148d03ec9e6",
+          "license": "internal-use",
+          "purpose": "research",
+          "refresh_seconds": 86400,
+          "response_seconds": 10,
+          "schema_version": "machine-trade-terms-1",
+          "seller_id": "buyer-83b048db5ebaf75aca645171",
+          "supply_id": "supply-88dd8e3575bc92865134e9f9",
+          "total_price": "0.01",
+          "unit_price": "0.01",
+          "units": 1
+        },
+        "terms_hash": "6f0f2ffc52cd9ed439007f3bcafb9e2c5181a8298f510e2adcf67f1d454db17c",
+        "trace": [
+          {
+            "actor": "seller",
+            "kind": "OFFER",
+            "unit_price": "0.0125"
+          },
+          {
+            "actor": "seller",
+            "kind": "POLICY_COUNTER",
+            "license": "internal-use",
+            "unit_price": "0.01",
+            "units": 1
+          },
+          {
+            "actor": "buyer",
+            "kind": "POLICY_ACCEPT",
+            "total_price": "0.01"
+          }
+        ]
+      },
+      "expires": 1791003081
+    },
+    "demand": {
+      "id": "demand-6361bed784de4148d03ec9e6",
+      "owner": "buyer-2bb7e4ea8f26f7b847881453",
+      "data_type": "arbitrum.finalized-block",
+      "body": {
+        "data_type": "arbitrum.finalized-block",
+        "license": "internal-use",
+        "max_age_seconds": 86400,
+        "max_refresh_seconds": 86400,
+        "max_total_atoms": 10000,
+        "max_unit_atoms": 10000,
+        "payment_asset": "eip155:421614/erc20:0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+        "purpose": "research",
+        "response_seconds": 30,
+        "ttl_seconds": 86400,
+        "units": 1
+      },
+      "expires": 1791003472
+    },
+    "supply": {
+      "id": "supply-88dd8e3575bc92865134e9f9",
+      "owner": "buyer-83b048db5ebaf75aca645171",
+      "data_type": "arbitrum.finalized-block",
+      "body": {
+        "ask_atoms": 12500,
+        "data_type": "arbitrum.finalized-block",
+        "discount_bps": 2000,
+        "discount_min_units": 1,
+        "floor_atoms": 10000,
+        "licenses": [
+          "internal-use"
+        ],
+        "max_units": 1,
+        "min_units": 1,
+        "name": "Sepolia Chain Observer",
+        "payment_asset": "eip155:421614/erc20:0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+        "purposes": [
+          "research"
+        ],
+        "refresh_seconds": 86400,
+        "response_seconds": 10,
+        "ttl_seconds": 86400,
+        "updated_at": 1790916681,
+        "version": "block-314868529"
+      },
+      "expires": 1791003472
+    },
+    "mandate": {
+      "id": "mandate-307c4dc7751722e1eca083ee",
+      "owner": "buyer-2bb7e4ea8f26f7b847881453",
+      "payer": "0x24d0b9bc844754dd1b22f215ebb06627f7314e79",
+      "payment_asset": "eip155:421614/erc20:0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+      "budget": 10000,
+      "max_order": 10000,
+      "resources": "[\"sepolia-block\"]",
+      "expires": 1791003472,
+      "reserved": 0,
+      "spent": 10000
+    },
+    "events": [
+      {
+        "ordinal": 36,
+        "kind": "PAYMENT_PREPARED",
+        "event": {
+          "amount_atoms": 10000,
+          "mandate_id": "mandate-307c4dc7751722e1eca083ee",
+          "nonce": "0xee7e2e6a1c84974e20f718c9576c4a709f9441c1b9fb5426ca3aa0af3ef0c3d3",
+          "payment_id": "payment-f74ca4a930759f44d9953da7",
+          "terms_hash": "6f0f2ffc52cd9ed439007f3bcafb9e2c5181a8298f510e2adcf67f1d454db17c"
+        },
+        "event_hash": "9c16bf79e245b5fb0a279729bf6b8eeac3d941af3993f5cb834607d05b605568",
+        "previous_hash": "a9f4458eb4f34bcfa58ec0c084aac305e0b77bde838d9f3048ec32135e88a592"
+      },
+      {
+        "ordinal": 37,
+        "kind": "PAYMENT_CHALLENGE_ADMITTED",
+        "event": {
+          "challenge_hash": "718c288611f063fbfc92088007fe14ed294629de5218dabec9110a35fd64354c",
+          "payment_id": "payment-f74ca4a930759f44d9953da7"
+        },
+        "event_hash": "a60bcb4054a9e9c25286a3b8002f77e5040a34e18ceab03cd57c5242436ce0eb",
+        "previous_hash": "9c16bf79e245b5fb0a279729bf6b8eeac3d941af3993f5cb834607d05b605568"
+      },
+      {
+        "ordinal": 38,
+        "kind": "PAYMENT_AUTHORIZATION_SENT",
+        "event": {
+          "authorization_hash": "784f4dedff7015988d2f3229b3b911aff8a3a2f4b9eac81729c8d0ab756ddad3",
+          "payload_hash": "00c6119ac0eeaf710c71f0c62f2cf6bd27957718bfe36d6c5f9a446c0176807f",
+          "payment_id": "payment-f74ca4a930759f44d9953da7"
+        },
+        "event_hash": "c5e29a01bb3ecf88ee71f293171d1782299992d4ce98095bff092b04f9ba2b0f",
+        "previous_hash": "a60bcb4054a9e9c25286a3b8002f77e5040a34e18ceab03cd57c5242436ce0eb"
+      },
+      {
+        "ordinal": 39,
+        "kind": "PAYMENT_SETTLEMENT_REPORTED",
+        "event": {
+          "delivery_received": true,
+          "payment_id": "payment-f74ca4a930759f44d9953da7",
+          "tx_hash": "0x3aa1cbbb04e18c0a1d07b3c9cc92b255bc7a3bdb6b62080fa1fb933659b11758"
+        },
+        "event_hash": "e7974e27c8c8dec3fc31458f86916d7ee44957727bfc9e7c1181772259ee1f42",
+        "previous_hash": "c5e29a01bb3ecf88ee71f293171d1782299992d4ce98095bff092b04f9ba2b0f"
+      },
+      {
+        "ordinal": 40,
+        "kind": "PAYMENT_CHAIN_OBSERVED",
+        "event": {
+          "observation": {
+            "status": "PENDING",
+            "tx_hash": "0x3aa1cbbb04e18c0a1d07b3c9cc92b255bc7a3bdb6b62080fa1fb933659b11758"
+          },
+          "payment_id": "payment-f74ca4a930759f44d9953da7",
+          "state": "SETTLEMENT_REPORTED"
+        },
+        "event_hash": "46875e323946dd472c1450ce8fa0fbb35bf7a219940550872ae4edb29bf72c4d",
+        "previous_hash": "e7974e27c8c8dec3fc31458f86916d7ee44957727bfc9e7c1181772259ee1f42"
+      },
+      {
+        "ordinal": 41,
+        "kind": "PAYMENT_CHAIN_OBSERVED",
+        "event": {
+          "observation": {
+            "amount_atoms": "10000",
+            "asset": "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d",
+            "block_hash": "0x115dbceb71fcb5668ff7afe80872ba9810dbd5e5381fe732530644097102fcc9",
+            "block_number": 314873781,
+            "finality": "finalized",
+            "nonce": "0xee7e2e6a1c84974e20f718c9576c4a709f9441c1b9fb5426ca3aa0af3ef0c3d3",
+            "pay_to": "0xd26491d35ed8725ef2bd1e3db1a1f8959ed31e97",
+            "payer": "0x24d0b9bc844754dd1b22f215ebb06627f7314e79",
+            "status": "PAID",
+            "tx_hash": "0x3aa1cbbb04e18c0a1d07b3c9cc92b255bc7a3bdb6b62080fa1fb933659b11758"
+          },
+          "payment_id": "payment-f74ca4a930759f44d9953da7",
+          "state": "SETTLED"
+        },
+        "event_hash": "a8b9899ebce46fa0061a0379f0416ee4d771422534e8da9dd53bdcbdbf24663a",
+        "previous_hash": "46875e323946dd472c1450ce8fa0fbb35bf7a219940550872ae4edb29bf72c4d"
+      }
+    ],
+    "journal_verified": true
+  },
+  "observations": [
+    {
+      "rpc": "https://sepolia-rollup.arbitrum.io/rpc",
+      "chain_id": 421614,
+      "receipt_status": 1,
+      "finalized_block": 315000770,
+      "exact_transfer_logs": 1,
+      "authorization_used_logs": 1,
+      "historical_balances_match": null,
+      "historical_balances_checked": false,
+      "nonce_consumed_at_finalized": true,
+      "public_snapshot_matches": true
+    },
+    {
+      "rpc": "https://arbitrum-sepolia.drpc.org",
+      "chain_id": 421614,
+      "receipt_status": 1,
+      "finalized_block": 315000770,
+      "exact_transfer_logs": 1,
+      "authorization_used_logs": 1,
+      "historical_balances_match": null,
+      "historical_balances_checked": false,
+      "nonce_consumed_at_finalized": true,
+      "public_snapshot_matches": true
+    }
+  ],
+  "signature_checks": [
+    {
+      "rpc": "https://sepolia-rollup.arbitrum.io/rpc",
+      "recovered_payer": "0x24d0B9Bc844754Dd1b22f215EBb06627f7314E79",
+      "payload_hash": "00c6119ac0eeaf710c71f0c62f2cf6bd27957718bfe36d6c5f9a446c0176807f",
+      "authorization_matches": true
+    },
+    {
+      "rpc": "https://arbitrum-sepolia.drpc.org",
+      "recovered_payer": "0x24d0B9Bc844754Dd1b22f215EBb06627f7314E79",
+      "payload_hash": "00c6119ac0eeaf710c71f0c62f2cf6bd27957718bfe36d6c5f9a446c0176807f",
+      "authorization_matches": true
+    }
+  ],
+  "archived_audit": {
+    "verified": true,
+    "read_only": true,
+    "private_key_required": false,
+    "tx_hash": "0x3aa1cbbb04e18c0a1d07b3c9cc92b255bc7a3bdb6b62080fa1fb933659b11758",
+    "observations": [
+      {
+        "rpc": "https://sepolia-rollup.arbitrum.io/rpc",
+        "chain_id": 421614,
+        "receipt_status": 1,
+        "finalized_block": 314874577,
+        "exact_transfer_logs": 1,
+        "authorization_used_logs": 1,
+        "historical_balances_match": true,
+        "public_snapshot_matches": true
+      },
+      {
+        "rpc": "https://arbitrum-sepolia.drpc.org",
+        "chain_id": 421614,
+        "receipt_status": 1,
+        "finalized_block": 314876165,
+        "exact_transfer_logs": 1,
+        "authorization_used_logs": 1,
+        "historical_balances_match": true,
+        "public_snapshot_matches": true
+      }
+    ],
+    "assurance": "TWO_RPC_FINALIZED_TAGS_NOT_INDEPENDENT_L1_PROOF",
+    "offchain_delivery_assurance": "RECORDED_HTTP_ARTIFACT_HASH_AND_PUBLIC_BLOCK_READBACK",
+    "negative_checks": [
+      {
+        "case": "amount",
+        "rejected": true,
+        "live_rpc_read": false
+      },
+      {
+        "case": "token",
+        "rejected": true,
+        "live_rpc_read": false
+      },
+      {
+        "case": "delivery_hash",
+        "rejected": true,
+        "live_rpc_read": false
+      },
+      {
+        "case": "capital_hold",
+        "rejected": true,
+        "live_rpc_read": false
+      },
+      {
+        "case": "rehashed_false_block_data",
+        "rejected": true,
+        "live_rpc_read": true
+      },
+      {
+        "case": "substituted_recipient",
+        "rejected": true,
+        "live_rpc_read": true
+      }
+    ]
+  }
+}

@@ -49,7 +49,7 @@ def check_record(proof):
         raise ValueError("recorded capital or at-most-once evidence changed")
 
 
-def audit_rpc(proof, url):
+def audit_rpc(proof, url, *, historical_balances=True):
     w3 = Web3(Web3.HTTPProvider(url, request_kwargs={"timeout": 12}))
     if w3.eth.chain_id != 421614:
         raise ValueError("RPC returned the wrong chain")
@@ -78,13 +78,14 @@ def audit_rpc(proof, url):
     token = w3.eth.contract(address=Web3.to_checksum_address(TOKEN), abi=BALANCE_ABI)
     if not token.functions.authorizationState(payer, bytes.fromhex(nonce[2:])).call(block_identifier=final.number):
         raise ValueError("nonce is not consumed at the finalized block")
-    for role in ["buyer", "seller"]:
-        before, after = proof["before"][role], proof["after_at_receipt_block"][role]
-        owner = Web3.to_checksum_address(before["address"])
-        for recorded, height in [(before, proof["before_block"]), (after, receipt.blockNumber)]:
-            if (token.functions.balanceOf(owner).call(block_identifier=height) != recorded["usdc_atoms"]
-                    or w3.eth.get_balance(owner, block_identifier=height) != recorded["eth_wei"]):
-                raise ValueError("historical balances disagree with the recorded outcome")
+    if historical_balances:
+        for role in ["buyer", "seller"]:
+            before, after = proof["before"][role], proof["after_at_receipt_block"][role]
+            owner = Web3.to_checksum_address(before["address"])
+            for recorded, height in [(before, proof["before_block"]), (after, receipt.blockNumber)]:
+                if (token.functions.balanceOf(owner).call(block_identifier=height) != recorded["usdc_atoms"]
+                        or w3.eth.get_balance(owner, block_identifier=height) != recorded["eth_wei"]):
+                    raise ValueError("historical balances disagree with the recorded outcome")
     data = proof["artifact"]["data"]
     source = w3.eth.get_block(data["block_number"])
     if ("0x" + source.hash.hex() != data["block_hash"] or source.timestamp != data["timestamp"]
@@ -92,7 +93,9 @@ def audit_rpc(proof, url):
         raise ValueError("delivered snapshot disagrees with public block state")
     return {"rpc": url, "chain_id": 421614, "receipt_status": receipt.status,
             "finalized_block": final.number, "exact_transfer_logs": 1, "authorization_used_logs": 1,
-            "historical_balances_match": True, "public_snapshot_matches": True}
+            "historical_balances_match": True if historical_balances else None,
+            "historical_balances_checked": historical_balances,
+            "nonce_consumed_at_finalized": True, "public_snapshot_matches": True}
 
 
 def negative_checks(proof):

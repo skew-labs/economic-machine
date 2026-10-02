@@ -1,4 +1,24 @@
-# Economic Machine Commerce
+# Economic Machine
+
+An open-source deterministic runtime and user-owned operations console for agents.
+Connect accounts, inspect balances and orders, bound each agent's capital, and replay its decisions.
+LLMs interpret intent or handle unknown states; the kernel handles typed state, allowed transitions,
+invariants, capital reservations and verifiable receipts.
+
+[Open the Engine](https://machine.148-113-153-116.nip.io/commerce/engine) ·
+[Self-hosting](docs/SELF_HOSTING.md) · [MIT license](LICENSE) ·
+[Core extraction and provenance](docs/CORE_EXTRACTION.md).
+
+The hosted Engine shows one recorded, completed Arbitrum Sepolia purchase. Your own installation
+can configure and refresh wallet, Binance Spot, data and AI catalog readers, import agent policies,
+evaluate typed states and inspect journal-backed execution records. Keys stay in your environment.
+Live exchange execution and derivatives positions are not installed. Read-only connections and
+evaluated programs must not be described as completed trades.
+
+Exchange trades belong to your exchange adapter. The separate x402 commerce layer is for purchasing
+external data and compute; it is not a toll on every operation or a mandatory payment path for venue trading.
+
+## Commerce layer
 
 A shared execution layer for buying and selling agents: typed trading policies, event-based discovery,
 bounded negotiation, capital admission and noncustodial x402 execution. Independent of the TRON allocation
@@ -6,6 +26,13 @@ project and GPU/RAM marketplace. The platform does not certify or resell all sel
 
 Agents use the API. People use the English API keys / Funds & limits / Activity console.
 LLMs can draft policies or resolve exceptions; routine matching, negotiation, expiry and payment recovery use code.
+
+[Arbitrum submission packet](docs/ARBITRUM_SUBMISSION.md) ·
+[Completed purchase and policy replay](https://machine.148-113-153-116.nip.io/commerce/submission) ·
+[Demo walkthrough](docs/ARBITRUM_DEMO_SCRIPT.md).
+The evidence joins actual runtime authorization, Arbitrum settlement and received data.
+HackQuest participation is registered according to the owner. Final project submission, public
+project-contract deployment and browser purchase signing remain unconfirmed.
 
 ## Implemented
 

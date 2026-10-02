@@ -5,7 +5,6 @@ import sqlite3
 
 from .values import MachineError, canonical, digest
 
-
 GENESIS = "0" * 64
 
 

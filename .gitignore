@@ -4,7 +4,16 @@ __pycache__/
 node_modules/
 runtime/
 .env
+.env.*
+!.env.example
 *.key
+*.pem
+*.sqlite*
+*.egg-info/
+dist/
+build/
+private/
+secrets/
 artifacts/contracts.json
 tools/
 .ruff_cache/

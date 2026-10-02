@@ -16,8 +16,10 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from starlette.concurrency import run_in_threadpool
 
 from economic_machine.values import MachineError
+from machine_engine.api import recorded_overview
 
 from .domain import DEFAULT_REQUESTS, money_atoms, money_string
+from .evidence import replay_policy, validate_bundle
 from .market import Market, negotiate, normalize_demand, normalize_supply
 from .store import Store
 
@@ -133,9 +135,10 @@ def recorded_workspace(proof_path):
             "payments": {"mandates": [safe_mandate], "payments": [payment], "resource_details": []}}
 
 
-def create_portal(site_dir=None, proof_path=None):
+def create_portal(site_dir=None, proof_path=None, evidence_path=None):
     site = Path(site_dir or os.environ.get("MACHINE_SITE_DIR", ROOT / "site"))
     proof_path = Path(proof_path or ROOT / "artifacts/arbitrum-sepolia/proof.json")
+    evidence_path = Path(evidence_path or ROOT / "artifacts/submission/completed-trade.json")
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
     gate = asyncio.Semaphore(4)
 
@@ -144,7 +147,7 @@ def create_portal(site_dir=None, proof_path=None):
         response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-        if request.url.path == "/console":
+        if request.url.path in {"/console", "/submission", "/engine"}:
             response.headers["Content-Security-Policy"] = (
                 "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
                 "connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
@@ -179,6 +182,64 @@ def create_portal(site_dir=None, proof_path=None):
     async def workspace():
         return JSONResponse(recorded_workspace(proof_path), headers={"Cache-Control": "no-store"})
 
+    def completed_trade():
+        return validate_bundle(json.loads(evidence_path.read_text()))
+
+    @app.get("/demo/engine")
+    async def engine_record():
+        try:
+            bundle = completed_trade()
+        except (OSError, ValueError, KeyError, TypeError):
+            return JSONResponse({"error": "Verified engine evidence unavailable"}, status_code=503)
+        return JSONResponse(recorded_overview(bundle), headers={"Cache-Control": "no-store"})
+
+    @app.get("/engine", response_class=HTMLResponse)
+    async def engine_console():
+        html = (ROOT / "web/engine.html").read_text()
+        html = html.replace('name="engine-mode" content="SELF_HOSTED"', 'name="engine-mode" content="RECORDED"')
+        html = html.replace('name="engine-prefix" content=""', 'name="engine-prefix" content="/commerce"')
+        html = html.replace('href="/engine.css', 'href="/commerce/engine.css').replace('src="/engine.js', 'src="/commerce/engine.js')
+        html = html.replace('href="/assets/', 'href="/commerce/assets/').replace('href="/"', 'href="/commerce/"')
+        return HTMLResponse(html, headers={"Cache-Control": "no-store"})
+
+    @app.get("/demo/trade")
+    async def trade_evidence():
+        try:
+            bundle = completed_trade()
+        except (OSError, ValueError, KeyError, TypeError):
+            return JSONResponse({"error": "Verified trade evidence unavailable"}, status_code=503)
+        return JSONResponse(bundle, headers={"Cache-Control": "no-store"})
+
+    @app.get("/demo/trade/artifact")
+    async def trade_artifact():
+        try:
+            bundle = completed_trade()
+        except (OSError, ValueError, KeyError, TypeError):
+            return JSONResponse({"error": "Verified delivery evidence unavailable"}, status_code=503)
+        return JSONResponse(bundle["delivery"]["artifact"], headers={"Cache-Control": "no-store",
+            "Content-Disposition": 'attachment; filename="arbitrum-delivered-snapshot.json"'})
+
+    @app.post("/demo/trade/replay")
+    async def trade_replay(request: Request):
+        body = bytearray()
+        async for part in request.stream():
+            body.extend(part)
+            if len(body) > 1024:
+                return JSONResponse({"error": "Replay request too large"}, status_code=413)
+        try:
+            bundle = completed_trade()
+        except (OSError, ValueError, KeyError, TypeError):
+            return JSONResponse({"error": "Verified trade evidence unavailable"}, status_code=503)
+        try:
+            result = replay_policy(bundle, json.loads(body))
+        except (ValueError, TypeError, MachineError):
+            return JSONResponse({"error": "Choose a valid budget, data age and usage right"}, status_code=400)
+        return JSONResponse(result, headers={"Cache-Control": "no-store"})
+
+    @app.get("/submission", response_class=HTMLResponse)
+    async def submission():
+        return HTMLResponse((ROOT / "web/submission.html").read_text(), headers={"Cache-Control": "no-store"})
+
     @app.get("/console", response_class=HTMLResponse)
     async def console():
         html = (ROOT / "web/index.html").read_text()
@@ -197,7 +258,7 @@ def create_portal(site_dir=None, proof_path=None):
 
     @app.get("/{asset:path}")
     async def files(asset):
-        if asset in {"app.css", "app.js", "wallet.js", "console-theme.css"}:
+        if asset in {"app.css", "app.js", "wallet.js", "console-theme.css", "submission.css", "submission.js", "engine.css", "engine.js"}:
             return FileResponse(ROOT / "web" / asset)
         if asset in {"assets/phantom-wallet.png", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/icon-provenance.json"}:
             return FileResponse(ROOT / "web" / asset)
