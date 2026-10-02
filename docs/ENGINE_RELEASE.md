@@ -1,5 +1,9 @@
 # Engine open-source release — 2026-10-03 KST
 
+This is the initial extraction snapshot. The later unified console, durable
+sync and venue execution extension is tracked in [UNIFIED_ENGINE.md](UNIFIED_ENGINE.md)
+and its release verification report. Limits below describe the initial release.
+
 ## Delivered
 
 The landing page opens a separate Economic Machine Engine: Overview, Connections, Agents & limits,

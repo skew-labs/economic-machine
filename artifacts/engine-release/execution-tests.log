@@ -1,0 +1,34 @@
+/srv/skew/economic-machine-commerce-20261002/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_cancel_timeout_retains_reservation_and_query_is_read_only (test_engine_execution.ExecutionTests.test_cancel_timeout_retains_reservation_and_query_is_read_only) ... ok
+test_changed_filters_require_replan (test_engine_execution.ExecutionTests.test_changed_filters_require_replan) ... ok
+test_derivatives_reader_preserves_signed_exposure_and_native_pnl (test_engine_execution.ExecutionTests.test_derivatives_reader_preserves_signed_exposure_and_native_pnl) ... ok
+test_disconnect_preserves_read_reconciliation (test_engine_execution.ExecutionTests.test_disconnect_preserves_read_reconciliation) ... ok
+test_expired_paused_or_disconnected_order_cannot_dispatch (test_engine_execution.ExecutionTests.test_expired_paused_or_disconnected_order_cannot_dispatch) ... ok
+test_explicit_rejection_releases_hold_without_fake_fill (test_engine_execution.ExecutionTests.test_explicit_rejection_releases_hold_without_fake_fill) ... ok
+test_fresh_account_recheck_blocks_insufficient_balance (test_engine_execution.ExecutionTests.test_fresh_account_recheck_blocks_insufficient_balance) ... ok
+test_futures_only_reduce_existing_one_way_position (test_engine_execution.ExecutionTests.test_futures_only_reduce_existing_one_way_position) ... ok
+test_live_gate_blocks_before_network_transmission (test_engine_execution.ExecutionTests.test_live_gate_blocks_before_network_transmission) ... ok
+test_minimum_tick_step_finite_and_order_size_checks (test_engine_execution.ExecutionTests.test_minimum_tick_step_finite_and_order_size_checks) ... ok
+test_mismatched_or_regressing_venue_evidence_keeps_hold (test_engine_execution.ExecutionTests.test_mismatched_or_regressing_venue_evidence_keeps_hold) ... ok
+test_one_submission_and_identity_bound_reconciliation (test_engine_execution.ExecutionTests.test_one_submission_and_identity_bound_reconciliation) ... ok
+test_owner_approval_binds_exact_plan_hash (test_engine_execution.ExecutionTests.test_owner_approval_binds_exact_plan_hash) ... ok
+test_partial_fill_retains_full_hold_until_terminal_evidence (test_engine_execution.ExecutionTests.test_partial_fill_retains_full_hold_until_terminal_evidence) ... ok
+test_plan_and_approval_never_send_an_order (test_engine_execution.ExecutionTests.test_plan_and_approval_never_send_an_order) ... ok
+test_request_id_reuse_is_exact (test_engine_execution.ExecutionTests.test_request_id_reuse_is_exact) ... ok
+test_shared_turnover_budget_and_one_inflight_order_per_account (test_engine_execution.ExecutionTests.test_shared_turnover_budget_and_one_inflight_order_per_account) ... ok
+test_timeout_retains_hold_and_recovers_after_restart (test_engine_execution.ExecutionTests.test_timeout_retains_hold_and_recovers_after_restart) ... ok
+test_existing_keys_never_gain_engine_or_trade_approval_authority (test_engine_execution.IntegrationTests.test_existing_keys_never_gain_engine_or_trade_approval_authority) ... ok
+test_hosted_routes_share_login_and_isolate_workspaces (test_engine_execution.IntegrationTests.test_hosted_routes_share_login_and_isolate_workspaces) ... ok
+test_local_console_and_schedule_authentication (test_engine_execution.IntegrationTests.test_local_console_and_schedule_authentication) ... ok
+test_stable_owner_namespace_and_cross_owner_isolation (test_engine_execution.IntegrationTests.test_stable_owner_namespace_and_cross_owner_isolation) ... ok
+test_disconnect_disables_durable_job (test_engine_execution.SchedulerTests.test_disconnect_disables_durable_job) ... ok
+test_exclusive_lease_and_crash_expiry (test_engine_execution.SchedulerTests.test_exclusive_lease_and_crash_expiry) ... ok
+test_failure_backoff_and_success_reset (test_engine_execution.SchedulerTests.test_failure_backoff_and_success_reset) ... ok
+test_schedule_bounds_and_types (test_engine_execution.SchedulerTests.test_schedule_bounds_and_types) ... ok
+test_schedule_runs_persists_and_resumes_after_restart (test_engine_execution.SchedulerTests.test_schedule_runs_persists_and_resumes_after_restart) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 1.295s
+
+OK

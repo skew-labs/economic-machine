@@ -58,8 +58,13 @@ a user's exchange API trades through the commerce payment network.
 
 ## Current boundaries
 
-Wallet reader: Arbitrum Sepolia ETH and Circle test USDC. Exchange reader: Binance Spot balances/open
-orders. Data reader: bounded JSON fingerprint. AI reader: model catalog, with no inference side effect.
-Derivative position readers, automated feed scheduling, generic financial dispatch, provider invoice
-imports, multi-tenant administration and a new browser-signed purchase are not implemented in this
-standalone release. Extend one capability with an explicit contract and verification evidence at a time.
+Wallet reader: Arbitrum Sepolia ETH and Circle test USDC. Exchange readers: Binance Spot balances/open
+orders and USD-M derivative balances, positions and orders. Data reader: bounded JSON fingerprint.
+AI reader: model catalog with no inference side effect. Durable, lease-based read scheduling and
+venue order recovery run server-side. Hosted wallet identities own separate private workspaces.
+
+The unified console and first live-capable order adapter are described in
+[UNIFIED_ENGINE.md](UNIFIED_ENGINE.md). Spot LIMIT and one-way reduce-only USD-M LIMIT compile to
+hash-bound owner-approved plans. The hosted service's transmission gate stays disabled.
+Additional venues, new leveraged positions, generic wallet signing, provider invoices and a new
+browser-signed purchase remain unimplemented. No private exchange account was supplied for live validation.

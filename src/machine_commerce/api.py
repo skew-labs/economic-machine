@@ -36,6 +36,8 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     operations = Operations(store, settings)
     access = Access(store, settings.mode)
     wallet_auth = WalletAuth(store, settings.origin)
+    from machine_engine.routes import HostedWorkspaces, engine_routes
+    hosted_engine = HostedWorkspaces(Path(store.path).parent / "engine-workspaces", clock)
 
     @asynccontextmanager
     async def lifespan(_app):
@@ -58,13 +60,17 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
                 await asyncio.sleep(15)
         task = asyncio.create_task(timers())
         recovery = asyncio.create_task(payment_recovery())
+        engine_worker = asyncio.create_task(hosted_engine.loop())
         yield
         task.cancel()
         recovery.cancel()
+        engine_worker.cancel()
         with suppress(asyncio.CancelledError):
             await task
         with suppress(asyncio.CancelledError):
             await recovery
+        with suppress(asyncio.CancelledError):
+            await engine_worker
 
     app = FastAPI(title="Economic Machine Commerce", docs_url=None, redoc_url=None, lifespan=lifespan)
     app.state.store, app.state.engine = store, engine
@@ -145,6 +151,23 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
         request.state.principal = principal
         return principal.session_id
 
+    def engine_workspace(request: Request, sid=Depends(buyer)):
+        identity = wallet_auth.identity(sid)
+        if identity:
+            subject = f"wallet:{identity['chain_id']}:{identity['address'].lower()}"
+        elif operations.known_operator(sid):
+            with store.connect() as db:
+                subject = "operator:" + db.execute("SELECT subject FROM operator_identities WHERE session_id=?", (sid,)).fetchone()[0]
+        else:
+            subject = "development:" + sid
+        return hosted_engine.get(subject)
+
+    def engine_owner(request: Request, sid=Depends(buyer)):
+        if not request.state.principal.owner:
+            raise HTTPException(403, "owner approval required")
+
+    app.include_router(engine_routes(engine_workspace, require_owner=engine_owner))
+
     def bind_order(request, policy_id):
         try:
             access.bind_order(request.state.principal, policy_id)
@@ -159,10 +182,11 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
 
     @app.get("/healthz")
     def health():
-        degraded = app.state.timer_error or app.state.payment_worker_error
+        degraded = app.state.timer_error or app.state.payment_worker_error or hosted_engine.last_error
         return JSONResponse({"status": "degraded" if degraded else "ok", "mode": settings.mode,
                 "timer_error": app.state.timer_error, "product": "economic-machine-commerce",
                 "payment_worker_error": app.state.payment_worker_error, "x402_configured": bool(settings.resources),
+                "engine_worker_error": hosted_engine.last_error, "engine_sync_worker": "SERVER_SIDE_DURABLE_JOBS",
                 "settlement_mode": "X402_EIP3009_AND_TEST_LEDGER" if settings.resources else "SANDBOX_LEDGER", "onchain_deployment": None,
                 "customer_signing_authority": "NONE"}, status_code=503 if degraded else 200)
 
@@ -380,6 +404,18 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     @app.get("/wallet.js")
     def wallet_javascript():
         return FileResponse(web / "wallet.js")
+
+    @app.get("/operations.js")
+    def operations_javascript():
+        return FileResponse(web / "operations.js")
+
+    @app.get("/operations.css")
+    def operations_stylesheet():
+        return FileResponse(web / "operations.css")
+
+    @app.get("/console-theme.css")
+    def console_stylesheet():
+        return FileResponse(web / "console-theme.css")
 
     @app.get("/assets/phantom-wallet.png")
     def wallet_logo():

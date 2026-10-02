@@ -1,9 +1,11 @@
 """Owner-authenticated loopback console for a user's own Economic Machine."""
 
+import asyncio
 import hmac
 import json
 import os
 import time
+from contextlib import asynccontextmanager, suppress
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -18,7 +20,8 @@ from .connections import PROFILES
 from .workspace import Workspace, now_iso
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSETS = {"engine.js", "engine.css", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt"}
+ASSETS = {"app.js", "app.css", "wallet.js", "console-theme.css", "operations.js", "operations.css",
+          "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt"}
 
 
 def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:8800", workspace=None, clock=time.time):
@@ -36,7 +39,29 @@ def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:880
     if not loopback:
         raise ValueError("Engine console is bound to loopback")
     work = workspace or Workspace(db_path, clock=clock)
-    app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+    @asynccontextmanager
+    async def lifespan(_app):
+        worker = asyncio.create_task(work.scheduler.loop())
+        async def reconcile_orders():
+            while True:
+                try:
+                    for oid in work.trading.pending_ids():
+                        await asyncio.to_thread(work.trading.reconcile, oid)
+                except Exception:  # noqa: BLE001 - bounded retry, no exception or credentials logged.
+                    _app.state.recovery_error = "VENUE_RECOVERY_DEGRADED"
+                await asyncio.sleep(15)
+        recovery = asyncio.create_task(reconcile_orders())
+        try:
+            yield
+        finally:
+            worker.cancel()
+            recovery.cancel()
+            with suppress(asyncio.CancelledError):
+                await worker
+            with suppress(asyncio.CancelledError):
+                await recovery
+
+    app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.state.workspace = work
 
     @app.middleware("http")
@@ -143,8 +168,10 @@ def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:880
 
     @app.get("/", response_class=HTMLResponse)
     @app.get("/engine", response_class=HTMLResponse)
+    @app.get("/console", response_class=HTMLResponse)
     def console():
-        return HTMLResponse((ROOT / "web/engine.html").read_text())
+        html = (ROOT / "web/index.html").read_text().replace("</head>", '<meta name="engine-auth" content="LOCAL_OWNER_TOKEN"><meta name="engine-mode" content="SELF_HOSTED"></head>')
+        return HTMLResponse(html)
 
     @app.get("/{asset:path}")
     def assets(asset):
@@ -152,6 +179,11 @@ def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:880
             return JSONResponse({"error": "NOT_FOUND"}, status_code=404)
         return FileResponse(ROOT / "web" / asset)
 
+    from .routes import engine_routes
+    router = engine_routes(lambda: work)
+    existing = {route.path for route in app.routes}
+    router.routes = [route for route in router.routes if route.path not in existing]
+    app.include_router(router)
     return app
 
 

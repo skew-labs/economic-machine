@@ -13,7 +13,7 @@ from economic_machine.values import MachineError, canonical, require_keys
 
 from .domain import identifier
 
-SCOPES = frozenset({"read", "demands:write", "supplies:write", "orders:write", "payments:request"})
+SCOPES = frozenset({"read", "demands:write", "supplies:write", "orders:write", "payments:request", "engine:read", "engine:write"})
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS api_keys (
  id TEXT PRIMARY KEY, session_id TEXT NOT NULL REFERENCES sessions(id),
@@ -157,7 +157,15 @@ class Access:
         # Positive route allowlist: future mutations default to owner-only.
         parts = path.strip("/").split("/")
         scope = None
-        if method == "GET" and len(parts) >= 2 and parts[1] in {"workspace", "market", "orders", "demands", "payments"}:
+        if path.startswith("/api/engine/"):
+            if method == "GET" and (path in {"/api/engine/overview", "/api/engine/profiles"}
+                    or (len(parts) == 5 and parts[2:4] == ["trade", "orders"])):
+                scope = "engine:read"
+            elif method == "POST" and (path in {"/api/engine/trade/orders", "/api/engine/usage", "/api/engine/programs/compile"}
+                    or (len(parts) == 6 and parts[2:4] == ["trade", "orders"] and parts[5] == "reconcile")
+                    or (len(parts) == 5 and parts[2] == "connections" and parts[4] == "sync")):
+                scope = "engine:write"
+        elif method == "GET" and len(parts) >= 2 and parts[1] in {"workspace", "market", "orders", "demands", "payments"}:
             scope = "read"
         elif method == "POST":
             if path == "/api/demands":

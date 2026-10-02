@@ -49,7 +49,9 @@ by the read-only adapter. The configured provider must not need a localhost/priv
 No proxy environment or automatic HTTP retry is used.
 
 Wallet quantities retain asset decimals. Unpriced ETH and USDC are not added together as “total USD.”
-Binance is a **Spot** reader; derivative positions have not been implemented. A failed refresh preserves
+Binance Spot and USD-M derivative readers are available. USD-M positions retain signed quantity,
+entry/mark/liquidation prices, maintenance margin and P&L in the margin asset. Sequential REST reads
+are not an atomic snapshot. A failed refresh preserves
 the last snapshot, marks it degraded/stale and exposes a bounded error code. Disconnecting removes that
 source from current balances while preserving its recorded history; it does not revoke the provider's key.
 
@@ -81,7 +83,7 @@ owner, network, asset, capital/exposure/cost/loss limits, allowed venues and exp
 .venv/bin/economic-machine register --db runtime/engine.sqlite3 --program owner-program.json
 ```
 
-The console's **Import policy** checks the typed JSON and registers it; **Evaluate** runs deterministic
+The unified console's **Agents & limits → Validate & register** checks the typed JSON and registers it; **Evaluate** runs deterministic
 checks against the installed state. State evidence is deliberately separate from connection snapshots:
 reading a wallet does not invent quotes, price evidence, liabilities or an economic mandate. An adapter
 must supply a typed `StateDelta` through `POST /api/engine/deltas` or the CLI. Dependencies determine which
@@ -89,9 +91,44 @@ programs are recomputed. Unchanged observations do not invoke an LLM.
 
 Program revisions supersede unsent intents while preserving locked capital. Pausing or expiry does not
 release an ambiguous submitted execution lock. Finality, post-state and exception verification are explicit
-external interfaces. There is **no live exchange-order executor or generic signer installed** in this release.
+external interfaces. Binance Spot LIMIT and one-way USD-M reduce-only LIMIT now have an execution
+adapter; a generic wallet signer and additional venue adapters remain unimplemented.
 The original commerce runtime's proven x402 purchase is exposed independently in the public recorded view.
 Do not report a kernel receipt or local lock as an exchange fill or a new chain transaction.
+
+## Scheduled synchronization and venue execution
+
+`Connections` configures each source and selects manual, 15s, 30s, 60s or 300s
+sync. The server scheduler is always running while the runtime service is alive;
+enabled jobs, next run, backoff and leases survive restart. A browser tab is not
+the scheduler. Failed reads keep old observations stale, and disconnect disables
+the job without discarding recovery evidence. No LLM inference runs in this loop.
+
+`Execution` creates an immutable venue turnover policy, prepares a LIMIT order,
+and binds owner approval to the exact plan hash. The plan expires after 60s.
+The broker re-reads the instrument rules and account before transmission.
+Unknown outcomes keep their full turnover reservation, block another order on
+that connection, and query the original client order ID; no new-order retry is
+performed. Terminal fills use actual cumulative quote/quantity evidence.
+Turnover is gross trading volume, not wallet spending or an x402 payment budget.
+Fees are explicitly marked unreconciled; they are never fabricated as zero.
+
+Order transmission is disabled unless the user's own service starts with
+`ENGINE_ALLOW_LIVE_TRADING=1`. Enabling this gate does not replace exact per-order
+owner approval. A trading API key should have no withdrawal permission and use
+venue-side IP restrictions where supported. The published Canada services keep
+the gate disabled. No live order, customer signature or mainnet transfer was
+performed in this release.
+
+The hosted console uses existing wallet login and stable wallet-owned databases.
+Its profile response provides `credential_namespace`, such as
+`ENGINE_<OWNER_HASH_PREFIX>_`. References outside that namespace are rejected so
+one customer cannot select server/operator credentials. Supply actual key values
+privately in the runtime environment, never in connection JSON or public source.
+The standalone loopback installation accepts the user's normal environment names
+and owner token, which is kept only in the current tab. API keys with `engine:read`
+or `engine:write` are opt-in; existing commerce read/order keys gain no engine or
+approval authority. Agents can prepare plans; only the owner can approve or send.
 
 ## Local API
 

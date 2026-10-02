@@ -1,13 +1,21 @@
 'use strict';
 
 const API_PREFIX = document.querySelector('meta[name="machine-api-prefix"]')?.content || '';
+const LOCAL_ENGINE = document.querySelector('meta[name="engine-auth"]')?.content === 'LOCAL_OWNER_TOKEN';
+let localOwnerToken = '';
 const PREVIEW = API_PREFIX === '/commerce' && new URLSearchParams(location.search).get('preview') === '1';
 let recordedWorkspace;
 const $ = (id) => document.getElementById(id);
-const state = {view: PREVIEW ? 'funds' : 'keys', snapshot: null, keys: [], offers: [], expires: null, busy: null, revoke: null, connected: false, mode: 'development', payments: {mandates: [], payments: [], resource_details: []}};
+const state = {view: 'overview', snapshot: null, keys: [], offers: [], expires: null, busy: null, revoke: null, connected: false, mode: 'development', payments: {mandates: [], payments: [], resource_details: []}};
 const names = {'csv-normalize': 'CSV normalization', 'arbitrum-state': 'Arbitrum state data'};
 const scopeNames = {read: 'Read', 'demands:write': 'Demand', 'supplies:write': 'Supply', 'orders:write': 'Orders', 'payments:request': 'Payment requests'};
 const headings = {
+  overview: ['Overview', 'Accounts, positions and execution in one workspace.', null],
+  connections: ['Connections', 'Your credentials stay in your environment.', null],
+  agents: ['Agents & limits', 'Economic programs with bounded capital and deterministic receipts.', null],
+  execution: ['Execution', 'Compile a bounded order. Review the exact plan before transmission.', null],
+  playground: ['Playground', 'Typed economic programs. Deterministic validation.', null],
+  usage: ['API usage', 'Reported consumption, with its source attached.', null],
   keys: ['API keys', 'Give your agents access. Keep control of what they can spend.', 'Create API key'],
   funds: ['Funds & limits', 'Set the boundaries. Your agents operate within them.', 'Create policy'],
   activity: ['Activity', 'Track execution, delivery and settlement in your workspace.', null]
@@ -63,6 +71,15 @@ function formError(id, message = '') {
   $(id).hidden = !message;
 }
 async function api(path, body) {
+  if (LOCAL_ENGINE) {
+    if (!path.startsWith('/api/engine/')) throw new Error('Commerce is not enabled in this standalone runtime.');
+    const response = await fetch(path, {method: body === undefined ? 'GET' : 'POST', credentials: 'omit',
+      headers: {'Authorization': 'Bearer ' + localOwnerToken, 'Content-Type': 'application/json'},
+      body: body === undefined ? undefined : JSON.stringify(body)});
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Owner authentication required.');
+    return result;
+  }
   if (PREVIEW) {
     if (body !== undefined) throw new Error('Recorded workspace is read-only. Sign in to manage your agents.');
     recordedWorkspace ||= fetch(`${API_PREFIX}/demo/workspace`, {credentials: 'omit'}).then(async response => {
@@ -102,6 +119,7 @@ function connection(ok, label) {
 function setView(view) {
   if (!(view in headings)) return;
   state.view = view;
+  if (location.hash !== '#' + view) history.replaceState(null, '', '#' + view);
   for (const name of Object.keys(headings)) $(`${name}-view`).hidden = name !== view;
   for (const node of document.querySelectorAll('[data-view]')) {
     if (node.dataset.view === view) node.setAttribute('aria-current', 'page');
@@ -114,6 +132,7 @@ function setView(view) {
   $('page-description').textContent = description;
   $('primary-action').hidden = !action;
   $('primary-action').replaceChildren(uiIcon('plus'), document.createTextNode(action || ''));
+  window.EngineConsole?.render(view);
 }
 function empty(title, description, action, actionText = '', icon = 'key') {
   const node = el('div', 'empty');
@@ -271,6 +290,7 @@ function render() {
 async function refresh() {
   $('refresh').disabled = true;
   try {
+    if (LOCAL_ENGINE) { await window.EngineConsole?.refresh(); setView(state.view); return; }
     const [snapshot, credentials, health, payments] = await Promise.all([api('/api/workspace'), api('/api/keys'), api('/healthz'), api('/api/payments')]);
     state.snapshot = snapshot;
     state.keys = credentials.keys;
@@ -279,6 +299,7 @@ async function refresh() {
     state.mode = health.mode;
     connection(health.status === 'ok', PREVIEW ? 'Recorded workspace' : health.status === 'ok' ? 'API connected' : 'API degraded');
     render();
+    await window.EngineConsole?.refresh();
     setView(state.view);
     if (PREVIEW) $('primary-action').disabled = true;
   } catch (error) {
@@ -442,7 +463,7 @@ for (const node of document.querySelectorAll('[data-close]')) node.addEventListe
 for (const dialog of document.querySelectorAll('dialog')) dialog.addEventListener('cancel', (event) => { if (state.busy === dialog.id) event.preventDefault(); });
 $('secret-dialog').addEventListener('close', () => { $('key-secret').value = ''; });
 window.addEventListener('pagehide', () => { $('key-secret').value = ''; });
-$('refresh').addEventListener('click', () => refresh().catch(() => {}));
+$('refresh').addEventListener('click', () => window.EngineConsole?.isView(state.view) ? window.EngineConsole.refresh() : refresh().catch(() => {}));
 $('balance-shortcut').addEventListener('click', () => setView('funds'));
 $('primary-action').addEventListener('click', () => state.view === 'keys' ? openKey() : state.mode === 'production' ? openMandate() : openPolicy());
 $('key-form').addEventListener('submit', createKey);
@@ -460,6 +481,14 @@ $('copy-example').addEventListener('click', () => copy(example, () => { $('copy-
 
 async function initialize() {
   try {
+    setView(headings[location.hash.slice(1)] ? location.hash.slice(1) : 'overview');
+    if (LOCAL_ENGINE) {
+      document.body.classList.add('local-engine');
+      $('connection-label').textContent = 'Owner token required';
+      $('mode-badge').textContent = 'Self-hosted';
+      $('local-owner-access').hidden = false;
+      return;
+    }
     state.mode = (await api('/healthz')).mode;
     if (PREVIEW) { await refresh(); return; }
     try {
@@ -475,7 +504,7 @@ async function initialize() {
       $('environment-label').textContent = 'Sign-in required';
       $('balance-shortcut').hidden = true;
       $('key-list').replaceChildren(empty('Connect your wallet', 'Sign in to manage agent access and payment limits.', null, '', 'wallet'));
-      if (!$('login-dialog').open) $('login-dialog').showModal();
+      await window.EngineConsole?.refresh();
       return;
     }
     state.offers = (await api('/api/catalog')).offers;
@@ -576,4 +605,6 @@ $('wallet-logout').addEventListener('click', async () => {
 });
 WalletBridge.subscribe(renderWallets);
 showWalletIdentity(null);
-initialize();
+window.MachineConsole = {api, state, notify, el, uiIcon, button, setView, API_PREFIX, PREVIEW, LOCAL_ENGINE,
+  unlock: async token => {localOwnerToken = token; await api('/api/engine/overview'); await refresh();}};
+window.addEventListener('DOMContentLoaded', initialize, {once: true});

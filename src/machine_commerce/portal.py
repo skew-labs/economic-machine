@@ -12,9 +12,10 @@ import tempfile
 from pathlib import Path
 
 from fastapi import FastAPI, Request
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from starlette.concurrency import run_in_threadpool
 
+from economic_machine.compiler import compile_program
 from economic_machine.values import MachineError
 from machine_engine.api import recorded_overview
 
@@ -195,12 +196,26 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
 
     @app.get("/engine", response_class=HTMLResponse)
     async def engine_console():
-        html = (ROOT / "web/engine.html").read_text()
-        html = html.replace('name="engine-mode" content="SELF_HOSTED"', 'name="engine-mode" content="RECORDED"')
-        html = html.replace('name="engine-prefix" content=""', 'name="engine-prefix" content="/commerce"')
-        html = html.replace('href="/engine.css', 'href="/commerce/engine.css').replace('src="/engine.js', 'src="/commerce/engine.js')
-        html = html.replace('href="/assets/', 'href="/commerce/assets/').replace('href="/"', 'href="/commerce/"')
-        return HTMLResponse(html, headers={"Cache-Control": "no-store"})
+        return RedirectResponse("/commerce/console", status_code=307)
+
+    @app.get("/demo/engine/example")
+    async def engine_example():
+        return JSONResponse({"example": json.loads((ROOT / "cases/economic_program_demo.json").read_text()),
+            "assurance": "SYNTHETIC_EXPIRED_CONFORMANCE_FIXTURE_COMPILE_ONLY"}, headers={"Cache-Control": "no-store"})
+
+    @app.post("/demo/engine/compile")
+    async def engine_compile(request: Request):
+        body = bytearray()
+        async for chunk in request.stream():
+            body.extend(chunk)
+            if len(body) > 20_000:
+                return JSONResponse({"error": "Program exceeds the public compilation limit"}, status_code=413)
+        try:
+            async with gate:
+                result = await run_in_threadpool(compile_program, json.loads(body))
+        except (MachineError, ValueError, TypeError, KeyError, UnicodeError):
+            return JSONResponse({"error": "A valid bounded Economic IR program is required"}, status_code=400)
+        return JSONResponse({"program": result, "execution_authority": "NONE", "mode": "STATIC_COMPILE_ONLY"}, headers={"Cache-Control": "no-store"})
 
     @app.get("/demo/trade")
     async def trade_evidence():
@@ -243,14 +258,16 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
     @app.get("/console", response_class=HTMLResponse)
     async def console():
         html = (ROOT / "web/index.html").read_text()
+        html = html.replace('  <link rel="stylesheet" href="/operations.css?v=wallet-20261002-3">', '')
         version = hashlib.sha256(b"".join((ROOT / "web" / name).read_bytes() for name in
-            ["index.html", "app.css", "app.js", "wallet.js", "console-theme.css", "assets/ui-icons.svg"])).hexdigest()[:16]
+            ["index.html", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "assets/ui-icons.svg"])).hexdigest()[:16]
         html = html.replace("Machine Market | Console", "skew | Console")
         html = html.replace('href="/" aria-label="Economic Machine console"', 'href="/commerce/" aria-label="Economic Machine console"')
         html = html.replace("<span>Machine<small>Economic infrastructure</small></span>", "<span>skew<small>Economic Machine</small></span>")
-        html = html.replace("</head>", '<meta name="machine-api-prefix" content="/commerce"><link rel="stylesheet" href="/commerce/console-theme.css?v=wallet-20261002-3"></head>')
+        html = html.replace("</head>", '<meta name="machine-api-prefix" content="/commerce"><link rel="stylesheet" href="/commerce/console-theme.css?v=wallet-20261002-3"><link rel="stylesheet" href="/commerce/operations.css?v=wallet-20261002-3"></head>')
         html = html.replace('href="/app.css', 'href="/commerce/app.css').replace('src="/app.js', 'src="/commerce/app.js')
         html = html.replace('src="/wallet.js', 'src="/commerce/wallet.js')
+        html = html.replace('src="/operations.js', 'src="/commerce/operations.js').replace('href="/operations.css', 'href="/commerce/operations.css')
         html = html.replace('href="/assets/ui-icons.svg', 'href="/commerce/assets/ui-icons.svg')
         html = html.replace("wallet-20261002-3", version)
         html = html.replace('<body>', '<body><div class="portal-bar"><a href="/commerce/">← skew Economic Machine</a><a href="/commerce/console?preview=1">Verified workspace</a></div>')
@@ -258,7 +275,7 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
 
     @app.get("/{asset:path}")
     async def files(asset):
-        if asset in {"app.css", "app.js", "wallet.js", "console-theme.css", "submission.css", "submission.js", "engine.css", "engine.js"}:
+        if asset in {"app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "submission.css", "submission.js"}:
             return FileResponse(ROOT / "web" / asset)
         if asset in {"assets/phantom-wallet.png", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/icon-provenance.json"}:
             return FileResponse(ROOT / "web" / asset)

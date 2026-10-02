@@ -22,12 +22,14 @@ class EnginePortal(unittest.TestCase):
         self.client.close()
         self.directory.cleanup()
 
-    def test_engine_is_a_separate_read_only_page_with_correct_assets(self):
-        response = self.client.get("/engine")
+    def test_engine_redirects_to_one_console_with_correct_assets(self):
+        redirect = self.client.get("/engine", follow_redirects=False)
+        self.assertEqual(redirect.status_code, 307)
+        self.assertEqual(redirect.headers['location'], '/commerce/console')
+        response = self.client.get("/console")
         self.assertEqual(response.status_code, 200)
-        self.assertIn('name="engine-mode" content="RECORDED"', response.text)
-        self.assertIn('name="engine-prefix" content="/commerce"', response.text)
-        for asset in ["engine.css", "engine.js", "assets/ui-icons.svg"]:
+        self.assertIn('name="machine-api-prefix" content="/commerce"', response.text)
+        for asset in ["operations.css", "operations.js", "assets/ui-icons.svg"]:
             self.assertIn("/commerce/" + asset, response.text)
             self.assertEqual(self.client.get("/" + asset).status_code, 200)
         self.assertIn("frame-ancestors 'none'", response.headers["content-security-policy"])
@@ -57,6 +59,21 @@ class EnginePortal(unittest.TestCase):
         self.assertEqual(self.client.get("/demo/engine").status_code, 503)
         self.evidence.unlink()
         self.assertEqual(self.client.get("/demo/engine").status_code, 503)
+
+
+    def test_public_playground_runs_the_actual_compiler_without_mutating_runtime(self):
+        source = self.client.get('/demo/engine/example').json()['example']
+        first = self.client.post('/demo/engine/compile', json=source)
+        self.assertEqual(first.status_code, 200)
+        self.assertEqual(first.json()['execution_authority'], 'NONE')
+        self.assertEqual(first.json()['mode'], 'STATIC_COMPILE_ONLY')
+        self.assertEqual(first.json(), self.client.post('/demo/engine/compile', json=source).json())
+        self.assertNotIn('set-cookie', first.headers)
+
+    def test_public_compile_bounds_and_invalid_inputs_fail_closed(self):
+        self.assertEqual(self.client.post('/demo/engine/compile', content='x'*20001).status_code, 413)
+        for value in [[], {}, {'instructions': []}]:
+            self.assertEqual(self.client.post('/demo/engine/compile', json=value).status_code, 400)
 
 
 if __name__ == "__main__":

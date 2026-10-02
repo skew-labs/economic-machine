@@ -24,6 +24,8 @@ PROFILES = {
         "fields": ["address"], "operations": ["READ_BALANCES"], "network": "eip155:421614"},
     "binance-spot": {"kind": "exchange", "name": "Binance Spot", "credentials": ["api_key_env", "api_secret_env"],
         "fields": [], "operations": ["READ_BALANCES", "READ_OPEN_ORDERS"], "network": "binance-spot"},
+    "binance-usdm": {"kind": "exchange", "name": "Binance USD-M", "credentials": ["api_key_env", "api_secret_env"],
+        "fields": [], "operations": ["READ_BALANCES", "READ_OPEN_ORDERS", "READ_DERIVATIVE_POSITIONS"], "network": "binance-usdm"},
     "json-data": {"kind": "data", "name": "JSON data", "credentials": ["api_key_env"],
         "fields": ["url"], "operations": ["READ_DATA"], "network": "https"},
     "openai-compatible": {"kind": "ai", "name": "AI API", "credentials": ["api_key_env"],
@@ -104,6 +106,8 @@ class Connectors:
             result = self.wallet(connection)
         elif profile == "binance-spot":
             result = self.binance(connection)
+        elif profile == "binance-usdm":
+            result = self.derivatives(connection)
         elif profile == "openai-compatible":
             result = self.models(connection)
         elif profile == "json-data":
@@ -178,6 +182,36 @@ class Connectors:
             raise MachineError("INVALID_MODEL_CATALOG")
         return {"models": [str(m["id"])[:160] for m in models if isinstance(m, dict) and isinstance(m.get("id"), str)],
                 "inference_calls": 0, "assurance": "CATALOG_READ_NOT_BILLING_READ"}
+
+    def derivatives(self, connection):
+        from economic_machine.values import decimal
+
+        from .broker import BinanceBroker
+        broker = BinanceBroker(connection, http=self.http, clock=self.clock)
+        account = broker.signed("/fapi/v3/account")
+        positions = broker.signed("/fapi/v3/positionRisk")
+        orders = broker.signed("/fapi/v1/openOrders")
+        if (not isinstance(account.get("assets"), list) or not isinstance(positions, list)
+                or not isinstance(orders, list) or max(len(positions), len(orders), len(account["assets"])) > 1000):
+            raise MachineError("INVALID_EXCHANGE_SNAPSHOT")
+        assets = [{"symbol": a["asset"], "quantity": decstr(decimal(a["walletBalance"], signed=True)),
+                   "available": decstr(decimal(a["availableBalance"], signed=True)),
+                   "unrealized_pnl": decstr(decimal(a["unrealizedProfit"], signed=True))} for a in account["assets"]]
+        public_positions = []
+        for p in positions:
+            quantity = decimal(p["positionAmt"], signed=True)
+            if quantity:
+                public_positions.append({"symbol": p["symbol"], "quantity": decstr(quantity), "side": p["positionSide"],
+                    "entry_price": decstr(decimal(p["entryPrice"])), "mark_price": decstr(decimal(p["markPrice"])),
+                    "liquidation_price": decstr(decimal(p["liquidationPrice"])),
+                    "unrealized_pnl": decstr(decimal(p["unRealizedProfit"], signed=True)),
+                    "notional": decstr(decimal(p["notional"], signed=True)), "margin_asset": p["marginAsset"],
+                    "maintenance_margin": decstr(decimal(p["maintMargin"])), "venue_updated_at_ms": p["updateTime"]})
+        public_orders = [{"id": str(o["orderId"]), "symbol": o["symbol"], "side": o["side"],
+            "status": o["status"], "price": decstr(decimal(o["price"])), "quantity": decstr(decimal(o["origQty"])),
+            "filled": decstr(decimal(o["executedQty"])), "reduce_only": o["reduceOnly"], "position_side": o["positionSide"]} for o in orders]
+        return {"assets": assets, "positions": public_positions, "orders": public_orders,
+                "assurance": "AUTHENTICATED_SEQUENTIAL_READS_NOT_ATOMIC_SNAPSHOT", "network": "binance-usdm"}
 
     def data(self, connection):
         config = connection["config"]

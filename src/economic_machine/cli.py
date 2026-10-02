@@ -1,4 +1,4 @@
-"""Self-hosted Economic Machine CLI. No signer or transaction sender is installed."""
+"""Self-hosted runtime CLI. Serving includes separately gated venue execution ports."""
 
 import argparse
 import json

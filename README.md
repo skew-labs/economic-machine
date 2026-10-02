@@ -5,15 +5,21 @@ Connect accounts, inspect balances and orders, bound each agent's capital, and r
 LLMs interpret intent or handle unknown states; the kernel handles typed state, allowed transitions,
 invariants, capital reservations and verifiable receipts.
 
-[Open the Engine](https://machine.148-113-153-116.nip.io/commerce/engine) ·
+[Open the console](https://machine.148-113-153-116.nip.io/commerce/console) ·
 [Self-hosting](docs/SELF_HOSTING.md) · [MIT license](LICENSE) ·
 [Core extraction and provenance](docs/CORE_EXTRACTION.md).
 
-The hosted Engine shows one recorded, completed Arbitrum Sepolia purchase. Your own installation
-can configure and refresh wallet, Binance Spot, data and AI catalog readers, import agent policies,
-evaluate typed states and inspect journal-backed execution records. Keys stay in your environment.
-Live exchange execution and derivatives positions are not installed. Read-only connections and
-evaluated programs must not be described as completed trades.
+The unified console keeps wallet login, API keys, payment limits and activity alongside accounts,
+positions, execution, program validation and API usage. Signed-in owners have isolated, durable
+workspaces. The public recorded view shows the completed Arbitrum Sepolia purchase.
+
+Wallet, Binance Spot, USD-M derivatives, data and AI catalog readers support manual and durable
+scheduled synchronization without an LLM. Venue execution has an adapter port, exact-plan owner
+approval, turnover reservations, timeout reconciliation and cancellation. Binance Spot LIMIT and
+one-way USD-M reduce-only LIMIT are the first adapters. Credentials remain environment references.
+The public runtime keeps live order transmission **disabled**; no new customer order was sent.
+Private venue balances/positions require user credentials. Commission reconciliation and additional
+venue adapters remain separate work. See [the unified runtime contract](docs/UNIFIED_ENGINE.md).
 
 Exchange trades belong to your exchange adapter. The separate x402 commerce layer is for purchasing
 external data and compute; it is not a toll on every operation or a mandatory payment path for venue trading.
@@ -57,6 +63,12 @@ project-contract deployment and browser purchase signing remain unconfirmed.
 
 All compute runs on the owner-selected Canada server at `/srv/skew/economic-machine-commerce-20261002`.
 The Mac is used only for editing, small reads, browser review and remote orchestration.
+
+The unified console extension adds 34 new execution/scheduling/boundary tests and 55 relevant
+connection regressions. Real loopback HTTP verification read the public disposable wallet twice
+across a process restart; both Binance Spot and USD-M public instrument reads succeeded. No private
+venue account, new order transmission or customer signing was performed. Evidence and remaining
+limits are recorded in [the unified release report](docs/UNIFIED_ENGINE_VERIFICATION.md).
 
 The original all-code comparison uses 64 suppliers and 24 paired trade requests over real localhost HTTP.
 It measures requests and agreement latency, not real customer purchases or WAN performance.

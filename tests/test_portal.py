@@ -107,7 +107,7 @@ class PortalHTTP(unittest.TestCase):
         self.assertIn('href="/commerce/assets/ui-icons.svg?v=', response.text)
         self.assertNotIn('href="/assets/ui-icons.svg', response.text)
         self.assertIn('id="wallet-options"', response.text)
-        self.assertNotIn('type="password"', response.text)
+        self.assertNotIn('id="login-password"', response.text)
         self.assertIn("img-src 'self' data:", response.headers["content-security-policy"])
         self.assertIn('base href="/commerce/"', self.client.get("/").text)
         self.assertEqual(self.client.get("/../demo-state.json").status_code, 404)

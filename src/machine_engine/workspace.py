@@ -30,7 +30,7 @@ def now_iso(at):
 
 
 class Workspace:
-    def __init__(self, db_path, *, readers=None, clock=time.time):
+    def __init__(self, db_path, *, readers=None, clock=time.time, credential_prefix=None, broker_factory=None, live_enabled=None):
         path = Path(db_path)
         path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         new_database = not path.exists()
@@ -38,8 +38,13 @@ class Workspace:
         if new_database:
             os.chmod(path, 0o600)
         self.readers = readers or Connectors(clock=clock)
+        self.credential_prefix = credential_prefix
         with self.runtime.connect() as db:
             db.executescript(SCHEMA)
+        from .scheduler import SyncScheduler
+        from .trading import Trading
+        self.scheduler = SyncScheduler(self)
+        self.trading = Trading(self, **({"broker_factory": broker_factory} if broker_factory else {}), live_enabled=live_enabled)
 
     def event(self, db, kind, value):
         if not verify_journal(db):
@@ -49,6 +54,9 @@ class Workspace:
 
     def connect(self, raw):
         body = normalize_connection(raw)
+        if self.credential_prefix and any(not body["config"][key].startswith(self.credential_prefix)
+            for key in PROFILES[body["profile"]]["credentials"]):
+            raise MachineError("OWNER_CREDENTIAL_NAMESPACE_REQUIRED")
         at, cid = int(self.clock()), "connection-" + secrets.token_hex(12)
         with self.runtime.connect() as db:
             db.execute("BEGIN IMMEDIATE")
@@ -173,6 +181,9 @@ class Workspace:
         return {"mode": "SELF_HOSTED", "read_only": False, "as_of": at, "connections": connections,
             "assets": assets, "positions": positions, "orders": orders, "usage": usage,
             "programs": programs, "runs": runs, "payments": [], "runtime": runtime,
-            "usage_assurance": "LOCAL_REPORT_NOT_PROVIDER_BILLING", "execution_authority": "NONE",
+            "usage_assurance": "LOCAL_REPORT_NOT_PROVIDER_BILLING",
+            "execution_authority": "OWNER_PER_ORDER_VENUE_ONLY" if self.trading.live_enabled is True else "NONE",
             "payment_scope": "EXTERNAL_DATA_AND_COMPUTE_ONLY", "venue_trades_use_venue_api": True,
-            "capital_aggregation": "NO_CROSS_ASSET_VALUATION_WITHOUT_PRICE_EVIDENCE"}
+            "capital_aggregation": "NO_CROSS_ASSET_VALUATION_WITHOUT_PRICE_EVIDENCE",
+            "credential_namespace": self.credential_prefix,
+            "sync_jobs": self.scheduler.status(), "trading": self.trading.status()}
