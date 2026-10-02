@@ -215,7 +215,7 @@ function render() {
     (c) => c.status !== "DISCONNECTED",
   ).length;
   $("observed-at").textContent =
-    `${recorded ? "Recorded" : "Workspace refreshed"} ${new Date(snapshot.as_of * 1000).toLocaleString("en-US", { timeZone: "UTC", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })} UTC`;
+    `${recorded ? "Record checked" : "Workspace refreshed"} ${new Date(snapshot.as_of * 1000).toLocaleString("en-US", { timeZone: "UTC", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })} UTC`;
   const content = $("content");
   content.replaceChildren();
   ({
@@ -329,10 +329,10 @@ function renderConnections(content) {
           : "External disposable buyer",
       ],
       [
-        "Last read",
+        recorded ? "Balance record" : "Last read",
         c.observed_at
           ? new Date(c.observed_at * 1000).toISOString()
-          : "Not read",
+          : recorded ? `Receipt block ${c.snapshot.block_number}` : "Not read",
       ],
       [
         "Status",

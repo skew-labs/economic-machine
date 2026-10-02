@@ -1,16 +1,16 @@
 {
   "inspected_files": 247,
-  "historical_blobs": 238,
+  "historical_blobs": 302,
   "findings": [],
   "line_counts": {
     "implementation": {
-      "physical_lines": 13894,
-      "nonblank_lines": 12997,
+      "physical_lines": 13896,
+      "nonblank_lines": 12999,
       "files": 67
     },
     "tests": {
-      "physical_lines": 4050,
-      "nonblank_lines": 3587,
+      "physical_lines": 4054,
+      "nonblank_lines": 3591,
       "files": 22
     }
   },

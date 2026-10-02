@@ -11,7 +11,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 
 from economic_machine.compiler import compile_program
-from economic_machine.values import MachineError, digest, require_keys
+from economic_machine.values import MachineError, require_keys
 from machine_commerce.domain import money_string
 
 from .connections import PROFILES
@@ -158,17 +158,19 @@ def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:880
 def recorded_overview(bundle):
     """Public showcase of an actual purchase; no invented connections or holdings."""
     payment, policy, capital = bundle["payment"], bundle["policy"], bundle["capital"]
-    return {"mode": "RECORDED", "read_only": True, "as_of": bundle["policy"]["evaluated_at"],
+    return {"mode": "RECORDED", "read_only": True, "as_of": bundle["checked_at"],
         "execution_authority": "NONE", "payment_scope": "EXTERNAL_DATA_AND_COMPUTE_ONLY",
         "venue_trades_use_venue_api": True, "capital_aggregation": "NO_CROSS_ASSET_VALUATION_WITHOUT_PRICE_EVIDENCE",
         "connections": [{"id": "recorded-sepolia", "name": "Buyer wallet", "profile": "arbitrum-sepolia-wallet",
             "kind": "wallet", "status": "RECORDED", "network": "eip155:421614", "stale": True,
-            "observed_at": policy["evaluated_at"], "updated_at": policy["evaluated_at"], "error_code": None,
+            "observed_at": None, "updated_at": bundle["checked_at"], "error_code": None,
             "operations": ["READ_BALANCES"], "secret_storage": "EXTERNAL_DISPOSABLE_BUYER_CLI",
-            "snapshot": {"address": bundle["authorization"]["signer"], "assurance": capital["balance_evidence"]}}],
+            "snapshot": {"address": bundle["authorization"]["signer"], "assurance": capital["balance_evidence"],
+                "block_number": payment["receipt_block"]}}],
         "assets": [{"symbol": "USDC", "quantity": money_string(capital["buyer_after_atoms"]),
             "network": "eip155:421614", "connection": "Buyer wallet", "connection_id": "recorded-sepolia",
-            "stale": True, "observed_at": policy["evaluated_at"], "assurance": capital["balance_evidence"]}],
+            "stale": True, "observed_at": None, "balance_at_block": payment["receipt_block"],
+            "assurance": capital["balance_evidence"]}],
         "positions": [], "orders": [], "usage": [], "usage_assurance": "NO_LIVE_USAGE_IMPORT",
         "programs": [{"id": bundle["agreement"]["id"], "name": "DATA BUYER", "version": 1,
             "network": "eip155:421614", "status": "COMPLETED", "program_hash": bundle["agreement"]["terms_hash"],
@@ -182,4 +184,4 @@ def recorded_overview(bundle):
                 "reserved_atoms": capital["reserved_atoms"], "external_signer_verified": True}}],
         "payments": [payment], "runtime": {"journal_integrity": True, "execution_port": "RECORDED_X402_PURCHASE",
             "active_reservations": 0, "events": len(bundle["audit"]["timeline"]), "receipts": 1},
-        "trade_bundle_hash": digest(bundle), "evidence_url": "/commerce/submission"}
+        "trade_bundle_hash": bundle["bundle_hash"], "evidence_url": "/commerce/submission"}
