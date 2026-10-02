@@ -1,0 +1,21 @@
+{
+  "verified_at": "2026-10-02",
+  "source_commit": "82da33c",
+  "site_commit": "8e0e878bc2c1d4bf4454ec0066de6a8d6158e1ea",
+  "site_deployment": "appgdep_6abf55066ca88191975bbfbd43138365",
+  "deployment_status": "succeeded",
+  "comparison_counts": {"standard": 2, "tight": 0, "fresh": 1},
+  "rendered_provider_symbols": 6,
+  "budget_block_and_identity_reuse": true,
+  "timeout_recovery_without_duplicate_order": true,
+  "evidence_tabs": true,
+  "api_quickstart_json_parses": true,
+  "copy_request_button": "Copied",
+  "management_login_required": true,
+  "recorded_workspace_read_only": true,
+  "actual_testnet_receipt_link": true,
+  "mobile_landing": {"viewport_width": 390, "document_width": 390},
+  "mobile_console": {"viewport_width": 390, "document_width": 390},
+  "desktop_landing": {"viewport_width": 1440, "document_width": 1440},
+  "wallet_or_payment_actions": 0
+}
