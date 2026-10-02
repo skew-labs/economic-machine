@@ -1,0 +1,505 @@
+{
+  "schema": "machine-line-audit-1",
+  "engine_implementation": {
+    "files": 59,
+    "physical": 14178,
+    "nonblank": 13229
+  },
+  "tests": {
+    "files": 34,
+    "physical": 5891,
+    "nonblank": 5243
+  },
+  "operational_scripts": {
+    "files": 29,
+    "physical": 3278,
+    "nonblank": 2921
+  },
+  "implementation_files": [
+    {
+      "path": "src/economic_machine/__init__.py",
+      "physical": 1,
+      "nonblank": 1
+    },
+    {
+      "path": "src/economic_machine/cli.py",
+      "physical": 93,
+      "nonblank": 82
+    },
+    {
+      "path": "src/economic_machine/compiler.py",
+      "physical": 217,
+      "nonblank": 200
+    },
+    {
+      "path": "src/economic_machine/execution_evidence.py",
+      "physical": 33,
+      "nonblank": 25
+    },
+    {
+      "path": "src/economic_machine/inference.py",
+      "physical": 259,
+      "nonblank": 236
+    },
+    {
+      "path": "src/economic_machine/journal.py",
+      "physical": 50,
+      "nonblank": 43
+    },
+    {
+      "path": "src/economic_machine/kernel.py",
+      "physical": 355,
+      "nonblank": 332
+    },
+    {
+      "path": "src/economic_machine/runtime.py",
+      "physical": 982,
+      "nonblank": 949
+    },
+    {
+      "path": "src/economic_machine/settlement.py",
+      "physical": 80,
+      "nonblank": 71
+    },
+    {
+      "path": "src/economic_machine/spec.py",
+      "physical": 129,
+      "nonblank": 116
+    },
+    {
+      "path": "src/economic_machine/state.py",
+      "physical": 183,
+      "nonblank": 167
+    },
+    {
+      "path": "src/economic_machine/transitions.py",
+      "physical": 21,
+      "nonblank": 15
+    },
+    {
+      "path": "src/economic_machine/values.py",
+      "physical": 83,
+      "nonblank": 66
+    },
+    {
+      "path": "src/machine_commerce/__init__.py",
+      "physical": 1,
+      "nonblank": 1
+    },
+    {
+      "path": "src/machine_commerce/access.py",
+      "physical": 194,
+      "nonblank": 175
+    },
+    {
+      "path": "src/machine_commerce/api.py",
+      "physical": 472,
+      "nonblank": 402
+    },
+    {
+      "path": "src/machine_commerce/atlas.py",
+      "physical": 269,
+      "nonblank": 247
+    },
+    {
+      "path": "src/machine_commerce/datapass.py",
+      "physical": 339,
+      "nonblank": 302
+    },
+    {
+      "path": "src/machine_commerce/domain.py",
+      "physical": 139,
+      "nonblank": 116
+    },
+    {
+      "path": "src/machine_commerce/evaluation.py",
+      "physical": 97,
+      "nonblank": 80
+    },
+    {
+      "path": "src/machine_commerce/evidence.py",
+      "physical": 178,
+      "nonblank": 165
+    },
+    {
+      "path": "src/machine_commerce/market.py",
+      "physical": 316,
+      "nonblank": 289
+    },
+    {
+      "path": "src/machine_commerce/operations.py",
+      "physical": 130,
+      "nonblank": 111
+    },
+    {
+      "path": "src/machine_commerce/payments.py",
+      "physical": 400,
+      "nonblank": 374
+    },
+    {
+      "path": "src/machine_commerce/portal.py",
+      "physical": 379,
+      "nonblank": 337
+    },
+    {
+      "path": "src/machine_commerce/providers.py",
+      "physical": 177,
+      "nonblank": 157
+    },
+    {
+      "path": "src/machine_commerce/release_proof.py",
+      "physical": 63,
+      "nonblank": 52
+    },
+    {
+      "path": "src/machine_commerce/store.py",
+      "physical": 344,
+      "nonblank": 317
+    },
+    {
+      "path": "src/machine_commerce/transport.py",
+      "physical": 173,
+      "nonblank": 148
+    },
+    {
+      "path": "src/machine_commerce/wallet_auth.py",
+      "physical": 115,
+      "nonblank": 101
+    },
+    {
+      "path": "src/machine_commerce/x402.py",
+      "physical": 145,
+      "nonblank": 128
+    },
+    {
+      "path": "src/machine_engine/__init__.py",
+      "physical": 1,
+      "nonblank": 1
+    },
+    {
+      "path": "src/machine_engine/api.py",
+      "physical": 219,
+      "nonblank": 189
+    },
+    {
+      "path": "src/machine_engine/broker.py",
+      "physical": 245,
+      "nonblank": 215
+    },
+    {
+      "path": "src/machine_engine/connections.py",
+      "physical": 223,
+      "nonblank": 201
+    },
+    {
+      "path": "src/machine_engine/native.py",
+      "physical": 70,
+      "nonblank": 59
+    },
+    {
+      "path": "src/machine_engine/program.py",
+      "physical": 142,
+      "nonblank": 118
+    },
+    {
+      "path": "src/machine_engine/routes.py",
+      "physical": 171,
+      "nonblank": 129
+    },
+    {
+      "path": "src/machine_engine/scheduler.py",
+      "physical": 111,
+      "nonblank": 102
+    },
+    {
+      "path": "src/machine_engine/trading.py",
+      "physical": 536,
+      "nonblank": 514
+    },
+    {
+      "path": "src/machine_engine/workspace.py",
+      "physical": 193,
+      "nonblank": 179
+    },
+    {
+      "path": "web/app.css",
+      "physical": 1292,
+      "nonblank": 1290
+    },
+    {
+      "path": "web/app.js",
+      "physical": 613,
+      "nonblank": 609
+    },
+    {
+      "path": "web/console-theme.css",
+      "physical": 12,
+      "nonblank": 12
+    },
+    {
+      "path": "web/data.js",
+      "physical": 102,
+      "nonblank": 101
+    },
+    {
+      "path": "web/index.html",
+      "physical": 84,
+      "nonblank": 83
+    },
+    {
+      "path": "web/operations.css",
+      "physical": 419,
+      "nonblank": 419
+    },
+    {
+      "path": "web/operations.js",
+      "physical": 864,
+      "nonblank": 862
+    },
+    {
+      "path": "web/submission.css",
+      "physical": 592,
+      "nonblank": 592
+    },
+    {
+      "path": "web/submission.html",
+      "physical": 281,
+      "nonblank": 281
+    },
+    {
+      "path": "web/submission.js",
+      "physical": 117,
+      "nonblank": 114
+    },
+    {
+      "path": "web/wallet.js",
+      "physical": 63,
+      "nonblank": 63
+    },
+    {
+      "path": "native/include/machine/kernel.hpp",
+      "physical": 270,
+      "nonblank": 241
+    },
+    {
+      "path": "native/include/machine/program.hpp",
+      "physical": 210,
+      "nonblank": 192
+    },
+    {
+      "path": "native/src/benchmark.cpp",
+      "physical": 92,
+      "nonblank": 88
+    },
+    {
+      "path": "native/src/kernel.cpp",
+      "physical": 61,
+      "nonblank": 56
+    },
+    {
+      "path": "native/src/program.cpp",
+      "physical": 230,
+      "nonblank": 225
+    },
+    {
+      "path": "contracts/MachineCommerceEscrow.sol",
+      "physical": 194,
+      "nonblank": 175
+    },
+    {
+      "path": "contracts/SkewDataPass.sol",
+      "physical": 354,
+      "nonblank": 314
+    }
+  ],
+  "test_files": [
+    {
+      "path": "tests/test_access.py",
+      "physical": 209,
+      "nonblank": 183
+    },
+    {
+      "path": "tests/test_api.py",
+      "physical": 105,
+      "nonblank": 91
+    },
+    {
+      "path": "tests/test_atlas.py",
+      "physical": 151,
+      "nonblank": 131
+    },
+    {
+      "path": "tests/test_benchmark_settlement.py",
+      "physical": 30,
+      "nonblank": 27
+    },
+    {
+      "path": "tests/test_commerce.py",
+      "physical": 208,
+      "nonblank": 182
+    },
+    {
+      "path": "tests/test_datapass_contract.py",
+      "physical": 172,
+      "nonblank": 150
+    },
+    {
+      "path": "tests/test_datapass_reader.py",
+      "physical": 160,
+      "nonblank": 141
+    },
+    {
+      "path": "tests/test_datapass_resale.py",
+      "physical": 123,
+      "nonblank": 108
+    },
+    {
+      "path": "tests/test_economic_inference.py",
+      "physical": 245,
+      "nonblank": 226
+    },
+    {
+      "path": "tests/test_economic_machine.py",
+      "physical": 771,
+      "nonblank": 725
+    },
+    {
+      "path": "tests/test_economic_spec.py",
+      "physical": 93,
+      "nonblank": 82
+    },
+    {
+      "path": "tests/test_engine_execution.py",
+      "physical": 601,
+      "nonblank": 541
+    },
+    {
+      "path": "tests/test_engine_portal.py",
+      "physical": 80,
+      "nonblank": 66
+    },
+    {
+      "path": "tests/test_engine_workspace.py",
+      "physical": 313,
+      "nonblank": 273
+    },
+    {
+      "path": "tests/test_escrow.py",
+      "physical": 152,
+      "nonblank": 134
+    },
+    {
+      "path": "tests/test_evaluation.py",
+      "physical": 64,
+      "nonblank": 54
+    },
+    {
+      "path": "tests/test_market.py",
+      "physical": 189,
+      "nonblank": 165
+    },
+    {
+      "path": "tests/test_native.py",
+      "physical": 137,
+      "nonblank": 117
+    },
+    {
+      "path": "tests/test_operations.py",
+      "physical": 134,
+      "nonblank": 114
+    },
+    {
+      "path": "tests/test_payments.py",
+      "physical": 432,
+      "nonblank": 387
+    },
+    {
+      "path": "tests/test_portal.py",
+      "physical": 125,
+      "nonblank": 104
+    },
+    {
+      "path": "tests/test_qwen_comparison.py",
+      "physical": 113,
+      "nonblank": 97
+    },
+    {
+      "path": "tests/test_release_proof.py",
+      "physical": 32,
+      "nonblank": 28
+    },
+    {
+      "path": "tests/test_sepolia_demo.py",
+      "physical": 89,
+      "nonblank": 74
+    },
+    {
+      "path": "tests/test_sepolia_merchant.py",
+      "physical": 214,
+      "nonblank": 187
+    },
+    {
+      "path": "tests/test_submission_evidence.py",
+      "physical": 201,
+      "nonblank": 166
+    },
+    {
+      "path": "tests/test_wallet_auth.py",
+      "physical": 174,
+      "nonblank": 150
+    },
+    {
+      "path": "tests/test_x402.py",
+      "physical": 93,
+      "nonblank": 80
+    },
+    {
+      "path": "tests/wallet_client.test.cjs",
+      "physical": 48,
+      "nonblank": 48
+    },
+    {
+      "path": "native/tests/conformance.cpp",
+      "physical": 122,
+      "nonblank": 115
+    },
+    {
+      "path": "native/tests/program.cpp",
+      "physical": 178,
+      "nonblank": 174
+    },
+    {
+      "path": "contracts/DataPassAdversaries.sol",
+      "physical": 53,
+      "nonblank": 49
+    },
+    {
+      "path": "contracts/TestCommerceToken.sol",
+      "physical": 39,
+      "nonblank": 37
+    },
+    {
+      "path": "contracts/TestEIP3009Token.sol",
+      "physical": 41,
+      "nonblank": 37
+    }
+  ],
+  "counted_as_engine": [
+    "src",
+    "web",
+    "native implementation",
+    "production contracts"
+  ],
+  "excluded": [
+    "data",
+    "JSON",
+    "evidence",
+    "dependencies",
+    "logs",
+    "binaries",
+    "docs",
+    "landing site",
+    "generated tables"
+  ],
+  "target_30000_engine_nonblank_reached": false
+}

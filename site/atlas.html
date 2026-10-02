@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Atlas | skew</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;550;600;650;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="tools.css?v=atlas-1" />
+    <script src="tools.js?v=atlas-1" defer></script>
+  </head>
+  <body data-tool="atlas">
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="tool-header">
+      <a class="wordmark" href="index.html" aria-label="skew home"
+        ><svg viewBox="0 0 34 30" aria-hidden="true">
+          <path
+            d="M11 2h8L10 28H2zM25 2h7l-9 26h-7z"
+            fill="currentColor"
+          /></svg
+        ><strong>skew</strong></a
+      >
+      <nav aria-label="Products">
+        <details class="product-menu">
+          <summary>Web tools</summary>
+          <div>
+            <a href="atlas.html">Atlas<span>APAC compute prices</span></a
+            ><a href="site-lens.html"
+              >SiteLens<span>Power and GPU capacity</span></a
+            ><a href="data-pass.html"
+              >DataPass<span>Versioned data access</span></a
+            ><a href="engine-product.html"
+              >Engine<span>Agent operations</span></a
+            >
+          </div>
+        </details>
+        <a href="evidence.html#evidence">Evidence</a
+        ><a href="https://github.com/skew-labs/economic-machine">Open source</a>
+      </nav>
+      <a
+        class="button dark small"
+        href="https://machine.148-113-153-116.nip.io/commerce/console"
+        >Open console
+        <svg class="tool-icon" viewBox="0 0 256 256" aria-hidden="true">
+          <use href="assets/ui-icons.svg#arrow-up-right"></use></svg
+      ></a>
+    </header>
+    <main id="main">
+      <section class="tool-intro">
+        <a class="back" href="tools.html">Web tools / Atlas</a>
+        <h1>APAC, in perspective.</h1>
+        <p>
+          Official on-demand list prices. Documented hardware.<br />Every
+          observation keeps its source.
+        </p>
+      </section>
+      <section class="workspace">
+        <div class="workspace-header">
+          <div>
+            <strong>Atlas</strong><span id="atlas-asof">Loading release…</span>
+          </div>
+          <div class="filters">
+            <label
+              >Provider<select id="provider-filter">
+                <option value="">All providers</option>
+                <option>AWS</option>
+                <option>Azure</option>
+              </select></label
+            ><label
+              >Location<select id="region-filter">
+                <option value="">All locations</option>
+              </select></label
+            ><label
+              >Hardware<select id="gpu-filter">
+                <option value="">All hardware</option>
+                <option>A100</option>
+                <option>H100</option>
+                <option>T4</option>
+                <option>V100</option>
+                <option value="unknown">Unclassified</option>
+              </select></label
+            >
+          </div>
+        </div>
+        <div class="coverage" id="atlas-coverage"></div>
+        <p class="context-note">
+          USD / instance-hour. Per-GPU prices appear only for documented GPU
+          counts. No capacity or negotiated discount is implied.
+        </p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Provider</th>
+                <th>Location</th>
+                <th>Instance</th>
+                <th>Hardware</th>
+                <th>USD / instance·h</th>
+                <th>USD / GPU·h</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody id="atlas-rows"></tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <span id="atlas-count"></span
+          ><button class="button light small" id="atlas-more">Show more</button>
+        </div>
+        <details class="method">
+          <summary>Method & collection coverage</summary>
+          <p>
+            Public Linux consumption prices; spot, Windows, reservation and
+            non-primary meters excluded. Linear quantiles compare documented GPU
+            counts, not equal system performance.
+          </p>
+          <pre id="atlas-collection"></pre>
+          <a
+            href="https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices"
+            >Azure source API</a
+          ><a
+            href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/using-the-aws-price-list-bulk-api.html"
+            >AWS source API</a
+          >
+        </details>
+        <div id="atlas-error" role="status"></div>
+      </section>
+    </main>
+    <footer class="tool-footer">
+      <strong>skew</strong><span>Compute intelligence. Agent execution.</span
+      ><a href="evidence.html#evidence">Method & evidence</a
+      ><a href="https://github.com/skew-labs/economic-machine">GitHub</a>
+    </footer>
+  </body>
+</html>

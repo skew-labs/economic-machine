@@ -795,7 +795,14 @@
     try {
       const source = JSON.parse(byId("ops-program").value);
       let result;
-      if (record?.read_only && API_PREFIX === "/commerce") {
+      if (byId("ops-language").value === "native") {
+        if (API_PREFIX === "/commerce") {
+          const response = await fetch(API_PREFIX + "/demo/native-program", {
+            method: "POST", credentials: "omit", headers: {"Content-Type": "application/json"}, body: JSON.stringify(source)});
+          result = await response.json();
+          if (!response.ok) throw new Error(result.error || "Native program rejected.");
+        } else result = await request("/native/programs/evaluate", source);
+      } else if (record?.read_only && API_PREFIX === "/commerce") {
         const response = await fetch(API_PREFIX + "/demo/engine/compile", {
           method: "POST",
           credentials: "omit",
@@ -814,7 +821,8 @@
   byId("ops-example").hidden = API_PREFIX !== "/commerce";
   byId("ops-example").addEventListener("click", async () => {
     try {
-      const response = await fetch(API_PREFIX + "/demo/engine/example", {
+      const native = byId("ops-language").value === "native";
+      const response = await fetch(API_PREFIX + (native ? "/demo/native-program/example" : "/demo/engine/example"), {
         credentials: "omit",
       });
       if (!response.ok) throw new Error("Example is unavailable.");
@@ -824,7 +832,7 @@
         2,
       );
       byId("ops-compiled").textContent =
-        "Synthetic historical fixture loaded. Static compilation only; no execution authority.";
+        native ? "Synthetic numeric state loaded. C++ evaluation returns a candidate and grants no execution authority." : "Synthetic historical fixture loaded. Static compilation only; no execution authority.";
     } catch (error) {
       notify(error.message, true);
     }

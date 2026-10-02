@@ -24,6 +24,44 @@ venue adapters remain separate work. See [the unified runtime contract](docs/UNI
 Exchange trades belong to your exchange adapter. The separate x402 commerce layer is for purchasing
 external data and compute; it is not a toll on every operation or a mandatory payment path for venue trading.
 
+## Compute tools and native execution
+
+[Atlas](https://skew-economic-machine.angus4314.chatgpt.site/atlas.html) ·
+[SiteLens](https://skew-economic-machine.angus4314.chatgpt.site/site-lens.html) ·
+[DataPass](https://skew-economic-machine.angus4314.chatgpt.site/data-pass.html) ·
+[Engine](https://skew-economic-machine.angus4314.chatgpt.site/engine-product.html).
+
+Atlas retains dated official Azure/AWS public APAC list-price observations with raw source hashes.
+An independently parsed source audit checks each selected price against its retained input archive.
+Documented GPU counts support normalized prices; unknown hardware remains unclassified. This is
+public price research, not hyperscaler inventory, private discounts or Silicon Data's licensed feed.
+SiteLens is a transparent user-input power scenario, not verified deployable capacity.
+
+DataPass's ERC-721 contract binds immutable report, terms and provenance roots to a paid, expiring,
+optionally transferable access license. The API verifies wallet identity, runtime bytecode and two
+finalized RPC observations before delivery. Historic versions remain available by content hash.
+Registration, deployment, purchase and secondary-sale APIs produce unsigned plans. Resale binds
+the seller, price and listing nonce and preserves the original license expiry. **Public deployment and new
+DataPass purchases are not recorded.** Native ERC-20 purchases and x402 must not charge the same sale.
+MIT applies to software; an NFT does not assign rights in upstream provider archives or hardware.
+
+The Canada tools mirror is accessible without a Sites account:
+[Web tools](https://machine.148-113-153-116.nip.io/commerce/tools.html).
+The existing ChatGPT Site retains its custom audience; unauthenticated HTTP requests return 401.
+The public [release manifest](https://machine.148-113-153-116.nip.io/commerce/demo/release-proof)
+hashes source and evidence, with reproducible tests and archived-source checks. Hash integrity does
+not establish exclusive data rights, inventory or production readiness.
+
+The C++20 core adds fixed-size rings/state, shared-capital candidate checks, typed bounded programs
+and sequence-aware depth quoting. Programs reject incompatible units, uninitialized registers,
+overflow, stale states and expired decisions. All outputs remain candidates; durable order approval
+and signing boundaries remain separate. The public Playground can evaluate synthetic numerical
+programs through the actual compiled C++ ABI without language-model calls or financial transmissions.
+AF_XDP, SmartNIC, FPGA and end-to-end exchange latency are not claimed.
+
+[Release method and reproduction](docs/ATLAS_DATAPASS_NATIVE.md) ·
+[Integrity manifest](https://machine.148-113-153-116.nip.io/commerce/demo/release-proof).
+
 ## Commerce layer
 
 A shared execution layer for buying and selling agents: typed trading policies, event-based discovery,

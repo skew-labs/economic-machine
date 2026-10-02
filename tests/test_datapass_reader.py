@@ -1,0 +1,160 @@
+import hashlib
+import unittest
+import json
+import tempfile
+from pathlib import Path
+
+from eth_abi import encode
+from eth_utils import keccak
+
+from economic_machine.values import MachineError
+from machine_commerce.datapass import CHAIN_ID, RPCS, USDC, DataPassChain, DataProducts, bytes32, release_identity
+from test_atlas import NOW, sample_report
+
+BUYER = "0x" + "1" * 40
+SELLER = "0x" + "2" * 40
+CONTRACT = "0x" + "3" * 40
+CODE = "0x60016001"
+CODE_HASH = hashlib.sha256(bytes.fromhex(CODE[2:])).hexdigest()
+
+
+class Reader:
+    def __init__(self):
+        self.calls = []; self.chain = CHAIN_ID; self.hashes = ["0x" + "a" * 64] * 2
+        self.expiry = NOW + 100; self.accepted = True; self.offset = 0
+        self.price = 10000; self.content = sample_report()["report_sha256"]
+        self.wrong_release = False
+        self.asset = USDC
+    def __call__(self, url, method, params):
+        self.calls.append((method, params))
+        if method == "eth_chainId": return hex(self.chain)
+        if method == "eth_getBlockByNumber":
+            return {"number": "0x100", "hash": self.hashes[RPCS.index(url)], "timestamp": hex(NOW - 30 + self.offset)}
+        if method == "eth_getCode": return CODE
+        if method == "eth_call":
+            selector = params[0]["data"][2:10]
+            if selector == keccak(text="publishers(address)")[:4].hex():
+                return "0x" + encode(["bool"], [self.accepted]).hex()
+            if selector == keccak(text="entitlement(uint256,address,bytes32,bytes32)")[:4].hex():
+                return "0x" + encode(["bool"], [self.accepted]).hex()
+            if selector == keccak(text="licenses(uint256)")[:4].hex():
+                report = sample_report()
+                release = b"a" * 32 if self.wrong_release else release_identity(report["report_sha256"], report["terms_sha256"])
+                return "0x" + encode(["bytes32", "uint64"], [release, self.expiry]).hex()
+            if selector == keccak(text="sales(uint256)")[:4].hex():
+                return "0x" + encode(["address", "uint128", "uint64", "uint64"], [SELLER, self.price, NOW + 90, 3]).hex()
+            report = sample_report()
+            return "0x" + encode(["(address,address,bytes32,bytes32,bytes32,uint128,uint64,uint64,bool,bool,string)"],
+                [(SELLER, self.asset, bytes32(self.content), bytes32(report["terms_sha256"]),
+                  bytes32(report["derived"]["source_observation_root"]), self.price, 86400,
+                  NOW + 100, True, True, "https://example.com/report")]).hex()
+        raise AssertionError(method)
+
+
+class DataPassReaderTests(unittest.TestCase):
+    def setUp(self):
+        self.reader = Reader()
+        self.chain = DataPassChain(CONTRACT, CODE_HASH, self.reader, lambda: NOW)
+        self.report = sample_report()
+
+    def verify(self):
+        return self.chain.entitled(1, BUYER, self.report["report_sha256"], self.report["terms_sha256"])
+
+    def test_delivery_requires_both_pinned_rpc_and_runtime(self):
+        proof = self.verify()
+        self.assertTrue(proof["accepted"])
+        self.assertEqual(proof["evidence"]["sources"], list(RPCS))
+        self.assertEqual(proof["evidence"]["block_number"], 256)
+        self.assertFalse(any(method.startswith("eth_send") for method, _ in self.reader.calls))
+        self.assertEqual(proof["evidence"]["calls_at_same_block"], 2)
+        self.assertEqual(len(self.reader.calls), 12)
+
+    def test_finality_lag_does_not_extend_expired_license(self):
+        self.reader.expiry = NOW
+        self.assertFalse(self.verify()["accepted"])
+        self.reader.expiry = NOW - 1
+        self.assertFalse(self.verify()["accepted"])
+
+    def test_two_rpc_disagreement_blocks_access(self):
+        self.reader.hashes[1] = "0x" + "b" * 64
+        with self.assertRaisesRegex(MachineError, "DISAGREEMENT"): self.verify()
+
+    def test_wrong_chain_runtime_future_and_stale_block_fail_closed(self):
+        self.reader.chain = 1
+        with self.assertRaisesRegex(MachineError, "WRONG_CHAIN"): self.verify()
+        self.reader.chain = CHAIN_ID
+        self.chain.code_hash = "f" * 64
+        with self.assertRaisesRegex(MachineError, "RUNTIME_MISMATCH"): self.verify()
+        self.chain.code_hash = CODE_HASH
+        for offset in [-4000, 100]:
+            self.reader.offset = offset
+            with self.subTest(offset=offset), self.assertRaisesRegex(MachineError, "STALE_ENTITLEMENT"): self.verify()
+
+    def test_unsigned_exact_purchase_binds_version_terms_and_price(self):
+        plan = self.chain.purchase_plan(BUYER, self.report, "a" * 64)
+        self.assertEqual(plan["amount_atoms"], "10000")
+        self.assertEqual(plan["transactions"][0]["to"].lower(), USDC)
+        self.assertEqual(plan["transactions"][1]["to"].lower(), CONTRACT)
+        self.assertEqual(plan["broadcasts"], 0)
+        self.assertFalse(plan["x402_payment_required"])
+        self.reader.content = "f" * 64
+        with self.assertRaisesRegex(MachineError, "TERMS_MISMATCH"):
+            self.chain.purchase_plan(BUYER, self.report, "a" * 64)
+
+    def test_price_cap_self_sale_and_invalid_token_fail_closed(self):
+        self.reader.price = 1000001
+        with self.assertRaises(MachineError): self.chain.purchase_plan(BUYER, self.report, "a" * 64)
+        self.reader.price = 10000
+        with self.assertRaises(MachineError): self.chain.purchase_plan(SELLER, self.report, "a" * 64)
+        for token in [True, -1, 2**256, "01", "1.0", "0x1"]:
+            with self.subTest(token=token), self.assertRaises(MachineError):
+                self.chain.entitled(token, BUYER, "a" * 64, "b" * 64)
+
+    def test_alternate_release_with_same_content_does_not_grant_canonical_access(self):
+        self.reader.wrong_release = True
+        self.assertFalse(self.verify()["accepted"])
+
+    def test_resale_plan_binds_nonce_price_and_remaining_original_license(self):
+        plan = self.chain.resale_plan(BUYER, self.report, "1", "a" * 64, 60)
+        self.assertEqual(plan["listing_nonce"], 3)
+        self.assertEqual(plan["price_atoms"], "10000")
+        self.assertEqual(plan["license_expires"], NOW + 100)
+        self.assertEqual(plan["transactions"][1]["purpose"], "ATOMIC_LICENSE_RESALE")
+        self.assertEqual(plan["broadcasts"], 0)
+        with self.assertRaises(MachineError): self.chain.resale_plan(BUYER, self.report, 1, "a" * 64, 600)
+        self.reader.asset = CONTRACT
+        with self.assertRaisesRegex(MachineError, "ASSET_OR_TRANSFER"):
+            self.chain.resale_plan(BUYER, self.report, 1, "a" * 64, 60)
+
+    def test_unconfigured_contract_cannot_claim_a_deployment(self):
+        chain = DataPassChain()
+        self.assertEqual(chain.status()["status"], "NOT_DEPLOYED")
+        with self.assertRaisesRegex(MachineError, "NOT_DEPLOYED"):
+            chain.entitled(1, BUYER, "a" * 64, "b" * 64)
+
+    def test_registration_plan_matches_the_actual_compiled_contract_abi(self):
+        from web3 import Web3
+        root = Path(__file__).resolve().parents[1]
+        abi = json.loads((root / "artifacts/contracts.json").read_text())["SkewDataPass"]["abi"]
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "atlas.json"; path.write_text(json.dumps(self.report))
+            service = DataProducts(path, self.chain)
+            plan = service.registration({"address": SELLER, "chain_id": CHAIN_ID}, 10000, 86400)
+            function, args = Web3().eth.contract(abi=abi).decode_function_input(plan["data"])
+            self.assertEqual(function.fn_name, "registerRelease")
+            self.assertEqual(args["release"]["price"], 10000)
+            self.assertEqual(args["release"]["contentRoot"], bytes32(self.report["report_sha256"]))
+            self.assertEqual(args["release"]["seller"].lower(), SELLER)
+            self.reader.accepted = False
+            with self.assertRaisesRegex(MachineError, "PUBLISHER"):
+                service.registration({"address": SELLER, "chain_id": CHAIN_ID}, 10000, 86400)
+
+    def test_historical_version_is_retained_when_current_release_changes(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "atlas.json"; path.write_text(json.dumps(self.report))
+            versions = path.parent / "versions"; versions.mkdir()
+            (versions / (self.report["report_sha256"] + ".json")).write_text(json.dumps(self.report))
+            service = DataProducts(path, self.chain)
+            path.write_text("{}")
+            self.assertEqual(service.version(self.report["report_sha256"]), self.report)
+            with self.assertRaises(MachineError): service.version("../release")

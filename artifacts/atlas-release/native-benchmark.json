@@ -1,0 +1,30 @@
+{
+  "schema": "machine-native-benchmark-1",
+  "compiler": "13.3.0",
+  "warmup": 10000,
+  "clock": "steady_clock",
+  "producer_core": 10,
+  "consumer_core": 11,
+  "producer_pinned": true,
+  "consumer_pinned": true,
+  "kernel": {
+    "samples": 100000,
+    "p50_ns": 33,
+    "p95_ns": 37,
+    "p99_ns": 42,
+    "max_ns": 15057
+  },
+  "batch_elapsed_ns": 5068447,
+  "spsc_transit": {
+    "samples": 100000,
+    "p50_ns": 158170,
+    "p95_ns": 882650,
+    "p99_ns": 3172264,
+    "max_ns": 3174334
+  },
+  "ordered": true,
+  "checksum": 1105000050000,
+  "financial_transmissions": 0,
+  "llm_calls": 0,
+  "scope": "IN_MEMORY_KERNEL_NOT_VENUE_OR_CHAIN_LATENCY"
+}

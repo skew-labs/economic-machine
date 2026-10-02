@@ -7,7 +7,7 @@ const PREVIEW = API_PREFIX === '/commerce' && new URLSearchParams(location.searc
 let recordedWorkspace;
 const $ = (id) => document.getElementById(id);
 const state = {view: 'overview', snapshot: null, keys: [], offers: [], expires: null, busy: null, revoke: null, connected: false, mode: 'development', payments: {mandates: [], payments: [], resource_details: []}};
-const names = {'csv-normalize': 'CSV normalization', 'arbitrum-state': 'Arbitrum state data'};
+const names = {'csv-normalize': 'CSV normalization', 'arbitrum-state': 'Arbitrum state data', 'apac-compute-brief': 'Atlas APAC Compute Brief'};
 const scopeNames = {read: 'Read', 'demands:write': 'Demand', 'supplies:write': 'Supply', 'orders:write': 'Orders', 'payments:request': 'Payment requests'};
 const headings = {
   overview: ['Overview', 'Accounts, positions and execution in one workspace.', null],
@@ -16,6 +16,7 @@ const headings = {
   execution: ['Execution', 'Compile a bounded order. Review the exact plan before transmission.', null],
   playground: ['Playground', 'Typed economic programs. Deterministic validation.', null],
   usage: ['API usage', 'Reported consumption, with its source attached.', null],
+  data: ['Data licenses', 'Version-bound compute intelligence. Wallet-owned access.', null],
   keys: ['API keys', 'Give your agents access. Keep control of what they can spend.', 'Create API key'],
   funds: ['Funds & limits', 'Set the boundaries. Your agents operate within them.', 'Create policy'],
   activity: ['Activity', 'Track execution, delivery and settlement in your workspace.', null]
@@ -133,6 +134,7 @@ function setView(view) {
   $('primary-action').hidden = !action;
   $('primary-action').replaceChildren(uiIcon('plus'), document.createTextNode(action || ''));
   window.EngineConsole?.render(view);
+  window.DataConsole?.render(view);
 }
 function empty(title, description, action, actionText = '', icon = 'key') {
   const node = el('div', 'empty');
@@ -606,5 +608,6 @@ $('wallet-logout').addEventListener('click', async () => {
 WalletBridge.subscribe(renderWallets);
 showWalletIdentity(null);
 window.MachineConsole = {api, state, notify, el, uiIcon, button, setView, API_PREFIX, PREVIEW, LOCAL_ENGINE,
+  getWallet: () => activeWallet,
   unlock: async token => {localOwnerToken = token; await api('/api/engine/overview'); await refresh();}};
 window.addEventListener('DOMContentLoaded', initialize, {once: true});

@@ -1,0 +1,45 @@
+{
+  "compiler_version": "0.8.24+commit.e11b9ed9",
+  "compiler_sha256": "fb03a29a517452b9f12bcf459ef37d0a543765bb3bbc911e70a87d6a37c30d5f",
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "viaIR": true,
+    "evmVersion": "shanghai",
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode.object",
+          "evm.deployedBytecode.object"
+        ]
+      }
+    }
+  },
+  "sources": {
+    "SkewDataPass.sol": "68c5d17c39c71cfd4ddf39123191e9cc1075a9aa1ddde0fa16a3bc829f60e1a7",
+    "TestCommerceToken.sol": "a35b9989bcb305f4001ad052abe0535784bcc36e7b8398038a2e2b504acc6db2",
+    "DataPassAdversaries.sol": "af31b33be6efd411a30daa353371c65e5be2e8254d649db3edc0d5186085f357"
+  },
+  "contracts": {
+    "SkewDataPass": {
+      "bytecode_bytes": 11095,
+      "bytecode_sha256": "863a120d72adde798d48961567ccb558805af0b2cb8159011c455fa62dec088a",
+      "runtime_sha256": "69242720ea6acba099914b2c24584925dcecbfd377b1fb3685253574f30880ad"
+    },
+    "DataPassHostileToken": {
+      "bytecode_bytes": 1984,
+      "bytecode_sha256": "1a3b33700775d4fa14ff9b0158caa6e8321c1baddc37d237dc1ea27bdfed02f7",
+      "runtime_sha256": "5fc0354574855b401b884eea889199e63a9e409f2213f14b848c40aaf356afee"
+    },
+    "DataPassHostileReceiver": {
+      "bytecode_bytes": 1542,
+      "bytecode_sha256": "bf8a934c76d55c641953a422bd44f11da5915e5ab5c788508bc44b2e20194273",
+      "runtime_sha256": "c4ae0a90e1e07fa53782d94a4fb4dc07c60f6a45adab2ecc2e2ced3975c56213"
+    }
+  },
+  "deployment": "NONE",
+  "evidence_scope": "EVM_LOCAL_TEST_ON_REMOTE_HOST_NOT_PUBLIC_ARBITRUM"
+}

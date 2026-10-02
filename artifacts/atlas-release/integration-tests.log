@@ -1,0 +1,61 @@
+/srv/skew/economic-machine-commerce-20261002/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_data_api_scopes_cannot_gain_deployment_or_delivery_authority (test_atlas.AtlasTests.test_data_api_scopes_cannot_gain_deployment_or_delivery_authority) ... ok
+test_dedup_order_and_exact_quantiles (test_atlas.AtlasTests.test_dedup_order_and_exact_quantiles) ... ok
+test_gpu_family_counts_are_explicit (test_atlas.AtlasTests.test_gpu_family_counts_are_explicit) ... ok
+test_original_report_recomputes_and_tampering_fails (test_atlas.AtlasTests.test_original_report_recomputes_and_tampering_fails) ... ok
+test_public_source_and_finite_bounded_prices (test_atlas.AtlasTests.test_public_source_and_finite_bounded_prices) ... ok
+test_public_tools_serve_verified_snapshot_and_explicit_scenario (test_atlas.AtlasTests.test_public_tools_serve_verified_snapshot_and_explicit_scenario) ... ok
+test_rehashing_a_forged_row_does_not_make_it_normalized (test_atlas.AtlasTests.test_rehashing_a_forged_row_does_not_make_it_normalized) ... ok
+test_report_file_cannot_be_a_symlink (test_atlas.AtlasTests.test_report_file_cannot_be_a_symlink) ... ok
+test_site_lens_rejects_unbounded_and_unit_ambiguity (test_atlas.AtlasTests.test_site_lens_rejects_unbounded_and_unit_ambiguity) ... ok
+test_site_lens_reports_integer_capacity_and_exclusions (test_atlas.AtlasTests.test_site_lens_reports_integer_capacity_and_exclusions) ... ok
+test_unknown_hardware_is_not_normalized_as_one_gpu (test_atlas.AtlasTests.test_unknown_hardware_is_not_normalized_as_one_gpu) ... ok
+test_versioned_worker_verifies_delivered_bytes (test_atlas.AtlasTests.test_versioned_worker_verifies_delivered_bytes) ... ok
+test_c_layout_and_microamounts_cross_the_real_abi (test_native.NativeTests.test_c_layout_and_microamounts_cross_the_real_abi) ... ok
+test_changed_condition_changes_native_candidate_admission (test_native.NativeTests.test_changed_condition_changes_native_candidate_admission) ... ok
+test_hash_pinning_and_symlink_reject_unsafe_library (test_native.NativeTests.test_hash_pinning_and_symlink_reject_unsafe_library) ... ok
+test_http_scope_boundary_connects_real_program_abi (test_native.NativeTests.test_http_scope_boundary_connects_real_program_abi) ... ok
+test_incompatible_units_uninitialized_and_unbounded_programs_fail (test_native.NativeTests.test_incompatible_units_uninitialized_and_unbounded_programs_fail) ... ok
+test_public_playground_uses_real_native_library_and_never_creates_owner_state (test_native.NativeTests.test_public_playground_uses_real_native_library_and_never_creates_owner_state) ... ok
+test_typed_program_compiles_and_runs_without_model_or_authority (test_native.NativeTests.test_typed_program_compiles_and_runs_without_model_or_authority) ... ok
+test_unknown_expired_or_changed_state_abstains (test_native.NativeTests.test_unknown_expired_or_changed_state_abstains) ... ok
+test_absolute_parent_escape_and_symlink_reject (test_release_proof.ReleaseProofTests.test_absolute_parent_escape_and_symlink_reject) ... ok
+test_modified_proof_modified_file_missing_file_and_duplicate_reject (test_release_proof.ReleaseProofTests.test_modified_proof_modified_file_missing_file_and_duplicate_reject) ... ok
+test_closed_inputs (test_portal.PortalHTTP.test_closed_inputs) ... ok
+test_console_routes_use_authenticated_runtime_prefix (test_portal.PortalHTTP.test_console_routes_use_authenticated_runtime_prefix) ... ok
+test_live_scenario_and_cross_origin_without_credentials (test_portal.PortalHTTP.test_live_scenario_and_cross_origin_without_credentials) ... ok
+test_options_allows_only_public_scenario (test_portal.PortalHTTP.test_options_allows_only_public_scenario) ... ok
+test_record_is_read_only_and_exposes_no_credentials (test_portal.PortalHTTP.test_record_is_read_only_and_exposes_no_credentials) ... ok
+test_reject_nonverified_record (test_portal.PortalHTTP.test_reject_nonverified_record) ... ok
+test_request_size_bound (test_portal.PortalHTTP.test_request_size_bound) ... ok
+test_comparison_uses_six_seller_policies (test_portal.PortalScenarios.test_comparison_uses_six_seller_policies) ... ok
+test_one_freshness_change_removes_old_agreement (test_portal.PortalScenarios.test_one_freshness_change_removes_old_agreement) ... ok
+test_one_price_change_updates_entire_comparison (test_portal.PortalScenarios.test_one_price_change_updates_entire_comparison) ... ok
+test_requests_have_isolated_state (test_portal.PortalScenarios.test_requests_have_isolated_state) ... ok
+test_shared_budget_and_replay (test_portal.PortalScenarios.test_shared_budget_and_replay) ... ok
+test_timeout_releases_only_test_ledger_once (test_portal.PortalScenarios.test_timeout_releases_only_test_ledger_once) ... ok
+test_corrupt_or_missing_evidence_cannot_masquerade_as_live_account (test_engine_portal.EnginePortal.test_corrupt_or_missing_evidence_cannot_masquerade_as_live_account) ... ok
+test_engine_redirects_to_one_console_with_correct_assets (test_engine_portal.EnginePortal.test_engine_redirects_to_one_console_with_correct_assets) ... ok
+test_public_compile_bounds_and_invalid_inputs_fail_closed (test_engine_portal.EnginePortal.test_public_compile_bounds_and_invalid_inputs_fail_closed) ... ok
+test_public_playground_runs_the_actual_compiler_without_mutating_runtime (test_engine_portal.EnginePortal.test_public_playground_runs_the_actual_compiler_without_mutating_runtime) ... ok
+test_recorded_accounts_join_actual_settlement_without_fabricated_usage (test_engine_portal.EnginePortal.test_recorded_accounts_join_actual_settlement_without_fabricated_usage) ... ok
+test_corrupted_journal_rolls_back_new_key_authority (test_access.AccessTests.test_corrupted_journal_rolls_back_new_key_authority) ... ok
+test_demand_and_supply_scopes_admit_only_their_own_routes (test_access.AccessTests.test_demand_and_supply_scopes_admit_only_their_own_routes) ... ok
+test_expiry_is_bounded_by_owner_and_policy_and_records_usage (test_access.AccessTests.test_expiry_is_bounded_by_owner_and_policy_and_records_usage) ... ok
+test_invalid_bearer_never_falls_back_to_owner_cookie (test_access.AccessTests.test_invalid_bearer_never_falls_back_to_owner_cookie) ... ok
+test_key_and_policy_cannot_cross_workspaces (test_access.AccessTests.test_key_and_policy_cannot_cross_workspaces) ... ok
+test_keys_share_policy_cap_and_idempotent_reservation (test_access.AccessTests.test_keys_share_policy_cap_and_idempotent_reservation) ... ok
+test_malformed_key_permissions_and_lifetimes_are_rejected (test_access.AccessTests.test_malformed_key_permissions_and_lifetimes_are_rejected) ... ok
+test_payment_request_permission_never_grants_live_payment_authority (test_access.AccessTests.test_payment_request_permission_never_grants_live_payment_authority) ... ok
+test_persistence_and_restart_preserve_hashed_key_authority (test_access.AccessTests.test_persistence_and_restart_preserve_hashed_key_authority) ... ok
+test_policy_binding_blocks_creating_running_and_cancelling_other_orders (test_access.AccessTests.test_policy_binding_blocks_creating_running_and_cancelling_other_orders) ... ok
+test_read_key_cannot_spend_administer_or_escalate (test_access.AccessTests.test_read_key_cannot_spend_administer_or_escalate) ... ok
+test_revocation_is_immediate_and_idempotent_without_reversing_orders (test_access.AccessTests.test_revocation_is_immediate_and_idempotent_without_reversing_orders) ... ok
+test_scoped_agent_executes_real_worker_and_receipt (test_access.AccessTests.test_scoped_agent_executes_real_worker_and_receipt) ... ok
+test_secret_is_returned_once_and_only_hash_is_stored (test_access.AccessTests.test_secret_is_returned_once_and_only_hash_is_stored) ... ok
+
+----------------------------------------------------------------------
+Ran 54 tests in 2.482s
+
+OK

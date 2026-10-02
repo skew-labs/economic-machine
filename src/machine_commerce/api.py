@@ -168,6 +168,46 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
 
     app.include_router(engine_routes(engine_workspace, require_owner=engine_owner))
 
+    from .datapass import DataProducts
+    data_products = DataProducts()
+
+    @app.get("/api/data/catalog")
+    def data_catalog(sid=Depends(buyer)):
+        return data_products.catalog()
+
+    @app.get("/api/data/licenses/{token_id}/delivery")
+    def data_delivery(token_id: int, version: str | None = None, sid=Depends(buyer)):
+        try:
+            return data_products.delivery(token_id, wallet_auth.identity(sid), version)
+        except PermissionError as exc:
+            raise HTTPException(403, str(exc)) from exc
+
+    @app.get("/api/data/purchase-plan")
+    def data_plan(purchase_id: str, version: str | None = None, sid=Depends(buyer)):
+        return data_products.plan(wallet_auth.identity(sid), purchase_id, version)
+
+    @app.post("/api/data/release-plan")
+    def data_release(raw: dict, request: Request, sid=Depends(buyer), approved=Depends(engine_owner)):
+        require_keys(raw, {"price_atoms", "sale_duration_seconds"}, "dataset release")
+        return data_products.registration(wallet_auth.identity(sid), raw["price_atoms"], raw["sale_duration_seconds"])
+
+    @app.post("/api/data/sale-plan")
+    def data_sale(raw: dict, request: Request, sid=Depends(buyer), approved=Depends(engine_owner)):
+        require_keys(raw, {"token_id", "price_atoms", "sale_duration_seconds", "version"}, "license sale")
+        return data_products.sell(wallet_auth.identity(sid), raw["token_id"], raw["price_atoms"], raw["sale_duration_seconds"], raw["version"])
+
+    @app.get("/api/data/resale-plan")
+    def data_resale(token_id: str, purchase_id: str, min_remaining_seconds: int = 600, version: str | None = None, sid=Depends(buyer)):
+        return data_products.resale(wallet_auth.identity(sid), token_id, purchase_id, min_remaining_seconds, version)
+
+    @app.post("/api/data/deployment-plan")
+    def data_deployment(request: Request, sid=Depends(buyer), approved=Depends(engine_owner)):
+        from .datapass import CHAIN_ID, deployment_draft
+        identity = wallet_auth.identity(sid)
+        if not identity or identity.get("chain_id") != CHAIN_ID:
+            raise HTTPException(403, "authenticated Arbitrum Sepolia wallet required")
+        return deployment_draft(identity["address"])
+
     def bind_order(request, policy_id):
         try:
             access.bind_order(request.state.principal, policy_id)

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SiteLens | skew</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;550;600;650;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="tools.css?v=atlas-1" />
+    <script src="tools.js?v=atlas-1" defer></script>
+  </head>
+  <body data-tool="site-lens">
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="tool-header">
+      <a class="wordmark" href="index.html" aria-label="skew home"
+        ><svg viewBox="0 0 34 30" aria-hidden="true">
+          <path
+            d="M11 2h8L10 28H2zM25 2h7l-9 26h-7z"
+            fill="currentColor"
+          /></svg
+        ><strong>skew</strong></a
+      >
+      <nav aria-label="Products">
+        <details class="product-menu">
+          <summary>Web tools</summary>
+          <div>
+            <a href="atlas.html">Atlas<span>APAC compute prices</span></a
+            ><a href="site-lens.html"
+              >SiteLens<span>Power and GPU capacity</span></a
+            ><a href="data-pass.html"
+              >DataPass<span>Versioned data access</span></a
+            ><a href="engine-product.html"
+              >Engine<span>Agent operations</span></a
+            >
+          </div>
+        </details>
+        <a href="evidence.html#evidence">Evidence</a
+        ><a href="https://github.com/skew-labs/economic-machine">Open source</a>
+      </nav>
+      <a
+        class="button dark small"
+        href="https://machine.148-113-153-116.nip.io/commerce/console"
+        >Open console
+        <svg class="tool-icon" viewBox="0 0 256 256" aria-hidden="true">
+          <use href="assets/ui-icons.svg#arrow-up-right"></use></svg
+      ></a>
+    </header>
+    <main id="main">
+      <section class="tool-intro">
+        <a class="back" href="tools.html">Web tools / SiteLens</a>
+        <h1>Power into capacity.</h1>
+        <p>
+          Model a facility using explicit engineering inputs.<br />See the
+          assumptions alongside the result.
+        </p>
+      </section>
+      <section class="split-workspace">
+        <form id="capacity-form">
+          <h2>Site envelope</h2>
+          <div class="form-grid">
+            <label
+              >Facility power · MW<input
+                name="facility_mw"
+                type="number"
+                min="0.01"
+                max="1000"
+                step="0.01"
+                value="10"
+                required /></label
+            ><label
+              >PUE<input
+                name="pue"
+                type="number"
+                min="1"
+                max="3"
+                step="0.01"
+                value="1.3"
+                required /></label
+            ><label
+              >Networking share<input
+                name="network_fraction"
+                type="number"
+                min="0"
+                max="0.99"
+                step="0.01"
+                value="0.12"
+                required /></label
+            ><label
+              >Reserve share<input
+                name="reserve_fraction"
+                type="number"
+                min="0"
+                max="0.99"
+                step="0.01"
+                value="0.15"
+                required /></label
+            ><label
+              >GPU power · W<input
+                name="gpu_watts"
+                type="number"
+                min="1"
+                max="5000"
+                step="1"
+                value="700"
+                required /></label
+            ><label
+              >GPUs / server<input
+                name="gpus_per_server"
+                type="number"
+                min="1"
+                max="32"
+                step="1"
+                value="8"
+                required /></label
+            ><label
+              >Server overhead · W<input
+                name="server_overhead_watts"
+                type="number"
+                min="0"
+                max="10000"
+                step="1"
+                value="1400"
+                required /></label
+            ><label
+              >Electricity · USD/kWh<input
+                name="electricity_usd_kwh"
+                type="number"
+                min="0"
+                max="10"
+                step="0.001"
+                value="0.12"
+                required /></label
+            ><label
+              >Utilization<input
+                name="utilization"
+                type="number"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.65"
+                required /></label
+            ><label
+              >Revenue · USD/GPU·h<input
+                name="gpu_usd_hour"
+                type="number"
+                min="0"
+                max="10000"
+                step="0.01"
+                value="2.5"
+                required
+            /></label>
+          </div>
+          <button class="button dark" type="submit">Calculate scenario</button>
+        </form>
+        <div class="capacity-results">
+          <h2>Scenario output</h2>
+          <div id="capacity-results" aria-live="polite">
+            Calculate to see capacity and power economics.
+          </div>
+          <p class="context-note">
+            Scenario estimates. No live site survey, climate feed or available
+            capacity verification. Revenue less power excludes capex,
+            depreciation, rent, staff, tax and maintenance.
+          </p>
+          <details class="method">
+            <summary>Reproduce the calculation</summary>
+            <pre id="capacity-proof"></pre>
+          </details>
+        </div>
+      </section>
+    </main>
+    <footer class="tool-footer">
+      <strong>skew</strong><span>Compute intelligence. Agent execution.</span
+      ><a href="evidence.html#evidence">Method & evidence</a
+      ><a href="https://github.com/skew-labs/economic-machine">GitHub</a>
+    </footer>
+  </body>
+</html>

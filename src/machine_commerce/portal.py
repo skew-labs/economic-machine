@@ -183,6 +183,83 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
     async def workspace():
         return JSONResponse(recorded_workspace(proof_path), headers={"Cache-Control": "no-store"})
 
+    @app.get("/demo/atlas")
+    async def atlas(version: str | None = None):
+        from .atlas import load_report
+        from .datapass import DataProducts
+        try:
+            async with gate:
+                report = await run_in_threadpool(DataProducts().version, version)
+        except (OSError, ValueError, KeyError, TypeError):
+            return JSONResponse({"error": "Source-verified Atlas release unavailable"}, status_code=503)
+        return JSONResponse(report, headers={"Cache-Control": "no-store", "Access-Control-Allow-Origin": "*"})
+
+    @app.get("/demo/datapass")
+    async def datapass_catalog():
+        from .datapass import DataProducts
+        try:
+            async with gate:
+                result = await run_in_threadpool(DataProducts().catalog)
+        except (OSError, ValueError, KeyError, TypeError):
+            return JSONResponse({"error": "Dataset releases unavailable"}, status_code=503)
+        return JSONResponse(result, headers={"Cache-Control": "no-store", "Access-Control-Allow-Origin": "*"})
+
+    @app.get("/demo/native")
+    async def native_evidence():
+        path = ROOT / "artifacts/atlas-release/native-benchmark.json"
+        if not path.is_file():
+            return JSONResponse({"error": "Native measurements unavailable"}, status_code=503)
+        return JSONResponse(json.loads(path.read_text()), headers={"Cache-Control": "no-store", "Access-Control-Allow-Origin": "*"})
+
+    @app.get("/demo/native-program/example")
+    async def native_example():
+        from machine_engine.program import example
+        return {"example": example(), "scope": "SYNTHETIC_INPUT_CANDIDATE_ONLY"}
+
+    @app.post("/demo/native-program")
+    async def native_program(request: Request):
+        from machine_engine.program import NativeProgram
+        body = bytearray()
+        async for part in request.stream():
+            body.extend(part)
+            if len(body) > 32000:
+                return JSONResponse({"error": "Program too large"}, status_code=413)
+        try:
+            raw = json.loads(body)
+            async with gate:
+                value = await run_in_threadpool(NativeProgram().evaluate, raw)
+        except (OSError, ValueError, TypeError, KeyError):
+            return JSONResponse({"error": "Native program unavailable or invalid"}, status_code=400)
+        return value | {"input_assurance": "USER_SUPPLIED_NUMERIC_STATE_NOT_LIVE_ACCOUNT_OR_ORACLE"}
+
+    @app.get("/demo/release-proof")
+    async def release_proof():
+        from .release_proof import public_manifest
+        try:
+            async with gate:
+                result = await run_in_threadpool(public_manifest)
+        except (OSError, ValueError, KeyError, TypeError):
+            return JSONResponse({"error": "Release proof unavailable or inconsistent"}, status_code=503)
+        return JSONResponse(result, headers={"Cache-Control": "no-store", "Access-Control-Allow-Origin": "*"})
+
+    @app.post("/demo/site-lens")
+    async def capacity_analysis(request: Request):
+        from .atlas import site_lens
+        body = bytearray()
+        async for part in request.stream():
+            body.extend(part)
+            if len(body) > 4096:
+                return JSONResponse({"error": "Scenario too large"}, status_code=413)
+        try:
+            result = site_lens(json.loads(body))
+        except (MachineError, ValueError, TypeError, KeyError):
+            return JSONResponse({"error": "Check the capacity scenario inputs"}, status_code=400)
+        return JSONResponse(result, headers={"Cache-Control": "no-store", "Access-Control-Allow-Origin": "*"})
+
+    @app.options("/demo/site-lens")
+    async def capacity_preflight():
+        return JSONResponse({}, headers={"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type"})
+
     def completed_trade():
         return validate_bundle(json.loads(evidence_path.read_text()))
 
@@ -260,7 +337,7 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         html = (ROOT / "web/index.html").read_text()
         html = html.replace('  <link rel="stylesheet" href="/operations.css?v=wallet-20261002-3">', '')
         version = hashlib.sha256(b"".join((ROOT / "web" / name).read_bytes() for name in
-            ["index.html", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "assets/ui-icons.svg"])).hexdigest()[:16]
+            ["index.html", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "data.js", "assets/ui-icons.svg"])).hexdigest()[:16]
         html = html.replace("Machine Market | Console", "skew | Console")
         html = html.replace('href="/" aria-label="Economic Machine console"', 'href="/commerce/" aria-label="Economic Machine console"')
         html = html.replace("<span>Machine<small>Economic infrastructure</small></span>", "<span>skew<small>Economic Machine</small></span>")
@@ -268,6 +345,7 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         html = html.replace('href="/app.css', 'href="/commerce/app.css').replace('src="/app.js', 'src="/commerce/app.js')
         html = html.replace('src="/wallet.js', 'src="/commerce/wallet.js')
         html = html.replace('src="/operations.js', 'src="/commerce/operations.js').replace('href="/operations.css', 'href="/commerce/operations.css')
+        html = html.replace('src="/data.js', 'src="/commerce/data.js')
         html = html.replace('href="/assets/ui-icons.svg', 'href="/commerce/assets/ui-icons.svg')
         html = html.replace("wallet-20261002-3", version)
         html = html.replace('<body>', '<body><div class="portal-bar"><a href="/commerce/">← skew Economic Machine</a><a href="/commerce/console?preview=1">Verified workspace</a></div>')
@@ -275,7 +353,13 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
 
     @app.get("/{asset:path}")
     async def files(asset):
-        if asset in {"app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "submission.css", "submission.js"}:
+        tool_pages = {"tools": "tools.html", "tools/atlas": "atlas.html", "tools/site-lens": "site-lens.html", "tools/data-pass": "data-pass.html", "tools/engine": "engine-product.html"}
+        if asset.rstrip("/") in tool_pages:
+            return HTMLResponse((site / tool_pages[asset.rstrip("/")]).read_text().replace('<head>', '<head><base href="/commerce/">'))
+        if asset in {"tools.css", "tools.js", "tools.html", "atlas.html", "site-lens.html", "data-pass.html", "engine-product.html", "atlas.json", "evidence.html"}:
+            target = site / asset
+            return FileResponse(target) if target.is_file() else JSONResponse({"error": "Not found"}, status_code=404)
+        if asset in {"app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "data.js", "submission.css", "submission.js"}:
             return FileResponse(ROOT / "web" / asset)
         if asset in {"assets/phantom-wallet.png", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/icon-provenance.json"}:
             return FileResponse(ROOT / "web" / asset)

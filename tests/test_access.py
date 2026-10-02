@@ -71,6 +71,17 @@ class AccessTests(unittest.TestCase):
         self.assertEqual(self.agent.get("/api/keys").status_code, 403)
         self.assertEqual(self.owner.get("/api/workspace").json()["reserved"], "0")
 
+    def test_dataset_reader_cannot_publish_sell_deploy_or_gain_spending_authority(self):
+        from unittest.mock import patch
+        self.key(["data:read"])
+        with patch("machine_commerce.datapass.DataProducts.catalog", return_value={"products": []}):
+            self.assertEqual(self.agent.get("/api/data/catalog").status_code, 200)
+        for path in ["/api/data/deployment-plan", "/api/data/release-plan", "/api/data/sale-plan", "/api/keys", "/api/policies"]:
+            with self.subTest(path=path):
+                self.assertEqual(self.agent.post(path, json={}).status_code, 403)
+        self.assertEqual(self.reserve().status_code, 403)
+        self.assertEqual(self.owner.get("/api/workspace").json()["reserved"], "0")
+
     def test_invalid_bearer_never_falls_back_to_owner_cookie(self):
         for credential in ["Basic invalid", "Bearer em_test_invalid", "Bearer "]:
             self.assertEqual(self.owner.get("/api/keys", headers={"Authorization": credential}).status_code, 401)

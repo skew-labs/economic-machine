@@ -9,6 +9,13 @@ from economic_machine.values import MachineError, decimal, decstr, digest, requi
 SCALE = 1_000_000
 ASSET = "TEST_CREDIT"
 CATALOG = {
+    "apac-compute-brief": {
+        "id": "apac-compute-brief", "name": "Atlas APAC Compute Brief", "provider": "Skew Atlas",
+        "provider_id": "skew-atlas", "price": "0.01", "category": "Data",
+        "description": "Version-bound original analysis of official APAC public compute list prices.",
+        "delivery_schema": "apac-compute-brief-1", "verification": "Content root, source roots, coverage and derivation",
+        "settlement": "Verified delivery; sandbox credits unless a separate x402 resource is configured", "version": 1,
+    },
     "csv-normalize": {
         "id": "csv-normalize", "name": "CSV 정규화", "provider": "Format Worker",
         "provider_id": "format-worker", "price": "0.12", "category": "서비스",
@@ -25,6 +32,7 @@ CATALOG = {
     },
 }
 DEFAULT_REQUESTS = {
+    "apac-compute-brief": {"report_sha256": "0" * 64, "max_age_seconds": 86400, "license": "internal-use"},
     "csv-normalize": {"columns": ["asset", "amount", "currency"],
         "numeric_columns": ["amount"],
         "csv": "asset,amount,currency\nTreasury,1200.00,USDC\nResearch,340.50,USDC\n"},
@@ -73,7 +81,14 @@ def identifier(value, label):
 
 
 def validate_request(offer_id, payload):
-    if offer_id == "csv-normalize":
+    if offer_id == "apac-compute-brief":
+        require_keys(payload, {"report_sha256", "max_age_seconds", "license"}, "Atlas request")
+        if not isinstance(payload["report_sha256"], str) or not re.fullmatch(r"[0-9a-f]{64}", payload["report_sha256"]) or payload["report_sha256"] == "0" * 64:
+            raise MachineError("IMMUTABLE_ATLAS_VERSION_REQUIRED")
+        bounded_int(payload["max_age_seconds"], 300, 86400, "maximum Atlas age")
+        if payload["license"] != "internal-use":
+            raise MachineError("SUPPORTED_ATLAS_LICENSE_REQUIRED")
+    elif offer_id == "csv-normalize":
         require_keys(payload, {"csv", "columns", "numeric_columns"}, "CSV request")
         columns, numeric = payload["columns"], payload["numeric_columns"]
         if (not isinstance(columns, list) or not 1 <= len(columns) <= 20

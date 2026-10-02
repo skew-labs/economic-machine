@@ -1,0 +1,38 @@
+{
+  "recorded_at": "2026-10-02",
+  "discovery": {
+    "scope": "Warm-path HTTP fixture benchmark; 64 suppliers, 24 paired requests",
+    "cached_direct_requests": 192,
+    "machine_requests": 24,
+    "reduction_percent": 87.5,
+    "valid_agreements_both": 18,
+    "model_tokens_both": 0,
+    "machine_registration_requests": 65,
+    "limitation": "Cached direct client was faster including setup for the initial 24-trade workload. No customer traffic."
+  },
+  "model_loop": {
+    "model": "Actual Kiln Qwen3-32B, no_think, all repair calls included",
+    "qwen_tokens": 122242,
+    "machine_initial_compile_tokens": 417,
+    "reduction_percent": 99.6589,
+    "qwen_feasible_completions": 10,
+    "machine_feasible_completions": 24,
+    "feasible_requests": 24,
+    "cached_deterministic_completions": 24,
+    "cached_deterministic_tokens": 417,
+    "limitation": "Paid ephemeral test-token fixtures; not public-chain/customer success. Ordinary deterministic code also avoided the model loop."
+  },
+  "payment": {
+    "network": "Arbitrum Sepolia",
+    "chain_id": 421614,
+    "test_usdc": "0.01",
+    "status": "SETTLED",
+    "tx_hash": "0x3aa1cbbb04e18c0a1d07b3c9cc92b255bc7a3bdb6b62080fa1fb933659b11758",
+    "receipt_block": 314873781,
+    "delivered_block": 314868529,
+    "held_atoms": 0,
+    "spent_atoms": 10000,
+    "rpc_checks": ["Official Arbitrum RPC", "dRPC"],
+    "limitation": "One approved public-testnet order; recorded off-chain delivery. No customer/mainnet payment. RPC finality is not an independent L1 proof."
+  }
+}

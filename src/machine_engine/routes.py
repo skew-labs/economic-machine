@@ -20,6 +20,18 @@ def engine_routes(workspace_dependency, *, require_owner=None):
 
         return {"profiles": PROFILES, "credential_namespace": work.credential_prefix}
 
+    @router.post("/native/evaluate")
+    def native_evaluate(raw: dict, work=Depends(workspace_dependency)):
+        return work.native.evaluate(raw)
+
+    @router.post("/native/programs/compile")
+    def native_compile(raw: dict, work=Depends(workspace_dependency)):
+        return work.native_program.compile(raw)
+
+    @router.post("/native/programs/evaluate")
+    def native_program_evaluate(raw: dict, work=Depends(workspace_dependency)):
+        return work.native_program.evaluate(raw)
+
     @router.post("/connections", dependencies=owner)
     def connect(raw: dict, work=Depends(workspace_dependency)):
         return work.connect(raw)

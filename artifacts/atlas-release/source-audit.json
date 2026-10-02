@@ -1,0 +1,70 @@
+{
+  "schema": "atlas-source-audit-1",
+  "accepted": true,
+  "report_sha256": "89fe2015672e89516e16aa73f0dfd81cb3136cfd225659ecc2302a4a71e92e2d",
+  "observations_checked": 497,
+  "archives": [
+    {
+      "sha256": "07b2fb5934bc76dfd71d215003ebaefdc413ad09085e594e307065c16fcdea70",
+      "bytes": 134078,
+      "provider": "Azure",
+      "rows_checked": 43
+    },
+    {
+      "sha256": "335f86e21ee2515534024bc8ab3cb92670522ea181da7a22d2b15b43bf42d67f",
+      "bytes": 40206,
+      "provider": "Azure",
+      "rows_checked": 11
+    },
+    {
+      "sha256": "5297af3af6ba40caa67ff23e37632637e1280b6c93b79ddb38561b896d930092",
+      "bytes": 363735197,
+      "provider": "AWS",
+      "rows_checked": 52
+    },
+    {
+      "sha256": "8b550de80dd4a1c1162b29ae141c6e67a189b8cafa9423e9979e8bc5ffb360c4",
+      "bytes": 178308,
+      "provider": "Azure",
+      "rows_checked": 60
+    },
+    {
+      "sha256": "8e1a670c23e2df9ff9f79d775323e0b45843358a3874704c939e2ef158ad94ae",
+      "bytes": 156496,
+      "provider": "Azure",
+      "rows_checked": 51
+    },
+    {
+      "sha256": "9ff8ae20565de2f09087d3e3a6caca2c1d6c2e82637bdbc8aa8e80056646e789",
+      "bytes": 445821037,
+      "provider": "AWS",
+      "rows_checked": 79
+    },
+    {
+      "sha256": "b5de2ec9b94a229a149f92570d8a993b831a25abcbca79bfb29d717d6d540a7e",
+      "bytes": 353880753,
+      "provider": "AWS",
+      "rows_checked": 32
+    },
+    {
+      "sha256": "d1bda064896bf52a943807debee306e07738f96e0515a75bbdf3b401bdd08ffe",
+      "bytes": 125792,
+      "provider": "Azure",
+      "rows_checked": 40
+    },
+    {
+      "sha256": "e8552f6d31e5c681ea2ce9bc26ea0b98e5bbb62dcebb91252e82b8145ddbacad",
+      "bytes": 174180,
+      "provider": "Azure",
+      "rows_checked": 60
+    },
+    {
+      "sha256": "eb8fae964778c05e269feb6b0b333ae64e19afc247657c0541f8618d8ff1bae1",
+      "bytes": 296287194,
+      "provider": "AWS",
+      "rows_checked": 69
+    }
+  ],
+  "assurance": "ARCHIVED_OFFICIAL_SOURCE_AGREEMENT_NOT_INVENTORY_OR_RIGHTS_PROOF",
+  "financial_transmissions": 0
+}

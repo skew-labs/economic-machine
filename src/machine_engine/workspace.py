@@ -45,6 +45,10 @@ class Workspace:
         from .trading import Trading
         self.scheduler = SyncScheduler(self)
         self.trading = Trading(self, **({"broker_factory": broker_factory} if broker_factory else {}), live_enabled=live_enabled)
+        from .native import NativeGate
+        self.native = NativeGate()
+        from .program import NativeProgram
+        self.native_program = NativeProgram(self.native)
 
     def event(self, db, kind, value):
         if not verify_journal(db):
@@ -186,4 +190,4 @@ class Workspace:
             "payment_scope": "EXTERNAL_DATA_AND_COMPUTE_ONLY", "venue_trades_use_venue_api": True,
             "capital_aggregation": "NO_CROSS_ASSET_VALUATION_WITHOUT_PRICE_EVIDENCE",
             "credential_namespace": self.credential_prefix,
-            "sync_jobs": self.scheduler.status(), "trading": self.trading.status()}
+            "sync_jobs": self.scheduler.status(), "trading": self.trading.status(), "native": self.native.status()}

@@ -71,6 +71,15 @@ class Workers:
         self.clock, self.rpc = clock, rpc_call
 
     def fulfill(self, offer_id, request):
+        if offer_id == "apac-compute-brief":
+            from .datapass import DataProducts
+            from .atlas import load_report
+            release = load_report(DataProducts().path)
+            if release["report_sha256"] != request["report_sha256"] or not 0 <= self.clock() - release["derived"]["as_of"] <= request["max_age_seconds"]:
+                raise MachineError("ATLAS_VERSION_UNAVAILABLE_OR_STALE")
+            return {"schema_version": "atlas-delivery-1", "report": release["derived"],
+                    "content_sha256": release["report_sha256"], "terms_sha256": release["terms_sha256"],
+                    "input_sha256": digest(request), "generated_at": self.clock()}
         if offer_id == "csv-normalize":
             rows = csv_rows(request)
             return {"schema_version": "normalized-csv-1", "columns": request["columns"],
@@ -95,7 +104,18 @@ class Workers:
     def verify(self, offer_id, request, artifact):
         checks, reasons = [], []
         try:
-            if offer_id == "csv-normalize":
+            if offer_id == "apac-compute-brief":
+                require_keys(artifact, {"schema_version", "report", "content_sha256", "terms_sha256", "input_sha256", "generated_at"}, "Atlas delivery")
+                from .atlas import TERMS, build_report, load_report
+                from .datapass import DataProducts
+                release = load_report(DataProducts().path)
+                rebuilt = build_report(release["observations"], release["derived"]["collection"], release["derived"]["as_of"])
+                checks = [artifact["schema_version"] == "atlas-delivery-1",
+                    artifact["content_sha256"] == request["report_sha256"] == rebuilt["report_sha256"],
+                    artifact["terms_sha256"] == digest(TERMS), artifact["input_sha256"] == digest(request),
+                    artifact["report"] == rebuilt["derived"],
+                    0 <= self.clock() - artifact["report"]["as_of"] <= request["max_age_seconds"]]
+            elif offer_id == "csv-normalize":
                 require_keys(artifact, {"schema_version", "columns", "numeric_columns", "rows", "row_count",
                     "input_sha256", "generated_at"}, "CSV artifact")
                 checks = [artifact["schema_version"] == "normalized-csv-1",
@@ -137,7 +157,7 @@ class Workers:
         return {"rule_version": "commerce-verifier-1", "accepted": not reasons and bool(checks),
             "checks_passed": sum(checks), "checks_total": len(checks), "reason_codes": reasons,
             "artifact_hash": digest(artifact), "request_hash": digest(request), "verified_at": self.clock(),
-            "assurance": "TRANSFORMATION_FIDELITY" if offer_id == "csv-normalize"
+            "assurance": "SOURCE_BOUND_DERIVED_REPORT_NOT_PRICE_OR_CAPACITY_ORACLE" if offer_id == "apac-compute-brief" else "TRANSFORMATION_FIDELITY" if offer_id == "csv-normalize"
                          else "CONFIGURED_RPC_CONSISTENCY_NOT_INDEPENDENT_ORACLE"}
 
 
