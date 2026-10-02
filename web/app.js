@@ -1,7 +1,10 @@
 'use strict';
 
+const API_PREFIX = document.querySelector('meta[name="machine-api-prefix"]')?.content || '';
+const PREVIEW = API_PREFIX === '/commerce' && new URLSearchParams(location.search).get('preview') === '1';
+let recordedWorkspace;
 const $ = (id) => document.getElementById(id);
-const state = {view: 'keys', snapshot: null, keys: [], offers: [], expires: null, busy: null, revoke: null, connected: false, mode: 'development', payments: {mandates: [], payments: [], resource_details: []}};
+const state = {view: PREVIEW ? 'funds' : 'keys', snapshot: null, keys: [], offers: [], expires: null, busy: null, revoke: null, connected: false, mode: 'development', payments: {mandates: [], payments: [], resource_details: []}};
 const names = {'csv-normalize': 'CSV normalization', 'arbitrum-state': 'Arbitrum state data'};
 const scopeNames = {read: 'Read', 'demands:write': 'Demand', 'supplies:write': 'Supply', 'orders:write': 'Orders', 'payments:request': 'Payment requests'};
 const headings = {
@@ -25,6 +28,9 @@ function button(text, className, action) {
 function credits(value) {
   return Number(value).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 6});
 }
+function paymentLabel(network, asset) {
+  return network === 'eip155:421614' && asset?.toLowerCase() === '0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d' ? 'test USDC' : 'tokens';
+}
 function date(value) {
   return value ? new Date(value * 1000).toLocaleString('en-US', {month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'}) : 'Never used';
 }
@@ -47,13 +53,24 @@ function formError(id, message = '') {
   $(id).hidden = !message;
 }
 async function api(path, body) {
+  if (PREVIEW) {
+    if (body !== undefined) throw new Error('Recorded workspace is read-only. Sign in to manage your agents.');
+    recordedWorkspace ||= fetch(`${API_PREFIX}/demo/workspace`, {credentials: 'omit'}).then(async response => {
+      if (!response.ok) throw new Error('Recorded workspace unavailable.');
+      return response.json();
+    }).catch(error => { recordedWorkspace = null; throw error; });
+    const record = await recordedWorkspace;
+    const key = {'/api/workspace': 'snapshot', '/api/keys': 'keys', '/healthz': 'health', '/api/payments': 'payments'}[path];
+    if (!key) throw new Error('Unavailable in the recorded workspace.');
+    return record[key];
+  }
   const options = {credentials: 'same-origin', headers: {Accept: 'application/json'}};
   if (body !== undefined) {
     options.method = 'POST';
     options.headers['Content-Type'] = 'application/json';
     options.body = JSON.stringify(body);
   }
-  const response = await fetch(path, options);
+  const response = await fetch(API_PREFIX + path, options);
   let result;
   try { result = await response.json(); } catch { throw new Error('The server returned an unreadable response. Refresh and try again.'); }
   if (!response.ok) {
@@ -99,6 +116,7 @@ function renderKeys() {
   const list = $('key-list');
   list.replaceChildren();
   if (!state.keys.length) {
+    if (PREVIEW) { list.append(empty('Private agent credentials', 'Sign in to manage API keys. This public record contains no credentials.')); return; }
     list.append(empty('Connect your first agent', 'Create an API key with the permissions your agent needs. Add a spending policy when it needs to buy.', openKey, 'Create API key'));
     return;
   }
@@ -108,7 +126,7 @@ function renderKeys() {
     const identity = el('div', 'key-identity');
     identity.append(el('h3', '', key.name), tag(key.status));
     main.append(identity);
-    if (key.status === 'active') main.append(button('Revoke', 'revoke-button', () => openRevoke(key)));
+    if (key.status === 'active' && !PREVIEW) main.append(button('Revoke', 'revoke-button', () => openRevoke(key)));
     const meta = el('div', 'key-meta');
     meta.append(el('span', '', `Expires ${date(key.expires)}`), el('span', '', key.last_used ? `Last used ${date(key.last_used)}` : 'Never used'));
     const scopes = el('div', 'scopes');
@@ -182,12 +200,18 @@ function renderActivity() {
     const identity = el('div');
     identity.append(el('h3', '', 'x402 payment'), el('p', '', `${date(payment.created)} · ${payment.id.slice(-8)}`));
     const amount = el('div', 'order-amount', credits(Number(payment.amount_atoms) / 1e6));
-    amount.append(el('small', '', `${payment.network} token`));
+    amount.append(el('small', '', paymentLabel(payment.network, payment.asset)));
     row.append(identity, tag(payment.status), amount, button('Details', 'quiet', () => {
       $('order-subtitle').textContent = 'External payment record';
       $('order-detail').replaceChildren(el('pre', 'receipt-json', JSON.stringify(payment, null, 2)));
       $('order-dialog').showModal();
     }));
+    if (payment.network === 'eip155:421614' && /^0x[0-9a-fA-F]{64}$/.test(payment.tx_hash || '')) {
+      const receiptLink = el('a', 'quiet', 'View receipt');
+      receiptLink.href = `https://sepolia.arbiscan.io/tx/${payment.tx_hash}`;
+      receiptLink.target = '_blank'; receiptLink.rel = 'noopener';
+      row.append(receiptLink);
+    }
     paymentList.append(row);
   }
 }
@@ -204,7 +228,8 @@ function renderMandates() {
     const values = el('div', 'policy-values');
     for (const [label, value] of [['Budget', mandate.budget], ['Held', mandate.reserved], ['Confirmed spending', mandate.spent]]) {
       const cell = el('div');
-      cell.append(el('span', '', label), el('strong', '', `${credits(value / 1e6)} tokens`));
+      const [network, asset] = mandate.payment_asset.split('/erc20:');
+      cell.append(el('span', '', label), el('strong', '', `${credits(value / 1e6)} ${paymentLabel(network, asset)}`));
       values.append(cell);
     }
     row.append(main, values, el('div', 'policy-info', mandate.payer), el('div', 'policy-info', mandate.payment_asset), el('div', 'meter-text', `Expires ${date(mandate.expires)}. Wallet balance is not tracked here.`));
@@ -223,6 +248,13 @@ function render() {
   $('environment-label').textContent = state.mode === 'production' ? 'Production environment' : 'Test environment';
   $('workspace-expiry').textContent = `Workspace access expires ${date(state.expires)}`;
   $('integrity-status').textContent = state.snapshot.journal_integrity ? 'Ledger integrity verified' : 'Ledger integrity check failed';
+  if (PREVIEW) {
+    $('mode-badge').textContent = 'Read-only';
+    $('environment-label').textContent = 'Recorded Sepolia workspace';
+    $('workspace-expiry').textContent = 'Recorded October 2, 2026 · No live wallet access';
+    $('integrity-status').textContent = 'Recorded receipt verified';
+    $('new-mandate').disabled = true;
+  }
 }
 async function refresh() {
   $('refresh').disabled = true;
@@ -233,9 +265,10 @@ async function refresh() {
     state.expires = credentials.workspace_expires;
     state.payments = payments;
     state.mode = health.mode;
-    connection(health.status === 'ok', health.status === 'ok' ? 'API connected' : 'API degraded');
+    connection(health.status === 'ok', PREVIEW ? 'Recorded workspace' : health.status === 'ok' ? 'API connected' : 'API degraded');
     render();
     setView(state.view);
+    if (PREVIEW) $('primary-action').disabled = true;
   } catch (error) {
     connection(false, 'Connection unavailable');
     notify(error.message || 'Connection failed. Refresh to retry.', true);
@@ -408,16 +441,15 @@ $('confirm-revoke').addEventListener('click', revokeKey);
 $('activity-filter').addEventListener('change', renderActivity);
 $('copy-secret').addEventListener('click', () => copy($('key-secret').value, () => { $('copy-secret').textContent = 'Copied'; }));
 $('copy-workspace').addEventListener('click', () => { if (state.snapshot) copy(state.snapshot.buyer_id, () => notify('Workspace ID copied.')); });
-const example = `curl ${window.location.origin}/api/workspace \\\n  -H "Authorization: Bearer $MACHINE_API_KEY"`;
+const example = `curl ${window.location.origin}${API_PREFIX}/api/workspace \\\n  -H "Authorization: Bearer $MACHINE_API_KEY"`;
 $('api-example').textContent = example;
-$('api-endpoint').textContent = window.location.origin;
+$('api-endpoint').textContent = window.location.origin + API_PREFIX;
 $('copy-example').addEventListener('click', () => copy(example, () => { $('copy-example').textContent = 'Copied'; }));
 
 async function initialize() {
   try {
     state.mode = (await api('/healthz')).mode;
-    const catalog = await api('/api/catalog');
-    state.offers = catalog.offers;
+    if (PREVIEW) { await refresh(); return; }
     try { await api('/api/sessions', {}); }
     catch (error) {
       if (state.mode !== 'production') throw error;
@@ -425,6 +457,7 @@ async function initialize() {
       if (!$('login-dialog').open) $('login-dialog').showModal();
       return;
     }
+    state.offers = (await api('/api/catalog')).offers;
     await refresh();
   } catch (error) {
     connection(false, 'Connection unavailable');
@@ -467,6 +500,7 @@ $('login-form').addEventListener('submit', async (event) => {
     state.busy = null;
     closeDialog('login-dialog');
     notify('');
+    state.offers = (await api('/api/catalog')).offers;
     await refresh();
   } catch (error) { formError('login-error', error.message); }
   finally { state.busy = null; $('login-submit').disabled = false; }

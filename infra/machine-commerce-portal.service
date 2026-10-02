@@ -1,0 +1,24 @@
+[Unit]
+Description=Economic Machine product site and isolated engine preview
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+WorkingDirectory=/srv/skew/economic-machine-commerce-20261002
+Environment=MACHINE_SITE_DIR=/srv/skew/economic-machine-site-20261002/dist
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/srv/skew/economic-machine-commerce-20261002/.venv/bin/uvicorn machine_commerce.portal:app --host 127.0.0.1 --port 4270 --workers 1 --limit-concurrency 16 --backlog 16 --timeout-keep-alive 5 --no-access-log
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+UMask=0077
+MemoryMax=256M
+TasksMax=32
+
+[Install]
+WantedBy=multi-user.target

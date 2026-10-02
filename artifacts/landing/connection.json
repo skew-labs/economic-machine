@@ -1,0 +1,18 @@
+{
+  "unauthenticated_management_rejected": true,
+  "existing_operator_login_https_cookie_scoped": true,
+  "authenticated_workspace": true,
+  "authenticated_keys": true,
+  "authenticated_payments": true,
+  "authenticated_catalog": true,
+  "session_resumes_without_budget_reset": true,
+  "public_demo_standard": true,
+  "public_demo_tight": true,
+  "public_demo_fresh": true,
+  "public_demo_budget": true,
+  "public_demo_recovery": true,
+  "all_site_console_assets_resolve": true,
+  "existing_root_preserved": true,
+  "merchant_post_only_boundary_preserved": true,
+  "wallet_or_payment_actions": 0
+}
