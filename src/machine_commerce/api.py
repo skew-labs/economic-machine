@@ -549,6 +549,10 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     def data_javascript():
         return FileResponse(web / "data.js")
 
+    @app.get("/mining.js")
+    def mining_javascript():
+        return FileResponse(web / "mining.js")
+
     @app.get("/tasks.js")
     def tasks_javascript():
         return FileResponse(web / "tasks.js")

@@ -1,0 +1,42 @@
+{
+  "compiler_sha256": "fb03a29a517452b9f12bcf459ef37d0a543765bb3bbc911e70a87d6a37c30d5f",
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "viaIR": true,
+    "evmVersion": "shanghai",
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode.object",
+          "evm.deployedBytecode.object"
+        ]
+      }
+    }
+  },
+  "sources": {
+    "MachineMining.sol": "455b6d754cc90dfdf81d8f207923e61972bddb28f5852599c74f3cd518250f52",
+    "TestCommerceToken.sol": "a35b9989bcb305f4001ad052abe0535784bcc36e7b8398038a2e2b504acc6db2",
+    "MiningAdversary.sol": "51f2e0e5e146be057dbda856dfcdfabcbe9b7eab886fe869fcdfbd3cc9fef4c8"
+  },
+  "contracts": {
+    "MachineMining": {
+      "runtime_bytes": 10530,
+      "creation_sha256": "dfac0ca32ceded9a423958d447ac78fc3dfa7505f2ca32c9236d5adce160ba07"
+    },
+    "MiningAdversary": {
+      "runtime_bytes": 1933,
+      "creation_sha256": "be0b274310550d4c943a7b473df0b8c27b4077d057ac9a6ac80876fb92e45a92"
+    },
+    "TestCommerceToken": {
+      "runtime_bytes": 1421,
+      "creation_sha256": "361f86b7288a796f2bbd6c8e7d6f7c8b2fac5318473fb98d2c6c6cafad522b6f"
+    }
+  },
+  "warnings": [],
+  "deployment": "NONE",
+  "assurance": "COMPILED_ON_REMOTE_NOT_PUBLIC_TESTNET"
+}

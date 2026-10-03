@@ -1,0 +1,16 @@
+{
+  "accepted": true,
+  "source_commit": "2b47f06a3a2c7d04c9e8c204e6c41c564d762f1e",
+  "independent_checkout": "/srv/skew/economic-machine-commerce-20261002/build/mining-independent",
+  "verification": {
+    "accepted": true,
+    "manifest_sha256": "01a300a445a7cee2a0e9d2c79c72d6f7e536e44d5b6a0f9a6aa34efde0fb096d",
+    "files_checked": 440,
+    "assurance": "FILE_INTEGRITY_NOT_EXTERNAL_TRUTH_OR_PRODUCTION_CERTIFICATION"
+  },
+  "native_source_hashes_match": true,
+  "installed_native_hash_matches": true,
+  "public_manifest_matches_github": true,
+  "chain_transactions": 0,
+  "scope": "FRESH_GITHUB_CHECKOUT_AND_PUBLIC_FILE_INTEGRITY_NOT_NEW_TESTNET_RECEIPT"
+}

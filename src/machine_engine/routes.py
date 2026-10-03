@@ -11,6 +11,8 @@ def engine_routes(workspace_dependency, *, require_owner=None):
 
     router = APIRouter(prefix="/api/engine")
     router.include_router(task_routes(workspace_dependency, require_owner=require_owner))
+    from .mining_routes import mining_routes
+    router.include_router(mining_routes(workspace_dependency, require_owner=require_owner))
     owner = [Depends(require_owner)] if require_owner else []
 
     @router.get("/control")
