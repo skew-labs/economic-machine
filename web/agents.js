@@ -173,6 +173,7 @@
       notify(result.error_code || `Task ${result.status.toLowerCase().replaceAll("_"," ")}.` , Boolean(result.error_code)); await refresh();
     }); tasks.append(task); root.append(tasks);
     const history = section("Execution history", "Agent → policy → connection → receipt");
+    history.id = "agent-run-history";
     if (!control.runs.length) history.append(el("p", "ops-empty", "Your agents' tasks, holds and failure reasons appear here."));
     for (const run of control.runs) {
       const row = el("article", "agent-run"), top = el("div", "agent-card-head");

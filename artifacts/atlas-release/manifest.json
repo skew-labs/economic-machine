@@ -1,6 +1,6 @@
 {
   "schema": "machine-release-proof-1",
-  "created_at": 1791004154,
+  "created_at": 1791004361,
   "files": [
     {
       "path": "LICENSE",
@@ -124,8 +124,8 @@
     },
     {
       "path": "artifacts/atlas-release/line-count.json",
-      "bytes": 13136,
-      "sha256": "63435b0507c8d5e02820a6789c9026589f57e56302a2811b237bd167a45ddeb4"
+      "bytes": 13137,
+      "sha256": "5fe7b656fb02b65892e42c64dacfd2ce284218ae5cdc67c1c2e4061775826ed8"
     },
     {
       "path": "artifacts/atlas-release/live-web-check.json",
@@ -1109,8 +1109,8 @@
     },
     {
       "path": "web/agents.js",
-      "bytes": 17842,
-      "sha256": "c19a030eba29c321ffc8527f16818d293b39dd7b729320d9b5930b151e0387e5"
+      "bytes": 17880,
+      "sha256": "6f860838dc35fd829910699760c358c21de267a65c00b097e7fd6a8583c6658e"
     },
     {
       "path": "web/app.css",
@@ -1169,8 +1169,8 @@
     },
     {
       "path": "web/operations.js",
-      "bytes": 36913,
-      "sha256": "dfddd7b3267f71f4b28b5553f1aa504abe85db3bff108bde04807fcc4feab2ad"
+      "bytes": 36986,
+      "sha256": "0621c864440e7e1f2e88003d3ef0ebf52c733d5a9e81e2762645b49cfc543e7d"
     },
     {
       "path": "web/submission.css",
@@ -1206,12 +1206,12 @@
     "deployment_proof_sha256": "ed24181d7869e91d5f6b3ebc09603236d2d45b4073d9c548dc6036bd75a6d458",
     "live_new_datapass_purchases": 0,
     "economic_operations": 20,
-    "engine_implementation_nonblank": 20484,
+    "engine_implementation_nonblank": 20488,
     "target_30000_engine_nonblank_reached": false,
     "native_authority": "CANDIDATE_ONLY",
     "agent_control": "SAME_ENGINE_DATABASE_SHARED_USDT_TURNOVER",
     "raw_archives_publicly_resold": false
   },
   "assurance": "SOURCE_AUDIT_PLUS_REPRODUCIBLE_LOCAL_EVM_AND_NATIVE_TESTS_NOT_PRODUCTION_CERTIFICATION",
-  "manifest_sha256": "faca7ca7d3f850621dc8f820c19dda9e05df0c36241627bf97dcd85aae70454c"
+  "manifest_sha256": "731f1a471bc8e6a0078c40503ef41ae67be11d876b1a6865d6a070c079194c2a"
 }

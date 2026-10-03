@@ -2,8 +2,8 @@
   "schema": "machine-line-audit-1",
   "engine_implementation": {
     "files": 80,
-    "physical": 21845,
-    "nonblank": 20484
+    "physical": 21849,
+    "nonblank": 20488
   },
   "native_cpp_implementation": {
     "files": 21,
@@ -17,8 +17,8 @@
   },
   "operational_scripts": {
     "files": 32,
-    "physical": 3692,
-    "nonblank": 3295
+    "physical": 3693,
+    "nonblank": 3296
   },
   "implementation_files": [
     {
@@ -243,8 +243,8 @@
     },
     {
       "path": "web/agents.js",
-      "physical": 197,
-      "nonblank": 194
+      "physical": 198,
+      "nonblank": 195
     },
     {
       "path": "web/app.css",
@@ -278,8 +278,8 @@
     },
     {
       "path": "web/operations.js",
-      "physical": 997,
-      "nonblank": 995
+      "physical": 1000,
+      "nonblank": 998
     },
     {
       "path": "web/submission.css",

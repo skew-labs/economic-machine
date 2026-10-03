@@ -200,9 +200,12 @@
       const item = el("li", done ? "complete" : "");
       const link = button("", "setup-step", () => {
         C.setView(view);
-        if (index === 1 || index === 2) {
-          const target = document.querySelector(index === 1 ? "#agent-policy-setup" : "#agent-register-setup");
-          if (target) {target.open = true; target.scrollIntoView({block: "center", behavior: "smooth"});}
+        if (index > 0) {
+          const target = document.querySelector(["", "#agent-policy-setup", "#agent-register-setup", "#agent-run-history"][index]);
+          if (target) {
+            if (target.tagName === "DETAILS") target.open = true;
+            target.scrollIntoView({block: "center", behavior: "smooth"});
+          }
         }
       });
       link.append(el("span", "step-number", done ? "✓" : String(index + 1)), el("strong", "", title), el("span", "step-detail", detail));
