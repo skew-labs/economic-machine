@@ -1,0 +1,38 @@
+{
+  "accepted": true,
+  "checked_at": "2026-10-03T08:10:36.162773+00:00",
+  "subscription_status": "PAYMENT_PROVIDER_NOT_CONFIGURED",
+  "facilitator_supports_arbitrum_v2_exact": true,
+  "anonymous_provider_check_blocked": true,
+  "unconfigured_merchant_closed": true,
+  "compute_connection": {
+    "id": "gate402-inference",
+    "name": "Gate402",
+    "kind": "INFERENCE_API",
+    "url": "https://gate402.app/v1/infer",
+    "network": "eip155:42161",
+    "credential": "CUSTOMER_WALLET_X402",
+    "api_key_required": false,
+    "status": "QUOTE_OBSERVED",
+    "payment_adapter_status": "NOT_ADMITTED",
+    "purchase_enabled": false,
+    "capacity_verified": false,
+    "workloads_started": 0,
+    "checked_at": 1791015035,
+    "request_hash": "eaaa8844100c580909d75a4d38bfbef5943b7eb3cc3b9ca4da5e6ab471548d5b",
+    "evidence_scope": "UNSIGNED_PAYMENT_REQUIREMENTS_ONLY",
+    "signatures_sent": 0,
+    "quote": {
+      "asset": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+      "pay_to": "0x8e57bfde053dbb6862991759c19affc5f383d5d0",
+      "amount_atoms": "1000",
+      "max_timeout_seconds": 300
+    },
+    "challenge_hash": "3a8eb13437bf337f1db8fbd4a7f5eef82d42de88291d7a9b05c064dd32bf16e7",
+    "challenge_hash_scheme": "SHA256_RAW_X402_JSON_BYTES"
+  },
+  "customer_signatures": 0,
+  "payments_submitted": 0,
+  "gpu_workloads_started": 0,
+  "source_matches_deployed_console": true
+}

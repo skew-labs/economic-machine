@@ -51,6 +51,10 @@ def main():
                   "artifacts/atlas-release/console-ux-site-deployment.json"})
     paths.add("docs/SERVICE_COMMERCE.md")
     paths.add("docs/LANDING_20261003.md")
+    paths.update({"docs/DOMAIN_MERCHANT_COMPUTE_20261003.md", "deploy/subscriptions.conf", "deploy/skew-deals-page.tsx"})
+    for name in ["merchant-compute-tests.log", "subscription-preflight-tests.log", "compute-provider-tests.log",
+                 "merchant-compute-live.json", "merchant-validation.json", "provider-ui-tests.log"]:
+        paths.add("artifacts/atlas-release/" + name)
     paths.add("artifacts/atlas-release/landing-route-tests.log")
     for path in (ROOT / "artifacts/landing-20261003").iterdir():
         if path.is_file() and path.suffix in {".json", ".jpg", ".png"}:

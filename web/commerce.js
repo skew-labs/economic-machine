@@ -115,10 +115,22 @@
         atlas.append(action('View data licenses', 'button secondary', () => C.setView('data'))); grid.append(atlas);
       }
       if (filter !== 'data' && !catalog.products.some(p => p.category === 'compute')) {
-        const compute = panel('Compute providers', 'No GPU or compute seller is connected to this deployment.');
-        compute.classList.add('commerce-product'); compute.prepend(mark('engine'));
-        compute.append(text('span', 'commerce-status', 'No providers connected'),
-          link('Provider setup guide', 'https://github.com/skew-labs/economic-machine/blob/main/docs/SERVICE_COMMERCE.md')); grid.append(compute);
+        for (const provider of catalog.compute_connections?.providers || []) {
+          const compute = panel(`${provider.name} · AI compute`, 'Pay-per-request inference through your wallet. No provider API key needed.');
+          compute.classList.add('commerce-product'); compute.prepend(mark('engine'));
+          const status = text('p', 'commerce-caption', 'Check the current Arbitrum USDC price before connecting payments.');
+          const check = action('Check provider price', 'button secondary', async () => {
+            if (!requireOwner()) return;
+            check.disabled = true;
+            try {
+              const result = await C.api(`/api/commerce/compute/${provider.id}/check`, {});
+              status.textContent = result.quote ? `${amount(BigInt(result.quote.amount_atoms))} USDC quoted · payment adapter pending` : 'Provider quote unavailable. No payment sent.';
+            } catch (error) { status.textContent = error.message; }
+            finally { check.disabled = false; }
+          });
+          compute.append(status, check, text('p', 'commerce-caption', 'Inference API · GPU capacity unverified · purchasing not open yet'),
+            link('Provider details', 'https://gate402.app/')); grid.append(compute);
+        }
       }
       root.append(grid);
       const developer = panel('Machine-to-machine trading', 'Your agents find sellers, agree on price and pay within your limits. Every purchase has a receipt.');
@@ -138,7 +150,7 @@
           const item = panel(plan.name, plan.description); item.classList.add('commerce-product'); item.prepend(mark('atlas'));
           item.append(text('div', 'commerce-price', `${cost(plan.price)} USDC / month`),
             text('p', 'commerce-caption', `${cost(plan.duration_seconds / 86400)} days · prepaid · no automatic charge`),
-            text('span', 'commerce-status', 'Payment provider not connected'),
+            text('span', 'commerce-status', 'Receiving wallet needed'),
             action('View subscription', 'button secondary', () => openPlan(plan))); grid.append(item);
         }
       }

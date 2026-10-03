@@ -1,0 +1,9 @@
+test_discovery_examples_with_float_prices_do_not_enter_payment_math (test_compute_registry.ComputeRegistryTests.test_discovery_examples_with_float_prices_do_not_enter_payment_math) ... ok
+test_keyless_unsigned_price_is_observed_without_claiming_capacity_or_delivery (test_compute_registry.ComputeRegistryTests.test_keyless_unsigned_price_is_observed_without_claiming_capacity_or_delivery) ... ok
+test_response_success_or_wrong_resource_is_not_paid_compute_evidence (test_compute_registry.ComputeRegistryTests.test_response_success_or_wrong_resource_is_not_paid_compute_evidence) ... ok
+test_wrong_network_amount_domain_or_duplicate_options_remain_unavailable (test_compute_registry.ComputeRegistryTests.test_wrong_network_amount_domain_or_duplicate_options_remain_unavailable) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.031s
+
+OK

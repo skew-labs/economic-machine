@@ -1,9 +1,9 @@
 {
   "schema": "machine-line-audit-1",
   "engine_implementation": {
-    "files": 83,
-    "physical": 22751,
-    "nonblank": 21359
+    "files": 85,
+    "physical": 23123,
+    "nonblank": 21704
   },
   "native_cpp_implementation": {
     "files": 21,
@@ -11,14 +11,14 @@
     "nonblank": 6310
   },
   "tests": {
-    "files": 39,
-    "physical": 7945,
-    "nonblank": 7159
+    "files": 43,
+    "physical": 8308,
+    "nonblank": 7473
   },
   "operational_scripts": {
-    "files": 34,
-    "physical": 3825,
-    "nonblank": 3412
+    "files": 38,
+    "physical": 4073,
+    "nonblank": 3628
   },
   "implementation_files": [
     {
@@ -98,8 +98,8 @@
     },
     {
       "path": "src/machine_commerce/api.py",
-      "physical": 546,
-      "nonblank": 465
+      "physical": 570,
+      "nonblank": 487
     },
     {
       "path": "src/machine_commerce/atlas.py",
@@ -110,6 +110,11 @@
       "path": "src/machine_commerce/checkout.py",
       "physical": 285,
       "nonblank": 266
+    },
+    {
+      "path": "src/machine_commerce/compute_registry.py",
+      "physical": 89,
+      "nonblank": 79
     },
     {
       "path": "src/machine_commerce/datapass.py",
@@ -135,6 +140,11 @@
       "path": "src/machine_commerce/market.py",
       "physical": 316,
       "nonblank": 289
+    },
+    {
+      "path": "src/machine_commerce/merchant.py",
+      "physical": 247,
+      "nonblank": 232
     },
     {
       "path": "src/machine_commerce/operations.py",
@@ -268,8 +278,8 @@
     },
     {
       "path": "web/commerce.js",
-      "physical": 312,
-      "nonblank": 311
+      "physical": 324,
+      "nonblank": 323
     },
     {
       "path": "web/console-theme.css",
@@ -479,6 +489,11 @@
       "nonblank": 182
     },
     {
+      "path": "tests/test_compute_registry.py",
+      "physical": 74,
+      "nonblank": 64
+    },
+    {
       "path": "tests/test_datapass_contract.py",
       "physical": 172,
       "nonblank": 150
@@ -534,6 +549,11 @@
       "nonblank": 54
     },
     {
+      "path": "tests/test_hosted_merchant.py",
+      "physical": 213,
+      "nonblank": 185
+    },
+    {
       "path": "tests/test_market.py",
       "physical": 189,
       "nonblank": 165
@@ -587,6 +607,16 @@
       "path": "tests/test_submission_evidence.py",
       "physical": 201,
       "nonblank": 166
+    },
+    {
+      "path": "tests/test_subscription_configuration.py",
+      "physical": 25,
+      "nonblank": 21
+    },
+    {
+      "path": "tests/test_subscription_preflight.py",
+      "physical": 51,
+      "nonblank": 44
     },
     {
       "path": "tests/test_wallet_auth.py",

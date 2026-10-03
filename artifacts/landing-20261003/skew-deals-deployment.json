@@ -1,0 +1,40 @@
+{
+  "deployment": {
+    "id": "appgdep_6ac0b600fba88191b6f1f6d52c32f27c",
+    "project_id": "appgprj_6abe8a0fa65c8191acf2660c775d43c4",
+    "title": "skew — APAC List-Price Markets",
+    "version_id": "appgprj_6abe8a0fa65c8191acf2660c775d43c4~appgver_23c992c41d808191b1b64a59d0364245",
+    "type": "publish",
+    "status": "succeeded",
+    "url": "https://skew-index-terminal.angus4314.chatgpt.site",
+    "has_mcp": false,
+    "screenshot_asset_pointer": null,
+    "provider_deployment_id": "site---6abe8a0fa65c8191acf2660c775d43c4",
+    "failure_message": null,
+    "env_set_revision": 0,
+    "updated_at": "2026-10-03T08:00:18.266161+00:00"
+  },
+  "version": {
+    "id": "appgprj_6abe8a0fa65c8191acf2660c775d43c4~appgver_23c992c41d808191b1b64a59d0364245",
+    "version_number": 16,
+    "source": {
+      "commit_sha": "fccc149e646d182f094cbe9c4da78e90f9a52514"
+    },
+    "archive_storage": {
+      "archive_format": "tar",
+      "sediment_file_id": "file_00000000b1648206a058334122a1bcd8",
+      "content_hash": "sha256:6ef8b1d93fbff910bb0facbab15836a28baf68d22fc71afa0e80067a192ae7e0",
+      "size_bytes": 12154880,
+      "file_count": 170
+    }
+  },
+  "custom_domain": {
+    "hostname": "skew.deals",
+    "status": "active",
+    "ssl_status": "active",
+    "provider_status": "active",
+    "project_id": "appgprj_6abe8a0fa65c8191acf2660c775d43c4"
+  },
+  "audience_preserved": true,
+  "existing_app_backend_preserved": true
+}

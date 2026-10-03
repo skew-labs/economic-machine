@@ -5,7 +5,7 @@ The console is the control surface of the Economic Machine engine, with one work
 LLMs interpret intent or handle unknown states; the kernel handles typed state, allowed transitions,
 invariants, capital reservations and verifiable receipts.
 
-[Open the console](https://machine.148-113-153-116.nip.io/commerce/console) ·
+[Skew homepage](https://skew.deals) · [Open the console](https://machine.148-113-153-116.nip.io/commerce/console) ·
 [Self-hosting](docs/SELF_HOSTING.md) · [MIT license](LICENSE) ·
 [Core extraction and provenance](docs/CORE_EXTRACTION.md).
 

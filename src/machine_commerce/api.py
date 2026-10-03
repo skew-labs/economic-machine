@@ -28,7 +28,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, payment_transport=None, payment_chain=None,
-               subscription_plans=None):
+               subscription_plans=None, merchant_config=None, merchant_transport=None):
     root = Path(__file__).resolve().parents[2]
     web = root / "web"
     store = Store(db_path or os.environ.get("COMMERCE_DB", str(root / "runtime/commerce.sqlite3")), clock)
@@ -39,6 +39,12 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     plan_file = os.environ.get("MACHINE_SUBSCRIPTIONS_FILE")
     checkout = Checkout(store, market, payments, subscription_plans if subscription_plans is not None
                         else config_file(plan_file) if plan_file else DEFAULT_PLANS)
+    from .merchant import HostedMerchant
+    merchant = HostedMerchant(checkout, merchant_config if merchant_config is not None else
+        config_file(os.environ.get("MACHINE_MERCHANTS_FILE")), merchant_transport)
+    merchant.refresh_offers()
+    from .compute_registry import ComputeRegistry
+    compute = ComputeRegistry(store)
     operations = Operations(store, settings)
     access = Access(store, settings.mode)
     wallet_auth = WalletAuth(store, settings.origin)
@@ -50,6 +56,7 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
         async def timers():
             while True:
                 try:
+                    await asyncio.to_thread(merchant.refresh_offers)
                     await asyncio.to_thread(market.tick)
                     _app.state.timer_error = None
                 except Exception:
@@ -59,8 +66,12 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
         async def payment_recovery():
             while True:
                 try:
+                    if merchant.config:
+                        merchant_result = await asyncio.to_thread(merchant.recover)
+                    else:
+                        merchant_result = {"failures": 0}
                     result = await asyncio.to_thread(payments.recover)
-                    _app.state.payment_worker_error = "PAYMENT_RECOVERY_DEGRADED" if result["failures"] else None
+                    _app.state.payment_worker_error = "PAYMENT_RECOVERY_DEGRADED" if result["failures"] or merchant_result["failures"] else None
                 except Exception:  # noqa: BLE001 - keep recovery alive without exposing authorization material.
                     _app.state.payment_worker_error = "PAYMENT_RECOVERY_FAILED"
                 await asyncio.sleep(15)
@@ -84,6 +95,8 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     app.state.wallet_auth = wallet_auth
     app.state.market, app.state.payments, app.state.operations = market, payments, operations
     app.state.checkout = checkout
+    app.state.merchant = merchant
+    app.state.compute = compute
     app.state.timer_error = None
     app.state.payment_worker_error = None
 
@@ -252,7 +265,18 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
 
     @app.get("/api/commerce/catalog")
     def commerce_catalog():
-        return checkout.catalog()
+        return {**checkout.catalog(), "compute_connections": compute.catalog()}
+
+    @app.post("/api/commerce/compute/{provider_id}/check")
+    def compute_connection_check(provider_id: str, raw: dict, sid=Depends(buyer)):
+        require_keys(raw, set(), "unsigned provider check")
+        return compute.probe(provider_id)
+
+    @app.post("/api/commerce/merchant/{resource_id}")
+    def subscription_merchant(resource_id: str, raw: dict, request: Request):
+        status, headers, body = merchant.handle(resource_id, request.headers.get("idempotency-key"),
+                                               raw, request.headers.get("payment-signature"))
+        return JSONResponse(body, status_code=status, headers={**headers, "Cache-Control": "no-store"})
 
     @app.get("/api/commerce/checkouts")
     def commerce_checkouts(sid=Depends(buyer)):

@@ -8,9 +8,10 @@ import sys
 from eth_account.messages import hash_domain
 
 from economic_machine.journal import verify_journal
-from machine_commerce.operations import Settings
+from machine_commerce.operations import Settings, config_file
 from machine_commerce.payments import validate_profiles
 from machine_commerce.store import Store
+from machine_commerce.domain import now_seconds
 from machine_commerce.transport import HTTPS, Chain, integer
 
 
@@ -30,13 +31,18 @@ def main():
         if not os.environ.get("COMMERCE_DB") or not os.path.isfile(os.environ["COMMERCE_DB"]):
             reason = "EXISTING_DURABLE_DATABASE_REQUIRED"
             raise ValueError("EXISTING_DURABLE_DATABASE_REQUIRED")
-        store = Store(os.environ["COMMERCE_DB"])
+        store = Store(os.environ["COMMERCE_DB"], now_seconds)
         with store.connect() as db:
             if not verify_journal(db):
                 reason = "JOURNAL_INTEGRITY_FAILED"
                 raise ValueError("JOURNAL_INTEGRITY_FAILED")
             owners = {row[0] for row in db.execute("SELECT s.id,o.subject FROM sessions s JOIN operator_identities o "
                 "ON o.session_id=s.id WHERE s.expires>?", (store.clock(),)) if row[1] in settings.operators}
+            merchants = config_file(os.environ.get("MACHINE_MERCHANTS_FILE"))
+            if db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='merchant_publishers'").fetchone():
+                owners.update(row[0] for row in db.execute("SELECT s.id,m.resource_id FROM sessions s "
+                    "JOIN merchant_publishers m ON m.owner=s.id WHERE s.expires>?", (store.clock(),))
+                    if row[1] in merchants and row[0] == "merchant-" + row[1])
         transport = HTTPS({p["rpc_url"] for p in profiles.values()})
         chain = Chain(transport)
         for rid, p in profiles.items():
