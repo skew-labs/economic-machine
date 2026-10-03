@@ -1,0 +1,17 @@
+{
+  "accepted": true,
+  "method": "FRESH_GITHUB_BRANCH_CLONE_NOT_LOCAL_WORKTREE_OR_DEPLOYMENT_COPY",
+  "source_commit": "e3ee501cb99334fb7b5322e8b3096b573cde9896",
+  "github_branch": "feat/tasks-pr1",
+  "verification": {
+    "accepted": true,
+    "manifest_sha256": "8a4b5bd9e65504b95486a9fd82175ce048dbde6fef00b431222c7bee21fe7601",
+    "files_checked": 387,
+    "assurance": "FILE_INTEGRITY_NOT_EXTERNAL_TRUTH_OR_PRODUCTION_CERTIFICATION"
+  },
+  "public_deployment_manifest_matches": true,
+  "fresh_checkout_tests": 23,
+  "deployed_portal_override_sha256": "264361aab576044d382408c808f88ce68981265190606445480f69b1f54de51f",
+  "services_active": true,
+  "assurance": "SOURCE_AND_FILE_INTEGRITY_NOT_PAYMENT_OR_PRODUCTION_CERTIFICATION"
+}
