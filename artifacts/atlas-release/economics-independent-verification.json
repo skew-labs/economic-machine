@@ -1,0 +1,19 @@
+{
+  "schema": "economic-independent-github-verification-1",
+  "published_commit": "ae7fa42bc53ade01996a82d4e51830372a53617c",
+  "source_sha256_matches": true,
+  "library_sha256_matches": true,
+  "library_sha256": "0cf9b82bb5c362ae2b1b6c402a2038a8f4706f15f23cfd27db56cb346d271035",
+  "native_checks": 287,
+  "asan_ubsan_checks": 287,
+  "integration_tests": 15,
+  "source": "PUBLIC_GITHUB_FRESH_CLONE_ON_AUTHORIZED_CANADA_HOST",
+  "financial_transmissions": 0,
+  "public_git_manifest_verified_after_restore_of_rebuild_metadata": {
+    "accepted": true,
+    "manifest_sha256": "7dcc5c5ded9647337356329d5419077efc592c835e4ba36e25a7eb596c7768f1",
+    "files_checked": 219,
+    "assurance": "FILE_INTEGRITY_NOT_EXTERNAL_TRUTH_OR_PRODUCTION_CERTIFICATION"
+  },
+  "evidence_sha256": "e07145cba529f8c15cad0708127214e9a1a00a82a81a83e6df436315b7ffdb14"
+}

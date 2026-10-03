@@ -1,6 +1,6 @@
 {
   "schema": "machine-release-proof-1",
-  "created_at": 1791001782,
+  "created_at": 1791002141,
   "files": [
     {
       "path": "LICENSE",
@@ -73,6 +73,21 @@
       "sha256": "4450ec3d6c495ad2ec797127333dfe9cf6410a8585a6570fc27eccda4efedcac"
     },
     {
+      "path": "artifacts/atlas-release/economics-independent-build.log",
+      "bytes": 2515,
+      "sha256": "459f59f5bfea3c661f61c554a0adbff699e06387ba37d13aeb2072f4e6585069"
+    },
+    {
+      "path": "artifacts/atlas-release/economics-independent-tests.log",
+      "bytes": 2807,
+      "sha256": "7150dea59345696ded9e354fe55b064563062b480e0a330ece5e90ed29826545"
+    },
+    {
+      "path": "artifacts/atlas-release/economics-independent-verification.json",
+      "bytes": 844,
+      "sha256": "dde4b0dfd42ec9fde74005cc6429db566082bce60997f9e1b91362ee7fdeadeb"
+    },
+    {
       "path": "artifacts/atlas-release/economics-integration-tests.log",
       "bytes": 2807,
       "sha256": "9c41f1dd1f6f97d19b380fb28beb45270ce4ac44e8ff5b97ec361bc19c58d54e"
@@ -100,7 +115,7 @@
     {
       "path": "artifacts/atlas-release/line-count.json",
       "bytes": 13043,
-      "sha256": "6a0951bc943733f783a303f978dad6fae568c0a16f98a2e19906f7c6bdbde078"
+      "sha256": "c3a946411ca5ae6714bab31f4780c8bac517564c206c7958f3a48516c6472814"
     },
     {
       "path": "artifacts/atlas-release/live-web-check.json",
@@ -236,6 +251,11 @@
       "path": "docs/ECONOMIC_PRIMITIVES.md",
       "bytes": 7828,
       "sha256": "674810b0e5f50609556f1f80cd4e522355cebb64200454cfe756161254e9f421"
+    },
+    {
+      "path": "docs/ECONOMIC_RELEASE_20261003.md",
+      "bytes": 4572,
+      "sha256": "a2e663ec2dc11cd2546472f5704d18db5f7b55f1dfcb455bba348d21423f4d27"
     },
     {
       "path": "native/CMakeLists.txt",
@@ -494,8 +514,8 @@
     },
     {
       "path": "scripts/release_proof.py",
-      "bytes": 5856,
-      "sha256": "9c9c2cc46b10477460c7cbba9116ca2d5c6234075eed8267c936a2e4cd9b8ddd"
+      "bytes": 6151,
+      "sha256": "8b13794bb7254cc6f8a8211d1841ade5f6b1e49ba82c2c250bcf547b4fcb5009"
     },
     {
       "path": "scripts/sepolia_demo.py",
@@ -1113,5 +1133,5 @@
     "raw_archives_publicly_resold": false
   },
   "assurance": "SOURCE_AUDIT_PLUS_REPRODUCIBLE_LOCAL_EVM_AND_NATIVE_TESTS_NOT_PRODUCTION_CERTIFICATION",
-  "manifest_sha256": "7dcc5c5ded9647337356329d5419077efc592c835e4ba36e25a7eb596c7768f1"
+  "manifest_sha256": "91f1444116ce9601f77b52c3e3a5792dde46b8c8ab781011fe9f3b611ec27725"
 }

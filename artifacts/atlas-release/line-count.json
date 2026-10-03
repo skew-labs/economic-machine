@@ -17,8 +17,8 @@
   },
   "operational_scripts": {
     "files": 32,
-    "physical": 3687,
-    "nonblank": 3290
+    "physical": 3691,
+    "nonblank": 3294
   },
   "implementation_files": [
     {

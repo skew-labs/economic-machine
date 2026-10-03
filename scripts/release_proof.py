@@ -39,6 +39,10 @@ def main():
                  "agent-control-tests.log", "agent-focused-tests.log", "agent-portal-tests.log", "agent-control-validation.json", "native-integration-tests.log", "dataset-scope-tests.log", "final-source-tests.log", "line-count.json", "live-web-check.json"]:
         paths.add("artifacts/atlas-release/" + name)
     paths.update({"artifacts/arbitrum-sepolia/datapass-deployment.json", "artifacts/arbitrum-sepolia/datapass-deployment-review.json"})
+    paths.update({"artifacts/atlas-release/economics-independent-build.log",
+                  "artifacts/atlas-release/economics-independent-tests.log",
+                  "artifacts/atlas-release/economics-independent-verification.json",
+                  "docs/ECONOMIC_RELEASE_20261003.md"})
     for path in (ROOT / "artifacts/atlas-release/screenshots").iterdir():
         if path.suffix in {".png", ".jpg"}:
             paths.add(str(path.relative_to(ROOT)))
