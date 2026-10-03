@@ -1,0 +1,16 @@
+{
+  "accepted": true,
+  "source_commit": "46c780897344939a889bcd111c3b513e736857a8",
+  "independent_checkout": "/srv/skew/economic-machine-commerce-20261002/build/solution-independent",
+  "verification": {
+    "accepted": true,
+    "manifest_sha256": "2e50f98f61e31d2b39b48625bc9466f200d6c73eb99b2146ba00823b2aeac72b",
+    "files_checked": 468,
+    "assurance": "FILE_INTEGRITY_NOT_EXTERNAL_TRUTH_OR_PRODUCTION_CERTIFICATION"
+  },
+  "native_source_hashes_match": true,
+  "installed_native_hash_matches": true,
+  "public_manifest_matches_github": true,
+  "chain_transactions": 0,
+  "scope": "FRESH_GITHUB_CHECKOUT_AND_PUBLIC_FILE_INTEGRITY_NOT_VRF_OR_TOKEN_DEPLOYMENT"
+}
