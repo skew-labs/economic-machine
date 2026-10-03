@@ -39,7 +39,12 @@ class Answer(c.Structure):
 
 class SolutionLab:
     def __init__(self):
-        self.library=None;self.sha256=None
+        self.library=None;self.sha256=None;self.pipeline=None
+        pipeline=os.environ.get('ENGINE_SOLUTION_PIPELINE');pipeline_sha=os.environ.get('ENGINE_SOLUTION_PIPELINE_SHA256')
+        if pipeline or pipeline_sha:
+            if not pipeline or not pipeline_sha:raise MachineError('SOLUTION_PIPELINE_CONFIGURATION')
+            from .solution_operations import NativePipeline
+            self.pipeline=NativePipeline(pipeline,pipeline_sha)
         path=os.environ.get('ENGINE_SOLUTION_LIBRARY');expected=os.environ.get('ENGINE_SOLUTION_SHA256')
         if not path:return
         p=Path(path)
@@ -61,7 +66,9 @@ class SolutionLab:
                 'nodes':32,'problems_per_round':16,'maximum_edge_visits':10000000,'algorithms':list(ALGORITHMS),
                 'token':'SKEWSIM_UNDEPLOYED_RESEARCH_TOKEN','live_emission':False,'live_vrf_configured':False,
                 'gpu_comparison':'NOT_RUN_NO_AUTHORIZED_GPU_LEASE','ai_comparison':'NOT_RUN_NO_APPROVED_PROVIDER_BUDGET',
-                'execution_authority':'NONE','randomness_assurance':'LOCAL_FIXTURE_NOT_VRF'}
+                'execution_authority':'NONE','randomness_assurance':'LOCAL_FIXTURE_NOT_VRF',
+                'execution_backend':'SANDBOXED_CPP_PIPELINE' if self.pipeline else 'SCALAR_CPP',
+                'pipeline_sha256':self.pipeline.sha256 if self.pipeline else None}
 
     def calculate(self,raw):
         require_keys(raw,{'seed','problem','algorithm','budget','search_seed','bits'},'solution research request')
@@ -74,19 +81,28 @@ class SolutionLab:
         edges=graph(seed,problem);request=Graph();request.nodes=32;request.count=len(edges)
         for i,e in enumerate(edges):request.edges[i]=Edge(*e)
         answer=Answer();start=time.perf_counter_ns()
-        if raw['bits'] is None:
+        if raw['bits'] is None and self.pipeline is not None:
+            row,=self.pipeline.search([{'seed':seed,'problem':problem,'budget':budget,
+                'algorithm':raw['algorithm'],'search_seed':search_seed}])
+            answer.bits=int(row['bits']);answer.score=int(row['score']);answer.edge_visits=row['edge_visits']
+            answer.candidates=row['candidates'];answer.valid=1;code=0
+            elapsed=int(row['elapsed_native_ns'])
+        elif raw['bits'] is None:
             code=self.library.solution_search(c.byref(request),search_seed,budget,ALGORITHMS[raw['algorithm']],c.byref(answer))
         else:
             bits=integer(raw['bits'],0,2**32-1);code=self.library.solution_score(c.byref(request),bits,c.byref(answer))
-        elapsed=time.perf_counter_ns()-start
+        if raw['bits'] is not None or self.pipeline is None:elapsed=time.perf_counter_ns()-start
         if code or not answer.valid:raise MachineError('SOLUTION_NATIVE_REJECTED')
         total=sum(e[2] for e in edges)
         result={'model':'MAXCUT_V1_RESEARCH','input_sha256':digest(raw),'graph_sha256':digest(edges),
                 'seed':raw['seed'],'problem':raw['problem'],'bits':str(answer.bits),'score':str(answer.score),'total_weight':str(total),
                 'quality_bps':answer.score*10000//total,'edge_visits':answer.edge_visits,'candidates':answer.candidates,
-                'global_optimum_proven':bool(answer.complete),'elapsed_native_ns':str(elapsed),
+                'global_optimum_proven':False,'elapsed_native_ns':str(elapsed),
                 'library_sha256':self.sha256,'language_model_calls':0,'confirmed_reward':'0','chain_transaction':None,
                 'execution_authority':'NONE','randomness_assurance':'CALLER_SEED_RESEARCH_FIXTURE_NOT_VRF'}
+        result.update({'execution_backend':('SCALAR_CPP_VERIFIER' if raw['bits'] is not None else
+                       'SANDBOXED_CPP_PIPELINE' if self.pipeline else 'SCALAR_CPP_SEARCH'),
+                       'pipeline_sha256':self.pipeline.sha256 if self.pipeline else None})
         result['receipt_sha256']=digest(result);return result
 
     @staticmethod

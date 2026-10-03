@@ -1,0 +1,19 @@
+Running as unit: skew-solution-ops-smoke-pr5.service
+usage: solution_operator.py [-h] --config CONFIG
+                            {run,status,prepare,export,observe,reconcile} ...
+
+Self-hosted read-only miner. Owner exports unsigned intents to their separate
+signer.
+
+positional arguments:
+  {run,status,prepare,export,observe,reconcile}
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG
+Finished with result: success
+Main processes terminated with: code=exited/status=0
+Service runtime: 267ms
+CPU time consumed: 262ms
+Memory peak: 612.0K
+Memory swap peak: 0B

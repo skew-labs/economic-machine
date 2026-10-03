@@ -1,0 +1,42 @@
+# Install only after independently reviewed contract/code + private owner config exist.
+# This worker has read-only RPC authority. It has no wallet key or send-transaction API.
+[Unit]
+Description=SKEW owner-local solution worker
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=solution-miner
+Group=solution-miner
+WorkingDirectory=/opt/skew-solution
+Environment=PYTHONPATH=/opt/skew-solution/src
+Environment=PYTHONUNBUFFERED=1
+Environment=ENGINE_SOLUTION_LIBRARY=/opt/skew-solution/libsolution-PINNED_HASH.so
+Environment=ENGINE_SOLUTION_SHA256=REPLACE_WITH_PINNED_LIBRARY_HASH
+ExecStart=/opt/skew-solution/.venv/bin/python scripts/solution_operator.py --config /etc/skew-solution/owner.json run --watch
+Restart=on-failure
+RestartSec=10
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+CapabilityBoundingSet=
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+LockPersonality=yes
+MemoryMax=256M
+CPUQuota=100%
+TasksMax=16
+ReadWritePaths=/var/lib/skew-solution
+TimeoutStopSec=35
+
+[Install]
+WantedBy=multi-user.target

@@ -55,6 +55,10 @@ def main():
     paths.add("docs/ARBITRUM_SUBMISSION.md")
     paths.add("deploy/native-mining.conf")
     paths.update({"docs/SOLUTION_MINING.md", "deploy/native-solution.conf"})
+    paths.update({"docs/SOLUTION_OPERATIONS.md", "deploy/solution-miner.service.example", "deploy/native-solution-pipeline.conf"})
+    for path in (ROOT / "artifacts/solution-operations").iterdir():
+        if path.is_file() and path.suffix in {".json", ".log"} and path.name != "manifest-verification.json":
+            paths.add(str(path.relative_to(ROOT)))
     for path in (ROOT / "artifacts/solution").iterdir():
         if path.is_file() and path.suffix in {".json", ".log", ".jpg", ".txt"} and path.name != "manifest-verification.json":
             paths.add(str(path.relative_to(ROOT)))
@@ -131,7 +135,9 @@ def main():
                        "solution_mining": {"model": "MAXCUT_V1_RESEARCH", "public_emission": False,
                            "public_vrf_configured": False, "public_deployment": None,
                            "gpu_comparison": "NOT_RUN", "ai_comparison": "NOT_RUN",
-                           "admission_gate": "SLOT_SATURATION_UNRESOLVED", "authority": "NONE"},
+                           "admission_gate": "GLOBAL_SLOT_CAP_REMOVED_OTHER_CONGESTION_RISKS_REMAIN", "authority": "NONE",
+                           "local_operations": "DUAL_RPC_WORKING_STATE_FINALIZED_EFFECTS_PRIVATE_WAL_UNSIGNED_HANDOFF",
+                           "native_pipeline": "CAPACITY_EIGHT_SPSC_SEARCH_VERIFY_OPTIONAL_CPU_AFFINITY"},
                        "production_paths": {"distinct_changed_boundary_tests": 121,
                            "actual_public_market_native_profiles": 4, "new_customer_payments": 0,
                            "new_paid_inference_jobs": 0, "new_venue_orders": 0,

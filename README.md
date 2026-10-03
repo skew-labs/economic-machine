@@ -253,4 +253,8 @@ An additional useful-work protocol in the same Economic Machine console: request
 
 ## Solution Mining research
 
-A separate Max-Cut research mode in the same Mining console. Sixteen fixed problems per round, native CPU search, Solidity score verification, VRF callback gating, bounded future difficulty and a capped research token. The public console only computes candidates; no public issuance or live VRF is enabled. The confirmed commitment-slot saturation weakness keeps real issuance closed. See [Solution Mining](docs/SOLUTION_MINING.md) and `artifacts/solution` for actual measurements and unrun GPU/AI comparisons.
+A separate Max-Cut research mode in the same Mining console. Sixteen fixed problems per round, native CPU search, Solidity score verification, VRF callback gating, bounded future difficulty and a capped research token. The public console only computes candidates; no public issuance or live VRF is enabled. The original slot-exclusion attack has been fixed; audit and public lifecycle validation remain open. See [Solution Mining](docs/SOLUTION_MINING.md) and `artifacts/solution` for research measurements and unrun GPU/AI comparisons.
+
+## Owner-local solution mining operations
+
+The Max-Cut worker now includes a C++ search/verification pipeline, optional CPU affinity, private durable work budgets and unsigned commit/reveal/claim recovery. See [Solution operations](docs/SOLUTION_OPERATIONS.md) for installation boundaries, read-only chain checks and measured evidence. Public issuance, real VRF and automatic wallet signing are not enabled.

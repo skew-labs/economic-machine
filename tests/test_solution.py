@@ -144,7 +144,7 @@ class SolutionContract(unittest.TestCase):
         self.assertTrue(all(a-b<=100 for a,b in zip(thresholds,thresholds[1:])))
         self.assertEqual(self.token.functions.totalSupply().call(),0)
 
-    def test_admission_saturation_is_bounded_but_remains_research_dos_risk(self):
+    def test_64_sybil_commitments_do_not_exclude_the_next_qualified_miner(self):
         self.start()
         # Simulate 64 independent wallets. Fees/identity/bonds are not modeled as Sybil resistance.
         for i in range(64):
@@ -152,9 +152,29 @@ class SolutionContract(unittest.TestCase):
             self.w3.eth.send_transaction({'from':self.a,'to':address,'value':10**17})
             self.send(self.machine.functions.commit(1,0,(i+1).to_bytes(32,'big')),address)
         self.assertEqual(self.machine.functions.counts(1,0).call(),64)
-        with self.assertRaises(TransactionFailed):self.send(self.machine.functions.commit(1,0,b'y'*32),self.a)
+        bits=int(SolutionLab().calculate(request())['bits']);salt=b'f'*32
+        self.commit(0,bits,salt,self.a)
+        self.assertEqual(self.machine.functions.counts(1,0).call(),65)
+        self.time(3);self.send(self.machine.functions.reveal(1,0,bits,salt),self.a)
         self.time(4);self.send(self.machine.functions.finalize(1),self.a)
-        self.assertEqual(self.token.functions.totalSupply().call(),0)
+        self.send(self.machine.functions.claim(1,0),self.a)
+        self.assertEqual(self.token.functions.totalSupply().call(),10**18)
+
+    def test_operator_controls_subscription_spend_and_pause_preserves_existing_rights(self):
+        self.assertEqual(self.machine.functions.roundOperator().call(),self.a)
+        with self.assertRaises(TransactionFailed):self.send(self.machine.functions.pauseAdmission(True),self.b)
+        self.start();bits=int(SolutionLab().calculate(request())['bits']);salt=b'g'*32
+        self.commit(0,bits,salt,self.a);self.send(self.machine.functions.pauseAdmission(True),self.a)
+        with self.assertRaises(TransactionFailed):self.commit(1,bits,salt,self.b)
+        self.time(3);self.send(self.machine.functions.reveal(1,0,bits,salt),self.a)
+        self.time(4);self.send(self.machine.functions.finalize(1),self.b)
+        self.send(self.machine.functions.claim(1,0),self.a)
+        self.assertEqual(self.token.functions.totalSupply().call(),10**18)
+        at=self.machine.functions.rounds(1).call()[2];self.tester.time_travel(at+1800);self.tester.mine_blocks(1)
+        with self.assertRaises(TransactionFailed):self.send(self.machine.functions.request(),self.a)
+        self.send(self.machine.functions.pauseAdmission(False),self.a)
+        with self.assertRaises(TransactionFailed):self.send(self.machine.functions.request(),self.b)
+        self.send(self.machine.functions.request(),self.a)
 
 
 class SolutionNative(unittest.TestCase):
@@ -163,7 +183,8 @@ class SolutionNative(unittest.TestCase):
         for algorithm in ['random','integer_anneal']:
             result=lab.calculate(request(algorithm=algorithm,budget='50000'))
             self.assertLessEqual(result['edge_visits'],50000);self.assertFalse(result['global_optimum_proven'])
-            self.assertEqual(lab.calculate(request(bits=result['bits']))['score'],result['score'])
+            verified=lab.calculate(request(bits=result['bits']))
+            self.assertEqual(verified['score'],result['score']);self.assertFalse(verified['global_optimum_proven'])
             self.assertEqual(result['confirmed_reward'],'0');self.assertIsNone(result['chain_transaction'])
 
     def test_exact_small_graph_and_canonical_duplicate(self):

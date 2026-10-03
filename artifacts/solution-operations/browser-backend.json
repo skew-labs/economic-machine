@@ -1,0 +1,12 @@
+{
+  "scope": "PUBLIC_CHANGED_BACKEND_CONNECTION_ONLY_NOT_REPEATED_RESPONSIVE_SUITE",
+  "checks": [
+    "console_calls_sandboxed_cpp",
+    "installed_executable_hash_matches_receipt",
+    "download_exact_receipt_without_issuance"
+  ],
+  "javascript_errors": [],
+  "pipeline_sha256": "70e80d33e7db13410d3ae99c54c3ce99b54ccdbdf2837bb4150413abf20dc035",
+  "chain_transactions": 0,
+  "language_model_calls": 0
+}
