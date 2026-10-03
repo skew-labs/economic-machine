@@ -1,0 +1,13 @@
+{
+  "abi": 1,
+  "library_path": "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/build/solution/libsolution-88a70703b875230709a7339d0d6664438327a15a0fdd9c600707228cd43cfe3b.so",
+  "library_sha256": "88a70703b875230709a7339d0d6664438327a15a0fdd9c600707228cd43cfe3b",
+  "sources": {
+    "native/src/solution.cpp": "346a0dcb4c8c8e7fc5a3ca22e8b2f05a7d8d56cee37718617f445c8b55823068",
+    "native/tests/solution.cpp": "3eff61631673879cd8b83f23a9e98899c5dcaaa0064e0f82a3db8d25fa8da174"
+  },
+  "sanitizers": "ADDRESS_UNDEFINED",
+  "sanitizer_result": "SOLUTION_BOUNDARIES_EXACT_TRIANGLE_DENSE64_QUEUE_PASS",
+  "authority": "NONE",
+  "graph_randomness": "SUPPLIED_RESEARCH_GRAPH_NOT_VRF"
+}

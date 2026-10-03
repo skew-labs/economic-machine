@@ -61,6 +61,8 @@ class Workspace:
         self.task_checkout = TaskCheckout(self, provider=task_provider)
         from .mining import Mining
         self.mining = Mining(self)
+        from .solution import SolutionLab
+        self.solution = SolutionLab()
 
     def event(self, db, kind, value):
         fingerprint = journal_fingerprint(db)
@@ -213,5 +215,6 @@ class Workspace:
             "sync_jobs": self.scheduler.status(), "trading": self.trading.status(), "live": self.live.status(), "native": self.native.status(),
             "control": self.control.status(), "economics": self.economics.status(), "tasks": self.tasks.status(),
             "mining": self.mining.status(),
+            "solution": self.solution.status(),
             "task_checkout": self.task_checkout.status(),
             "product": "USER_OWNED_AGENT_OPERATIONS_CONSOLE"}

@@ -2,7 +2,9 @@
 (() => {
   const {el, button: makeButton, notify} = window.MachineConsole;
   const button = (text, action) => makeButton(text, 'button secondary', action);
-  let selected = null, identity = null, busy = false;
+  let selected = null, identity = null, busy = false, mode = 'routes', solutionResult = null;
+  const initialSolution = () => ({seed:'12345',problem:'0',budget:'100000',algorithm:'integer_anneal'});
+  let solutionDraft = initialSolution();
   const download = (value, name) => {
     const blob = new Blob([JSON.stringify(value, null, 2)], {type:'application/json'});
     const url = URL.createObjectURL(blob), a = document.createElement('a');
@@ -10,13 +12,36 @@
   };
   function render(root, record, {request, refresh, writable}) {
     const owner = record?.credential_namespace || (record?.read_only ? 'readonly' : 'local');
-    if (identity !== owner) {selected = null; identity = owner; root.replaceChildren();}
+    if (identity !== owner) {selected = null; solutionResult = null; solutionDraft = initialSolution(); identity = owner; root.replaceChildren();}
     if (busy || root.querySelector('textarea:focus')) return;
     root.replaceChildren();
     const data = record?.mining;
-    root.append(el('h2','','Useful work earns tokens'), el('p','task-hint','Find a better execution route. C++ searches; the contract verifies the frozen calculation.'));
+    root.append(el('h2','',mode==='solutions'?'Verified solutions, bounded rewards':'Useful work earns tokens'), el('p','task-hint',mode==='solutions'?'Compare search strategies on the same fixed problem.':'Find a better execution route. C++ searches; the contract verifies the frozen calculation.'));
     if (!writable() || !data) {
       root.append(el('div','task-empty','Sign in to create a work request or run the native solver. API keys stay in your environment.'));
+      return;
+    }
+    const modes=el('div','dialog-actions');modes.append(button('Funded work requests',async()=>{mode='routes';await refresh();}),button('Solution research',async()=>{mode='solutions';await refresh();}));root.append(modes);
+    if(mode==='solutions'){
+      const status=record.solution,panel=el('section','task-editor');root.append(panel);
+      panel.append(el('h3','','Mine a verified solution'),el('p','task-hint','Split a weighted graph into two groups. Improve the crossing-edge score. The research contract has 16 problems per round and one capped reward per problem.'),
+        el('div','status-chip','Research only · local seed · no live issuance'),
+        el('p','task-hint','The following seed is a test input. Live rounds require verified coordinator randomness; an expired request aborts. SKEWSIM has no demonstrated market value.'));
+      const form=el('form','task-form'),fields={};
+      for(const [name,title,value] of [['seed','Test seed','12345'],['problem','Problem · 0–15','0'],['budget','Maximum edge visits','100000']]){
+        const label=el('label','task-field',title),input=el('input');input.id='solution-'+name;input.value=solutionDraft[name]||value;input.required=true;input.addEventListener('input',()=>{solutionDraft[name]=input.value;});label.append(input);form.append(label);fields[name]=input;
+      }
+      const label=el('label','task-field','CPU strategy'),choose=el('select');choose.id='solution-algorithm';
+      for(const [value,title] of [['integer_anneal','Integer annealing'],['greedy','Greedy local search'],['random','Random baseline']]){const option=el('option','',title);option.value=value;choose.append(option);}choose.value=solutionDraft.algorithm;choose.addEventListener('change',()=>{solutionDraft.algorithm=choose.value;});label.append(choose);form.append(label);
+      const run=button(status?.enabled?'Search and verify':'Research worker unavailable',()=>{});run.type='submit';run.disabled=!status?.enabled;form.append(run);
+      form.addEventListener('submit',async event=>{event.preventDefault();if(busy)return;busy=true;run.disabled=true;
+        try{solutionResult=await request('/mining/solution/evaluate',{seed:fields.seed.value,problem:fields.problem.value,budget:fields.budget.value,search_seed:'42',algorithm:choose.value,bits:null});notify('Candidate verified locally. No tokens issued.');}
+        catch(error){notify(error.message,true);}finally{busy=false;await refresh();}
+      });panel.append(form);
+      if(solutionResult){const r=solutionResult;panel.append(el('h3','','Verified candidate'),el('p','task-hint',`Cut score ${r.score} / ${r.total_weight} · quality ${(r.quality_bps/100).toFixed(2)}% · ${r.edge_visits} edge visits`),
+        el('p','task-hint','The score is exact. This search does not prove a global optimum. Confirmed rewards: 0.'),button('Download solution receipt',()=>download(r,'solution-receipt.json')));}
+      panel.append(el('h3','','Use your own worker'),el('code','','python scripts/solution_cli.py search --seed 12345 --problem 0'),
+        el('p','task-hint','Your agent can supply a bit string. Verify it locally before sealing; keep keys and the reveal salt on your machine. GPU and paid AI comparisons have not run.'));
       return;
     }
     const current = data.jobs.find(j => j.id === selected), layout = el('div','task-layout');

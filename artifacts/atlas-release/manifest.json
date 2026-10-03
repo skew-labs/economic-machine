@@ -1,6 +1,6 @@
 {
   "schema": "machine-release-proof-1",
-  "created_at": 1791041569,
+  "created_at": 1791044555,
   "files": [
     {
       "path": "LICENSE",
@@ -9,8 +9,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 17866,
-      "sha256": "205e9065de9eb0be7888a31064173478e0f7c62388f95a0789fb811622d3077b"
+      "bytes": 18407,
+      "sha256": "f827d5a2af4a5b64f11c325e3b88c45cc25822ee1751d5a066a4bdf27ebdf571"
     },
     {
       "path": "artifacts/arbitrum-sepolia/datapass-deployment-review.json",
@@ -184,8 +184,8 @@
     },
     {
       "path": "artifacts/atlas-release/line-count.json",
-      "bytes": 16521,
-      "sha256": "500d4b0769f64f3e746cd3a590b80f2f56b10870f4bc871f58bbebdf1a80b080"
+      "bytes": 17239,
+      "sha256": "173d5b2a492a4289b4fe87aeccf4f9642e7a87d4e51c16ca0fa8113d5bf529d2"
     },
     {
       "path": "artifacts/atlas-release/live-web-check.json",
@@ -703,6 +703,76 @@
       "sha256": "169505c0bf40a94dcc7f67f13a6b779751413537a5afdfe52a75ffbf8e6b1dba"
     },
     {
+      "path": "artifacts/solution/benchmark.json",
+      "bytes": 21369,
+      "sha256": "bc153610dd3cf4bbcd0ed1aa7e78a0a703ac7c1594113a5174bc3edd936b95e8"
+    },
+    {
+      "path": "artifacts/solution/benchmark.log",
+      "bytes": 793,
+      "sha256": "5694e15863ebedbfe04395e24d330c0934b56b91cfb517654866e2a7b85284de"
+    },
+    {
+      "path": "artifacts/solution/browser-isolated.json",
+      "bytes": 418,
+      "sha256": "a2807ab118ccd4d42185d2732cb7ae6aca852f6c8566e4737c2141db0628343e"
+    },
+    {
+      "path": "artifacts/solution/browser-isolated.log",
+      "bytes": 325,
+      "sha256": "538c202045feb89b3ad5f47092f2ac4f6396e1d84da4a4769f2ddd97349b8781"
+    },
+    {
+      "path": "artifacts/solution/browser-public.json",
+      "bytes": 428,
+      "sha256": "b40f9a2cd8e281866417b3c7c7199367031070e69eebd7ee12e3d687205f0982"
+    },
+    {
+      "path": "artifacts/solution/contract-build.json",
+      "bytes": 544,
+      "sha256": "0825d06f6d97413d57b2c932a6d42d22e512858ce1ff01f2d9d84cca74e9b1df"
+    },
+    {
+      "path": "artifacts/solution/contracts.json",
+      "bytes": 59477,
+      "sha256": "6aca751cb57f52f05b17f8f80de52222532a8d9640e400a2247f892f4465abcc"
+    },
+    {
+      "path": "artifacts/solution/native-build.json",
+      "bytes": 698,
+      "sha256": "f4416de18a42f6363cb9b2c09fc808c962a0ba8be05418fbb75d1426c3f0c0be"
+    },
+    {
+      "path": "artifacts/solution/solution-1440-isolated.jpg",
+      "bytes": 123476,
+      "sha256": "3f90c4b050b68268b1cd93bd83981806a7290c9a88438bcac79047714c29ff95"
+    },
+    {
+      "path": "artifacts/solution/solution-1440-public.jpg",
+      "bytes": 122958,
+      "sha256": "e02eb32ff90461449221201d48a1bc3030c09b652ea42502d69992cdfb6e152d"
+    },
+    {
+      "path": "artifacts/solution/solution-390-isolated.jpg",
+      "bytes": 79559,
+      "sha256": "5fc393b766c4e41e5999fe6b5cf8f9c4d6b6d20176f202c473af391e030d77e6"
+    },
+    {
+      "path": "artifacts/solution/solution-390-public.jpg",
+      "bytes": 77933,
+      "sha256": "622320f95afa0d7f92721a8c4172476ec70ab3e58005058c5bb79171e1997c7e"
+    },
+    {
+      "path": "artifacts/solution/tests-initial.log",
+      "bytes": 15687,
+      "sha256": "83e4aa42a54806f855d25de4af9f65835bfdfcd46ad409f3d33b840b00ea7aa5"
+    },
+    {
+      "path": "artifacts/solution/tests.log",
+      "bytes": 3115,
+      "sha256": "57bc898dd588ae0f5636742d3f81d84d8283abac7a67b1ed31e9f45861964116"
+    },
+    {
       "path": "artifacts/tasks-pr1/browser-attempt-1.log",
       "bytes": 2855,
       "sha256": "552babf1cd35a37254eff2868782ca6c34c09426cddf9fb29c5fd30a49ba3fba"
@@ -908,6 +978,16 @@
       "sha256": "68c5d17c39c71cfd4ddf39123191e9cc1075a9aa1ddde0fa16a3bc829f60e1a7"
     },
     {
+      "path": "contracts/SolutionMining.sol",
+      "bytes": 10567,
+      "sha256": "27704396950824ff47a4bd2335076a8389220ba75ae3d4f69e20af8dd3ccb243"
+    },
+    {
+      "path": "contracts/SolutionVRFMock.sol",
+      "bytes": 830,
+      "sha256": "efbc4d3d01181594b5965f81d6301b22e49479280db26541a2a349779090c476"
+    },
+    {
       "path": "contracts/TestCommerceToken.sol",
       "bytes": 1660,
       "sha256": "a35b9989bcb305f4001ad052abe0535784bcc36e7b8398038a2e2b504acc6db2"
@@ -931,6 +1011,11 @@
       "path": "deploy/native-mining.conf",
       "bytes": 375,
       "sha256": "f84b663b2829c0bd19b4be937c3549132a0fb4e93ed25ea8c86e2e483e7fa7a5"
+    },
+    {
+      "path": "deploy/native-solution.conf",
+      "bytes": 373,
+      "sha256": "0d0bb74fd05b3aeacdd191dfb0f25b547db28214a47b23a4fb93fddff005d16f"
     },
     {
       "path": "deploy/paypal-sandbox.example.json",
@@ -964,8 +1049,8 @@
     },
     {
       "path": "docs/ARBITRUM_SUBMISSION.md",
-      "bytes": 11740,
-      "sha256": "e1f7c24350a4fb804410a53495aab407437901a541ee258c75aaad7a6dd9bd25"
+      "bytes": 12648,
+      "sha256": "e2ce9fa2f9569bba76eebef8adbc606498c0c4be34d90df6cf434d102c08132c"
     },
     {
       "path": "docs/ATLAS_DATAPASS_NATIVE.md",
@@ -1011,6 +1096,11 @@
       "path": "docs/SERVICE_COMMERCE.md",
       "bytes": 11197,
       "sha256": "cf0af700e0a7faa4550d6bca7eba96b4301ba4c3f0286adb56acbd4d777ffed0"
+    },
+    {
+      "path": "docs/SOLUTION_MINING.md",
+      "bytes": 10712,
+      "sha256": "06168ad33d1fe1597acfac772495dfd5316856b4b645953143d14e6e1cd49ffb"
     },
     {
       "path": "docs/SUBSCRIPTION_RECEIVER_20261003.md",
@@ -1143,6 +1233,11 @@
       "sha256": "f92b049d7bb7190f218043a37a12024f476be5e49beccd9223f6afc24b257e7e"
     },
     {
+      "path": "native/src/solution.cpp",
+      "bytes": 5660,
+      "sha256": "346a0dcb4c8c8e7fc5a3ca22e8b2f05a7d8d56cee37718617f445c8b55823068"
+    },
+    {
       "path": "native/tests/conformance.cpp",
       "bytes": 7413,
       "sha256": "76cf9a419519ba150c6dacda1d0323b13cd390aa231a3ec7c6fdce050fea4cec"
@@ -1161,6 +1256,11 @@
       "path": "native/tests/program.cpp",
       "bytes": 12402,
       "sha256": "7b35f2dc789c4d279677be22b0d2a3a93c6e68d5efedae8aed7b6dd1b580eb69"
+    },
+    {
+      "path": "native/tests/solution.cpp",
+      "bytes": 1358,
+      "sha256": "3eff61631673879cd8b83f23a9e98899c5dcaaa0064e0f82a3db8d25fa8da174"
     },
     {
       "path": "pyproject.toml",
@@ -1213,6 +1313,11 @@
       "sha256": "5daa0242f501519c66db243ff6c5601161b53d1050718b531d6432dba2af3038"
     },
     {
+      "path": "scripts/benchmark_solution.py",
+      "bytes": 5209,
+      "sha256": "5766a2b1207c5bfa3c84b27eeca9b6401da383d9e88681409c0ac6c767a42a99"
+    },
+    {
       "path": "scripts/build_economics.py",
       "bytes": 2645,
       "sha256": "1eaef570774d22c38ec1f0f78f7c28343024c9148c639658616c1abe41b931c3"
@@ -1231,6 +1336,11 @@
       "path": "scripts/build_native.py",
       "bytes": 5454,
       "sha256": "c2217b9ca8121c4207dface128c7ddce8e37e1729df18ffe02725af7694af0c7"
+    },
+    {
+      "path": "scripts/build_solution.py",
+      "bytes": 1571,
+      "sha256": "35833c47964fba4a18a27ce70b856a9813ceb4e9382270253337000e38c8ca6d"
     },
     {
       "path": "scripts/build_submission_evidence.py",
@@ -1283,6 +1393,11 @@
       "sha256": "bbf9ee6cfec64b0476dc4d159f1d7a40e1124f71eeae0c55431d72bfcb5f4825"
     },
     {
+      "path": "scripts/compile_solution.py",
+      "bytes": 2003,
+      "sha256": "68059aa2f4a58da2d765f0441fea753f35ad76d21f59e2303af5aa5aa8823162"
+    },
+    {
       "path": "scripts/configure_subscription.py",
       "bytes": 4390,
       "sha256": "549971aeebd37478afeaecc2958f2b675b2abe6189cbffceea886fe9b0f4c118"
@@ -1294,8 +1409,8 @@
     },
     {
       "path": "scripts/count_release_lines.py",
-      "bytes": 2651,
-      "sha256": "f3d250dbfcda2d54e60fee1f0a85ea1c59e981bd5b2860eed8c68017bd4ff5af"
+      "bytes": 2674,
+      "sha256": "688e497324454fc56531185ad467a46d949e2ca3b1679e9ed3e2c8f4541f3547"
     },
     {
       "path": "scripts/deploy_datapass_sepolia.py",
@@ -1344,8 +1459,8 @@
     },
     {
       "path": "scripts/release_proof.py",
-      "bytes": 10369,
-      "sha256": "8a59e866e56d287d9db386f6ea3a919c5a437391282dc0872791770038171a62"
+      "bytes": 11047,
+      "sha256": "3da9a5b33177f28824d32ce1b87e5be91b578dadafee9885fcdacc41d8589a09"
     },
     {
       "path": "scripts/sepolia_demo.py",
@@ -1356,6 +1471,11 @@
       "path": "scripts/sepolia_merchant.py",
       "bytes": 16215,
       "sha256": "4fad0c4ec59d9377726166944f4d02050c02b8cbde5a5d9882deafaf0534b5cc"
+    },
+    {
+      "path": "scripts/solution_cli.py",
+      "bytes": 1798,
+      "sha256": "84a24996d494977f5ea5e6d2ba1b427362a25787eddee132df55fb1834c37d71"
     },
     {
       "path": "scripts/verify_commerce_release.py",
@@ -1416,6 +1536,11 @@
       "path": "scripts/verify_provider_ui.py",
       "bytes": 3145,
       "sha256": "ef683fa29cad2565798de6ab16049ce4a0e5f21a8f0bbfe94c40fd866153a1ab"
+    },
+    {
+      "path": "scripts/verify_solution_browser.py",
+      "bytes": 4834,
+      "sha256": "53f643929fb382dd5e512b8e71589377bb199e49450bbd1a83a282ca71652405"
     },
     {
       "path": "scripts/verify_subscription_activation.py",
@@ -1824,8 +1949,8 @@
     },
     {
       "path": "src/machine_engine/mining_routes.py",
-      "bytes": 1179,
-      "sha256": "5f3e52d496627a173940e8bdd8c39eacfcf3339f1656efa499da046f4bc1816a"
+      "bytes": 1695,
+      "sha256": "1fc10a87e90413c51d44fae38963e38e363a3b3cd867a7184cbcf883c2d96091"
     },
     {
       "path": "src/machine_engine/native.py",
@@ -1853,6 +1978,16 @@
       "sha256": "1cd36e64696ea6df5ecb5c055bd50314278f2016a1f3e915fbfdea18e17ea1e7"
     },
     {
+      "path": "src/machine_engine/solution.py",
+      "bytes": 5701,
+      "sha256": "da8e5a4012976cceffb1d407742685d11868cd2f82c6d4fe1e7593f8d29f9b66"
+    },
+    {
+      "path": "src/machine_engine/solution_client.py",
+      "bytes": 3053,
+      "sha256": "4515018f8e41d4b444815431eb121f3bab6d7e0c945b5ec7b0436da62c24ea6b"
+    },
+    {
       "path": "src/machine_engine/task_checkout.py",
       "bytes": 16940,
       "sha256": "0b178e8bab2ec5ba9616d9b4e319e4f00adcdaa5ba16c8935289108510b89d71"
@@ -1874,8 +2009,8 @@
     },
     {
       "path": "src/machine_engine/workspace.py",
-      "bytes": 13644,
-      "sha256": "82a2ddda5f3fc3af9d2a56ab1c983aa34c586948817490e2aada744e3ca5b07b"
+      "bytes": 13772,
+      "sha256": "f08ff722a8c8eac152ccf6fbc77b846f721afd2704d2a202018358e03ac68c90"
     },
     {
       "path": "tests/agent_console_fixture.py",
@@ -2043,6 +2178,11 @@
       "sha256": "90801c2003df4a8ec918c83289976ce23c2d2b70c9b6f7065e8bb77e76ceaaf9"
     },
     {
+      "path": "tests/test_solution.py",
+      "bytes": 13891,
+      "sha256": "dac6c17e6afa0000a26715ef04f3024676796120ccc37fcaa0b41fe416fdd74e"
+    },
+    {
       "path": "tests/test_submission_evidence.py",
       "bytes": 11278,
       "sha256": "565dfabecf0dd759484d31e60a39bc7885e544a74a5d2d1d2d5023fcfb013c9a"
@@ -2154,8 +2294,8 @@
     },
     {
       "path": "web/mining.js",
-      "bytes": 6301,
-      "sha256": "b5dc3e38d639d80bf01e07fef188afc8f0d5fa5d6774c02452119baf6958787a"
+      "bytes": 9929,
+      "sha256": "06ae74689505019443564dcf8d57b0f890624a66e855c2bdd62c924891653987"
     },
     {
       "path": "web/operations.css",
@@ -2211,7 +2351,7 @@
     "deployment_proof_sha256": "ed24181d7869e91d5f6b3ebc09603236d2d45b4073d9c548dc6036bd75a6d458",
     "live_new_datapass_purchases": 0,
     "economic_operations": 20,
-    "engine_implementation_nonblank": 24467,
+    "engine_implementation_nonblank": 24896,
     "target_30000_engine_nonblank_reached": false,
     "native_authority": "CANDIDATE_ONLY",
     "agent_control": "SAME_ENGINE_DATABASE_SHARED_USDT_TURNOVER",
@@ -2241,6 +2381,16 @@
       "new_emission_tokens": 0,
       "input_assurance": "REQUESTER_DECLARED_FROZEN_MODEL"
     },
+    "solution_mining": {
+      "model": "MAXCUT_V1_RESEARCH",
+      "public_emission": false,
+      "public_vrf_configured": false,
+      "public_deployment": null,
+      "gpu_comparison": "NOT_RUN",
+      "ai_comparison": "NOT_RUN",
+      "admission_gate": "SLOT_SATURATION_UNRESOLVED",
+      "authority": "NONE"
+    },
     "production_paths": {
       "distinct_changed_boundary_tests": 121,
       "actual_public_market_native_profiles": 4,
@@ -2252,5 +2402,5 @@
     }
   },
   "assurance": "SOURCE_AUDIT_PLUS_REPRODUCIBLE_LOCAL_EVM_AND_NATIVE_TESTS_NOT_PRODUCTION_CERTIFICATION",
-  "manifest_sha256": "01a300a445a7cee2a0e9d2c79c72d6f7e536e44d5b6a0f9a6aa34efde0fb096d"
+  "manifest_sha256": "2e50f98f61e31d2b39b48625bc9466f200d6c73eb99b2146ba00823b2aeac72b"
 }

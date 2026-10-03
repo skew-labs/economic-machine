@@ -10,6 +10,18 @@ def mining_routes(workspace_dependency, *, require_owner=None):
     def status(work=Depends(workspace_dependency)):
         return work.mining.status()
 
+    @router.get('/mining/solution', dependencies=owner)
+    def solution_status(work=Depends(workspace_dependency)):
+        return work.solution.status()
+
+    @router.post('/mining/solution/evaluate', dependencies=owner)
+    def solution_evaluate(raw: dict, work=Depends(workspace_dependency)):
+        result = work.solution.calculate(raw)
+        with work.runtime.connect() as db:
+            db.execute('BEGIN IMMEDIATE')
+            work.event(db, 'SOLUTION_RESEARCH_EVALUATED', result)
+        return result
+
     @router.post('/mining/jobs', dependencies=owner)
     def create(raw: dict, work=Depends(workspace_dependency)):
         return work.mining.create(raw)
