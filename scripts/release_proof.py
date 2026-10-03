@@ -69,6 +69,10 @@ def main():
                  "commerce-recovery-tests.log", "commerce-wallet-tests.log", "commerce-native-tests.log",
                  "commerce-wallet-native-tests.log", "commerce-cache-tests.log", "commerce-live-check.json", "commerce-browser.json"]:
         paths.add("artifacts/atlas-release/" + name)
+    paths.update({"docs/TASKS_PR1_20261003.md", "docs/AMAZON_PAYPAL_PLAN_20261003.md", "deploy/portal-concurrency.conf"})
+    for path in (ROOT / "artifacts/tasks-pr1").iterdir():
+        if path.is_file() and path.suffix in {".json", ".log", ".jpg", ".txt"} and path.name != "manifest-verification.json":
+            paths.add(str(path.relative_to(ROOT)))
     files = [file_evidence(ROOT, path) for path in sorted(paths)]
     report = json.loads((ROOT / "artifacts/atlas-release/atlas.json").read_text())
     audit = json.loads((ROOT / "artifacts/atlas-release/source-audit.json").read_text())
@@ -100,6 +104,9 @@ def main():
                        "engine_implementation_nonblank": lines["engine_implementation"]["nonblank"],
                        "target_30000_engine_nonblank_reached": lines["target_30000_engine_nonblank_reached"],
                        "native_authority": "CANDIDATE_ONLY", "agent_control": "SAME_ENGINE_DATABASE_SHARED_USDT_TURNOVER", "raw_archives_publicly_resold": False,
+                       "tasks_pr1": {"work_types": 5, "payment_authority": "NONE",
+                           "automatic_execution": False, "language_interpretation_installed": False,
+                           "paypal_installed": False, "completed_deliverables": 0},
                        "production_paths": {"distinct_changed_boundary_tests": 121,
                            "actual_public_market_native_profiles": 4, "new_customer_payments": 0,
                            "new_paid_inference_jobs": 0, "new_venue_orders": 0,

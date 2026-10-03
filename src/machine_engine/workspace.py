@@ -55,6 +55,8 @@ class Workspace:
         self.economics = EconomicLibrary(self)
         from .live import LiveDecisions
         self.live = LiveDecisions(self)
+        from .tasks import Tasks
+        self.tasks = Tasks(self)
 
     def event(self, db, kind, value):
         fingerprint = journal_fingerprint(db)
@@ -205,5 +207,5 @@ class Workspace:
             "capital_aggregation": "NO_CROSS_ASSET_VALUATION_WITHOUT_PRICE_EVIDENCE",
             "credential_namespace": self.credential_prefix,
             "sync_jobs": self.scheduler.status(), "trading": self.trading.status(), "live": self.live.status(), "native": self.native.status(),
-            "control": self.control.status(), "economics": self.economics.status(),
+            "control": self.control.status(), "economics": self.economics.status(), "tasks": self.tasks.status(),
             "product": "USER_OWNED_AGENT_OPERATIONS_CONSOLE"}

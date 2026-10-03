@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/srv/skew/economic-machine-commerce-20261002/scripts/verify_tasks_browser.py", line 219, in <module>
+    main()
+  File "/srv/skew/economic-machine-commerce-20261002/scripts/verify_tasks_browser.py", line 192, in main
+    assert all(t["payment_authority"] == "NONE" for t in records["tasks"])
+                                                         ~~~~~~~^^^^^^^^^
+KeyError: 'tasks'

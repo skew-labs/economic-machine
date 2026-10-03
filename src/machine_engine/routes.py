@@ -7,7 +7,10 @@ from economic_machine.values import require_keys
 
 
 def engine_routes(workspace_dependency, *, require_owner=None):
+    from .task_routes import task_routes
+
     router = APIRouter(prefix="/api/engine")
+    router.include_router(task_routes(workspace_dependency, require_owner=require_owner))
     owner = [Depends(require_owner)] if require_owner else []
 
     @router.get("/control")

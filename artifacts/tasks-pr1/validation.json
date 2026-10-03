@@ -1,0 +1,54 @@
+{
+  "accepted": true,
+  "test_host": "OWNER_AUTHORIZED_CANADA",
+  "focused_tests": 87,
+  "new_task_tests": 23,
+  "public_browser_checks": 14,
+  "scope": "PR1_TASK_BRIEFS_AND_CONFIRMED_PREFERENCES_ONLY",
+  "files": [
+    {
+      "path": "src/machine_engine/tasks.py",
+      "physical_lines": 524,
+      "nonblank_lines": 493,
+      "sha256": "fb321bb872c4112ad5852e5f94e078a4a2c15197a09e7a1d97d7ae8f7edb4a01"
+    },
+    {
+      "path": "src/machine_engine/task_routes.py",
+      "physical_lines": 41,
+      "nonblank_lines": 29,
+      "sha256": "b0ae05aec2ad90fc3fb12d3f7d459bc1a321c1b097fcebacf0467993779fcfe0"
+    },
+    {
+      "path": "web/tasks.js",
+      "physical_lines": 118,
+      "nonblank_lines": 118,
+      "sha256": "caf7313f4067d492b376ec636a381156fd7254fb5c43ead56e2e4abd25557883"
+    },
+    {
+      "path": "web/tasks.css",
+      "physical_lines": 1,
+      "nonblank_lines": 1,
+      "sha256": "f7b2e676859b8ab98e2e70cb61f405017ec79dc1b82353d84d93b8a51654b6e8"
+    },
+    {
+      "path": "tests/test_tasks.py",
+      "physical_lines": 379,
+      "nonblank_lines": 340,
+      "sha256": "48eee41cddde5120cd4462da1cf6d1f59ce103dd8ccdac61bff6e183679b2850"
+    },
+    {
+      "path": "scripts/verify_tasks_browser.py",
+      "physical_lines": 230,
+      "nonblank_lines": 221,
+      "sha256": "21efc53aff871a1fc10e94b35279379d4860adfbeddaf76e821d8b18cef6347b"
+    }
+  ],
+  "paypal_installed": false,
+  "automatic_fulfillment": false,
+  "customer_payments": 0,
+  "native_cpp_source_changed": false,
+  "source_backup": "build/tasks-pr1/pre-deploy",
+  "portal_only_connections": 64,
+  "portal_only_keepalive_seconds": 2,
+  "payment_api_rate_limits_changed": false
+}

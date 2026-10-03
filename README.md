@@ -232,3 +232,10 @@ a hash-locked supply-chain attestation. The private systemd service listens only
 
 [Architecture](docs/ARCHITECTURE.md) · [Production contract](docs/PRODUCTION.md) ·
 [Verification](docs/VERIFICATION.md) · [Original extraction](docs/EXTRACTION.md).
+
+## Practical work tasks
+
+The existing console now includes [Tasks](docs/TASKS_PR1_20261003.md): vendor
+comparisons, research briefs, document drafts, data cleanup and localization.
+Save exact USD caps and explicitly confirmed conditions in the owner workspace.
+Saving a brief grants no payment authority or automatic execution.
