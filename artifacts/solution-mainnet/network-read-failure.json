@@ -1,0 +1,10 @@
+{
+  "state": "UNAVAILABLE",
+  "reason": "SOLUTION_RPC_UNAVAILABLE",
+  "chain_id": 42161,
+  "providers": [
+    "arb1.arbitrum.io",
+    "arbitrum.drpc.org"
+  ],
+  "submitted_transactions": 0
+}

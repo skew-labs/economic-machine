@@ -17,10 +17,10 @@ def load(path):
         raise MachineError('SOLUTION_PRIVATE_CONFIG_REQUIRED')
     raw=json.loads(source.read_text())
     required={'rpc_a','rpc_b','contract','code_sha256','miner','directory','pipeline','pipeline_sha256','edge_budget','daily_edge_limit'}
-    if set(raw)-required-{'cpus','working_confirmations'} or required-set(raw):
+    if set(raw)-required-{'cpus','working_confirmations','chain_id'} or required-set(raw):
         raise MachineError('SOLUTION_CONFIG_FIELDS')
     chain=FinalizedChain(ReadRPC(raw['rpc_a']),ReadRPC(raw['rpc_b']),raw['contract'],raw['code_sha256'],
-                         working_confirmations=raw.get('working_confirmations',4))
+                         working_confirmations=raw.get('working_confirmations',4),chain_id=raw.get('chain_id',421614))
     journal=MiningJournal(raw['directory'])
     pipeline=NativePipeline(raw['pipeline'],raw['pipeline_sha256'],cpus=raw.get('cpus'))
     return LocalMiner(journal,chain,pipeline,raw['miner'],budget=raw['edge_budget'],daily_limit=raw['daily_edge_limit'])

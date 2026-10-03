@@ -5,14 +5,24 @@ import secrets
 from pathlib import Path
 
 from eth_abi import encode
-from eth_utils import keccak
+from eth_utils import keccak, is_address, to_checksum_address
 from economic_machine.values import MachineError
-from .mining_client import binding
 from .solution import SolutionLab
 
 
-def seal(raw, *, contract, round_id, miner, secret_file):
-    contract,chain,round_id,miner=binding(contract,421614,round_id,miner)
+def binding(contract, chain, round_id, miner):
+    """Explicit solution-network scope; legacy EVM-plan mining stays testnet-only."""
+    if (not is_address(contract) or not is_address(miner)
+            or int(contract, 16) == 0 or int(miner, 16) == 0):
+        raise MachineError('SOLUTION_ADDRESS_REQUIRED')
+    if (type(chain) is not int or chain not in {42161, 421614}
+            or type(round_id) is not int or not 1 <= round_id <= 10000):
+        raise MachineError('SOLUTION_NETWORK_ROUND_REQUIRED')
+    return to_checksum_address(contract), chain, round_id, to_checksum_address(miner)
+
+
+def seal(raw, *, contract, round_id, miner, secret_file, chain_id=421614):
+    contract,chain,round_id,miner=binding(contract,chain_id,round_id,miner)
     # Recompute; neither a model's claimed score nor a server result is accepted as evidence.
     result=SolutionLab().calculate(raw)
     bits=int(result['bits']);problem=int(raw['problem']);salt=secrets.token_bytes(32)

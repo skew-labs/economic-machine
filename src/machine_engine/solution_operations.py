@@ -263,7 +263,7 @@ class MiningJournal:
 
 class LocalMiner:
     def __init__(self, journal, chain, pipeline, miner, *, budget=100000, daily_limit=10000000):
-        from .mining_client import binding
+        from .solution_client import binding
         _, _, _, self.miner = binding(chain.contract,chain.chain_id,1,miner)
         self.journal,self.chain,self.pipeline = journal,chain,pipeline
         self.budget,self.daily_limit = budget,daily_limit
@@ -323,7 +323,7 @@ class LocalMiner:
             raw = {'seed':str(bound['seed']),'problem':str(bound['problem']),'budget':str(self.budget),
                    'search_seed':'42','algorithm':'integer_anneal','bits':record['result']['bits']}
             if not path.exists():
-                payload = seal(raw,contract=bound['contract'],round_id=bound['round'],miner=self.miner,secret_file=path)
+                payload = seal(raw,contract=bound['contract'],round_id=bound['round'],miner=self.miner,secret_file=path,chain_id=bound['chain'])
             else:
                 # Recovery after fsync(secret) but before database intent commit. Validate secret before reuse.
                 reveal(path)

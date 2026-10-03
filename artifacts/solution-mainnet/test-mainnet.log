@@ -1,0 +1,17 @@
+test_additional_seed_cpp_solidity_parity (test_solution_mainnet.MainnetContract.test_additional_seed_cpp_solidity_parity) ... ok
+test_batch_atomicity_cap_no_premine_and_erc20 (test_solution_mainnet.MainnetContract.test_batch_atomicity_cap_no_premine_and_erc20) ... ok
+test_copied_commitment_salt_phase_and_canonical_defenses (test_solution_mainnet.MainnetContract.test_copied_commitment_salt_phase_and_canonical_defenses) ... ok
+test_delayed_vrf_never_cancels_or_rerolls_and_250k_callback (test_solution_mainnet.MainnetContract.test_delayed_vrf_never_cancels_or_rerolls_and_250k_callback) ... ok
+test_difficulty_changes_only_future_round_and_no_repeated_seed_reroll (test_solution_mainnet.MainnetContract.test_difficulty_changes_only_future_round_and_no_repeated_seed_reroll) ... ok
+test_governance_two_step_revokes_every_old_keeper (test_solution_mainnet.MainnetContract.test_governance_two_step_revokes_every_old_keeper) ... ok
+test_launch_lock_and_subscription_reserve_consumer_gate (test_solution_mainnet.MainnetContract.test_launch_lock_and_subscription_reserve_consumer_gate) ... ok
+test_pause_preserves_existing_reveal_finalize_claim (test_solution_mainnet.MainnetContract.test_pause_preserves_existing_reveal_finalize_claim) ... ok
+test_tie_order_bound_to_commit_not_reveal (test_solution_mainnet.MainnetContract.test_tie_order_bound_to_commit_not_reveal) ... ok
+test_cpp_mainnet_binding_to_finalized_token_balance (test_solution_mainnet.MainnetOperator.test_cpp_mainnet_binding_to_finalized_token_balance) ... ok
+test_network_scope_legacy_unchanged (test_solution_mainnet.MainnetOperator.test_network_scope_legacy_unchanged) ... ok
+test_private_secret_cannot_replay_across_networks (test_solution_mainnet.MainnetOperator.test_private_secret_cannot_replay_across_networks) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 54.608s
+
+OK
