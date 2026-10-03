@@ -5,9 +5,9 @@ inference response, lease, capacity or seller service-level promise exists.
 Providers stay outside the payable catalog until their adapter is admitted.
 """
 
-import threading
 import base64
 import hashlib
+import threading
 
 from economic_machine.values import MachineError, digest
 
@@ -21,8 +21,9 @@ NETWORK = "eip155:42161"
 
 
 class ComputeRegistry:
-    def __init__(self, store, transport=None):
+    def __init__(self, store, transport=None, *, admitted=False):
         self.store, self.transport = store, transport or HTTPS({URL})
+        self.admitted = admitted
         self.lock = threading.Lock()
         self.cache = None
 
@@ -30,12 +31,12 @@ class ComputeRegistry:
         with self.lock:
             return {"providers": [self.cache or self.initial()], "gpu_lease_required": True}
 
-    @staticmethod
-    def initial():
+    def initial(self):
         return {"id": "gate402-inference", "name": "Gate402", "kind": "INFERENCE_API", "url": URL,
             "network": NETWORK, "credential": "CUSTOMER_WALLET_X402", "api_key_required": False,
-            "status": "NOT_CHECKED", "payment_adapter_status": "NOT_ADMITTED",
-            "purchase_enabled": False, "capacity_verified": False, "workloads_started": 0}
+            "status": "NOT_CHECKED", "payment_adapter_status": "ADMITTED" if self.admitted else "NOT_ADMITTED",
+            "purchase_enabled": self.admitted, "capacity_verified": False, "workloads_started": 0,
+            "resource_id": "gate402-inference" if self.admitted else None}
 
     def probe(self, provider_id):
         if provider_id != "gate402-inference":
@@ -82,7 +83,7 @@ class ComputeRegistry:
                 result.update(status="QUOTE_OBSERVED", quote=options[0],
                     challenge_hash=hashlib.sha256(base64.b64decode(headers["payment-required"], validate=True)).hexdigest(),
                     challenge_hash_scheme="SHA256_RAW_X402_JSON_BYTES")
-            except Exception:
+            except Exception:  # noqa: BLE001 - arbitrary provider and transport data stay private.
                 # Do not expose headers, arbitrary response bodies or network internals.
                 result.update(status="UNAVAILABLE", reason="PROVIDER_QUOTE_NOT_VERIFIED")
             self.cache = result

@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/srv/skew/economic-machine-commerce-20261002/scripts/verify_paths_browser.py", line 92, in <module>
+    main()
+  File "/srv/skew/economic-machine-commerce-20261002/scripts/verify_paths_browser.py", line 32, in main
+    page.get_by_label('Maximum output tokens', exact=True).fill('8')
+  File "/srv/skew/economic-machine-commerce-20261002/tools/browser-qa-venv/lib/python3.12/site-packages/playwright/sync_api/_generated.py", line 15919, in fill
+    self._sync(
+  File "/srv/skew/economic-machine-commerce-20261002/tools/browser-qa-venv/lib/python3.12/site-packages/playwright/_impl/_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/tools/browser-qa-venv/lib/python3.12/site-packages/playwright/_impl/_locator.py", line 212, in fill
+    return await self._frame.fill(self._selector, strict=True, **params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/tools/browser-qa-venv/lib/python3.12/site-packages/playwright/_impl/_frame.py", line 590, in fill
+    await self._fill(**locals_to_params(locals()))
+  File "/srv/skew/economic-machine-commerce-20261002/tools/browser-qa-venv/lib/python3.12/site-packages/playwright/_impl/_frame.py", line 602, in _fill
+    await self._channel.send("fill", self._timeout, locals_to_params(locals()))
+  File "/srv/skew/economic-machine-commerce-20261002/tools/browser-qa-venv/lib/python3.12/site-packages/playwright/_impl/_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/tools/browser-qa-venv/lib/python3.12/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Locator.fill: Timeout 30000ms exceeded.
+Call log:
+  - waiting for get_by_label("Maximum output tokens", exact=True)
+

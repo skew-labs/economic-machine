@@ -6,12 +6,13 @@ an untrusted 402 response. TEST_CREDIT is deliberately unsupported here.
 
 import base64
 import binascii
+import hashlib
 import json
 import re
 from dataclasses import dataclass
 from urllib.parse import urlsplit
 
-from economic_machine.values import MachineError, digest
+from economic_machine.values import MachineError
 
 
 def decode_header(value):
@@ -108,7 +109,9 @@ def admit_required(header, binding, current_terms_hash, now):
         if address(requirement.get("payTo")) != address(binding.pay_to):
             continue
         timeout = requirement.get("maxTimeoutSeconds")
-        if type(timeout) is not int or not 1 <= timeout <= binding.max_timeout_seconds:
+        # The provider advertises its maximum. A shorter local authorization
+        # remains legal; its validity is always bounded by the owner policy.
+        if type(timeout) is not int or not 1 <= timeout <= 3600:
             continue
         # This adapter only admits the default exact EVM EIP-3009 authorization flow.
         if (extra.get("assetTransferMethod", "eip3009") != "eip3009"
@@ -119,8 +122,11 @@ def admit_required(header, binding, current_terms_hash, now):
     if len(compatible) != 1:
         raise MachineError("one unambiguous payment option matching agreement required")
     return {"status": "SIGNATURE_REQUIRED", "x402Version": 2, "accepted": compatible[0],
-            "terms_hash": binding.terms_hash, "challenge_hash": digest(body),
-            "authorization_expires": min(binding.expires, now + compatible[0]["maxTimeoutSeconds"]),
+            "terms_hash": binding.terms_hash,
+            "challenge_hash": hashlib.sha256(base64.b64decode(header, validate=True)).hexdigest(),
+            "challenge_hash_scheme": "SHA256_RAW_X402_JSON_BYTES",
+            "authorization_expires": min(binding.expires, now + binding.max_timeout_seconds,
+                                         now + compatible[0]["maxTimeoutSeconds"]),
             "payment_status": "UNPAID", "tx_hash": None}
 
 

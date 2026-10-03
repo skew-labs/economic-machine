@@ -184,6 +184,7 @@ class Access:
                     or (len(parts) == 5 and parts[2] == "connections" and parts[4] == "sync")):
                 scope = "engine:write"
         elif method == "GET" and (path.startswith("/api/data/") or
+                (len(parts) == 6 and parts[1:4] == ["commerce", "compute", "jobs"] and parts[5] == "result") or
                 (len(parts) == 5 and parts[1:3] == ["commerce", "subscriptions"] and parts[4] == "delivery")):
             scope = "data:read"
         elif method == "GET" and (path == "/api/commerce/checkouts" or
@@ -191,7 +192,7 @@ class Access:
                 (len(parts) >= 2 and parts[1] in {"workspace", "market", "orders", "demands", "payments"})):
             scope = "read"
         elif method == "POST":
-            if path == "/api/commerce/checkouts":
+            if path in {"/api/commerce/checkouts", "/api/commerce/compute/jobs"}:
                 scope = "demands:write"
             elif len(parts) == 5 and parts[1:3] == ["commerce", "checkouts"] and parts[4] == "prepare":
                 scope = "payments:request"

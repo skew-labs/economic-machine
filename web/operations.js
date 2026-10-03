@@ -642,6 +642,10 @@
         ],
         trading.orders.map((o) => {
           const controls = el("div", "ops-row-actions");
+          if (["FILLED", "CANCELED", "EXPIRED", "REJECTED", "EXPIRED_IN_MATCH"].includes(o.status)) controls.append(
+            el("small", "muted", `Account: ${o.account_readback?.status || 'NOT_OBSERVED'}`),
+            action("Refresh account", async () => { await request(`/trade/orders/${o.id}/readback`, {}); await refresh(); })
+          );
           controls.append(
             action("Reconcile", async () => {
               await request(`/trade/orders/${o.id}/reconcile`, {});
@@ -684,7 +688,7 @@
       record.connections
         .filter(
           (c) =>
-            ["binance-spot", "binance-usdm"].includes(c.profile) &&
+            ["binance-spot", "binance-usdm", "binance-spot-testnet", "binance-usdm-testnet"].includes(c.profile) &&
             c.status !== "DISCONNECTED",
         )
         .map((c) => [c.id, c.name]),
@@ -763,6 +767,38 @@
         "No venue policies.",
       ),
     );
+    liveControls(root, trading);
+  }
+  function liveControls(root, trading) {
+    const section = el('section', 'ops-section'); section.append(el('h2', '', 'Live market rules'),
+      el('p', 'muted', 'Connect a live market and venue account, set a rule, then review each proposed order.'));
+    const form = el('form', 'ops-form');
+    labeled(form, 'Rule name', 'live-name', 'text', 'MarketGuard');
+    select(form, 'Live market', 'live-market', record.connections.filter(c => ['binance-public-market', 'binance-public-futures', 'binance-testnet-market', 'binance-testnet-futures'].includes(c.profile) && c.status !== 'DISCONNECTED').map(c => [c.id, c.name]));
+    select(form, 'Venue policy', 'live-policy', trading.policies.filter(p => p.status === 'ACTIVE').map(p => [p.id, p.policy.name]));
+    labeled(form, 'Drawdown trigger · basis points', 'live-trigger', 'number', '100');
+    labeled(form, 'Order quantity', 'live-quantity', 'text', '0.001');
+    select(form, 'Action', 'live-side', [['SELL', 'Sell / reduce long'], ['BUY', 'Buy / reduce short']]);
+    labeled(form, 'Maximum slippage · basis points', 'live-slip', 'number', '25');
+    const submit = el('button', 'button secondary', 'Save market rule'); submit.type = 'submit';
+    submit.disabled = !writable() || !trading.policies.length; form.append(submit);
+    form.addEventListener('submit', async e => { e.preventDefault(); submit.disabled = true;
+      try { const d = new FormData(form), vp = trading.policies.find(p => p.id === d.get('live-policy'));
+        const venue = record.connections.find(c => c.id === vp?.policy.connection_id);
+        await request('/live/watches', {name: d.get('live-name'), market_connection_id: d.get('live-market'), venue_policy_id: d.get('live-policy'),
+          trigger_drawdown_bps: Number(d.get('live-trigger')), quantity: d.get('live-quantity'), side: d.get('live-side'),
+          reduce_only: venue?.profile.startsWith('binance-usdm') || false, maximum_slippage_bps: Number(d.get('live-slip')), max_age_seconds: 120});
+        await refresh();
+      } catch(error) { notify(error.message, true); submit.disabled = !writable(); }
+    }); section.append(form); root.append(section);
+    const live = record.live || {watches: [], decisions: []};
+    root.append(table('Saved market rules', ['Rule', 'State', 'Check'], live.watches.map(w => [w.body.name, status(w.status), action('Evaluate', async () => {
+      await request(`/connections/${w.body.market_connection_id}/sync`, {}); await request(`/live/watches/${w.id}/evaluate`, {}); await refresh();
+    })]), 'No market rules.'));
+    root.append(table('Market decisions', ['Market', 'Decision', 'Valid until', 'Review'], live.decisions.map(d => [
+      identity(d.symbol, 'Native C++ · zero LLM calls'), status(d.action), stamp(d.expires_at),
+      d.action === 'PLAN' && d.expires_at > Date.now() / 1000 ? action('Review order', async () => { currentPlan = await request(`/live/decisions/${d.id}/plan`, {}); await refresh(); }) : 'No order'
+    ]), 'No observed decisions.'));
   }
   function usage() {
     const root = byId("ops-usage");

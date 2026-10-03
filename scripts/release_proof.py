@@ -47,6 +47,10 @@ def main():
         if path.suffix in {".png", ".jpg"}:
             paths.add(str(path.relative_to(ROOT)))
     paths.add("deploy/native-economics.conf")
+    paths.update({"deploy/compute.conf", "docs/PRODUCTION_PATHS_20261003.md"})
+    for path in (ROOT / "artifacts/production-paths").iterdir():
+        if path.is_file() and path.suffix in {".json", ".log", ".jpg"} and path.name != "manifest-verification.json":
+            paths.add(str(path.relative_to(ROOT)))
     paths.update({"docs/CONSOLE_UX_20261003.md", "artifacts/atlas-release/console-ux-browser.json",
                   "artifacts/atlas-release/console-ux-site-deployment.json"})
     paths.add("docs/SERVICE_COMMERCE.md")
@@ -95,7 +99,11 @@ def main():
                        "live_new_datapass_purchases": 0, "economic_operations": 20,
                        "engine_implementation_nonblank": lines["engine_implementation"]["nonblank"],
                        "target_30000_engine_nonblank_reached": lines["target_30000_engine_nonblank_reached"],
-                       "native_authority": "CANDIDATE_ONLY", "agent_control": "SAME_ENGINE_DATABASE_SHARED_USDT_TURNOVER", "raw_archives_publicly_resold": False},
+                       "native_authority": "CANDIDATE_ONLY", "agent_control": "SAME_ENGINE_DATABASE_SHARED_USDT_TURNOVER", "raw_archives_publicly_resold": False,
+                       "production_paths": {"distinct_changed_boundary_tests": 121,
+                           "actual_public_market_native_profiles": 4, "new_customer_payments": 0,
+                           "new_paid_inference_jobs": 0, "new_venue_orders": 0,
+                           "off_host_backup_verified": False, "actual_same_host_restore": True}},
             "assurance": "SOURCE_AUDIT_PLUS_REPRODUCIBLE_LOCAL_EVM_AND_NATIVE_TESTS_NOT_PRODUCTION_CERTIFICATION"}
     manifest = body | {"manifest_sha256": digest(body)}
     verify_manifest(manifest)

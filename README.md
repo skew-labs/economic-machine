@@ -21,6 +21,13 @@ The public runtime keeps live order transmission **disabled**; no new customer o
 Private venue balances/positions require user credentials. Commission reconciliation and additional
 venue adapters remain separate work. See [the unified runtime contract](docs/UNIFIED_ENGINE.md).
 
+The console now admits a bounded x402 inference provider and four fixed public
+spot/futures market sources, including testnets. Observed data can enter the
+actual C++ calculation, owner-reviewed order plan and independent account readback.
+Paid delivery is implemented with finalized-only access and ambiguity recovery;
+actual customer payment and venue-fill evidence still require their owners.
+[Current implementation, live evidence and remaining gates](docs/PRODUCTION_PATHS_20261003.md).
+
 Exchange trades belong to your exchange adapter. The separate x402 commerce layer is for purchasing
 external data and compute; it is not a toll on every operation or a mandatory payment path for venue trading.
 

@@ -14,6 +14,29 @@ def engine_routes(workspace_dependency, *, require_owner=None):
     def control_status(work=Depends(workspace_dependency)):
         return work.control.status()
 
+    @router.get("/live")
+    def live_status(work=Depends(workspace_dependency)):
+        return work.live.status()
+
+    @router.post("/trade/orders/{oid}/readback", dependencies=owner)
+    def trade_readback(oid: str, raw: dict, work=Depends(workspace_dependency)):
+        require_keys(raw, set(), "post-trade account readback")
+        return work.trading.readback(oid)
+
+    @router.post("/live/watches", dependencies=owner)
+    def live_watch(raw: dict, work=Depends(workspace_dependency)):
+        return work.live.policy(raw)
+
+    @router.post("/live/watches/{wid}/evaluate", dependencies=owner)
+    def live_evaluate(wid: str, raw: dict, work=Depends(workspace_dependency)):
+        require_keys(raw, set(), "observed native decision")
+        return work.live.evaluate(wid)
+
+    @router.post("/live/decisions/{did}/plan", dependencies=owner)
+    def live_plan(did: str, raw: dict, work=Depends(workspace_dependency)):
+        require_keys(raw, set(), "observed decision plan")
+        return work.live.plan(did)
+
     @router.get("/economics")
     def economic_catalogue(work=Depends(workspace_dependency)):
         return work.economics.catalogue()

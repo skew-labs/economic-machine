@@ -19,7 +19,11 @@ from economic_machine.values import MachineError, decstr, digest, require_keys
 from machine_commerce.transport import PinnedTransport, https_url, integer
 from machine_commerce.x402 import address
 
+from .live import MARKETS
+
 PROFILES = {
+    "binance-public-market": {"kind": "data", "name": "Live Binance market", "credentials": [],
+        "fields": ["symbol"], "operations": ["READ_MARKET"], "network": "binance-public"},
     "arbitrum-sepolia-wallet": {"kind": "wallet", "name": "Arbitrum Sepolia", "credentials": [],
         "fields": ["address"], "operations": ["READ_BALANCES"], "network": "eip155:421614"},
     "binance-spot": {"kind": "exchange", "name": "Binance Spot", "credentials": ["api_key_env", "api_secret_env"],
@@ -31,6 +35,12 @@ PROFILES = {
     "openai-compatible": {"kind": "ai", "name": "AI API", "credentials": ["api_key_env"],
         "fields": ["url"], "operations": ["LIST_MODELS"], "network": "https"},
 }
+for _name in ["binance-spot", "binance-usdm"]:
+    PROFILES[_name + "-testnet"] = PROFILES[_name] | {"name": PROFILES[_name]["name"] + " Testnet",
+                                                    "network": _name + "-testnet"}
+for _market, (_, _venue) in MARKETS.items():
+    PROFILES[_market] = {"kind": "data", "name": PROFILES[_venue]['name'] + ' Market', 'credentials': [],
+        'fields': ['symbol'], 'operations': ['READ_MARKET'], 'network': _market}
 RPC = "https://sepolia-rollup.arbitrum.io/rpc"
 USDC = "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d"
 
@@ -49,6 +59,8 @@ def normalize_connection(raw):
             raise MachineError("use an environment variable name, not a secret")
     if "address" in config:
         config = config | {"address": address(config["address"])}
+    if "symbol" in config and (not isinstance(config["symbol"], str) or re.fullmatch(r"[A-Z0-9]{3,24}", config["symbol"]) is None):
+        raise MachineError("EXACT_MARKET_SYMBOL_REQUIRED")
     if "url" in config:
         https_url(config["url"])
         if raw["profile"] == "openai-compatible" and not config["url"].endswith("/models"):
@@ -102,11 +114,14 @@ class Connectors:
 
     def read(self, connection):
         profile = connection["profile"]
-        if profile == "arbitrum-sepolia-wallet":
+        if profile in MARKETS:
+            from .live import read_market
+            result = read_market(self.http, connection["config"]["symbol"], self.clock(), profile=profile)
+        elif profile == "arbitrum-sepolia-wallet":
             result = self.wallet(connection)
-        elif profile == "binance-spot":
+        elif profile in {"binance-spot", "binance-spot-testnet"}:
             result = self.binance(connection)
-        elif profile == "binance-usdm":
+        elif profile in {"binance-usdm", "binance-usdm-testnet"}:
             result = self.derivatives(connection)
         elif profile == "openai-compatible":
             result = self.models(connection)
@@ -145,13 +160,15 @@ class Connectors:
                 "assurance": "RPC_FINALIZED_TAG", "network": "eip155:421614"}
 
     def binance(self, connection):
+        from .broker import VENUES
+        base = VENUES[connection["profile"]][0]
         config = connection["config"]
         key, secret = credential(config["api_key_env"]), credential(config["api_secret_env"])
         def get(path):
             params = {"timestamp": int(self.clock() * 1000), "recvWindow": 5000}
             encoded = urlencode(params)
             params["signature"] = hmac.new(secret.encode(), encoded.encode(), hashlib.sha256).hexdigest()
-            return self.http.request("https://api.binance.com/api/v3/" + path,
+            return self.http.request(base + "/api/v3/" + path,
                 headers={"X-MBX-APIKEY": key}, params=params)
         account, orders = get("account"), get("openOrders")
         if not isinstance(account.get("balances"), list) or not isinstance(orders, list) or len(orders) > 1000:
@@ -172,7 +189,7 @@ class Connectors:
         public_orders = [{"id": str(o["orderId"]), "symbol": o["symbol"], "side": o["side"],
             "status": o["status"], "price": o["price"], "quantity": o["origQty"], "filled": o["executedQty"]} for o in orders]
         return {"assets": balances, "positions": [], "orders": public_orders,
-                "assurance": "AUTHENTICATED_READ_ONLY_API", "network": "binance-spot"}
+                "assurance": "AUTHENTICATED_READ_ONLY_API", "network": connection["profile"]}
 
     def models(self, connection):
         config = connection["config"]
@@ -211,7 +228,7 @@ class Connectors:
             "status": o["status"], "price": decstr(decimal(o["price"])), "quantity": decstr(decimal(o["origQty"])),
             "filled": decstr(decimal(o["executedQty"])), "reduce_only": o["reduceOnly"], "position_side": o["positionSide"]} for o in orders]
         return {"assets": assets, "positions": public_positions, "orders": public_orders,
-                "assurance": "AUTHENTICATED_SEQUENTIAL_READS_NOT_ATOMIC_SNAPSHOT", "network": "binance-usdm"}
+                "assurance": "AUTHENTICATED_SEQUENTIAL_READS_NOT_ATOMIC_SNAPSHOT", "network": connection["profile"]}
 
     def data(self, connection):
         config = connection["config"]

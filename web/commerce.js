@@ -43,7 +43,10 @@
     for (const node of document.querySelectorAll('#commerce-dialog button')) node.disabled = true;
     try { await fn(); }
     catch (error) { $('commerce-error').textContent = Number(error.code) === 4001 ? 'Wallet approval cancelled. Nothing was submitted.' : error.message; }
-    finally { busy = false; if ($('commerce-dialog').open) paintCheckout(); }
+    finally { busy = false; for (const node of document.querySelectorAll('#commerce-dialog button')) node.disabled = false;
+      if ($('commerce-dialog').open) {
+      if (!selected?.compute || current) paintCheckout();
+    } }
   }
   async function refresh() {
     if (C.LOCAL_ENGINE) { paint(); return; }
@@ -108,13 +111,13 @@
       }
       bar.append(tabs, action('Refresh catalog', 'button secondary', () => refresh().catch(e => C.notify(e.message, true)))); root.append(bar);
       const grid = text('div', 'commerce-grid');
-      for (const p of catalog.products.filter(p => p.category !== 'subscription' && (filter === 'all' || p.category === filter))) grid.append(productCard(p));
+      for (const p of catalog.products.filter(p => p.category !== 'subscription' && p.data_type !== 'compute.inference' && (filter === 'all' || p.category === filter))) grid.append(productCard(p));
       if (filter !== 'compute') {
         const atlas = panel('Atlas APAC compute data', 'Explore source-bound price research and transferable DataPass licenses.');
         atlas.classList.add('commerce-product'); atlas.prepend(mark('atlas'));
         atlas.append(action('View data licenses', 'button secondary', () => C.setView('data'))); grid.append(atlas);
       }
-      if (filter !== 'data' && !catalog.products.some(p => p.category === 'compute')) {
+      if (filter !== 'data') {
         for (const provider of catalog.compute_connections?.providers || []) {
           const compute = panel(`${provider.name} · AI compute`, 'Pay-per-request inference through your wallet. No provider API key needed.');
           compute.classList.add('commerce-product'); compute.prepend(mark('engine'));
@@ -124,12 +127,13 @@
             check.disabled = true;
             try {
               const result = await C.api(`/api/commerce/compute/${provider.id}/check`, {});
-              status.textContent = result.quote ? `${amount(BigInt(result.quote.amount_atoms))} USDC quoted · payment adapter pending` : 'Provider quote unavailable. No payment sent.';
+              status.textContent = result.quote ? `${amount(BigInt(result.quote.amount_atoms))} USDC quoted · ${result.purchase_enabled ? 'review before paying' : 'payment adapter pending'}` : 'Provider quote unavailable. No payment sent.';
             } catch (error) { status.textContent = error.message; }
             finally { check.disabled = false; }
           });
-          compute.append(status, check, text('p', 'commerce-caption', 'Inference API · GPU capacity unverified · purchasing not open yet'),
+          compute.append(status, check, text('p', 'commerce-caption', 'Inference API · GPU capacity unverified'),
             link('Provider details', 'https://gate402.app/')); grid.append(compute);
+          if (provider.purchase_enabled) compute.append(action('Review inference request', 'button primary', () => openCompute(provider)));
         }
       }
       root.append(grid);
@@ -182,6 +186,31 @@
     ensureDialog(); selected = {product, plan}; current = null; quoteKey = 'quote-' + crypto.randomUUID();
     $('commerce-dialog-title').textContent = plan?.name || product.offers[0]?.name || product.data_type;
     $('commerce-error').textContent = ''; paintCheckout(); $('commerce-dialog').showModal();
+  }
+  function openCompute(provider) {
+    if (!requireOwner()) return;
+    ensureDialog(); current = null; quoteKey = 'compute-' + crypto.randomUUID();
+    const product = catalog.products.find(p => p.id === provider.resource_id);
+    if (!product) { C.notify('Refresh the approved provider catalog.', true); return; }
+    selected = {product, compute: true}; $('commerce-dialog-title').textContent = 'Buy inference';
+    $('commerce-error').textContent = '';
+    const root = $('commerce-dialog-body'); root.replaceChildren();
+    const form = text('form', 'commerce-form');
+    field(form, 'compute-model', 'Model', null, ['llama-3.1-8b', 'llama-3.1-70b', 'qwen-2.5-7b', 'mistral-small'].map(m => [m, m]));
+    const wrap = text('div', 'commerce-field'), label = text('label', '', 'Your request'); label.htmlFor = 'compute-prompt';
+    const prompt = text('textarea'); prompt.id = 'compute-prompt'; prompt.maxLength = 16000; prompt.value = 'Return OK.';
+    wrap.append(label, prompt); form.append(wrap);
+    field(form, 'compute-tokens', 'Maximum output tokens', '8');
+    field(form, 'compute-spend', 'Maximum payment · USDC', '0.005');
+    summary(form, [['Network', network(product.network)], ['Recipient', product.pay_to]]);
+    const btn = text('button', 'button primary', 'Get exact price'); btn.type = 'submit'; form.append(btn);
+    form.addEventListener('submit', event => { event.preventDefault(); run(async () => {
+      current = await C.api('/api/commerce/compute/jobs', {resource_id: product.id, request: {
+        model: $('compute-model').value, messages: [{role: 'user', content: prompt.value}], max_tokens: Number($('compute-tokens').value)},
+        max_total: $('compute-spend').value, idempotency_key: quoteKey});
+    }); });
+    root.append(form, text('p', 'commerce-caption', 'Review the exact price, then approve in your wallet. A quote starts no paid work.'));
+    $('commerce-dialog').showModal();
   }
   function openPlan(plan) {
     ensureDialog(); selected = null; current = null;
@@ -306,7 +335,12 @@
       current.subscribed_data = data;
     })));
     if (current.subscribed_data) root.append(text('pre', 'receipt-json', JSON.stringify(current.subscribed_data, null, 2)));
+    if (payment.status === 'SETTLED' && p?.data_type === 'compute.inference') root.append(action('Open inference result', 'button secondary', () => run(async () => {
+      current.compute_result = await C.api(`/api/commerce/compute/jobs/${current.id}/result`);
+    })));
+    if (current.compute_result) root.append(text('pre', 'receipt-json', JSON.stringify(current.compute_result, null, 2)));
     if (payment.tx_hash && payment.network === 'eip155:421614') root.append(link('View testnet transaction', `https://sepolia.arbiscan.io/tx/${payment.tx_hash}`));
+    if (payment.tx_hash && payment.network === 'eip155:42161') root.append(link('View transaction', `https://arbiscan.io/tx/${payment.tx_hash}`));
     if (payment.delivery && payment.status === 'SETTLED') {
       const details = text('details', 'commerce-delivery'); details.append(text('summary', '', 'View delivered resource'),
         text('pre', 'receipt-json', JSON.stringify(payment.delivery.artifact, null, 2))); root.append(details);

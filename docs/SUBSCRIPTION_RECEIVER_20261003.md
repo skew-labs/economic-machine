@@ -65,5 +65,7 @@ cancels another unsigned checkout; it never pays.
 
 The console is at
 `https://machine.148-113-153-116.nip.io/commerce/console#subscriptions` and is
-linked from `https://skew.deals`. Compute purchasing remains unadmitted; adding
-a subscription receiver does not connect or authorize a GPU provider.
+linked from `https://skew.deals`. The later
+[production paths release](PRODUCTION_PATHS_20261003.md) admits a separate
+inference provider and records an actual unsigned compute quote. No actual paid
+inference or GPU-capacity lease has been completed by that admission.

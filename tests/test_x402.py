@@ -34,7 +34,7 @@ class X402Tests(unittest.TestCase):
 
     def test_untrusted_resource_recipient_asset_price_and_network_cannot_change_terms(self):
         for key, value in [("payTo", "0x" + "ff" * 20), ("asset", "0x" + "ff" * 20),
-                           ("amount", "400001"), ("network", "eip155:1"), ("maxTimeoutSeconds", 3600),
+                           ("amount", "400001"), ("network", "eip155:1"), ("maxTimeoutSeconds", 3601),
                            ("scheme", "upto")]:
             with self.subTest(key=key), self.assertRaises(MachineError):
                 changed = copy.deepcopy(self.required)
@@ -44,6 +44,21 @@ class X402Tests(unittest.TestCase):
         changed["resource"]["url"] = "https://other.example/data"
         with self.assertRaises(MachineError):
             self.admit(changed)
+
+    def test_provider_maximum_never_extends_local_authorization(self):
+        changed = copy.deepcopy(self.required)
+        changed["accepts"][0]["maxTimeoutSeconds"] = 3600
+        self.assertEqual(self.admit(changed)["authorization_expires"], 960)
+        changed["accepts"][0]["maxTimeoutSeconds"] = 15
+        self.assertEqual(self.admit(changed)["authorization_expires"], 915)
+
+    def test_discovery_extension_float_never_becomes_financial_state(self):
+        changed = copy.deepcopy(self.required)
+        changed['extensions'] = {'discovery': {'example': {'temperature': 0.7}}}
+        admitted = self.admit(changed)
+        self.assertEqual(admitted['accepted']['amount'], '400000')
+        self.assertEqual(admitted['challenge_hash_scheme'], 'SHA256_RAW_X402_JSON_BYTES')
+        self.assertNotIn('extensions', admitted)
 
     def test_expiry_version_and_ambiguous_options_are_rejected(self):
         for now, terms in [(1000, self.binding.terms_hash), (900, "cd" * 32)]:

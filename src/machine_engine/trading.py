@@ -7,7 +7,7 @@ from decimal import localcontext
 
 from economic_machine.values import MachineError, canonical, decimal, decstr, digest, ident, require_keys
 
-from .broker import VenueRejected, broker_for, symbol
+from .broker import VENUES, VenueRejected, broker_for, symbol
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS engine_trade_policies (
@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS engine_trade_orders (
  venue_order_id TEXT, error_code TEXT, created INTEGER NOT NULL, updated INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS engine_trade_recovery (
  order_id TEXT PRIMARY KEY, failures INTEGER NOT NULL, next_run INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS engine_trade_readbacks (
+ order_id TEXT PRIMARY KEY, body TEXT NOT NULL);
 """
 TERMINAL = {"FILLED", "CANCELED", "EXPIRED", "REJECTED", "EXPIRED_IN_MATCH"}
 ACTIVE = {"TRANSMITTING", "UNKNOWN", "NEW", "PARTIALLY_FILLED", "CANCEL_PENDING"}
@@ -87,7 +89,7 @@ class Trading:
         with self.work.runtime.connect() as db:
             db.execute("BEGIN IMMEDIATE")
             _, body = self.connection(db, raw["connection_id"])
-            if body["profile"] not in {"binance-spot", "binance-usdm"}:
+            if body["profile"] not in VENUES:
                 raise MachineError("EXECUTION_ADAPTER_UNAVAILABLE")
             db.execute(
                 "INSERT INTO engine_trade_policies VALUES (?,?,'ACTIVE','0')", (pid, canonical(raw).decode())
@@ -154,8 +156,8 @@ class Trading:
                 raise MachineError("ACTIVE_VENUE_POLICY_REQUIRED")
             if raw["symbol"] not in policy["symbols"] or raw["side"] not in policy["sides"]:
                 raise MachineError("ORDER_OUTSIDE_POLICY")
-            if (connection["profile"] == "binance-usdm" and not raw["reduce_only"]) or (
-                connection["profile"] == "binance-spot" and raw["reduce_only"]
+            if (VENUES[connection["profile"]][1] and not raw["reduce_only"]) or (
+                not VENUES[connection["profile"]][1] and raw["reduce_only"]
             ):
                 raise MachineError("PROFILE_REDUCTION_MODE_MISMATCH")
             version = connection_row["version"]
@@ -215,6 +217,7 @@ class Trading:
             db.execute("BEGIN IMMEDIATE")
             row = self.get(db, oid)
             self.work.control.authorize_order(db, oid)
+            self.work.live.verify_order(db, oid)
             if row["plan_hash"] != plan_hash or digest(json.loads(row["plan"])) != plan_hash:
                 raise MachineError("EXACT_PLAN_APPROVAL_REQUIRED")
             if row["status"] != "AWAITING_APPROVAL" or json.loads(row["plan"])["expires_at"] <= int(
@@ -236,6 +239,7 @@ class Trading:
             row = self.get(db, oid)
             if row["status"] != "APPROVED":
                 raise MachineError("APPROVED_UNSENT_ORDER_REQUIRED")
+            self.work.live.verify_order(db, oid)
             _, connection = self.connection(db, row["connection_id"])
             plan = json.loads(row["plan"])
         broker = self.broker_factory(connection, clock=self.work.clock)
@@ -252,6 +256,7 @@ class Trading:
             row = self.get(db, oid)
             current, _ = self.connection(db, row["connection_id"])
             self.work.control.authorize_order(db, oid)
+            self.work.live.verify_order(db, oid)
             policy_row = db.execute(
                 "SELECT * FROM engine_trade_policies WHERE id=?", (row["policy_id"],)
             ).fetchone()
@@ -334,9 +339,15 @@ class Trading:
             "budget_basis": "GROSS_TURNOVER_NOT_WALLET_BALANCE",
         }
 
+    def public_order(self, db, row):
+        result = self.public(row)
+        proof = db.execute("SELECT body FROM engine_trade_readbacks WHERE order_id=?", (row["id"],)).fetchone()
+        result["account_readback"] = json.loads(proof[0]) if proof else {"status": "NOT_OBSERVED"}
+        return result
+
     def order(self, oid):
         with self.work.runtime.connect() as db:
-            return self.public(self.get(db, oid))
+            return self.public_order(db, self.get(db, oid))
 
     def unknown(self, oid, retry_after=0):
         with self.work.runtime.connect() as db:
@@ -375,7 +386,7 @@ class Trading:
                 self.work.control.observe_order(db, oid, "REJECTED")
         return self.order(oid)
 
-    def observe(self, oid, result):
+    def observe(self, oid, result, *, read_account=True):
         with self.work.runtime.connect() as db, localcontext() as context:
             context.prec = 180
             db.execute("BEGIN IMMEDIATE")
@@ -384,7 +395,7 @@ class Trading:
             status = result["status"]
             filled = decimal(result["executedQty"])
             quote = decimal(
-                result["cumQuote"] if plan["profile"] == "binance-usdm" else result["cummulativeQuoteQty"]
+                result["cumQuote"] if VENUES[plan["profile"]][1] else result["cummulativeQuoteQty"]
             )
             if (
                 status not in TERMINAL | {"NEW", "PARTIALLY_FILLED"}
@@ -404,7 +415,7 @@ class Trading:
                 or (status == "FILLED" and filled != decimal(plan["quantity"]))
             ):
                 raise MachineError("VENUE_ORDER_EVIDENCE_MISMATCH")
-            if plan["profile"] == "binance-usdm" and (
+            if VENUES[plan["profile"]][1] and (
                 result.get("reduceOnly") is not True or result.get("positionSide") != "BOTH"
             ):
                 raise MachineError("VENUE_ORDER_EVIDENCE_MISMATCH")
@@ -466,6 +477,45 @@ class Trading:
                 },
             )
             self.work.control.observe_order(db, oid, status, decstr(quote))
+        if status in TERMINAL and read_account:
+            return self.readback(oid)
+        return self.order(oid)
+
+    def readback(self, oid):
+        """Query the exact terminal order, then independently refresh its account.
+
+        This proves observation, not attribution: account reads are sequential,
+        other orders may have executed and commissions are not reconciled here.
+        A read failure never resubmits an order or rewrites a finalized fill.
+        """
+        with self.work.runtime.connect() as db:
+            row = self.get(db, oid)
+            if row["status"] not in TERMINAL:
+                raise MachineError("TERMINAL_ORDER_REQUIRED_FOR_ACCOUNT_READBACK")
+            _, connection = self.connection(db, row["connection_id"], recovery=True)
+            cid, plan = row["connection_id"], json.loads(row["plan"])
+        proof = {"status": "UNVERIFIED", "observed_at": int(self.work.clock()),
+                 "assurance": "SEQUENTIAL_ACCOUNT_OBSERVATION_NOT_FILL_ATTRIBUTION",
+                 "commissions_reconciled": False, "safe_to_resubmit": False}
+        try:
+            broker = self.broker_factory(connection, clock=self.work.clock)
+            result = broker.query(plan)
+            self.observe(oid, result, read_account=False)
+            refreshed = self.work.sync(cid, reader=broker.account_snapshot)
+            if refreshed["status"] != "CONNECTED" or not refreshed["new_snapshot"]:
+                raise MachineError("FRESH_POST_TRADE_ACCOUNT_REQUIRED")
+            with self.work.runtime.connect() as db:
+                fresh = db.execute("SELECT snapshot,version FROM engine_connections WHERE id=?", (cid,)).fetchone()
+                snapshot = json.loads(fresh["snapshot"])
+            proof.update(status="OBSERVED", connection_id=cid, connection_version=fresh["version"],
+                         account_source_hash=snapshot["source_hash"], order_evidence_hash=digest(result),
+                         account_observed_at=snapshot["observed_at"])
+        except Exception:  # noqa: BLE001 - no credential-bearing errors or retry of financial submission.
+            proof["reason"] = "POST_TRADE_ACCOUNT_OR_ORDER_NOT_VERIFIED"
+        with self.work.runtime.connect() as db:
+            db.execute("INSERT INTO engine_trade_readbacks VALUES (?,?) ON CONFLICT(order_id) "
+                       "DO UPDATE SET body=excluded.body", (oid, canonical(proof).decode()))
+            self.work.event(db, "POST_TRADE_ACCOUNT_READBACK", {"order_id": oid, **proof})
         return self.order(oid)
 
     def reconcile(self, oid):
@@ -530,7 +580,7 @@ class Trading:
                 "approval": "OWNER_PER_ORDER",
                 "policies": policies,
                 "orders": [
-                    self.public(row)
+                    self.public_order(db, row)
                     for row in db.execute("SELECT * FROM engine_trade_orders ORDER BY rowid DESC LIMIT 100")
                 ],
             }

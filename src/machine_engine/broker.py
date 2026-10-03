@@ -16,6 +16,13 @@ from machine_commerce.transport import PinnedTransport, https_url
 
 from .connections import credential
 
+VENUES = {
+    "binance-spot": ("https://api.binance.com", False),
+    "binance-usdm": ("https://fapi.binance.com", True),
+    "binance-spot-testnet": ("https://testnet.binance.vision", False),
+    "binance-usdm-testnet": ("https://demo-fapi.binance.com", True),
+}
+
 
 class VenueRejected(MachineError):
     pass
@@ -33,6 +40,7 @@ class VenuePort(Protocol):
     def instrument(self, ticker): ...
     def validate(self, instruction, instrument): ...
     def guard_account(self, order, instrument): ...
+    def account_snapshot(self, connection): ...
     def submit(self, plan): ...
     def query(self, plan): ...
     def cancel(self, plan): ...
@@ -48,7 +56,7 @@ class VenueHTTP:
         # query. Only this fixed public GET gets a larger, still bounded limit.
         maximum = (
             4_000_000
-            if method == "GET" and url == "https://fapi.binance.com/fapi/v1/exchangeInfo"
+            if method == "GET" and url in {base + "/fapi/v1/exchangeInfo" for base, futures in VENUES.values() if futures}
             else 500_000
         )
         delegate = httpx.HTTPTransport(retries=0, trust_env=False)
@@ -111,10 +119,9 @@ class BinanceBroker:
 
     def __init__(self, connection, *, http=None, clock=time.time):
         self.connection, self.http, self.clock = connection, http or VenueHTTP(), clock
-        if connection["profile"] not in {"binance-spot", "binance-usdm"}:
+        if connection["profile"] not in VENUES:
             raise MachineError("EXECUTION_ADAPTER_UNAVAILABLE")
-        self.futures = connection["profile"] == "binance-usdm"
-        self.base = "https://fapi.binance.com" if self.futures else "https://api.binance.com"
+        self.base, self.futures = VENUES[connection["profile"]]
         self.prefix = "/fapi/v1/" if self.futures else "/api/v3/"
 
     def signed(self, path, *, method="GET", params=None):
@@ -226,6 +233,10 @@ class BinanceBroker:
         if self.futures:
             params |= {"reduceOnly": "true", "positionSide": "BOTH"}
         return self.signed(self.prefix + "order", method="POST", params=params)
+
+    def account_snapshot(self, connection):
+        from .connections import Connectors
+        return Connectors(self.http, clock=self.clock).read(connection)
 
     def query(self, plan):
         return self.signed(

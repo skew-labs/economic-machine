@@ -7,7 +7,7 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 
-from economic_machine.journal import append_event, verify_journal
+from economic_machine.journal import append_event, fingerprint_row, journal_fingerprint, verify_journal
 from economic_machine.runtime import MachineRuntime
 from economic_machine.values import MachineError, canonical, digest, ident, require_keys
 
@@ -53,12 +53,20 @@ class Workspace:
         self.control = AgentControl(self)
         from .economics import EconomicLibrary
         self.economics = EconomicLibrary(self)
+        from .live import LiveDecisions
+        self.live = LiveDecisions(self)
 
     def event(self, db, kind, value):
-        if not verify_journal(db):
+        fingerprint = journal_fingerprint(db)
+        if (getattr(self, '_verified_journal_fingerprint', None) != fingerprint.hexdigest()
+                and not verify_journal(db)):
             raise MachineError("JOURNAL_INTEGRITY_FAILED")
         key = kind + ":" + secrets.token_hex(12)
         append_event(db, key, kind, digest(value), digest(value), value)
+        fingerprint_row(fingerprint, db.execute('SELECT * FROM events WHERE event_id=?', (key,)).fetchone())
+        # A rolled-back append merely invalidates this cache at the next call.
+        # Each transaction still reads and fingerprints the entire stored log.
+        self._verified_journal_fingerprint = fingerprint.hexdigest()
 
     def connect(self, raw):
         body = normalize_connection(raw)
@@ -75,7 +83,7 @@ class Workspace:
             self.event(db, "CONNECTION_CONFIGURED", {"id": cid, "profile": body["profile"], "at": at})
         return {"id": cid, "status": "CONFIGURED", "read_only": True, "secret_storage": "USER_ENVIRONMENT_ONLY"}
 
-    def sync(self, cid):
+    def sync(self, cid, *, reader=None):
         ident(cid, "connection ID")
         with self.runtime.connect() as db:
             row = db.execute("SELECT * FROM engine_connections WHERE id=?", (cid,)).fetchone()
@@ -85,7 +93,7 @@ class Workspace:
         # Network I/O occurs outside the transaction. A concurrent disconnect
         # invalidates the commit by advancing its generation.
         try:
-            snapshot = self.readers.read(body)
+            snapshot = (reader or self.readers.read)(body)
             status, error = "CONNECTED", None
         except Exception as exc:  # noqa: BLE001 - Connector exceptions must never leak credentials.
             snapshot, status = None, "DEGRADED"
@@ -106,6 +114,8 @@ class Workspace:
                 (status, at, canonical(snapshot).decode() if snapshot else None, error, cid))
             self.event(db, "CONNECTION_READ", {"id": cid, "status": status, "error_code": error,
                 "source_hash": snapshot["source_hash"] if snapshot else None, "at": at})
+        if status == "CONNECTED":
+            self.live.on_sync(cid)
         return {"id": cid, "status": status, "error_code": error, "new_snapshot": snapshot is not None,
                 "read_only": True}
 
@@ -194,6 +204,6 @@ class Workspace:
             "payment_scope": "EXTERNAL_DATA_AND_COMPUTE_ONLY", "venue_trades_use_venue_api": True,
             "capital_aggregation": "NO_CROSS_ASSET_VALUATION_WITHOUT_PRICE_EVIDENCE",
             "credential_namespace": self.credential_prefix,
-            "sync_jobs": self.scheduler.status(), "trading": self.trading.status(), "native": self.native.status(),
+            "sync_jobs": self.scheduler.status(), "trading": self.trading.status(), "live": self.live.status(), "native": self.native.status(),
             "control": self.control.status(), "economics": self.economics.status(),
             "product": "USER_OWNED_AGENT_OPERATIONS_CONSOLE"}

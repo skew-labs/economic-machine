@@ -1,9 +1,9 @@
 {
   "schema": "machine-line-audit-1",
   "engine_implementation": {
-    "files": 85,
-    "physical": 23123,
-    "nonblank": 21704
+    "files": 89,
+    "physical": 24042,
+    "nonblank": 22552
   },
   "native_cpp_implementation": {
     "files": 21,
@@ -11,14 +11,14 @@
     "nonblank": 6310
   },
   "tests": {
-    "files": 43,
-    "physical": 8308,
-    "nonblank": 7473
+    "files": 45,
+    "physical": 8909,
+    "nonblank": 8011
   },
   "operational_scripts": {
-    "files": 38,
-    "physical": 4073,
-    "nonblank": 3628
+    "files": 45,
+    "physical": 4741,
+    "nonblank": 4225
   },
   "implementation_files": [
     {
@@ -48,8 +48,8 @@
     },
     {
       "path": "src/economic_machine/journal.py",
-      "physical": 50,
-      "nonblank": 43
+      "physical": 79,
+      "nonblank": 67
     },
     {
       "path": "src/economic_machine/kernel.py",
@@ -93,13 +93,13 @@
     },
     {
       "path": "src/machine_commerce/access.py",
-      "physical": 219,
-      "nonblank": 200
+      "physical": 220,
+      "nonblank": 201
     },
     {
       "path": "src/machine_commerce/api.py",
-      "physical": 570,
-      "nonblank": 487
+      "physical": 584,
+      "nonblank": 499
     },
     {
       "path": "src/machine_commerce/atlas.py",
@@ -107,14 +107,24 @@
       "nonblank": 247
     },
     {
+      "path": "src/machine_commerce/backup.py",
+      "physical": 142,
+      "nonblank": 131
+    },
+    {
       "path": "src/machine_commerce/checkout.py",
       "physical": 285,
       "nonblank": 266
     },
     {
+      "path": "src/machine_commerce/compute.py",
+      "physical": 253,
+      "nonblank": 236
+    },
+    {
       "path": "src/machine_commerce/compute_registry.py",
-      "physical": 89,
-      "nonblank": 79
+      "physical": 90,
+      "nonblank": 80
     },
     {
       "path": "src/machine_commerce/datapass.py",
@@ -145,6 +155,11 @@
       "path": "src/machine_commerce/merchant.py",
       "physical": 247,
       "nonblank": 232
+    },
+    {
+      "path": "src/machine_commerce/offsite.py",
+      "physical": 87,
+      "nonblank": 77
     },
     {
       "path": "src/machine_commerce/operations.py",
@@ -188,8 +203,8 @@
     },
     {
       "path": "src/machine_commerce/x402.py",
-      "physical": 145,
-      "nonblank": 128
+      "physical": 151,
+      "nonblank": 134
     },
     {
       "path": "src/machine_engine/__init__.py",
@@ -203,13 +218,13 @@
     },
     {
       "path": "src/machine_engine/broker.py",
-      "physical": 245,
-      "nonblank": 215
+      "physical": 256,
+      "nonblank": 224
     },
     {
       "path": "src/machine_engine/connections.py",
-      "physical": 223,
-      "nonblank": 201
+      "physical": 240,
+      "nonblank": 217
     },
     {
       "path": "src/machine_engine/control.py",
@@ -227,6 +242,11 @@
       "nonblank": 399
     },
     {
+      "path": "src/machine_engine/live.py",
+      "physical": 205,
+      "nonblank": 190
+    },
+    {
       "path": "src/machine_engine/native.py",
       "physical": 70,
       "nonblank": 59
@@ -238,8 +258,8 @@
     },
     {
       "path": "src/machine_engine/routes.py",
-      "physical": 216,
-      "nonblank": 163
+      "physical": 239,
+      "nonblank": 181
     },
     {
       "path": "src/machine_engine/scheduler.py",
@@ -248,13 +268,13 @@
     },
     {
       "path": "src/machine_engine/trading.py",
-      "physical": 548,
-      "nonblank": 526
+      "physical": 598,
+      "nonblank": 573
     },
     {
       "path": "src/machine_engine/workspace.py",
-      "physical": 199,
-      "nonblank": 185
+      "physical": 209,
+      "nonblank": 195
     },
     {
       "path": "web/agents.js",
@@ -278,8 +298,8 @@
     },
     {
       "path": "web/commerce.js",
-      "physical": 324,
-      "nonblank": 323
+      "physical": 358,
+      "nonblank": 357
     },
     {
       "path": "web/console-theme.css",
@@ -303,8 +323,8 @@
     },
     {
       "path": "web/operations.js",
-      "physical": 1000,
-      "nonblank": 998
+      "physical": 1036,
+      "nonblank": 1034
     },
     {
       "path": "web/submission.css",
@@ -584,6 +604,11 @@
       "nonblank": 118
     },
     {
+      "path": "tests/test_production_paths.py",
+      "physical": 494,
+      "nonblank": 444
+    },
+    {
       "path": "tests/test_qwen_comparison.py",
       "physical": 113,
       "nonblank": 97
@@ -619,14 +644,19 @@
       "nonblank": 44
     },
     {
+      "path": "tests/test_subscription_wallet.py",
+      "physical": 92,
+      "nonblank": 81
+    },
+    {
       "path": "tests/test_wallet_auth.py",
       "physical": 174,
       "nonblank": 150
     },
     {
       "path": "tests/test_x402.py",
-      "physical": 93,
-      "nonblank": 80
+      "physical": 108,
+      "nonblank": 93
     },
     {
       "path": "tests/wallet_client.test.cjs",

@@ -12,6 +12,7 @@ dependencies = ["fastapi>=0.115,<1", "uvicorn>=0.32,<1", "httpx>=0.27,<1", "eth-
 [project.optional-dependencies]
 verification = ["web3>=7,<8", "eth-tester[py-evm]>=0.13.0b1,<0.15", "ruff>=0.9,<1"]
 atlas = ["ijson==3.4.0.post0"]
+backup = ["pycryptodome>=3.20,<4"]
 
 [project.scripts]
 economic-machine = "economic_machine.cli:main"

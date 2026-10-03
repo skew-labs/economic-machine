@@ -1,11 +1,40 @@
 """Append-only local event hash chain. Integrity, not remote attestation."""
 
+import hashlib
 import json
 import sqlite3
 
 from .values import MachineError, canonical, digest
 
 GENESIS = "0" * 64
+JOURNAL_FIELDS = ('ordinal', 'event_id', 'kind', 'input_hash', 'output_hash', 'event_json', 'previous_hash', 'event_hash')
+
+
+def fingerprint_row(hasher, row):
+    """Frame every stored field, including raw JSON, without interpreting it.
+
+    A cached full verification is reusable only when this fingerprint matches.
+    Changing any old field invalidates it. Type and byte lengths prevent tuple
+    ambiguity; this is not a hash of the tail alone or a remote attestation.
+    """
+    for name in JOURNAL_FIELDS:
+        value = row[name]
+        if type(value) is int:
+            marker, content = b'I', str(value).encode('ascii')
+        elif isinstance(value, str):
+            marker, content = b'S', value.encode('utf-8')
+        else:
+            raise MachineError('INVALID_STORED_JOURNAL_FIELD')
+        hasher.update(marker + len(content).to_bytes(8, 'big'))
+        hasher.update(content)
+
+
+def journal_fingerprint(db):
+    """Read all journal bytes each time; never trust a cached prefix or mtime."""
+    result = hashlib.sha256(b'MACHINE-JOURNAL-FINGERPRINT-1')
+    for row in db.execute('SELECT * FROM events ORDER BY ordinal'):
+        fingerprint_row(result, row)
+    return result
 
 
 def append_event(db: sqlite3.Connection, event_id: str, kind: str,

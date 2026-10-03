@@ -28,7 +28,8 @@ LOGGER = logging.getLogger(__name__)
 
 
 def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, payment_transport=None, payment_chain=None,
-               subscription_plans=None, merchant_config=None, merchant_transport=None):
+               subscription_plans=None, merchant_config=None, merchant_transport=None, compute_resources=None,
+               compute_transport=None):
     root = Path(__file__).resolve().parents[2]
     web = root / "web"
     store = Store(db_path or os.environ.get("COMMERCE_DB", str(root / "runtime/commerce.sqlite3")), clock)
@@ -43,8 +44,12 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     merchant = HostedMerchant(checkout, merchant_config if merchant_config is not None else
         config_file(os.environ.get("MACHINE_MERCHANTS_FILE")), merchant_transport)
     merchant.refresh_offers()
+    from .compute import ComputeService
     from .compute_registry import ComputeRegistry
-    compute = ComputeRegistry(store)
+    from .transport import HTTPS
+    compute_ids = compute_resources if compute_resources is not None else config_file(os.environ.get("MACHINE_COMPUTE_FILE"))
+    compute_service = ComputeService(checkout, compute_transport or HTTPS({"https://gate402.app/v1/infer"}), compute_ids)
+    compute = ComputeRegistry(store, admitted="gate402-inference" in compute_service.resources)
     operations = Operations(store, settings)
     access = Access(store, settings.mode)
     wallet_auth = WalletAuth(store, settings.origin)
@@ -97,6 +102,7 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     app.state.checkout = checkout
     app.state.merchant = merchant
     app.state.compute = compute
+    app.state.compute_service = compute_service
     app.state.timer_error = None
     app.state.payment_worker_error = None
 
@@ -271,6 +277,14 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     def compute_connection_check(provider_id: str, raw: dict, sid=Depends(buyer)):
         require_keys(raw, set(), "unsigned provider check")
         return compute.probe(provider_id)
+
+    @app.post("/api/commerce/compute/jobs")
+    def compute_quote(raw: dict, sid=Depends(buyer)):
+        return compute_service.quote(sid, raw)
+
+    @app.get("/api/commerce/compute/jobs/{cid}/result")
+    def compute_result(cid: str, sid=Depends(buyer)):
+        return compute_service.result(sid, cid)
 
     @app.post("/api/commerce/merchant/{resource_id}")
     def subscription_merchant(resource_id: str, raw: dict, request: Request):

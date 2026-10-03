@@ -1,0 +1,15 @@
+{
+  "ciphertext_sha256": "17fc3513add41631316c651436c3205dd8aa15624945b3aafb41a2bda666b226",
+  "ciphertext_bytes": 2113007,
+  "database_count": 8,
+  "private_file_count": 7,
+  "algorithm": "AES-256-GCM",
+  "off_host_verified": false,
+  "restore_verified": true,
+  "key_in_archive": false,
+  "restored_files": 15,
+  "encrypted_path": "/var/lib/skew-treasury/runtime-backups/runtime-17fc3513add41631.encrypted",
+  "disaster_recovery_key_custody": "SEPARATE_EXTERNAL_KEY_CUSTODY_REQUIRED",
+  "transactions_submitted_by_rehearsal": 0,
+  "snapshot_assurance": "SQLITE_CONSISTENT_PER_DATABASE_NOT_CROSS_DATABASE_ATOMIC"
+}

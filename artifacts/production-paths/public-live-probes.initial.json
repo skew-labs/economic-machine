@@ -1,0 +1,58 @@
+{
+  "observed_at": 1791022936,
+  "probes": [
+    {
+      "profile": "binance-public-market",
+      "status": "OBSERVED",
+      "venue_profile": "binance-spot",
+      "window_sha256": "980bd7141a95b5641f8206f2664e30d5fc3e07dcfbf617cd8a8c7eb5c792add6",
+      "closed_samples": 30,
+      "observed_at": 1791022934,
+      "assurance": "PUBLIC_HTTPS_CLOSED_CANDLES_NOT_SIGNED_ORACLE",
+      "native_computed": true,
+      "elapsed_ms": 762.95
+    },
+    {
+      "profile": "binance-public-futures",
+      "status": "OBSERVED",
+      "venue_profile": "binance-usdm",
+      "window_sha256": "714f6f04d3fe6f54d155ca7249c63e225ecf084e78b2d546ef389b5c311318c2",
+      "closed_samples": 30,
+      "observed_at": 1791022935,
+      "assurance": "PUBLIC_HTTPS_CLOSED_CANDLES_NOT_SIGNED_ORACLE",
+      "native_computed": true,
+      "elapsed_ms": 313.2
+    },
+    {
+      "profile": "binance-testnet-market",
+      "status": "OBSERVED",
+      "venue_profile": "binance-spot-testnet",
+      "window_sha256": "a022ddc9ea93d984d03c6f0de9572136fd3b26f7773e3ed641ebb6cad75ddf86",
+      "closed_samples": 30,
+      "observed_at": 1791022935,
+      "assurance": "PUBLIC_HTTPS_CLOSED_CANDLES_NOT_SIGNED_ORACLE",
+      "native_computed": true,
+      "elapsed_ms": 573.83
+    },
+    {
+      "profile": "binance-testnet-futures",
+      "status": "OBSERVED",
+      "venue_profile": "binance-usdm-testnet",
+      "window_sha256": "bb1e758cbb2a593265c896fec9f44ca4080af1577728f5af8b78c0e57d131b58",
+      "closed_samples": 30,
+      "observed_at": 1791022936,
+      "assurance": "PUBLIC_HTTPS_CLOSED_CANDLES_NOT_SIGNED_ORACLE",
+      "native_computed": true,
+      "elapsed_ms": 595.43
+    }
+  ],
+  "runtime_health_http": 404,
+  "runtime_health": {
+    "detail": "Not Found"
+  },
+  "native_sha256": "0cf9b82bb5c362ae2b1b6c402a2038a8f4706f15f23cfd27db56cb346d271035",
+  "payments_submitted": 0,
+  "venue_orders_submitted": 0,
+  "language_model_calls": 0,
+  "scope": "PUBLIC_CLOSED_CANDLE_FETCH_AND_NATIVE_CALCULATION_NOT_PRIVATE_ACCOUNT_OR_FILL"
+}

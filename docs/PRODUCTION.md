@@ -137,8 +137,11 @@ independent security review and an operator dispute workflow. Those external ope
 ## Storage and recovery constraints
 
 One application process, SQLite WAL and BEGIN IMMEDIATE transactions; do not increase worker count to claim scale.
-Journal verification happens once per exclusive transaction before appends, never cached across transactions.
-This preserves corruption rejection without repeatedly scanning the same history within one matching event.
+The commerce journal performs full verification per exclusive transaction. Engine
+workspace appends fingerprint every historical stored field before reusing a full
+verification result; changed history, restart or rollback forces full verification.
+Both paths still scan history. See the [production-path release](PRODUCTION_PATHS_20261003.md)
+for the exact cache boundary, restore rehearsal and bounded workload measurements.
 The journal has no external trust anchor and does not resist an administrator rewriting the whole database.
 History grows with use; market sharding, external anchoring, organization roles, inventory reservations, push delivery,
 multi-region failover and long-running capacity tests remain future work. No public availability guarantee is asserted.

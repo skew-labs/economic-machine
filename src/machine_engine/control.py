@@ -565,7 +565,7 @@ class AgentControl:
             "dispatch_authority": "OWNER_PER_ORDER_ONLY",
         }
         if row["order_id"]:
-            order = self.work.trading.public(self.work.trading.get(db, row["order_id"]))
+            order = self.work.trading.public_order(db, self.work.trading.get(db, row["order_id"]))
             result["result"], result["status"] = order, order["status"]
         return result
 
