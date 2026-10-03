@@ -369,6 +369,8 @@ class Tasks:
             self._revision_guard(row, raw["expected_revision"])
             if row["revision"] >= 64:
                 raise MachineError("TASK_REVISION_LIMIT_REACHED")
+            from .task_checkout import task_purchase_guard
+            task_purchase_guard(db, tid)
             brief, at, version = self._draft(db, raw["draft"]), int(self.work.clock()), row["revision"] + 1
             db.execute(
                 "INSERT INTO engine_task_revisions VALUES (?,?,?,?,?)",
@@ -396,6 +398,8 @@ class Tasks:
                 return replay
             row = self._row(db, tid)
             self._revision_guard(row, raw["expected_revision"])
+            from .task_checkout import task_purchase_guard
+            task_purchase_guard(db, tid)
             db.execute(
                 "UPDATE engine_tasks SET status='CANCELLED_UNSENT',updated=? WHERE id=?",
                 (int(self.work.clock()), tid),

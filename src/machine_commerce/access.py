@@ -176,8 +176,8 @@ class Access:
                 if principal.engine_agent_id != parts[3]:
                     raise PermissionError("API key is bound to another engine agent")
                 scope = "agents:run"
-            elif method == "GET" and (path in {"/api/engine/overview", "/api/engine/profiles", "/api/engine/control", "/api/engine/economics", "/api/engine/tasks"}
-                    or (len(parts) == 4 and parts[2] == "tasks")
+            elif method == "GET" and (path in {"/api/engine/overview", "/api/engine/profiles", "/api/engine/control", "/api/engine/economics", "/api/engine/tasks", "/api/engine/task-checkout"}
+                    or (len(parts) == 4 and parts[2] in {"tasks", "task-purchases"})
                     or (len(parts) == 5 and parts[2:4] == ["trade", "orders"])):
                 scope = "engine:read"
             elif method == "POST" and (path in {"/api/engine/trade/orders", "/api/engine/usage", "/api/engine/programs/compile", "/api/engine/native/evaluate", "/api/engine/native/programs/compile", "/api/engine/native/programs/evaluate", "/api/engine/economics/evaluate", "/api/engine/tasks"}

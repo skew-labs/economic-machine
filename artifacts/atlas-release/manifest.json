@@ -1,6 +1,6 @@
 {
   "schema": "machine-release-proof-1",
-  "created_at": 1791031748,
+  "created_at": 1791035932,
   "files": [
     {
       "path": "LICENSE",
@@ -9,8 +9,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 16951,
-      "sha256": "114af74406ad5b7e0098d78a406dccbfe14319daaa261a7c043858471085ee0c"
+      "bytes": 17399,
+      "sha256": "2366d0a3f4f67dade65b6d8f66fb325f978b127f53c1048608fc8cc91eb30e91"
     },
     {
       "path": "artifacts/arbitrum-sepolia/datapass-deployment-review.json",
@@ -184,8 +184,8 @@
     },
     {
       "path": "artifacts/atlas-release/line-count.json",
-      "bytes": 15296,
-      "sha256": "d3191e5fe4ab5da341bf75e147a746b5d75c87707249f260dc14ad5b35a7ec6b"
+      "bytes": 15614,
+      "sha256": "60220be0953da9be3c543993e8088a637f74497bdb32a4954adbf2098de5649b"
     },
     {
       "path": "artifacts/atlas-release/live-web-check.json",
@@ -738,6 +738,81 @@
       "sha256": "8d65cc24332eb9b31debff0f518a72d4e33a335026117cf0a5aae497ffee2c0b"
     },
     {
+      "path": "artifacts/tasks-pr2/browser-assets.initial.log",
+      "bytes": 977,
+      "sha256": "2c136f81ed3ebb048eef51376c6482ed5a97088df5c32c8ae5f01987e6c34bd5"
+    },
+    {
+      "path": "artifacts/tasks-pr2/browser-failure.json",
+      "bytes": 383,
+      "sha256": "2b59d06d15b64bb32da55b339df48975709689b703bd0370cc43670e472726f6"
+    },
+    {
+      "path": "artifacts/tasks-pr2/browser-isolated.initial.log",
+      "bytes": 768,
+      "sha256": "0a1c213e5f5f6f76c17724feace16fc5750258dae1fb0973b55d3831f1dcaa85"
+    },
+    {
+      "path": "artifacts/tasks-pr2/browser-isolated.json",
+      "bytes": 709,
+      "sha256": "b8961574521503b779266c2af35fe9bed2d99a64e9916d44ae9f37b65752d638"
+    },
+    {
+      "path": "artifacts/tasks-pr2/browser-isolated.log",
+      "bytes": 360,
+      "sha256": "31554c10979c468fee44866eaa2ab74d8f0965364b3dd1c984871ec1b18b2407"
+    },
+    {
+      "path": "artifacts/tasks-pr2/browser-public.json",
+      "bytes": 460,
+      "sha256": "595ccb5e0dd931d8feda7c6762d1078b25b29d13b44ef0ffd31b840e002a38e1"
+    },
+    {
+      "path": "artifacts/tasks-pr2/browser-public.log",
+      "bytes": 70,
+      "sha256": "1c2fe42a15a5dab29c69c096143f3e89fdfc371921ddc937aec3feb74952ec0b"
+    },
+    {
+      "path": "artifacts/tasks-pr2/checkout-fixture-1440.jpg",
+      "bytes": 147113,
+      "sha256": "979cba94ef7ef8a6687008fce86d5a3435d3e7ba0d6163bd94ef58dbacf1af44"
+    },
+    {
+      "path": "artifacts/tasks-pr2/checkout-fixture-390.jpg",
+      "bytes": 102048,
+      "sha256": "e1769a078c15b721395f1fdf2842e3dcaadd85d5b205219df1ae588750dcdd97"
+    },
+    {
+      "path": "artifacts/tasks-pr2/checkout-public-1440.jpg",
+      "bytes": 152028,
+      "sha256": "dfb37e31f3e915429eadd86ad9ad14f823ae6db009467b74c9649d1afab5432d"
+    },
+    {
+      "path": "artifacts/tasks-pr2/checkout-public-390.jpg",
+      "bytes": 100095,
+      "sha256": "20a1e08ace14a600123dfea1ac956f047b9399027fb637f5ce5df276e07d67a8"
+    },
+    {
+      "path": "artifacts/tasks-pr2/deployment.json",
+      "bytes": 1564,
+      "sha256": "badc6b47be88fcdb445b0acadf6260c81aa165ddcb3105263a76dac94f11f479"
+    },
+    {
+      "path": "artifacts/tasks-pr2/focused-tests.log",
+      "bytes": 10614,
+      "sha256": "74928bb186dc5ba22e43d47d178b66c24a803545935a15d4f424370c24b4c4bf"
+    },
+    {
+      "path": "artifacts/tasks-pr2/lint.log",
+      "bytes": 63,
+      "sha256": "df2c4d73de32a588127d2085ab5de85ea292a3e4268ffb3acd73a57a3b8cee3f"
+    },
+    {
+      "path": "artifacts/tasks-pr2/validation.json",
+      "bytes": 284,
+      "sha256": "e285596a2aed715d291ea9eed4d2391eac24a4cbe9555ac6563e389e00d9937f"
+    },
+    {
       "path": "contracts/DataPassAdversaries.sol",
       "bytes": 2022,
       "sha256": "af31b33be6efd411a30daa353371c65e5be2e8254d649db3edc0d5186085f357"
@@ -771,6 +846,11 @@
       "path": "deploy/native-economics.conf",
       "bytes": 541,
       "sha256": "3ded96b845eb672a30709d3269aaf06a312ff2de13d01f7214f2efbf5f15df41"
+    },
+    {
+      "path": "deploy/paypal-sandbox.example.json",
+      "bytes": 424,
+      "sha256": "354bc56a1f41400a41991339d5e53832642e067d6313714f53cad4b876450072"
     },
     {
       "path": "deploy/portal-concurrency.conf",
@@ -846,6 +926,11 @@
       "path": "docs/TASKS_PR1_20261003.md",
       "bytes": 5298,
       "sha256": "eaa4795458df4e681bfc65fb16516a82d210011b0e3cee9727de9ac0f9d601ff"
+    },
+    {
+      "path": "docs/TASKS_PR2_20261003.md",
+      "bytes": 8220,
+      "sha256": "58cbba6e52683793ab6389d7b93db10c2b5e82702d468e3e11670b451e1caf16"
     },
     {
       "path": "native/CMakeLists.txt",
@@ -1129,8 +1214,8 @@
     },
     {
       "path": "scripts/release_proof.py",
-      "bytes": 9012,
-      "sha256": "4d6f7c350981c54e0f14ba8876e840e2998cddb16dc8f5cd3b955b8f611a16e7"
+      "bytes": 9701,
+      "sha256": "2d88d5ba1e8a9b3b96d7f85128ee5e7e776d2ac39bd93f8ed480bab0e4e74702"
     },
     {
       "path": "scripts/sepolia_demo.py",
@@ -1201,6 +1286,11 @@
       "path": "scripts/verify_subscription_activation.py",
       "bytes": 7973,
       "sha256": "c5ad21d7e878c692a85f3d44ffb6a282242e81748c30d8565951616191f1926d"
+    },
+    {
+      "path": "scripts/verify_task_checkout_browser.py",
+      "bytes": 10465,
+      "sha256": "254cf96efcddf77297562ee5311907d20ab6e788bb24a4abe0cf936c9a64ad61"
     },
     {
       "path": "scripts/verify_tasks_browser.py",
@@ -1434,13 +1524,13 @@
     },
     {
       "path": "src/machine_commerce/access.py",
-      "bytes": 12938,
-      "sha256": "bb0934d67415f829cc6f8fe7eb1c6c7af168284d442db90e8654311526ddf8d9"
+      "bytes": 12987,
+      "sha256": "6f5f1f4dcea9c89b79287d7f72fffe9bf78ce50e1e3bed93ae089e99ff02d6a1"
     },
     {
       "path": "src/machine_commerce/api.py",
-      "bytes": 28060,
-      "sha256": "edb849ef82ae549286811c06e89b35e356d8f55d65f497deb79cfd521ce1f3ae"
+      "bytes": 28262,
+      "sha256": "136b7882f6cac372d626167f6a12210f73ec8854c86617a8be179b81c09cdb12"
     },
     {
       "path": "src/machine_commerce/atlas.py",
@@ -1593,6 +1683,11 @@
       "sha256": "e944b598dacdbb4a4e103867a93f770e804415f534f83fdf0dee9d9230e1098e"
     },
     {
+      "path": "src/machine_engine/paypal.py",
+      "bytes": 8643,
+      "sha256": "9d0042f63bbec4e3f57fadc69d3c9fdfb098b3e5e9f2b57938d438aaaf352a12"
+    },
+    {
       "path": "src/machine_engine/program.py",
       "bytes": 7768,
       "sha256": "968b0cc1436a08151660a894f014bc792f826d7a44b0e13f3de49e081c42bbd5"
@@ -1608,14 +1703,19 @@
       "sha256": "1cd36e64696ea6df5ecb5c055bd50314278f2016a1f3e915fbfdea18e17ea1e7"
     },
     {
+      "path": "src/machine_engine/task_checkout.py",
+      "bytes": 16940,
+      "sha256": "0b178e8bab2ec5ba9616d9b4e319e4f00adcdaa5ba16c8935289108510b89d71"
+    },
+    {
       "path": "src/machine_engine/task_routes.py",
-      "bytes": 1469,
-      "sha256": "b0ae05aec2ad90fc3fb12d3f7d459bc1a321c1b097fcebacf0467993779fcfe0"
+      "bytes": 3741,
+      "sha256": "a44bf1c7492b93da9cc45636ef874cab81c58d83d3ebeeba0745c682e4d8b648"
     },
     {
       "path": "src/machine_engine/tasks.py",
-      "bytes": 22638,
-      "sha256": "fb321bb872c4112ad5852e5f94e078a4a2c15197a09e7a1d97d7ae8f7edb4a01"
+      "bytes": 22838,
+      "sha256": "965c6be756854edf49dc3afd5705fb27c6f74d166e8971b638542059b3240be5"
     },
     {
       "path": "src/machine_engine/trading.py",
@@ -1624,8 +1724,8 @@
     },
     {
       "path": "src/machine_engine/workspace.py",
-      "bytes": 13332,
-      "sha256": "69d1fe0ce216abf8202e87dc6e57aef8430c3d6d3c72b3eb61045263a4c34195"
+      "bytes": 13530,
+      "sha256": "d036683f7a8265db89e406561fe7af456e854a7152af84b9e7585282b323ec4e"
     },
     {
       "path": "tests/agent_console_fixture.py",
@@ -1808,6 +1908,11 @@
       "sha256": "175cf33f8e78626bf5072b1ed46eecaa6248d256129733ab88b5b206b89ff6ae"
     },
     {
+      "path": "tests/test_task_checkout.py",
+      "bytes": 22886,
+      "sha256": "91952f7d2fe65c4be4eb7b93d784ec677dda797ab1306510b09a87d477c83aca"
+    },
+    {
       "path": "tests/test_tasks.py",
       "bytes": 17671,
       "sha256": "48eee41cddde5120cd4462da1cf6d1f59ce103dd8ccdac61bff6e183679b2850"
@@ -1924,8 +2029,8 @@
     },
     {
       "path": "web/tasks.js",
-      "bytes": 13798,
-      "sha256": "caf7313f4067d492b376ec636a381156fd7254fb5c43ead56e2e4abd25557883"
+      "bytes": 19015,
+      "sha256": "fc5b9e7da4464cc46f21e393288f67ecf94cff8d8a8b71bbaa1e7ee15b7d25d0"
     },
     {
       "path": "web/wallet.js",
@@ -1946,7 +2051,7 @@
     "deployment_proof_sha256": "ed24181d7869e91d5f6b3ebc09603236d2d45b4073d9c548dc6036bd75a6d458",
     "live_new_datapass_purchases": 0,
     "economic_operations": 20,
-    "engine_implementation_nonblank": 23215,
+    "engine_implementation_nonblank": 23873,
     "target_30000_engine_nonblank_reached": false,
     "native_authority": "CANDIDATE_ONLY",
     "agent_control": "SAME_ENGINE_DATABASE_SHARED_USDT_TURNOVER",
@@ -1959,6 +2064,15 @@
       "paypal_installed": false,
       "completed_deliverables": 0
     },
+    "tasks_pr2": {
+      "paypal_sandbox_adapter_installed": true,
+      "actual_paypal_sandbox_transactions": 0,
+      "public_paypal_configured": false,
+      "worker": "BUSINESS_CSV_CLEANUP",
+      "fixture_deliverable_only": true,
+      "owner_approval_required": true,
+      "live_money_enabled": false
+    },
     "production_paths": {
       "distinct_changed_boundary_tests": 121,
       "actual_public_market_native_profiles": 4,
@@ -1970,5 +2084,5 @@
     }
   },
   "assurance": "SOURCE_AUDIT_PLUS_REPRODUCIBLE_LOCAL_EVM_AND_NATIVE_TESTS_NOT_PRODUCTION_CERTIFICATION",
-  "manifest_sha256": "8a4b5bd9e65504b95486a9fd82175ce048dbde6fef00b431222c7bee21fe7601"
+  "manifest_sha256": "d3cd51bb7f4510965202bd6e7c16488206b285c20b46b5420550e6e38073a99f"
 }

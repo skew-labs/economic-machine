@@ -1,0 +1,23 @@
+{
+  "accepted": true,
+  "environment": "ISOLATED_PAYPAL_FIXTURE",
+  "checks": [
+    "general_business_task_saved",
+    "input_and_exact_usd_price_frozen",
+    "owner_approval_creates_bound_order",
+    "fixture_capture_get_readback",
+    "verified_entitlement",
+    "actual_transformed_file_downloaded",
+    "reload_resumes_purchase_without_duplicate_charge",
+    "new_work_remains_available_after_purchase",
+    "responsive_1440",
+    "responsive_390"
+  ],
+  "javascript_errors": [],
+  "failed_http_responses": [],
+  "actual_paypal_sandbox_transactions": 0,
+  "real_money_transactions": 0,
+  "actual_transform_download": true,
+  "disposable_unfunded_login_signatures": 0,
+  "customer_payment_signatures": 0
+}

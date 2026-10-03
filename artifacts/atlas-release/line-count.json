@@ -1,9 +1,9 @@
 {
   "schema": "machine-line-audit-1",
   "engine_implementation": {
-    "files": 93,
-    "physical": 24751,
-    "nonblank": 23215
+    "files": 95,
+    "physical": 25463,
+    "nonblank": 23873
   },
   "native_cpp_implementation": {
     "files": 21,
@@ -11,14 +11,14 @@
     "nonblank": 6310
   },
   "tests": {
-    "files": 46,
-    "physical": 9288,
-    "nonblank": 8351
+    "files": 47,
+    "physical": 9787,
+    "nonblank": 8797
   },
   "operational_scripts": {
-    "files": 46,
-    "physical": 4978,
-    "nonblank": 4453
+    "files": 47,
+    "physical": 5197,
+    "nonblank": 4665
   },
   "implementation_files": [
     {
@@ -98,8 +98,8 @@
     },
     {
       "path": "src/machine_commerce/api.py",
-      "physical": 592,
-      "nonblank": 505
+      "physical": 600,
+      "nonblank": 511
     },
     {
       "path": "src/machine_commerce/atlas.py",
@@ -252,6 +252,11 @@
       "nonblank": 59
     },
     {
+      "path": "src/machine_engine/paypal.py",
+      "physical": 208,
+      "nonblank": 191
+    },
+    {
       "path": "src/machine_engine/program.py",
       "physical": 142,
       "nonblank": 118
@@ -267,14 +272,19 @@
       "nonblank": 102
     },
     {
+      "path": "src/machine_engine/task_checkout.py",
+      "physical": 384,
+      "nonblank": 359
+    },
+    {
       "path": "src/machine_engine/task_routes.py",
-      "physical": 41,
-      "nonblank": 29
+      "physical": 91,
+      "nonblank": 69
     },
     {
       "path": "src/machine_engine/tasks.py",
-      "physical": 524,
-      "nonblank": 493
+      "physical": 528,
+      "nonblank": 497
     },
     {
       "path": "src/machine_engine/trading.py",
@@ -283,8 +293,8 @@
     },
     {
       "path": "src/machine_engine/workspace.py",
-      "physical": 211,
-      "nonblank": 197
+      "physical": 214,
+      "nonblank": 200
     },
     {
       "path": "web/agents.js",
@@ -358,8 +368,8 @@
     },
     {
       "path": "web/tasks.js",
-      "physical": 118,
-      "nonblank": 118
+      "physical": 173,
+      "nonblank": 173
     },
     {
       "path": "web/wallet.js",
@@ -667,6 +677,11 @@
       "path": "tests/test_subscription_wallet.py",
       "physical": 92,
       "nonblank": 81
+    },
+    {
+      "path": "tests/test_task_checkout.py",
+      "physical": 499,
+      "nonblank": 446
     },
     {
       "path": "tests/test_tasks.py",

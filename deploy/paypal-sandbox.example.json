@@ -1,0 +1,16 @@
+{
+  "merchant_id": "REPLACEWITHSANDBOXMERCHANT",
+  "client_id_env": "SKEW_PAYPAL_CLIENT_ID",
+  "client_secret_env": "SKEW_PAYPAL_CLIENT_SECRET",
+  "public_origin": "https://machine.148-113-153-116.nip.io",
+  "services": [
+    {
+      "sku": "business-csv-cleanup",
+      "version": 1,
+      "kind": "data_cleanup",
+      "worker": "csv_cleanup_v1",
+      "price_cents": 100,
+      "name": "Business CSV cleanup"
+    }
+  ]
+}
