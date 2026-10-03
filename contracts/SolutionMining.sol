@@ -37,7 +37,7 @@ contract SolutionResearchToken {
     }
 }
 
-/// @notice Closed research protocol: 16 Max-Cut tasks, capped emissions, VRF-gated rounds.
+/// @notice Bounded Max-Cut protocol candidate. Not audited or deployed for public issuance.
 /// @dev No blockhash/random admin seed fallback. Mock coordinator is test-only assurance.
 contract SolutionMining {
     uint256 public constant PROBLEMS = 16;
@@ -52,6 +52,8 @@ contract SolutionMining {
     SolutionResearchToken public immutable rewardToken;
     bytes32 public immutable keyHash;
     uint256 public immutable subscription;
+    address public immutable roundOperator;
+    bool public admissionPaused;
     uint256 public nextRound = 1;
     uint256 public activeRound;
     uint16 public nextThreshold = 5500;
@@ -64,12 +66,12 @@ contract SolutionMining {
         uint256 requestId; uint256 seed; uint64 requestedAt; uint64 commitEnd; uint64 revealEnd;
         uint16 threshold; uint8 state; // 1 awaiting randomness; 2 active; 3 finalized; 4 aborted
     }
-    struct Best { address miner; uint32 bits; uint32 score; uint16 ordinal; bool claimed; }
-    struct Submission { bytes32 commitment; uint16 ordinal; bool revealed; }
+    struct Best { address miner; uint32 bits; uint32 score; uint256 ordinal; bool claimed; }
+    struct Submission { bytes32 commitment; uint256 ordinal; bool revealed; }
     mapping(uint256 => Round) public rounds;
     mapping(uint256 => uint256) private requestRound;
     mapping(uint256 => mapping(uint8 => Best)) public best;
-    mapping(uint256 => mapping(uint8 => uint16)) public counts;
+    mapping(uint256 => mapping(uint8 => uint256)) public counts;
     mapping(uint256 => mapping(uint8 => mapping(address => Submission))) public submissions;
     event Requested(uint256 indexed round, uint256 indexed request);
     event Started(uint256 indexed round, uint256 seed, uint16 threshold, uint64 commitEnd, uint64 revealEnd);
@@ -78,14 +80,17 @@ contract SolutionMining {
     event Revealed(uint256 indexed round, uint8 indexed problem, address indexed miner, uint32 bits, uint32 score);
     event Finalized(uint256 indexed round, uint8 qualified, uint16 nextThreshold);
     event Claimed(uint256 indexed round, uint8 indexed problem, address indexed miner, uint256 amount);
+    event AdmissionPaused(bool paused);
     modifier lock() { require(!entered, "REENTRANT"); entered = true; _; entered = false; }
 
     constructor(address vrf, bytes32 lane, uint256 subId) {
         require(vrf.code.length != 0 && lane != bytes32(0) && subId != 0, "VRF_CONFIG_REQUIRED");
         coordinator = SolutionVRF(vrf); keyHash = lane; subscription = subId;
+        roundOperator = msg.sender;
         rewardToken = new SolutionResearchToken(MAX_ROUNDS * PROBLEMS * REWARD);
     }
     function request() external lock returns (uint256 id) {
+        require(msg.sender == roundOperator && !admissionPaused, "AUTHORIZED_ROUND_OPERATOR");
         if (activeRound != 0) {
             Round storage previous = rounds[activeRound];
             require(previous.state == 3 || previous.state == 4, "PREVIOUS_NOT_TERMINAL");
@@ -99,6 +104,12 @@ contract SolutionMining {
             abi.encodeWithSelector(bytes4(keccak256("VRF ExtraArgsV1")), false)));
         require(req != 0 && requestRound[req] == 0, "REQUEST_ID_REQUIRED");
         r.requestId = req; requestRound[req] = id; emit Requested(id, req);
+    }
+    /// @notice Stop new rounds/commitments; existing reveal/finalize/claim rights remain available.
+    /// @dev This role cannot change seeds, deadlines, scores, rewards or minted supply.
+    function pauseAdmission(bool paused) external {
+        require(msg.sender == roundOperator, "ONLY_ROUND_OPERATOR");
+        admissionPaused = paused; emit AdmissionPaused(paused);
     }
     function rawFulfillRandomWords(uint256 req, uint256[] calldata words) external {
         require(msg.sender == address(coordinator), "ONLY_COORDINATOR");
@@ -122,10 +133,13 @@ contract SolutionMining {
         return keccak256(abi.encode(address(this),block.chainid,id,problem,miner,bits,salt));
     }
     function commit(uint256 id,uint8 problem,bytes32 fingerprint) external {
+        require(!admissionPaused, "ADMISSION_PAUSED");
         Round storage r = rounds[id]; require(r.state == 2 && block.timestamp < r.commitEnd, "COMMIT_CLOSED");
         require(problem < PROBLEMS && fingerprint != bytes32(0), "COMMIT_INPUT");
-        require(submissions[id][problem][msg.sender].ordinal == 0 && counts[id][problem] < 64, "COMMIT_CAP");
-        uint16 ordinal = ++counts[id][problem];
+        // No global first-come admission cap: 64 Sybil wallets cannot exclude miner 65.
+        // No enumeration of submitters occurs in scoring, finalization or claiming.
+        require(submissions[id][problem][msg.sender].ordinal == 0, "ONE_COMMITMENT_PER_ADDRESS");
+        uint256 ordinal = ++counts[id][problem];
         submissions[id][problem][msg.sender] = Submission(fingerprint,ordinal,false);
         emit Committed(id,problem,msg.sender,fingerprint);
     }

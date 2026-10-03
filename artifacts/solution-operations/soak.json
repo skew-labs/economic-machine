@@ -1,0 +1,24 @@
+{
+  "scope": "120_SECOND_FIXED_FRAME_NATIVE_SOAK_NOT_24H_OR_MULTIUSER_CERTIFICATION",
+  "duration_seconds": 120.006,
+  "jobs": 102432,
+  "frame_or_score_errors": 0,
+  "maximum_batch": 16,
+  "batch_round_trip_includes_spawn_and_verify": {
+    "p50_ns": 6495509,
+    "p99_ns": 16158580,
+    "maximum_ns": 28401849
+  },
+  "native_search": {
+    "p50_ns": 271734,
+    "p99_ns": 696161,
+    "maximum_ns": 9534693
+  },
+  "peak_child_rss_kib": 43856,
+  "child_cpu_seconds": 86.974,
+  "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+  "pipeline_sha256": "70e80d33e7db13410d3ae99c54c3ce99b54ccdbdf2837bb4150413abf20dc035",
+  "paid_api_calls": 0,
+  "chain_transactions": 0,
+  "comparability_to_firedancer_or_ore": "NOT_MEASURED_DIFFERENT_WORKLOADS"
+}

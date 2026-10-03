@@ -21,6 +21,9 @@ def seal(raw, *, contract, round_id, miner, secret_file):
             'bits':str(bits),'salt':salt.hex(),'commitment':fingerprint.hex(),'graph_sha256':result['graph_sha256']}
     fd=os.open(Path(secret_file),os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
     with os.fdopen(fd,'w') as out:out.write(json.dumps(secret,sort_keys=True)+'\n');out.flush();os.fsync(out.fileno())
+    directory=os.open(Path(secret_file).parent,os.O_RDONLY|os.O_DIRECTORY)
+    try:os.fsync(directory)
+    finally:os.close(directory)
     data=keccak(text='commit(uint256,uint8,bytes32)')[:4]+encode(['uint256','uint8','bytes32'],[round_id,problem,fingerprint])
     return {'status':'UNSIGNED_OFFLINE','transaction':{'to':contract,'from':miner,'chainId':chain,'value':'0x0','data':'0x'+data.hex()},
             'commitment':'0x'+fingerprint.hex(),'graph_sha256':result['graph_sha256'],'chain_round_verified':False,

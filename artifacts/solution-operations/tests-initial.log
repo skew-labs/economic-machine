@@ -1,0 +1,48 @@
+/srv/skew/economic-machine-commerce-20261002/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_64_sybil_commitments_do_not_exclude_the_next_qualified_miner (test_solution.SolutionContract.test_64_sybil_commitments_do_not_exclude_the_next_qualified_miner) ... ok
+test_all16_qualified_round_emission_cap_and_future_threshold_only (test_solution.SolutionContract.test_all16_qualified_round_emission_cap_and_future_threshold_only) ... ok
+test_commitment_python_abi_and_immutable_seed_callback (test_solution.SolutionContract.test_commitment_python_abi_and_immutable_seed_callback) ... ok
+test_cpp_graph_score_parity_for_all16_problems (test_solution.SolutionContract.test_cpp_graph_score_parity_for_all16_problems) ... ok
+test_duplicate_canonical_solutions_one_reward_earlier_commit_wins (test_solution.SolutionContract.test_duplicate_canonical_solutions_one_reward_earlier_commit_wins) ... ok
+test_duplicate_randomness_and_pending_round_no_reroll (test_solution.SolutionContract.test_duplicate_randomness_and_pending_round_no_reroll) ... ok
+test_local_evm_emission_only_after_finalized_winner_once (test_solution.SolutionContract.test_local_evm_emission_only_after_finalized_winner_once) ... ok
+test_no_valid_answers_no_emission_and_bounded_difficulty (test_solution.SolutionContract.test_no_valid_answers_no_emission_and_bounded_difficulty) ... ok
+test_operator_controls_subscription_spend_and_pause_preserves_existing_rights (test_solution.SolutionContract.test_operator_controls_subscription_spend_and_pause_preserves_existing_rights) ... ok
+test_sender_round_problem_binding_and_reveal_order_tie (test_solution.SolutionContract.test_sender_round_problem_binding_and_reveal_order_tie) ... ok
+test_vrf_spoof_timeout_and_late_callback_cannot_restart (test_solution.SolutionContract.test_vrf_spoof_timeout_and_late_callback_cannot_restart) ... ok
+test_withholding_cannot_lower_below_floor_or_mint_any_tokens (test_solution.SolutionContract.test_withholding_cannot_lower_below_floor_or_mint_any_tokens) ... ok
+test_exact_small_graph_and_canonical_duplicate (test_solution.SolutionNative.test_exact_small_graph_and_canonical_duplicate) ... ok
+test_fixed_batch_matches_scalar_and_rejects_noncanonical_candidates (test_solution.SolutionNative.test_fixed_batch_matches_scalar_and_rejects_noncanonical_candidates) ... ok
+test_malformed_bounds_and_research_only_api (test_solution.SolutionNative.test_malformed_bounds_and_research_only_api) ... ok
+test_private_seal_restart_reveal_and_tamper_detection (test_solution.SolutionNative.test_private_seal_restart_reveal_and_tamper_detection) ... ok
+test_random_and_anneal_same_budget_and_exact_rescore (test_solution.SolutionNative.test_random_and_anneal_same_budget_and_exact_rescore) ... ok
+test_orphaned_and_foreign_transactions_never_confirm (test_solution_operations.ChainBoundary.test_orphaned_and_foreign_transactions_never_confirm) ... ok
+test_provider_hosts_wrong_chain_code_and_disagreement (test_solution_operations.ChainBoundary.test_provider_hosts_wrong_chain_code_and_disagreement) ... ok
+test_read_only_transport_does_not_accept_send_or_embedded_credentials (test_solution_operations.ChainBoundary.test_read_only_transport_does_not_accept_send_or_embedded_credentials) ... ok
+test_reorg_between_eth_call_and_anchor_read_is_rejected (test_solution_operations.ChainBoundary.test_reorg_between_eth_call_and_anchor_read_is_rejected) ... ok
+test_unknown_pending_finalized_and_reverted_are_distinct (test_solution_operations.ChainBoundary.test_unknown_pending_finalized_and_reverted_are_distinct) ... ok
+test_working_state_is_explicitly_not_finalized (test_solution_operations.ChainBoundary.test_working_state_is_explicitly_not_finalized) ... ok
+test_atomic_budget_reservation_across_competing_connections (test_solution_operations.DurableJournal.test_atomic_budget_reservation_across_competing_connections) ... ok
+test_crash_after_handoff_never_returns_to_unsigned (test_solution_operations.DurableJournal.test_crash_after_handoff_never_returns_to_unsigned) ... ok
+test_private_path_and_immutable_intent (test_solution_operations.DurableJournal.test_private_path_and_immutable_intent) ... ok
+test_restart_preserves_daily_budget_and_work_identity (test_solution_operations.DurableJournal.test_restart_preserves_daily_budget_and_work_identity) ... ok
+test_unknown_orphaned_no_blind_retry_and_reveal_requires_commit (test_solution_operations.DurableJournal.test_unknown_orphaned_no_blind_retry_and_reveal_requires_commit) ... ok
+test_hash_pin_capacity_and_malformed_binary_frames (test_solution_operations.PipelineBoundary.test_hash_pin_capacity_and_malformed_binary_frames) ... ok
+test_local_miner_once_budget_recovery_and_pause (test_solution_operations.PipelineBoundary.test_local_miner_once_budget_recovery_and_pause) ... ok
+test_real_pipeline_order_parity_backpressure_and_cpu_pinning (test_solution_operations.PipelineBoundary.test_real_pipeline_order_parity_backpressure_and_cpu_pinning) ... ok
+test_owner_isolation_and_api_boundary (test_mining.MiningWorkspace.test_owner_isolation_and_api_boundary) ... FAIL
+test_hosted_agent_key_cannot_freeze_solve_or_read_owner_mining_jobs (test_mining.MiningWorkspace.test_hosted_agent_key_cannot_freeze_solve_or_read_owner_mining_jobs) ... ok
+
+======================================================================
+FAIL: test_owner_isolation_and_api_boundary (test_mining.MiningWorkspace.test_owner_isolation_and_api_boundary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-ops-pr5/tests/test_mining.py", line 244, in test_owner_isolation_and_api_boundary
+    self.assertEqual(client.post('/api/engine/mining/jobs/'+job['id']+'/solve',json={'budget':70000},headers=headers).status_code,200)
+AssertionError: 409 != 200
+
+----------------------------------------------------------------------
+Ran 33 tests in 71.603s
+
+FAILED (failures=1)

@@ -40,15 +40,15 @@ The initial threshold is 55%, the floor 52%, the ceiling 80%. Only finalized rou
 
 The controller uses result qualification, not wallets, deposits, self-reported GPU time or API usage. Withholding can still drive qualification down and reduce future difficulty; the eight-round withholding test reaches the floor without minting. Bounds limit the attack's effect, but do not eliminate the strategic incentive.
 
-## Confirmed admission weakness: production gate remains closed
+## Admission hardening after the initial research release
 
-Each problem admits at most 64 commitments to bound storage. The attack test confirms that 64 wallets can fill those slots and exclude the next miner. It also confirms that doing so does not increase issuance. Gas costs alone are not represented as complete Sybil resistance. This release has no admission bond, identity proof or competitive-slot replacement scheme.
+The initial research release admitted only 64 commitments per problem. Its attack test confirmed slot exclusion. The operations release removes that global first-come limit and widens commitment ordinals to uint256: 64 attacker commitments cannot exclude miner 65, and no finalization/claim loop enumerates submitters. One commitment per address/problem remains; reward quantity remains one per problem. New compiled-EVM tests reproduce the original setup and verify miner 65 can win and claim.
 
-Therefore **real issuance remains a closed gate** until an admission mechanism is designed, adversarially measured and reviewed. No statement of production-ready mining, profit or decentralization follows from the current tests. The UI does not expose an issuance button.
+This fixes the specific slot attack, not all Sybil/congestion issues. Attackers can still pay to create persistent chain state and compete on transaction ordering. The immutable round operator limits funded VRF requests; emergency admission pause leaves reveal, finalize and claim available. The operator cannot alter seeds, rewards or scores. Public issuance remains unlaunched pending audit, live VRF integration and longer operation. The UI does not expose issuance.
 
 ## Native worker and hardware boundary
 
-The hot calculation path is C++20: fixed arrays, contiguous edge data, a fixed adjacency matrix, integer score/delta arithmetic and a bounded result queue. Search and batched candidate staging allocate no heap memory or language tokens. The queue is worker-local, not an inter-thread lock-free queue. No AF_XDP, SmartNIC, FPGA, NUMA tuning, CPU affinity, GPU kernel or SIMD speedup is claimed.
+The scalar calculation path is C++20: fixed arrays, contiguous edges, a fixed adjacency matrix and integer score/delta arithmetic. Search and candidate staging allocate no heap memory or language tokens. Its staging queue is worker-local. The operations executable adds cross-thread SPSC queues with capacity-eight backpressure, search and exact-verification stages, optional CPU affinity and a fixed binary local pipe. No AF_XDP, SmartNIC, FPGA, NUMA, GPU kernel or SIMD speedup is claimed. See [operations](SOLUTION_OPERATIONS.md) for the executable and failure recovery.
 
 Workers support random sampling, greedy local search and integer annealing. A separate exact enumerator is restricted to at most 20 nodes and used for small reference problems. Heuristics never claim global optimality. All workers use a bounded edge-visit budget. Network waits, secret persistence, API calls and signing remain outside the native call.
 

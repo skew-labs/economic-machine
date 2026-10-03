@@ -1,24 +1,24 @@
 {
   "schema": "machine-line-audit-1",
   "engine_implementation": {
-    "files": 105,
-    "physical": 26567,
-    "nonblank": 24896
+    "files": 108,
+    "physical": 27401,
+    "nonblank": 25677
   },
   "native_cpp_implementation": {
-    "files": 23,
-    "physical": 6901,
-    "nonblank": 6518
+    "files": 24,
+    "physical": 7110,
+    "nonblank": 6722
   },
   "tests": {
-    "files": 53,
-    "physical": 10361,
-    "nonblank": 9303
+    "files": 55,
+    "physical": 10750,
+    "nonblank": 9657
   },
   "operational_scripts": {
-    "files": 58,
-    "physical": 5711,
-    "nonblank": 5119
+    "files": 64,
+    "physical": 6027,
+    "nonblank": 5400
   },
   "implementation_files": [
     {
@@ -288,13 +288,23 @@
     },
     {
       "path": "src/machine_engine/solution.py",
-      "physical": 96,
-      "nonblank": 81
+      "physical": 112,
+      "nonblank": 97
+    },
+    {
+      "path": "src/machine_engine/solution_chain.py",
+      "physical": 248,
+      "nonblank": 229
     },
     {
       "path": "src/machine_engine/solution_client.py",
-      "physical": 40,
-      "nonblank": 35
+      "physical": 43,
+      "nonblank": 38
+    },
+    {
+      "path": "src/machine_engine/solution_operations.py",
+      "physical": 344,
+      "nonblank": 315
     },
     {
       "path": "src/machine_engine/task_checkout.py",
@@ -527,6 +537,11 @@
       "nonblank": 107
     },
     {
+      "path": "native/src/solution_pipeline.cpp",
+      "physical": 209,
+      "nonblank": 204
+    },
+    {
       "path": "contracts/MachineCommerceEscrow.sol",
       "physical": 194,
       "nonblank": 175
@@ -543,8 +558,8 @@
     },
     {
       "path": "contracts/SolutionMining.sol",
-      "physical": 173,
-      "nonblank": 168
+      "physical": 187,
+      "nonblank": 182
     }
   ],
   "test_files": [
@@ -715,8 +730,13 @@
     },
     {
       "path": "tests/test_solution.py",
-      "physical": 204,
-      "nonblank": 174
+      "physical": 225,
+      "nonblank": 194
+    },
+    {
+      "path": "tests/test_solution_operations.py",
+      "physical": 348,
+      "nonblank": 315
     },
     {
       "path": "tests/test_submission_evidence.py",
@@ -787,6 +807,11 @@
       "path": "native/tests/solution.cpp",
       "physical": 23,
       "nonblank": 22
+    },
+    {
+      "path": "native/tests/solution_pipeline.cpp",
+      "physical": 20,
+      "nonblank": 19
     },
     {
       "path": "contracts/DataPassAdversaries.sol",
