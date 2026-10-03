@@ -1,0 +1,11 @@
+test_atomic_budget_reservation_across_competing_connections (test_solution_operations.DurableJournal.test_atomic_budget_reservation_across_competing_connections) ... ok
+test_crash_after_handoff_never_returns_to_unsigned (test_solution_operations.DurableJournal.test_crash_after_handoff_never_returns_to_unsigned) ... ok
+test_owner_export_is_exclusive_private_and_handoff_precedes_file (test_solution_operations.DurableJournal.test_owner_export_is_exclusive_private_and_handoff_precedes_file) ... ok
+test_private_path_and_immutable_intent (test_solution_operations.DurableJournal.test_private_path_and_immutable_intent) ... ok
+test_restart_preserves_daily_budget_and_work_identity (test_solution_operations.DurableJournal.test_restart_preserves_daily_budget_and_work_identity) ... ok
+test_unknown_orphaned_no_blind_retry_and_reveal_requires_commit (test_solution_operations.DurableJournal.test_unknown_orphaned_no_blind_retry_and_reveal_requires_commit) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.129s
+
+OK

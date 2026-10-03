@@ -1,6 +1,6 @@
 {
   "schema": "machine-release-proof-1",
-  "created_at": 1791053057,
+  "created_at": 1791055915,
   "files": [
     {
       "path": "LICENSE",
@@ -184,8 +184,8 @@
     },
     {
       "path": "artifacts/atlas-release/line-count.json",
-      "bytes": 17794,
-      "sha256": "345a3698b475b4fa95f0010ef608deea0eb4b3044b49c9d5c4af89be9bccd719"
+      "bytes": 18127,
+      "sha256": "d09e7c4c76614238a4cfea70eeaf1a2ab7d281a6e4e4e3d878fb94fde19cfb7f"
     },
     {
       "path": "artifacts/atlas-release/live-web-check.json",
@@ -703,6 +703,71 @@
       "sha256": "169505c0bf40a94dcc7f67f13a6b779751413537a5afdfe52a75ffbf8e6b1dba"
     },
     {
+      "path": "artifacts/solution-launch/journal-regression.log",
+      "bytes": 1058,
+      "sha256": "9fa9cf51e065fb1d0a23e6f5416709baedc5516e96de843fef25d9fa7f7224cd"
+    },
+    {
+      "path": "artifacts/solution-launch/lint.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "artifacts/solution-launch/qualification-24h-observation.json",
+      "bytes": 1064,
+      "sha256": "1bc5fb41769dfdc84613d9132709bc0fc73c3b58f1cbafb6cae5953b30e49f26"
+    },
+    {
+      "path": "artifacts/solution-launch/qualification-service.log",
+      "bytes": 2611,
+      "sha256": "8ce8c42d32c7088528f13b57eec7cbd9300b7e1677b5f9c4ac1795a2c23628bf"
+    },
+    {
+      "path": "artifacts/solution-launch/soak-complete.json",
+      "bytes": 1208,
+      "sha256": "1ccc81603eff165f3e6e5ead17570305268ed1a17c84a6ac76114d786cecc09e"
+    },
+    {
+      "path": "artifacts/solution-launch/soak-crash-checkpoint.json",
+      "bytes": 1118,
+      "sha256": "d5b8fbcad4e859f4a8615ba92b09911d6748c5f26842b22564c42dbaea584b9c"
+    },
+    {
+      "path": "artifacts/solution-launch/soak-initial.json",
+      "bytes": 1104,
+      "sha256": "7ab5da434f2281cb04e68f1bcb7361313f6c60231afcb35d9a5a13d3d7422756"
+    },
+    {
+      "path": "artifacts/solution-launch/tests-first-pass.log",
+      "bytes": 2075,
+      "sha256": "6c7cc2cff49cd65d1bae8b3a050e5bfee57ca3c5b82f95163ea2751cb915c26a"
+    },
+    {
+      "path": "artifacts/solution-launch/tests.log",
+      "bytes": 3209,
+      "sha256": "3811e9d0a9acfbca4229ee2a346227db845d1c3b950bd4b38c7c8030dd7911c1"
+    },
+    {
+      "path": "artifacts/solution-launch/validation.json",
+      "bytes": 1806,
+      "sha256": "31845968a27f4c5fad0619835ba079c8b70b71f46068edabe48b31f5d00b63a4"
+    },
+    {
+      "path": "artifacts/solution-launch/validation.log",
+      "bytes": 1726,
+      "sha256": "a4722a57f44c6ccf71ae794a584e0e35fcd2d560ea8598b8cb8280a0e7c4e9e2"
+    },
+    {
+      "path": "artifacts/solution-launch/vrf-public-preflight.json",
+      "bytes": 1256,
+      "sha256": "d119278f4ef0439410583ab321708cea97a393312f7721f936d527b2797991ae"
+    },
+    {
+      "path": "artifacts/solution-launch/vrf-public-preflight.log",
+      "bytes": 1170,
+      "sha256": "fc36bbe958222f1e2bb90a5c480aeb10de27bcda403d9cb64825c10157ff8c79"
+    },
+    {
       "path": "artifacts/solution-operations/browser-backend.json",
       "bytes": 407,
       "sha256": "60b952268cefc24f126f94f49994cff700ee4999be0558b757a7d666e8c0feed"
@@ -1133,6 +1198,11 @@
       "sha256": "412f79317fd7e7fcdea4a8d6c754b5440dc30eb60c951e98404f1c4608d208d6"
     },
     {
+      "path": "deploy/solution-qualification.service.example",
+      "bytes": 835,
+      "sha256": "de8d99ee5c0dce7b74c9e7513489e4558c2ff8609894b3fb6d4f3dd3d5a1aa88"
+    },
+    {
       "path": "deploy/subscriptions.conf",
       "bytes": 366,
       "sha256": "7d57a39a8f9d4569675e3b3247e880f2ad0ebbc22561de1b8aa69265c82b2acd"
@@ -1196,6 +1266,11 @@
       "path": "docs/SERVICE_COMMERCE.md",
       "bytes": 11197,
       "sha256": "cf0af700e0a7faa4550d6bca7eba96b4301ba4c3f0286adb56acbd4d777ffed0"
+    },
+    {
+      "path": "docs/SOLUTION_LAUNCH.md",
+      "bytes": 7826,
+      "sha256": "6fa7296501aafa178c642d0f87de9439cd03bbfbf07107a9959f156f45a9dc43"
     },
     {
       "path": "docs/SOLUTION_MINING.md",
@@ -1558,6 +1633,11 @@
       "sha256": "646f46f828dbc9c0aa345d2f2a28e40d2e422118037cd4a7697d96f518f7d75f"
     },
     {
+      "path": "scripts/prepare_solution_launch.py",
+      "bytes": 2676,
+      "sha256": "acd6286699329e01d99f17b0092ae2a24894be74549da48f2235e05828a0e08a"
+    },
+    {
       "path": "scripts/probe_solution_rpc.py",
       "bytes": 2231,
       "sha256": "62b0b7d7ba9e05f2d6e35b827bd41815165777da354959dbbd6ac58fd370d72e"
@@ -1578,14 +1658,19 @@
       "sha256": "34e0f0b60e97f477c21e56dd148b226fa0e34e8b16150c98e9eb77cfb934f128"
     },
     {
+      "path": "scripts/qualify_solution_runtime.py",
+      "bytes": 10926,
+      "sha256": "4f8c06082859b73e910235e59c0d9f76d3a4b11f58bdd8698554282106ffeb5c"
+    },
+    {
       "path": "scripts/read_chain.py",
       "bytes": 1553,
       "sha256": "ad99eb27b610f970d88dc76aff160703f09e1d2426346e485995d960e72e1e1c"
     },
     {
       "path": "scripts/release_proof.py",
-      "bytes": 11659,
-      "sha256": "60501af9abcded51173d99d1d77acd242a10f0656765726be413062de2dc5c6f"
+      "bytes": 12265,
+      "sha256": "c34688f4677f831ae0c39e541c05ea07c7ed31cec9e6a976edb9e419c4c0a73f"
     },
     {
       "path": "scripts/sepolia_demo.py",
@@ -1611,6 +1696,16 @@
       "path": "scripts/solution_operator.py",
       "bytes": 4669,
       "sha256": "d57c32b85f3e4bea7555e26803b455f54b4180d7356064b954d10bb571fccdca"
+    },
+    {
+      "path": "scripts/solution_recovery.py",
+      "bytes": 2102,
+      "sha256": "da529a699482ded51016270dd04813fc5057f4c3503fd7d4f23f92aed502c69a"
+    },
+    {
+      "path": "scripts/validate_solution_launch.py",
+      "bytes": 4914,
+      "sha256": "2bb5a7ac47c06398ee9a6165b3907276b01c6948954956d4cc14db57549c127c"
     },
     {
       "path": "scripts/validate_solution_operations.py",
@@ -2138,9 +2233,19 @@
       "sha256": "794917c8b1afd438bf3025f27c225eb97fb06dcbf74caa8bc5ae6bf4b2dd4835"
     },
     {
+      "path": "src/machine_engine/solution_launch.py",
+      "bytes": 6062,
+      "sha256": "d48cdacc798d17e06d3e0b143acddcffd4496e4acfcb68031d8efdb0195a28e5"
+    },
+    {
       "path": "src/machine_engine/solution_operations.py",
-      "bytes": 20599,
-      "sha256": "70922981fc9be4caaa8ba998169af624b8c6949fe98213d07e1d12a6ebda6ac4"
+      "bytes": 21429,
+      "sha256": "ffcf3d60f58973788a2823e5d87d11add6140743ab70c321940e8219eea22c5f"
+    },
+    {
+      "path": "src/machine_engine/solution_recovery.py",
+      "bytes": 9766,
+      "sha256": "a7eb28af3585d2bc8bfde0278d58d6d4a36c3657af0fd38b6cc1e77638621e86"
     },
     {
       "path": "src/machine_engine/task_checkout.py",
@@ -2338,6 +2443,11 @@
       "sha256": "bf11a1d81578c3ef4da396bda28e2d4a287c58f41078df5d26528c929b6abe41"
     },
     {
+      "path": "tests/test_solution_launch.py",
+      "bytes": 13606,
+      "sha256": "72dee3a9fc2fcf136ea2f63939f79fc27da87b5f5c23f9dea7f341200e721cb6"
+    },
+    {
       "path": "tests/test_solution_operations.py",
       "bytes": 22218,
       "sha256": "cc1522a8c17727209e7066a320f8acbad23d9d7d1be3838f9d3cf8312eae8d7d"
@@ -2511,7 +2621,7 @@
     "deployment_proof_sha256": "ed24181d7869e91d5f6b3ebc09603236d2d45b4073d9c548dc6036bd75a6d458",
     "live_new_datapass_purchases": 0,
     "economic_operations": 20,
-    "engine_implementation_nonblank": 25677,
+    "engine_implementation_nonblank": 26022,
     "target_30000_engine_nonblank_reached": false,
     "native_authority": "CANDIDATE_ONLY",
     "agent_control": "SAME_ENGINE_DATABASE_SHARED_USDT_TURNOVER",
@@ -2551,7 +2661,10 @@
       "admission_gate": "GLOBAL_SLOT_CAP_REMOVED_OTHER_CONGESTION_RISKS_REMAIN",
       "authority": "NONE",
       "local_operations": "DUAL_RPC_WORKING_STATE_FINALIZED_EFFECTS_PRIVATE_WAL_UNSIGNED_HANDOFF",
-      "native_pipeline": "CAPACITY_EIGHT_SPSC_SEARCH_VERIFY_OPTIONAL_CPU_AFFINITY"
+      "native_pipeline": "CAPACITY_EIGHT_SPSC_SEARCH_VERIFY_OPTIONAL_CPU_AFFINITY",
+      "recovery": "ENCRYPTED_JOURNAL_AND_SALT_PACK_RESTORED_STATE_HELD",
+      "launch_validation": "artifacts/solution-launch/validation.json",
+      "long_qualification": "OBSERVED_CHECKPOINT_NOT_COMPLETION_CERTIFICATE"
     },
     "production_paths": {
       "distinct_changed_boundary_tests": 121,
@@ -2564,5 +2677,5 @@
     }
   },
   "assurance": "SOURCE_AUDIT_PLUS_REPRODUCIBLE_LOCAL_EVM_AND_NATIVE_TESTS_NOT_PRODUCTION_CERTIFICATION",
-  "manifest_sha256": "42e1b0276b047b234eb5e839b52aa15504355d8c0b44b49df9fa0fe12f3077a4"
+  "manifest_sha256": "f2efb07c74d784f0e73cd4d08dabfed4a99a6842cef4a6fbee62929224d03798"
 }
