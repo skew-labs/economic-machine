@@ -1,6 +1,6 @@
 {
   "schema": "machine-release-proof-1",
-  "created_at": 1791035932,
+  "created_at": 1791041569,
   "files": [
     {
       "path": "LICENSE",
@@ -9,8 +9,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 17399,
-      "sha256": "2366d0a3f4f67dade65b6d8f66fb325f978b127f53c1048608fc8cc91eb30e91"
+      "bytes": 17866,
+      "sha256": "205e9065de9eb0be7888a31064173478e0f7c62388f95a0789fb811622d3077b"
     },
     {
       "path": "artifacts/arbitrum-sepolia/datapass-deployment-review.json",
@@ -184,8 +184,8 @@
     },
     {
       "path": "artifacts/atlas-release/line-count.json",
-      "bytes": 15614,
-      "sha256": "60220be0953da9be3c543993e8088a637f74497bdb32a4954adbf2098de5649b"
+      "bytes": 16521,
+      "sha256": "500d4b0769f64f3e746cd3a590b80f2f56b10870f4bc871f58bbebdf1a80b080"
     },
     {
       "path": "artifacts/atlas-release/live-web-check.json",
@@ -421,6 +421,76 @@
       "path": "artifacts/landing-20261003/subscription-active-subscriptions-390.jpg",
       "bytes": 63006,
       "sha256": "da131176e5be6197542b2c0cde3a856dd410e9d5b1457a37d1db5f1fa44ef0b5"
+    },
+    {
+      "path": "artifacts/mining/benchmark.json",
+      "bytes": 763,
+      "sha256": "0bed458e02f9963d33006e5240a5f4d81a8a20e38a6491b50912cc25e5262398"
+    },
+    {
+      "path": "artifacts/mining/browser-isolated.json",
+      "bytes": 350,
+      "sha256": "d653c14f345f95ebff0b837b2c38476ede222bd4b8e473ce50c7e036f6558c09"
+    },
+    {
+      "path": "artifacts/mining/browser-isolated.log",
+      "bytes": 310,
+      "sha256": "3a79640f0e4ec4ebae662220f5ba1bd76a610feb18b238c25d582e1e54d41b08"
+    },
+    {
+      "path": "artifacts/mining/browser-public.json",
+      "bytes": 352,
+      "sha256": "4c915f2b50d3c9f5fdce9c15e1c036fad413da274382d4ac046d7e969ffb2804"
+    },
+    {
+      "path": "artifacts/mining/contract-build.json",
+      "bytes": 1279,
+      "sha256": "2f64555b9d6f76d351e730be7bb3f1eb8315fb892f33dde1ff65d609b65ae9fb"
+    },
+    {
+      "path": "artifacts/mining/contracts.json",
+      "bytes": 70342,
+      "sha256": "b6816d05099d0c7467a38984e550b4febe7a2bdabc93d1b1f854c2fcf306b1ac"
+    },
+    {
+      "path": "artifacts/mining/deployment-preflight.log",
+      "bytes": 985,
+      "sha256": "5306be92cd7aec7cb0e96a600b7bd49e10f222fc9b424fd303ab865b60510daa"
+    },
+    {
+      "path": "artifacts/mining/deployment-review.json",
+      "bytes": 22885,
+      "sha256": "8676f641e2dad9e3691ae777a67042a2ad59c0458e781f7136d130d7c4e34614"
+    },
+    {
+      "path": "artifacts/mining/mining-1440-isolated.jpg",
+      "bytes": 110482,
+      "sha256": "1a48d498743741fbb496b4488cc05303ef027ce019802822b53a372842fadfe9"
+    },
+    {
+      "path": "artifacts/mining/mining-1440-public.jpg",
+      "bytes": 114914,
+      "sha256": "cff8d8fa0ac4dff46054178ab402a2ca53055a86e64b46684c1f280aa4a4f05e"
+    },
+    {
+      "path": "artifacts/mining/mining-390-isolated.jpg",
+      "bytes": 80422,
+      "sha256": "545eebf57f1330e0d4610b208e5186ad99770f603ed9b85d13c0630def85ef1f"
+    },
+    {
+      "path": "artifacts/mining/mining-390-public.jpg",
+      "bytes": 83044,
+      "sha256": "1e2d4db0eac3e2384bf7d13251f0302f854a4c21e85f2a5a7202c63c20c87ab3"
+    },
+    {
+      "path": "artifacts/mining/native-build.json",
+      "bytes": 1024,
+      "sha256": "4741900797387ad5bca9a269939c0988ced77535cfdd75fa052b6e370dcbe380"
+    },
+    {
+      "path": "artifacts/mining/tests.log",
+      "bytes": 3398,
+      "sha256": "92d8223f603fb40ffac496d91f5971e2d3824ea90ceb1271d62ca6980dd5999c"
     },
     {
       "path": "artifacts/production-paths/backup-rehearsal.before-compute.json",
@@ -823,6 +893,16 @@
       "sha256": "0a977c0492995fb70dec74e3c5ba3eb76907b576616e0eb80f388f6eb73c396b"
     },
     {
+      "path": "contracts/MachineMining.sol",
+      "bytes": 9804,
+      "sha256": "455b6d754cc90dfdf81d8f207923e61972bddb28f5852599c74f3cd518250f52"
+    },
+    {
+      "path": "contracts/MiningAdversary.sol",
+      "bytes": 1257,
+      "sha256": "51f2e0e5e146be057dbda856dfcdfabcbe9b7eab886fe869fcdfbd3cc9fef4c8"
+    },
+    {
       "path": "contracts/SkewDataPass.sol",
       "bytes": 16348,
       "sha256": "68c5d17c39c71cfd4ddf39123191e9cc1075a9aa1ddde0fa16a3bc829f60e1a7"
@@ -846,6 +926,11 @@
       "path": "deploy/native-economics.conf",
       "bytes": 541,
       "sha256": "3ded96b845eb672a30709d3269aaf06a312ff2de13d01f7214f2efbf5f15df41"
+    },
+    {
+      "path": "deploy/native-mining.conf",
+      "bytes": 375,
+      "sha256": "f84b663b2829c0bd19b4be937c3549132a0fb4e93ed25ea8c86e2e483e7fa7a5"
     },
     {
       "path": "deploy/paypal-sandbox.example.json",
@@ -878,6 +963,11 @@
       "sha256": "66f2df3b8b723fb181dc4557496d42f36facc3938c1c240d449c9f5d02097d8f"
     },
     {
+      "path": "docs/ARBITRUM_SUBMISSION.md",
+      "bytes": 11740,
+      "sha256": "e1f7c24350a4fb804410a53495aab407437901a541ee258c75aaad7a6dd9bd25"
+    },
+    {
       "path": "docs/ATLAS_DATAPASS_NATIVE.md",
       "bytes": 7592,
       "sha256": "2a27a5c500ff43570287991f82ae781433294c68e919df8c5e4462e0fd4510ae"
@@ -906,6 +996,11 @@
       "path": "docs/LANDING_20261003.md",
       "bytes": 2467,
       "sha256": "774fbd9581d78f3006c1ed035023f6b2ac5bed87a02094e83307cf5d8220edaa"
+    },
+    {
+      "path": "docs/MACHINE_MINING.md",
+      "bytes": 8913,
+      "sha256": "6056b61e429b6d0ced5dbf54e5b5ae11037e95b93cfae8a93d97dc40b7bb94ae"
     },
     {
       "path": "docs/PRODUCTION_PATHS_20261003.md",
@@ -1038,6 +1133,11 @@
       "sha256": "204e550fe04c87489a68929cda90bfba407355f8778ce8e2cd0b6ab4f367eae8"
     },
     {
+      "path": "native/src/mining.cpp",
+      "bytes": 5254,
+      "sha256": "1f4b0b92a16c16fd71f26ffc04c3c89f3f04360f0380a61e3d768b05439dba21"
+    },
+    {
       "path": "native/src/program.cpp",
       "bytes": 11958,
       "sha256": "f92b049d7bb7190f218043a37a12024f476be5e49beccd9223f6afc24b257e7e"
@@ -1051,6 +1151,11 @@
       "path": "native/tests/economics.cpp",
       "bytes": 46294,
       "sha256": "33e6587632256c565c2d18ca974f498b7cd5e33b17cca44ab38e0af7ef173f0e"
+    },
+    {
+      "path": "native/tests/mining.cpp",
+      "bytes": 1699,
+      "sha256": "fd1e3ff5afc5c453087a3192cd8a54439cceb5fe9486731d7c7e12485220bf69"
     },
     {
       "path": "native/tests/program.cpp",
@@ -1098,6 +1203,11 @@
       "sha256": "de9f6219deca0fefbf471587c37e4379b14ab5869be69829a841c55eeb11ed67"
     },
     {
+      "path": "scripts/benchmark_mining.py",
+      "bytes": 1724,
+      "sha256": "31e9be956ccd0c6ae1b3eedc0c9f73c3520c21bbe0aa0da295d5bbb1a78466c7"
+    },
+    {
       "path": "scripts/benchmark_settlement.py",
       "bytes": 5891,
       "sha256": "5daa0242f501519c66db243ff6c5601161b53d1050718b531d6432dba2af3038"
@@ -1111,6 +1221,11 @@
       "path": "scripts/build_merchant_evidence.py",
       "bytes": 2296,
       "sha256": "1fd4f4961cf822ac2418d44cf262e4e707776d70907867f55552ba5ea7cb281c"
+    },
+    {
+      "path": "scripts/build_mining.py",
+      "bytes": 2049,
+      "sha256": "542192d32133fa0de8abb4d2bcba9a6cdf9ed1c8c53300d18bce19735fce300d"
     },
     {
       "path": "scripts/build_native.py",
@@ -1163,6 +1278,11 @@
       "sha256": "e2a94f440992bc72d0e6854019a8d724b0ecd5d98a8a5851727d3fd381fceccd"
     },
     {
+      "path": "scripts/compile_mining.py",
+      "bytes": 2618,
+      "sha256": "bbf9ee6cfec64b0476dc4d159f1d7a40e1124f71eeae0c55431d72bfcb5f4825"
+    },
+    {
       "path": "scripts/configure_subscription.py",
       "bytes": 4390,
       "sha256": "549971aeebd37478afeaecc2958f2b675b2abe6189cbffceea886fe9b0f4c118"
@@ -1174,8 +1294,8 @@
     },
     {
       "path": "scripts/count_release_lines.py",
-      "bytes": 2628,
-      "sha256": "622cb8fe2b4181a7baa88b06ff21da3ca8b383bd6fa25c6311660d5c017e6de2"
+      "bytes": 2651,
+      "sha256": "f3d250dbfcda2d54e60fee1f0a85ea1c59e981bd5b2860eed8c68017bd4ff5af"
     },
     {
       "path": "scripts/deploy_datapass_sepolia.py",
@@ -1191,6 +1311,16 @@
       "path": "scripts/market_agents.py",
       "bytes": 4589,
       "sha256": "d68ef04f0d082e80afba923552f0e889616d4d01a83854c4a4e6c6ecf9420e69"
+    },
+    {
+      "path": "scripts/mining_cli.py",
+      "bytes": 2060,
+      "sha256": "951e840d57a925ed9482fad0ca8182ec57518a48e6baaaabd1063ab23e0e6cd7"
+    },
+    {
+      "path": "scripts/prepare_mining_deployment.py",
+      "bytes": 3052,
+      "sha256": "646f46f828dbc9c0aa345d2f2a28e40d2e422118037cd4a7697d96f518f7d75f"
     },
     {
       "path": "scripts/production_preflight.py",
@@ -1214,8 +1344,8 @@
     },
     {
       "path": "scripts/release_proof.py",
-      "bytes": 9701,
-      "sha256": "2d88d5ba1e8a9b3b96d7f85128ee5e7e776d2ac39bd93f8ed480bab0e4e74702"
+      "bytes": 10369,
+      "sha256": "8a59e866e56d287d9db386f6ea3a919c5a437391282dc0872791770038171a62"
     },
     {
       "path": "scripts/sepolia_demo.py",
@@ -1256,6 +1386,11 @@
       "path": "scripts/verify_merchant_compute_live.py",
       "bytes": 3602,
       "sha256": "16041679452923cd31d3f76a077b6daa4fb1a8c8c749a4daf0b995872abdcf54"
+    },
+    {
+      "path": "scripts/verify_mining_browser.py",
+      "bytes": 4913,
+      "sha256": "2fd0317ca8b18cb47fa173918198843fbaea1e3a97f0bd8adf673470b0d7fa78"
     },
     {
       "path": "scripts/verify_paths_browser.py",
@@ -1529,8 +1664,8 @@
     },
     {
       "path": "src/machine_commerce/api.py",
-      "bytes": 28262,
-      "sha256": "136b7882f6cac372d626167f6a12210f73ec8854c86617a8be179b81c09cdb12"
+      "bytes": 28366,
+      "sha256": "dea368c8f8a429019124fac8f43de311149c227eb20de453b8dd0326f87ff7b2"
     },
     {
       "path": "src/machine_commerce/atlas.py",
@@ -1604,8 +1739,8 @@
     },
     {
       "path": "src/machine_commerce/portal.py",
-      "bytes": 25050,
-      "sha256": "f23d47a376755332fca9364838728a2fba2309d56494de24a4bef33689969fbe"
+      "bytes": 25207,
+      "sha256": "3dc693774de075d8309c0519fd5f0bfda93884718ec582cdb14b00ab38164ba4"
     },
     {
       "path": "src/machine_commerce/providers.py",
@@ -1644,8 +1779,8 @@
     },
     {
       "path": "src/machine_engine/api.py",
-      "bytes": 12342,
-      "sha256": "f176db5ccd4b457ea3aaa5a8b5fd7c530878b7dffde27beb2193e2b2e1f25b67"
+      "bytes": 12355,
+      "sha256": "a4f52eae34acd9e9e03f46fdc56776cd05bddcf865cb9b145dc30a29de7da9e6"
     },
     {
       "path": "src/machine_engine/broker.py",
@@ -1678,6 +1813,21 @@
       "sha256": "2b54a9b05f1a6dc9f586f3d023392e598a56d0e33153c14d5a3b11b6341064aa"
     },
     {
+      "path": "src/machine_engine/mining.py",
+      "bytes": 10061,
+      "sha256": "aa1a6db56fe180d651adc6b5cb3df3a3407fa90cbb0dbcd61d2051c3a7755e99"
+    },
+    {
+      "path": "src/machine_engine/mining_client.py",
+      "bytes": 4067,
+      "sha256": "bbd93b88a5db5e3abde210f7321c1bed9e0d1bec7deada2e883630f370797e2c"
+    },
+    {
+      "path": "src/machine_engine/mining_routes.py",
+      "bytes": 1179,
+      "sha256": "5f3e52d496627a173940e8bdd8c39eacfcf3339f1656efa499da046f4bc1816a"
+    },
+    {
       "path": "src/machine_engine/native.py",
       "bytes": 3633,
       "sha256": "e944b598dacdbb4a4e103867a93f770e804415f534f83fdf0dee9d9230e1098e"
@@ -1694,8 +1844,8 @@
     },
     {
       "path": "src/machine_engine/routes.py",
-      "bytes": 9725,
-      "sha256": "68a0d92ba7ee6626debeec6ef3ce7eca7b76ed19a65a6ec438b0edab292ec7b0"
+      "bytes": 9862,
+      "sha256": "b8d4c45dd529427f741373ec5db2c46cc6098ca1c2b325e31fa50c11e275612a"
     },
     {
       "path": "src/machine_engine/scheduler.py",
@@ -1724,8 +1874,8 @@
     },
     {
       "path": "src/machine_engine/workspace.py",
-      "bytes": 13530,
-      "sha256": "d036683f7a8265db89e406561fe7af456e854a7152af84b9e7585282b323ec4e"
+      "bytes": 13644,
+      "sha256": "82a2ddda5f3fc3af9d2a56ab1c983aa34c586948817490e2aada744e3ca5b07b"
     },
     {
       "path": "tests/agent_console_fixture.py",
@@ -1838,6 +1988,11 @@
       "sha256": "f2f740207a0d5089df2ad447ec8d34eb71337b57007f8671b86c3047633bc1e9"
     },
     {
+      "path": "tests/test_mining.py",
+      "bytes": 17683,
+      "sha256": "ec42ab627fc5f54d73ef679543836f93e873c3a2295bf5492ea688d9c46efe15"
+    },
+    {
       "path": "tests/test_native.py",
       "bytes": 8176,
       "sha256": "5269023814603f9890b556d7c4faf3caa3f02ae19d610514bc3aab6d453629d0"
@@ -1944,8 +2099,8 @@
     },
     {
       "path": "web/app.js",
-      "bytes": 36021,
-      "sha256": "b4b16d3eae25534e97df9761f602b3ea44ff703f608b0e306d6725189d812f89"
+      "bytes": 36120,
+      "sha256": "cd2de099e57ff8f834cd86463752d04ee5e290030e69b8db47ba5192a60a6093"
     },
     {
       "path": "web/assets/app-atlas.svg",
@@ -1994,18 +2149,23 @@
     },
     {
       "path": "web/index.html",
-      "bytes": 25332,
-      "sha256": "19bbcd62c216b81e830df5873993ed3acd7b8b56f07cfea17101f83ebb2c377e"
+      "bytes": 25651,
+      "sha256": "92f60448bfa9c05e8baae8371c6944aa48603ed4c8c7ad2cb9a8fefac455a8b7"
+    },
+    {
+      "path": "web/mining.js",
+      "bytes": 6301,
+      "sha256": "b5dc3e38d639d80bf01e07fef188afc8f0d5fa5d6774c02452119baf6958787a"
     },
     {
       "path": "web/operations.css",
-      "bytes": 9311,
-      "sha256": "dace324b9b2c45c728fc949afb42375dbe979b4f7974359a1e71c398dfd20056"
+      "bytes": 9989,
+      "sha256": "2c99f85b83ca5f780094763ad53023d81b01acdb7cb0e9a8716040e9829ed1c9"
     },
     {
       "path": "web/operations.js",
-      "bytes": 40553,
-      "sha256": "dee0d61600fb475099a314f365c6df6ee4978eb374a79b4c65283a407a9f3024"
+      "bytes": 40682,
+      "sha256": "3f2b6e1938a3d9120fba7ca1d1a2168e46c9f4c87e6f0affa177834ed6cf2744"
     },
     {
       "path": "web/submission.css",
@@ -2051,7 +2211,7 @@
     "deployment_proof_sha256": "ed24181d7869e91d5f6b3ebc09603236d2d45b4073d9c548dc6036bd75a6d458",
     "live_new_datapass_purchases": 0,
     "economic_operations": 20,
-    "engine_implementation_nonblank": 23873,
+    "engine_implementation_nonblank": 24467,
     "target_30000_engine_nonblank_reached": false,
     "native_authority": "CANDIDATE_ONLY",
     "agent_control": "SAME_ENGINE_DATABASE_SHARED_USDT_TURNOVER",
@@ -2073,6 +2233,14 @@
       "owner_approval_required": true,
       "live_money_enabled": false
     },
+    "machine_mining": {
+      "model": "SNAPSHOT_ROUTE_V1",
+      "authority": "CANDIDATE_ONLY",
+      "public_mining_deployment": null,
+      "new_mining_chain_transactions": 0,
+      "new_emission_tokens": 0,
+      "input_assurance": "REQUESTER_DECLARED_FROZEN_MODEL"
+    },
     "production_paths": {
       "distinct_changed_boundary_tests": 121,
       "actual_public_market_native_profiles": 4,
@@ -2084,5 +2252,5 @@
     }
   },
   "assurance": "SOURCE_AUDIT_PLUS_REPRODUCIBLE_LOCAL_EVM_AND_NATIVE_TESTS_NOT_PRODUCTION_CERTIFICATION",
-  "manifest_sha256": "d3cd51bb7f4510965202bd6e7c16488206b285c20b46b5420550e6e38073a99f"
+  "manifest_sha256": "01a300a445a7cee2a0e9d2c79c72d6f7e536e44d5b6a0f9a6aa34efde0fb096d"
 }

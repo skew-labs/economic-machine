@@ -59,6 +59,8 @@ class Workspace:
         self.tasks = Tasks(self)
         from .task_checkout import TaskCheckout
         self.task_checkout = TaskCheckout(self, provider=task_provider)
+        from .mining import Mining
+        self.mining = Mining(self)
 
     def event(self, db, kind, value):
         fingerprint = journal_fingerprint(db)
@@ -210,5 +212,6 @@ class Workspace:
             "credential_namespace": self.credential_prefix,
             "sync_jobs": self.scheduler.status(), "trading": self.trading.status(), "live": self.live.status(), "native": self.native.status(),
             "control": self.control.status(), "economics": self.economics.status(), "tasks": self.tasks.status(),
+            "mining": self.mining.status(),
             "task_checkout": self.task_checkout.status(),
             "product": "USER_OWNED_AGENT_OPERATIONS_CONSOLE"}

@@ -13,6 +13,7 @@ const headings = {
   overview: ['Overview', 'Your accounts and agents, working under one set of rules.', null],
   connections: ['Connections', 'Connect your APIs. See balances, positions and usage in one place.', null],
   tasks: ['Tasks', 'Save work briefs, budgets and conditions. Keep each task easy to review.', null],
+  mining: ['Machine Mining', 'Submit useful work. Verify the result. Earn funded rewards.', null],
   agents: ['Agents & limits', 'Give each agent a job. Choose what it can do and spend.', null],
   execution: ['Order desk', 'Prepare an order, review the plan and track its outcome.', null],
   playground: ['Developer lab', 'Test a program with sample inputs. No account access or transactions.', null],

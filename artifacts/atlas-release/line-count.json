@@ -1,24 +1,24 @@
 {
   "schema": "machine-line-audit-1",
   "engine_implementation": {
-    "files": 95,
-    "physical": 25463,
-    "nonblank": 23873
+    "files": 101,
+    "physical": 26109,
+    "nonblank": 24467
   },
   "native_cpp_implementation": {
-    "files": 21,
-    "physical": 6690,
-    "nonblank": 6310
+    "files": 22,
+    "physical": 6792,
+    "nonblank": 6411
   },
   "tests": {
-    "files": 47,
-    "physical": 9787,
-    "nonblank": 8797
+    "files": 50,
+    "physical": 10118,
+    "nonblank": 9091
   },
   "operational_scripts": {
-    "files": 47,
-    "physical": 5197,
-    "nonblank": 4665
+    "files": 53,
+    "physical": 5486,
+    "nonblank": 4921
   },
   "implementation_files": [
     {
@@ -98,8 +98,8 @@
     },
     {
       "path": "src/machine_commerce/api.py",
-      "physical": 600,
-      "nonblank": 511
+      "physical": 604,
+      "nonblank": 514
     },
     {
       "path": "src/machine_commerce/atlas.py",
@@ -173,8 +173,8 @@
     },
     {
       "path": "src/machine_commerce/portal.py",
-      "physical": 434,
-      "nonblank": 388
+      "physical": 436,
+      "nonblank": 390
     },
     {
       "path": "src/machine_commerce/providers.py",
@@ -247,6 +247,21 @@
       "nonblank": 190
     },
     {
+      "path": "src/machine_engine/mining.py",
+      "physical": 180,
+      "nonblank": 156
+    },
+    {
+      "path": "src/machine_engine/mining_client.py",
+      "physical": 67,
+      "nonblank": 57
+    },
+    {
+      "path": "src/machine_engine/mining_routes.py",
+      "physical": 30,
+      "nonblank": 22
+    },
+    {
       "path": "src/machine_engine/native.py",
       "physical": 70,
       "nonblank": 59
@@ -263,8 +278,8 @@
     },
     {
       "path": "src/machine_engine/routes.py",
-      "physical": 242,
-      "nonblank": 183
+      "physical": 244,
+      "nonblank": 185
     },
     {
       "path": "src/machine_engine/scheduler.py",
@@ -293,8 +308,8 @@
     },
     {
       "path": "src/machine_engine/workspace.py",
-      "physical": 214,
-      "nonblank": 200
+      "physical": 217,
+      "nonblank": 203
     },
     {
       "path": "web/agents.js",
@@ -308,8 +323,8 @@
     },
     {
       "path": "web/app.js",
-      "physical": 658,
-      "nonblank": 654
+      "physical": 659,
+      "nonblank": 655
     },
     {
       "path": "web/commerce.css",
@@ -333,18 +348,23 @@
     },
     {
       "path": "web/index.html",
-      "physical": 96,
-      "nonblank": 93
+      "physical": 99,
+      "nonblank": 96
+    },
+    {
+      "path": "web/mining.js",
+      "physical": 74,
+      "nonblank": 74
     },
     {
       "path": "web/operations.css",
-      "physical": 434,
-      "nonblank": 433
+      "physical": 444,
+      "nonblank": 442
     },
     {
       "path": "web/operations.js",
-      "physical": 1038,
-      "nonblank": 1036
+      "physical": 1040,
+      "nonblank": 1038
     },
     {
       "path": "web/submission.css",
@@ -482,6 +502,11 @@
       "nonblank": 56
     },
     {
+      "path": "native/src/mining.cpp",
+      "physical": 102,
+      "nonblank": 101
+    },
+    {
       "path": "native/src/program.cpp",
       "physical": 230,
       "nonblank": 225
@@ -490,6 +515,11 @@
       "path": "contracts/MachineCommerceEscrow.sol",
       "physical": 194,
       "nonblank": 175
+    },
+    {
+      "path": "contracts/MachineMining.sol",
+      "physical": 166,
+      "nonblank": 159
     },
     {
       "path": "contracts/SkewDataPass.sol",
@@ -609,6 +639,11 @@
       "nonblank": 165
     },
     {
+      "path": "tests/test_mining.py",
+      "physical": 274,
+      "nonblank": 239
+    },
+    {
       "path": "tests/test_native.py",
       "physical": 137,
       "nonblank": 117
@@ -714,6 +749,11 @@
       "nonblank": 807
     },
     {
+      "path": "native/tests/mining.cpp",
+      "physical": 31,
+      "nonblank": 30
+    },
+    {
       "path": "native/tests/program.cpp",
       "physical": 178,
       "nonblank": 174
@@ -722,6 +762,11 @@
       "path": "contracts/DataPassAdversaries.sol",
       "physical": 53,
       "nonblank": 49
+    },
+    {
+      "path": "contracts/MiningAdversary.sol",
+      "physical": 26,
+      "nonblank": 25
     },
     {
       "path": "contracts/TestCommerceToken.sol",

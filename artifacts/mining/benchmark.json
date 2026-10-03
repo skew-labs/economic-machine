@@ -1,0 +1,25 @@
+{
+  "schema": "machine-mining-measurement-1",
+  "host": "x86_64",
+  "sample_count": 2000,
+  "input_sha256": "ca40a1288f7bd6604fb5ae4e477aac7c0f0b1247955464173fec8eb7b9410b60",
+  "library_sha256": "5f5ec94bd00c55ab3a0e4be9f4d534cf59a6de81543c5f98c4918a7ac47fa9ad",
+  "measured_region": "CTYPES_NATIVE_CALL_ONLY_EXCLUDES_MARSHAL_HASH_API_CHAIN",
+  "native_median_ns": 3203,
+  "native_p95_ns": 6591,
+  "native_max_ns": 16250,
+  "language_model_calls": 0,
+  "synthetic_comparison": {
+    "direct_path": [
+      0
+    ],
+    "direct_net": "995906",
+    "selected_path": [
+      1,
+      2
+    ],
+    "selected_net": "1194675",
+    "extra_normalized_output_units": "198769"
+  },
+  "assurance": "SYNTHETIC_FROZEN_MODEL_NOT_LIVE_RETURN_OR_END_TO_END_NETWORK_BENCHMARK"
+}

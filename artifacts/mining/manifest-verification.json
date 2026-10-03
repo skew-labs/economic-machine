@@ -1,0 +1,11 @@
+{
+  "accepted": true,
+  "public_verification": {
+    "accepted": true,
+    "manifest_sha256": "01a300a445a7cee2a0e9d2c79c72d6f7e536e44d5b6a0f9a6aa34efde0fb096d",
+    "files_checked": 440,
+    "assurance": "FILE_INTEGRITY_NOT_EXTERNAL_TRUTH_OR_PRODUCTION_CERTIFICATION"
+  },
+  "native_installed_sha256": "5f5ec94bd00c55ab3a0e4be9f4d534cf59a6de81543c5f98c4918a7ac47fa9ad",
+  "scope": "PUBLIC_FILE_INTEGRITY_AND_INSTALLED_BINARY_NOT_CHAIN_TX"
+}

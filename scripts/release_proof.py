@@ -51,6 +51,12 @@ def main():
         if path.is_file() and path.suffix in {".json", ".log", ".jpg", ".txt"} and path.name != "manifest-verification.json":
             paths.add(str(path.relative_to(ROOT)))
     paths.add("deploy/native-economics.conf")
+    paths.add("docs/MACHINE_MINING.md")
+    paths.add("docs/ARBITRUM_SUBMISSION.md")
+    paths.add("deploy/native-mining.conf")
+    for path in (ROOT / "artifacts/mining").iterdir():
+        if path.is_file() and path.suffix in {".json", ".log", ".jpg", ".txt"} and path.name != "manifest-verification.json":
+            paths.add(str(path.relative_to(ROOT)))
     paths.update({"deploy/compute.conf", "docs/PRODUCTION_PATHS_20261003.md"})
     for path in (ROOT / "artifacts/production-paths").iterdir():
         if path.is_file() and path.suffix in {".json", ".log", ".jpg"} and path.name != "manifest-verification.json":
@@ -115,6 +121,9 @@ def main():
                            "actual_paypal_sandbox_transactions": 0, "public_paypal_configured": False,
                            "worker": "BUSINESS_CSV_CLEANUP", "fixture_deliverable_only": True,
                            "owner_approval_required": True, "live_money_enabled": False},
+                       "machine_mining": {"model": "SNAPSHOT_ROUTE_V1", "authority": "CANDIDATE_ONLY",
+                           "public_mining_deployment": None, "new_mining_chain_transactions": 0,
+                           "new_emission_tokens": 0, "input_assurance": "REQUESTER_DECLARED_FROZEN_MODEL"},
                        "production_paths": {"distinct_changed_boundary_tests": 121,
                            "actual_public_market_native_profiles": 4, "new_customer_payments": 0,
                            "new_paid_inference_jobs": 0, "new_venue_orders": 0,

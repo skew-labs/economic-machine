@@ -246,3 +246,7 @@ result downloads. The first executable service is business CSV cleanup; it is
 not limited to GPU data. Public payment remains closed until the owner's sandbox
 merchant app and private credentials are configured. Isolated fixture completion
 must not be presented as an actual PayPal transaction.
+
+## Machine Mining
+
+An additional useful-work protocol in the same Economic Machine console: requester-funded tasks, local C++ candidate search, sender-bound commit/reveal, an on-chain fixed-model verifier and exact token reward credits. See [Machine Mining](docs/MACHINE_MINING.md) for implementation, CLI and evidence boundaries. The first task is frozen constant-product route optimization. No public mining contract or emission reward is claimed by this release.

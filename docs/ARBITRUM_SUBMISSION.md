@@ -1,3 +1,23 @@
+# Arbitrum submission — Economic Machine + Machine Mining
+
+Updated 2026-10-04. New vertical: requester-funded useful-work tasks and verifiable token rewards, integrated into the existing owner console and C++ runtime. This extends the data/service commerce app; it does not relabel earlier x402 transfers as mining rewards.
+
+## Machine Mining demonstration
+
+1. Open `/commerce/console#mining`, authenticate and freeze a work request.
+2. Search a fixed pool snapshot with C++, review the selected path and download the exact receipt.
+3. A local participant can submit its own agent's path, independently verify it and seal it without uploading API keys or reveal secrets.
+4. The new Solidity contract implements funded job creation, sender-bound commit/reveal, exact integer verification, commitment-order ties, bond recovery and pull reward withdrawal.
+5. New-contract public deployment and a public funded job remain pending owner authorization. The current demo shows owner drafts/native computation; the escrow lifecycle is verified using actual compiled bytecode in remote Py-EVM.
+
+Existing independently observed deployment: SkewDataPass on Arbitrum Sepolia at `0x2C9619Cd327418571963A3334EA674FA1F4Fb234`, deployment transaction `0x6edc6f928c7e48aabdf8b1140eaa024ddd1e02084ea8e3278fdc597808160bc8`. Its deployment proof is `artifacts/arbitrum-sepolia/datapass-deployment.json`; it records no DataPass purchase and no mining reward.
+
+A complete new mining demonstration needs a source-verified public contract, requester reward escrow, two participant commitments/reveals, finalization and exact reward withdrawal reconciled by two RPCs. The new offline deployment review is `artifacts/mining/deployment-review.json`. Never call an unsigned request, a local EVM receipt or an old test-USDC transfer a public mining transaction. After that evidence, record the demo video and submit the project through the registered HackQuest account; retain the actual submission receipt.
+
+Detailed verifier/CLI/limits: [Machine Mining](MACHINE_MINING.md).
+
+## Earlier commerce submission materials (historical)
+
 # Economic Machine — Arbitrum Open House Singapore
 
 **Draft submission packet, checked 2026-10-02. This document is not a HackQuest submission receipt.**
@@ -64,7 +84,7 @@ ungranted commercial rights each reject the offer without requesting a signature
 | Arbitrum Sepolia | Explicitly named as an accepted chain by the official event page |
 | Application services | Hosted engine, portal and separate test merchant; real HTTP purchase flow |
 | Contract used by this purchase | Existing Circle test USDC `0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d` |
-| Project-owned contract deployment | **Not established**; `MachineCommerceEscrow.sol` is tested locally on the remote host, not deployed publicly |
+| Project-owned contract deployment | **SkewDataPass publicly deployed**; see the 2026-10-04 update above. `MachineCommerceEscrow.sol` remains local-EVM tested; new `MachineMining.sol` public deployment is pending. |
 | Buyer signing | Actual disposable buyer EIP-3009 signature through external CLI; browser wallet login is a separate capability |
 | Browser checkout | **Not demonstrated**; the console manages identity, keys, limits and records |
 | Fresh chain audit | Two distinct RPCs reconfirm canonical receipt, exact logs, consumed nonce, signature and delivered block fields |
