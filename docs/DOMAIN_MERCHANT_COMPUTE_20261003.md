@@ -6,11 +6,13 @@
   Skew landing at `/home/index.html`; the older `/app` routes, D1 binding and
   backend remain in the same deployment. Existing audience is preserved.
 - Launch App opens the existing Economic Machine console. Its Buy services
-  screen now includes a keyless inference-provider price check; Subscriptions
-  clearly identifies the missing receiving-wallet configuration.
+  screen now includes a keyless inference-provider price check. Subscriptions
+  initially identified the missing receiving-wallet configuration; the later
+  owner-requested wallet setup is recorded below.
 - The production runtime loads an explicit merchant registry through a systemd
-  credential. The deployed registry is `{}`: no receiving address was inferred
-  from historical demo wallets, so paid subscriptions are still closed.
+  credential. The initial registry was `{}`. A newly generated owner-approved
+  recipient is now configured for Atlas Monthly; historical demo wallets were
+  not reused. The exact unsigned checkout is verified, with no customer payment.
 
 ## Subscription execution boundary
 
@@ -75,5 +77,8 @@ Customer signatures, submitted payments and started GPU workloads were all zero.
 - Custom domain: `skew.deals`, provider active, SSL active
 - Console runtime: `/srv/skew/economic-machine-commerce-20261002`
 
-Still required: owner-approved subscription receiving address, a fully admitted
-paid inference adapter, and a separately configured/approved GPU lease provider.
+The later [subscription receiver setup](SUBSCRIPTION_RECEIVER_20261003.md)
+records the new public address, root-only encrypted custody, live availability,
+unsigned challenge and cancellation. Its evidence supersedes the earlier
+unconfigured subscription status. Still required for compute: a fully admitted
+paid inference adapter and a separately configured/approved GPU lease provider.

@@ -52,6 +52,8 @@ def main():
     paths.add("docs/SERVICE_COMMERCE.md")
     paths.add("docs/LANDING_20261003.md")
     paths.update({"docs/DOMAIN_MERCHANT_COMPUTE_20261003.md", "deploy/subscriptions.conf", "deploy/skew-deals-page.tsx"})
+    paths.update({"docs/SUBSCRIPTION_RECEIVER_20261003.md", "artifacts/atlas-release/subscription-wallet-tests.log",
+                  "artifacts/atlas-release/subscription-wallet-public.json", "artifacts/atlas-release/subscription-wallet-live.json"})
     for name in ["merchant-compute-tests.log", "subscription-preflight-tests.log", "compute-provider-tests.log",
                  "merchant-compute-live.json", "merchant-validation.json", "provider-ui-tests.log"]:
         paths.add("artifacts/atlas-release/" + name)

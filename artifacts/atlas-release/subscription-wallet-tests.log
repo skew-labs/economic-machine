@@ -1,0 +1,11 @@
+test_encrypted_roundtrip_and_idempotent_recipient_without_output (test_subscription_wallet.SubscriptionWalletTests.test_encrypted_roundtrip_and_idempotent_recipient_without_output) ... ok
+test_insecure_parent_directory_or_file_is_rejected (test_subscription_wallet.SubscriptionWalletTests.test_insecure_parent_directory_or_file_is_rejected) ... ok
+test_mismatched_public_address_is_rejected (test_subscription_wallet.SubscriptionWalletTests.test_mismatched_public_address_is_rejected) ... ok
+test_partial_vault_is_never_replaced (test_subscription_wallet.SubscriptionWalletTests.test_partial_vault_is_never_replaced) ... ok
+test_symlinks_and_hardlinks_are_rejected (test_subscription_wallet.SubscriptionWalletTests.test_symlinks_and_hardlinks_are_rejected) ... ok
+test_weak_kdf_is_rejected_before_decryption (test_subscription_wallet.SubscriptionWalletTests.test_weak_kdf_is_rejected_before_decryption) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 2.534s
+
+OK

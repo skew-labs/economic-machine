@@ -73,7 +73,7 @@
     box.append(head, text('h2', '', plan?.name || product.offers[0]?.name || titles[product.data_type] || product.data_type.replaceAll('.', ' ')),
       text('p', 'muted', plan?.description || `${product.category === 'compute' ? 'Provider compute service' : 'Version-bound resource'} · ${product.version}`));
     const price = plan?.price || product.offers[0]?.unit_price;
-    box.append(text('div', 'commerce-price', price ? `${cost(price)} ${unit(product)}` : 'No current quote'),
+    box.append(text('div', 'commerce-price', price ? (plan ? `${cost(price)} USDC / month` : `${cost(price)} ${unit(product)}`) : 'No current quote'),
       text('p', 'commerce-caption', plan ? `${cost(plan.duration_seconds / 86400)} days · renew manually` : `${network(product.network)} · pay per purchase`));
     box.append(action(available ? 'Review purchase' : 'View availability', 'button ' + (available ? 'primary' : 'secondary'), () => openPurchase(product, plan)));
     return box;

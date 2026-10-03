@@ -174,15 +174,19 @@ ambiguous outcomes through finalized token/nonce/transfer observation. There is
 no signer in the subscription service. The facilitator is PayAI's exact-EVM
 x402 v2 endpoint; its public supported-methods endpoint includes Arbitrum One.
 
-An owner must supply a **public receiving address** before enabling the SKU.
+An owner-approved **public receiving address** is required before enabling the SKU.
 On the trusted host, run `scripts/configure_subscription.py` with `--recipient`,
 `--resources`, and `--merchants`. Dry-run is the default; `--apply` writes the
 registries without signing or transferring funds. Load both files in the same
 service revision using `deploy/subscriptions.conf`. Existing differing recipients
 are rejected rather than silently replaced. The managed seller identity publishes
 immutable 10-USDC offers and refreshes them without extending human logins or
-changing an in-flight quote. The currently installed merchant registry is empty:
-the recipient is still awaiting owner input and subscriptions remain closed.
+changing an in-flight quote. On 2026-10-03 the owner requested creation of a new
+receiver. Atlas Monthly now uses `0xD432a628a9860A8d0Be98c1782B2a0cD136Da00e`
+on Arbitrum One and is available for customer-approved 10-USDC checkout.
+See [receiver custody and unsigned live evidence](SUBSCRIPTION_RECEIVER_20261003.md).
+The root-only encrypted key is outside the API service; no paid customer
+subscription was executed during setup verification.
 
 The console also lists a keyless Gate402 inference connection. Its unsigned
 Arbitrum USDC challenge is queried through a bounded, cached, DNS-pinned request.

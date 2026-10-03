@@ -22,6 +22,8 @@ def main():
         catalog = client.get(BASE + "/catalog"); catalog.raise_for_status()
         plan = next(p for p in catalog.json()["plans"] if p["id"] == "atlas-monthly")
         assert plan["price"] == "10" and plan["duration_seconds"] == 2592000 and not plan["auto_charge"]
+        recipient = json.loads((ROOT / 'artifacts/atlas-release/subscription-wallet-public.json').read_text())["address"].lower()
+        assert plan["status"] == "AVAILABLE" and plan["product"]["pay_to"] == recipient
         provider = catalog.json()["compute_connections"]["providers"][0]
         assert not provider["purchase_enabled"] and not provider["capacity_verified"]
         anon = client.post(BASE + "/compute/gate402-inference/check", json={})
@@ -46,7 +48,7 @@ def main():
         assert any(k["network"] == "eip155:42161" and k["scheme"] == "exact" and k["x402Version"] == 2 for k in kinds)
     result = {"accepted": True, "checked_at": datetime.now(UTC).isoformat(), "subscription_status": plan["status"],
         "facilitator_supports_arbitrum_v2_exact": True, "anonymous_provider_check_blocked": True,
-        "unconfigured_merchant_closed": True, "compute_connection": quote, "customer_signatures": 0,
+        "merchant_rejects_missing_checkout": True, "recipient": recipient, "compute_connection": quote, "customer_signatures": 0,
         "payments_submitted": 0, "gpu_workloads_started": 0, "source_matches_deployed_console": True}
     (ROOT / 'artifacts/atlas-release/merchant-compute-live.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps({"accepted": True, "provider_status": quote["status"], "subscription_status": plan["status"],

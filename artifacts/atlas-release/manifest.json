@@ -1,6 +1,6 @@
 {
   "schema": "machine-release-proof-1",
-  "created_at": 1791015295,
+  "created_at": 1791016663,
   "files": [
     {
       "path": "LICENSE",
@@ -338,6 +338,21 @@
       "sha256": "60e86a4faf6db9ff427b72acbc48e84fe8651f0cf89f47e5ae851c81030c8fed"
     },
     {
+      "path": "artifacts/atlas-release/subscription-wallet-live.json",
+      "bytes": 1871,
+      "sha256": "40ec1f5418077062e4ff6cdbd64b0d0c0a92bd15b93d147de1874de3625b503f"
+    },
+    {
+      "path": "artifacts/atlas-release/subscription-wallet-public.json",
+      "bytes": 411,
+      "sha256": "9fa1005dcbb78f3db5ca6e489d8de519f8a4a47671f2eedeaf48e8a19715f43f"
+    },
+    {
+      "path": "artifacts/atlas-release/subscription-wallet-tests.log",
+      "bytes": 1008,
+      "sha256": "9a4deaa0002ee4a219d2a01011632a0b2138acc381d0754072a390d1ce41759d"
+    },
+    {
       "path": "artifacts/landing-20261003/browser-check.json",
       "bytes": 1921,
       "sha256": "76451bc0556ae0ebdc777c62906afa6cbb2666c54bd5dbe311ed59f1cf1d5754"
@@ -391,6 +406,21 @@
       "path": "artifacts/landing-20261003/skew-deals-deployment.json",
       "bytes": 1432,
       "sha256": "28c0ed6685cc59099d0d7a86a1464b60a525f4334652e437aaaa981221d58c5d"
+    },
+    {
+      "path": "artifacts/landing-20261003/subscription-active-browser-check.json",
+      "bytes": 408,
+      "sha256": "e403c67b60bf09ea3cb32174ecdaa6e508d2a38fa040fad5ffa9d180e53d322a"
+    },
+    {
+      "path": "artifacts/landing-20261003/subscription-active-subscriptions-1440.jpg",
+      "bytes": 102057,
+      "sha256": "8408400532a73e5d1469ede5bcf4ea4c32a09d0af43bc5b0916b739d1fd14186"
+    },
+    {
+      "path": "artifacts/landing-20261003/subscription-active-subscriptions-390.jpg",
+      "bytes": 63006,
+      "sha256": "da131176e5be6197542b2c0cde3a856dd410e9d5b1457a37d1db5f1fa44ef0b5"
     },
     {
       "path": "contracts/DataPassAdversaries.sol",
@@ -449,8 +479,8 @@
     },
     {
       "path": "docs/DOMAIN_MERCHANT_COMPUTE_20261003.md",
-      "bytes": 4253,
-      "sha256": "42cddf3f2f8283890121b516653015b8483379a1d05e1c0fca0c4848ce0a4b1d"
+      "bytes": 4627,
+      "sha256": "ddedf02bde230198763cd41d481d144f3e1a7690db71e11b841501865f4e1fcb"
     },
     {
       "path": "docs/ECONOMIC_PRIMITIVES.md",
@@ -469,8 +499,13 @@
     },
     {
       "path": "docs/SERVICE_COMMERCE.md",
-      "bytes": 10904,
-      "sha256": "618a2aa3a65ebc29b1cd1673aa5110704a8741aee8ff87f7e101a0c404da6bcf"
+      "bytes": 11197,
+      "sha256": "cf0af700e0a7faa4550d6bca7eba96b4301ba4c3f0286adb56acbd4d777ffed0"
+    },
+    {
+      "path": "docs/SUBSCRIPTION_RECEIVER_20261003.md",
+      "bytes": 4054,
+      "sha256": "b4661505a46e74bc492d13d76d6fffbbdb0a17d454616fa3cda46ec1b1f0478f"
     },
     {
       "path": "native/CMakeLists.txt",
@@ -733,14 +768,19 @@
       "sha256": "0cfba3f1d373f0f49a2edcdb72a5cc3dc533e83cb2d99dd12ee0ff214459b416"
     },
     {
+      "path": "scripts/provision_subscription_wallet.py",
+      "bytes": 4762,
+      "sha256": "34e0f0b60e97f477c21e56dd148b226fa0e34e8b16150c98e9eb77cfb934f128"
+    },
+    {
       "path": "scripts/read_chain.py",
       "bytes": 1553,
       "sha256": "ad99eb27b610f970d88dc76aff160703f09e1d2426346e485995d960e72e1e1c"
     },
     {
       "path": "scripts/release_proof.py",
-      "bytes": 7463,
-      "sha256": "49884355ed519502ac16e80cb7890e8ff09f246b7c709f7bc92f1cff9405a6f1"
+      "bytes": 7715,
+      "sha256": "9682751aaa3e0d714a8997402064f962730baa9b063ac5c29d4c2cee6b0bb377"
     },
     {
       "path": "scripts/sepolia_demo.py",
@@ -779,8 +819,8 @@
     },
     {
       "path": "scripts/verify_merchant_compute_live.py",
-      "bytes": 3355,
-      "sha256": "ff868b799e9428d208c3e42c42d9d71d3c6ac0eb7f1a8e2cb5b0c0a3c7a205a9"
+      "bytes": 3602,
+      "sha256": "16041679452923cd31d3f76a077b6daa4fb1a8c8c749a4daf0b995872abdcf54"
     },
     {
       "path": "scripts/verify_portal.py",
@@ -789,8 +829,13 @@
     },
     {
       "path": "scripts/verify_provider_ui.py",
-      "bytes": 2651,
-      "sha256": "c4c55dff434c88c0ab7e9e7cf46045118b6aa876cb5e1cedded27008abc0789a"
+      "bytes": 3145,
+      "sha256": "ef683fa29cad2565798de6ab16049ce4a0e5f21a8f0bbfe94c40fd866153a1ab"
+    },
+    {
+      "path": "scripts/verify_subscription_activation.py",
+      "bytes": 7973,
+      "sha256": "c5ad21d7e878c692a85f3d44ffb6a282242e81748c30d8565951616191f1926d"
     },
     {
       "path": "scripts/verify_wallet_login.py",
@@ -1353,6 +1398,11 @@
       "sha256": "30035be67632f8df1a5ca3aa1b867434dd1ae380c7c4d6990da853bf0b749182"
     },
     {
+      "path": "tests/test_subscription_wallet.py",
+      "bytes": 3485,
+      "sha256": "175cf33f8e78626bf5072b1ed46eecaa6248d256129733ab88b5b206b89ff6ae"
+    },
+    {
       "path": "tests/test_wallet_auth.py",
       "bytes": 10018,
       "sha256": "43976f2d4ed8f5fbaf196902b64a3c2529191721feb654f22923c44761269244"
@@ -1414,8 +1464,8 @@
     },
     {
       "path": "web/commerce.js",
-      "bytes": 24571,
-      "sha256": "83a5f7aa32b18141ed1e719c4c16486281309174f7c4434f34685b745b7a8ba8"
+      "bytes": 24612,
+      "sha256": "b977d0d2bf6367f1c23e9576e4e900b1df0cc0ecdc0a1f62b8ea57b9afd2a923"
     },
     {
       "path": "web/console-theme.css",
@@ -1483,5 +1533,5 @@
     "raw_archives_publicly_resold": false
   },
   "assurance": "SOURCE_AUDIT_PLUS_REPRODUCIBLE_LOCAL_EVM_AND_NATIVE_TESTS_NOT_PRODUCTION_CERTIFICATION",
-  "manifest_sha256": "ee9210665d6d8ed1f4ef740817e15ebf2d3e6ef7efe2df183f455e008f8cdfd1"
+  "manifest_sha256": "7de5c6e892be70ef2c74e70afa42a5e090a433f731fd68d7580de1a3f0bd1be9"
 }
