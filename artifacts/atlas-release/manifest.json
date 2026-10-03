@@ -1,6 +1,6 @@
 {
   "schema": "machine-release-proof-1",
-  "created_at": 1791008844,
+  "created_at": 1791010806,
   "files": [
     {
       "path": "LICENSE",
@@ -173,9 +173,14 @@
       "sha256": "4f963aab9b6d247b6ccbd50351cd11909efb9db89d12637459dc79e4d8ea5155"
     },
     {
+      "path": "artifacts/atlas-release/landing-route-tests.log",
+      "bytes": 564,
+      "sha256": "4883b8e7976b714023e14c88855cd6e04a960faa63b834e79714b77dae435fab"
+    },
+    {
       "path": "artifacts/atlas-release/line-count.json",
       "bytes": 13528,
-      "sha256": "7c33e2e1f84b048848d6852982f55afa608666756389529e9c50a17f86670cd2"
+      "sha256": "60691d087f67b7160286c1d0a287974b2cc7e17a21d265fc08b4d5f3dad79606"
     },
     {
       "path": "artifacts/atlas-release/live-web-check.json",
@@ -303,6 +308,31 @@
       "sha256": "6acf766e4cd171e483a6bc4cf3c5e173e311543133edaf770525e2fa861958ed"
     },
     {
+      "path": "artifacts/landing-20261003/browser-check.json",
+      "bytes": 1921,
+      "sha256": "76451bc0556ae0ebdc777c62906afa6cbb2666c54bd5dbe311ed59f1cf1d5754"
+    },
+    {
+      "path": "artifacts/landing-20261003/hero-desktop.jpg",
+      "bytes": 46152,
+      "sha256": "7f07947cc7c3f33525bda7548ef95ba4c04b340aef6da87c9c6cd3d9d70d101b"
+    },
+    {
+      "path": "artifacts/landing-20261003/hero-mobile.jpg",
+      "bytes": 30591,
+      "sha256": "fddedc3a84ba59557974964cf390405897e443554c07defa0b5ea70187b8836c"
+    },
+    {
+      "path": "artifacts/landing-20261003/http-check.json",
+      "bytes": 921,
+      "sha256": "e1e8d7d2eda44f86948769fc340505a30270901ed48e36357737cbba06af9d94"
+    },
+    {
+      "path": "artifacts/landing-20261003/site-deployment.json",
+      "bytes": 598,
+      "sha256": "9a4ebfe8563996bc65cb20f5b0a69c9819d1cce35d6d2136c8d98e665ced87e9"
+    },
+    {
       "path": "contracts/DataPassAdversaries.sol",
       "bytes": 2022,
       "sha256": "af31b33be6efd411a30daa353371c65e5be2e8254d649db3edc0d5186085f357"
@@ -356,6 +386,11 @@
       "path": "docs/ECONOMIC_RELEASE_20261003.md",
       "bytes": 4572,
       "sha256": "a2e663ec2dc11cd2546472f5704d18db5f7b55f1dfcb455bba348d21423f4d27"
+    },
+    {
+      "path": "docs/LANDING_20261003.md",
+      "bytes": 2467,
+      "sha256": "774fbd9581d78f3006c1ed035023f6b2ac5bed87a02094e83307cf5d8220edaa"
     },
     {
       "path": "docs/SERVICE_COMMERCE.md",
@@ -619,8 +654,8 @@
     },
     {
       "path": "scripts/release_proof.py",
-      "bytes": 6779,
-      "sha256": "b8e826ce14254a0f4f6dd932430387a1a9aef5d16a552c6d8136aa3cfd8a79b1"
+      "bytes": 7074,
+      "sha256": "db3dde734b8e03da93a75164e63788931db312337d9df819e1d4956d9a91ed28"
     },
     {
       "path": "scripts/sepolia_demo.py",
@@ -651,6 +686,11 @@
       "path": "scripts/verify_engine_runtime.py",
       "bytes": 4666,
       "sha256": "ced495341d1eb96521a954c45beb8d2a1c26c8c453681851d978da14361a93ab"
+    },
+    {
+      "path": "scripts/verify_landing.py",
+      "bytes": 2924,
+      "sha256": "172a513d2b1a4c166cbbafba95425fbfe718b793e80553048b0eb6589aa3ff0c"
     },
     {
       "path": "scripts/verify_portal.py",
@@ -769,8 +809,18 @@
     },
     {
       "path": "site/index.html",
-      "bytes": 9565,
-      "sha256": "f947087483456a97f24ee8d74a633f569954bcc903b1842edfba83bc24424208"
+      "bytes": 10344,
+      "sha256": "d8a71404933c07ef0521a9643c02af6bd6accead3f6bb0fbca033dab6294807d"
+    },
+    {
+      "path": "site/landing.css",
+      "bytes": 15134,
+      "sha256": "59c948629977e91b7e6a48a4abc8c54a1cff4b951db6766bada58d6149f53f46"
+    },
+    {
+      "path": "site/landing.js",
+      "bytes": 4543,
+      "sha256": "0e04582b3e4b9f41789ebe565ec9cfe6ea9b16484d54de4a2c7687bf3485557a"
     },
     {
       "path": "site/site-lens.html",
@@ -929,8 +979,8 @@
     },
     {
       "path": "src/machine_commerce/portal.py",
-      "bytes": 24716,
-      "sha256": "85026a2f8cf066c363184e2431e3379998c176f09cec87286b0373b4902fffc5"
+      "bytes": 24745,
+      "sha256": "2c3dd47b7de3b739875bafbf86ec33cff5a3083c58a22c2e008095e51cc6430a"
     },
     {
       "path": "src/machine_commerce/providers.py",
@@ -1149,8 +1199,8 @@
     },
     {
       "path": "tests/test_portal.py",
-      "bytes": 6426,
-      "sha256": "a5ea7c32a123042af69cce03bfc92b10cf48498a5dc6f4507d156d900db3469a"
+      "bytes": 7003,
+      "sha256": "4c45565c3c2e8174967130e880a453db975bf69ec259822e45d4a6af68d55fbd"
     },
     {
       "path": "tests/test_qwen_comparison.py",
@@ -1308,5 +1358,5 @@
     "raw_archives_publicly_resold": false
   },
   "assurance": "SOURCE_AUDIT_PLUS_REPRODUCIBLE_LOCAL_EVM_AND_NATIVE_TESTS_NOT_PRODUCTION_CERTIFICATION",
-  "manifest_sha256": "bfae14199ef99376e0ca48eb27587f5e8dd4a0729434fde3930d68d3c729cea7"
+  "manifest_sha256": "7134fa3985114adea3a5c61bf6a5bc6ce3b92e9ba7cf92fc53b456ccab71722a"
 }

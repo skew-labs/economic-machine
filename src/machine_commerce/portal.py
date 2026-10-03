@@ -408,7 +408,7 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         tool_pages = {"tools": "tools.html", "tools/atlas": "atlas.html", "tools/site-lens": "site-lens.html", "tools/data-pass": "data-pass.html", "tools/engine": "engine-product.html"}
         if asset.rstrip("/") in tool_pages:
             return HTMLResponse((site / tool_pages[asset.rstrip("/")]).read_text().replace('<head>', '<head><base href="/commerce/">'))
-        if asset in {"tools.css", "tools.js", "tools.html", "atlas.html", "site-lens.html", "data-pass.html", "engine-product.html", "atlas.json", "evidence.html"}:
+        if asset in {"landing.css", "landing.js", "tools.css", "tools.js", "tools.html", "atlas.html", "site-lens.html", "data-pass.html", "engine-product.html", "atlas.json", "evidence.html"}:
             target = site / asset
             return FileResponse(target) if target.is_file() else JSONResponse({"error": "Not found"}, status_code=404)
         if asset in {"app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "data.js", "workspace.css", "commerce.js", "commerce.css", "submission.css", "submission.js"}:

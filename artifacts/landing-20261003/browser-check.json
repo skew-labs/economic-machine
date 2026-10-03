@@ -1,0 +1,91 @@
+{
+  "url": "https://machine.148-113-153-116.nip.io/commerce/",
+  "responsive": [
+    {
+      "brokenImages": [],
+      "outsideControls": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "width": 1280
+    },
+    {
+      "brokenImages": [],
+      "outsideControls": [],
+      "overflow": false,
+      "pageWidth": 1024,
+      "width": 1024
+    },
+    {
+      "brokenImages": [],
+      "outsideControls": [],
+      "overflow": false,
+      "pageWidth": 768,
+      "width": 768
+    },
+    {
+      "brokenImages": [],
+      "outsideControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "width": 390
+    },
+    {
+      "brokenImages": [],
+      "outsideControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "width": 320
+    }
+  ],
+  "selections": [
+    {
+      "name": "Economic Machine",
+      "selected": [
+        "engine"
+      ],
+      "url": "https://machine.148-113-153-116.nip.io/commerce/console"
+    },
+    {
+      "name": "Atlas",
+      "selected": [
+        "atlas"
+      ],
+      "url": "atlas.html"
+    },
+    {
+      "name": "DataPass",
+      "selected": [
+        "datapass"
+      ],
+      "url": "data-pass.html"
+    },
+    {
+      "name": "SiteLens",
+      "selected": [
+        "sitelens"
+      ],
+      "url": "site-lens.html"
+    }
+  ],
+  "animation": {
+    "initial": {
+      "network": "matrix(0.986305, 0, 0, 0.986305, -33.6305, -16.8152)",
+      "stream": "matrix(1, 0, 0, 1, -101.059, 0)"
+    },
+    "final": {
+      "network": "matrix(1.12627, 0, 0, 1.12627, -47.6267, -23.8134)",
+      "stream": "matrix(1, 0, 0, 1, -297.763, 0)"
+    }
+  },
+  "interactions": {
+    "searchAtlasCount": 1,
+    "searchMissingCount": 0,
+    "operateCount": 1,
+    "dataCount": 3,
+    "allCount": 4,
+    "menuOpenedAndAnchorClosed": true,
+    "launchAppObservedUrl": "https://machine.148-113-153-116.nip.io/commerce/console#overview"
+  },
+  "payments": 0,
+  "signatures": 0
+}

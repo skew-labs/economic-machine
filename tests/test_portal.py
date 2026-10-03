@@ -117,6 +117,16 @@ class PortalHTTP(unittest.TestCase):
         self.assertIn('base href="/commerce/"', self.client.get("/").text)
         self.assertEqual(self.client.get("/../demo-state.json").status_code, 404)
 
+    def test_landing_assets_are_served_from_the_site_and_private_paths_stay_closed(self):
+        for name in ["landing.css", "landing.js"]:
+            content = "/* landing asset fixture */"
+            (self.site / name).write_text(content)
+            response = self.client.get("/" + name)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.text, content)
+        self.assertEqual(self.client.get("/.openai/hosting.json").status_code, 404)
+        self.assertEqual(self.client.get("/runtime/commerce.sqlite3").status_code, 404)
+
     def test_reject_nonverified_record(self):
         proof = json.loads((ROOT / "artifacts/arbitrum-sepolia/proof.json").read_text())
         proof["verified"] = False

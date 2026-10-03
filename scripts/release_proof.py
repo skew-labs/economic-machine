@@ -50,6 +50,11 @@ def main():
     paths.update({"docs/CONSOLE_UX_20261003.md", "artifacts/atlas-release/console-ux-browser.json",
                   "artifacts/atlas-release/console-ux-site-deployment.json"})
     paths.add("docs/SERVICE_COMMERCE.md")
+    paths.add("docs/LANDING_20261003.md")
+    paths.add("artifacts/atlas-release/landing-route-tests.log")
+    for path in (ROOT / "artifacts/landing-20261003").iterdir():
+        if path.is_file() and path.suffix in {".json", ".jpg", ".png"}:
+            paths.add(str(path.relative_to(ROOT)))
     for name in ["commerce-checkout-tests.log", "commerce-portal-tests.log", "commerce-portal-tests.initial.log",
                  "commerce-recovery-tests.log", "commerce-wallet-tests.log", "commerce-native-tests.log",
                  "commerce-wallet-native-tests.log", "commerce-cache-tests.log", "commerce-live-check.json", "commerce-browser.json"]:

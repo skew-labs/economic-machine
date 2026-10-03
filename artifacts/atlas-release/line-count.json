@@ -12,13 +12,13 @@
   },
   "tests": {
     "files": 39,
-    "physical": 7935,
-    "nonblank": 7150
+    "physical": 7945,
+    "nonblank": 7159
   },
   "operational_scripts": {
-    "files": 33,
-    "physical": 3752,
-    "nonblank": 3348
+    "files": 34,
+    "physical": 3825,
+    "nonblank": 3412
   },
   "implementation_files": [
     {
@@ -560,8 +560,8 @@
     },
     {
       "path": "tests/test_portal.py",
-      "physical": 130,
-      "nonblank": 109
+      "physical": 140,
+      "nonblank": 118
     },
     {
       "path": "tests/test_qwen_comparison.py",
