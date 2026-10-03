@@ -1,0 +1,11 @@
+{
+  "source_files_synced": 14,
+  "focused_tests": 70,
+  "new_checkout_tests": 32,
+  "isolated_browser_checks": 10,
+  "public_browser_checks": 4,
+  "actual_paypal_sandbox_transactions": 0,
+  "public_paypal_configured": false,
+  "real_money_transactions": 0,
+  "runtime_health": "ok"
+}

@@ -1,0 +1,21 @@
+{
+  "source_files": 14,
+  "source_sha256": {
+    "README.md": "2366d0a3f4f67dade65b6d8f66fb325f978b127f53c1048608fc8cc91eb30e91",
+    "deploy/paypal-sandbox.example.json": "354bc56a1f41400a41991339d5e53832642e067d6313714f53cad4b876450072",
+    "docs/TASKS_PR2_20261003.md": "58cbba6e52683793ab6389d7b93db10c2b5e82702d468e3e11670b451e1caf16",
+    "scripts/release_proof.py": "2d88d5ba1e8a9b3b96d7f85128ee5e7e776d2ac39bd93f8ed480bab0e4e74702",
+    "scripts/verify_task_checkout_browser.py": "254cf96efcddf77297562ee5311907d20ab6e788bb24a4abe0cf936c9a64ad61",
+    "src/machine_commerce/access.py": "6f5f1f4dcea9c89b79287d7f72fffe9bf78ce50e1e3bed93ae089e99ff02d6a1",
+    "src/machine_commerce/api.py": "136b7882f6cac372d626167f6a12210f73ec8854c86617a8be179b81c09cdb12",
+    "src/machine_engine/paypal.py": "9d0042f63bbec4e3f57fadc69d3c9fdfb098b3e5e9f2b57938d438aaaf352a12",
+    "src/machine_engine/task_checkout.py": "0b178e8bab2ec5ba9616d9b4e319e4f00adcdaa5ba16c8935289108510b89d71",
+    "src/machine_engine/task_routes.py": "a44bf1c7492b93da9cc45636ef874cab81c58d83d3ebeeba0745c682e4d8b648",
+    "src/machine_engine/tasks.py": "965c6be756854edf49dc3afd5705fb27c6f74d166e8971b638542059b3240be5",
+    "src/machine_engine/workspace.py": "d036683f7a8265db89e406561fe7af456e854a7152af84b9e7585282b323ec4e",
+    "tests/test_task_checkout.py": "91952f7d2fe65c4be4eb7b93d784ec677dda797ab1306510b09a87d477c83aca",
+    "web/tasks.js": "fc5b9e7da4464cc46f21e393288f67ecf94cff8d8a8b71bbaa1e7ee15b7d25d0"
+  },
+  "private_configuration_changed": false,
+  "customer_payments": 0
+}

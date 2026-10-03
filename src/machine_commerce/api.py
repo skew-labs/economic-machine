@@ -541,6 +541,14 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     def wallet_javascript():
         return FileResponse(web / "wallet.js")
 
+    @app.get("/agents.js")
+    def agents_javascript():
+        return FileResponse(web / "agents.js")
+
+    @app.get("/data.js")
+    def data_javascript():
+        return FileResponse(web / "data.js")
+
     @app.get("/tasks.js")
     def tasks_javascript():
         return FileResponse(web / "tasks.js")

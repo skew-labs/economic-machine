@@ -1,0 +1,21 @@
+{
+  "javascript_errors": [],
+  "failed_http_responses": [
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4294/agents.js"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4294/data.js"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4294/agents.js"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4294/data.js"
+    }
+  ]
+}

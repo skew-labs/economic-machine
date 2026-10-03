@@ -239,3 +239,10 @@ The existing console now includes [Tasks](docs/TASKS_PR1_20261003.md): vendor
 comparisons, research briefs, document drafts, data cleanup and localization.
 Save exact USD caps and explicitly confirmed conditions in the owner workspace.
 Saving a brief grants no payment authority or automatic execution.
+
+[PR2 work checkout](docs/TASKS_PR2_20261003.md) adds frozen task prices,
+owner-only PayPal sandbox approval/capture, fresh payment readback and private
+result downloads. The first executable service is business CSV cleanup; it is
+not limited to GPU data. Public payment remains closed until the owner's sandbox
+merchant app and private credentials are configured. Isolated fixture completion
+must not be presented as an actual PayPal transaction.

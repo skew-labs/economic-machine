@@ -46,6 +46,10 @@ def main():
     for path in (ROOT / "artifacts/atlas-release/screenshots").iterdir():
         if path.suffix in {".png", ".jpg"}:
             paths.add(str(path.relative_to(ROOT)))
+    paths.update({"docs/TASKS_PR2_20261003.md", "deploy/paypal-sandbox.example.json"})
+    for path in (ROOT / "artifacts/tasks-pr2").iterdir():
+        if path.is_file() and path.suffix in {".json", ".log", ".jpg", ".txt"} and path.name != "manifest-verification.json":
+            paths.add(str(path.relative_to(ROOT)))
     paths.add("deploy/native-economics.conf")
     paths.update({"deploy/compute.conf", "docs/PRODUCTION_PATHS_20261003.md"})
     for path in (ROOT / "artifacts/production-paths").iterdir():
@@ -107,6 +111,10 @@ def main():
                        "tasks_pr1": {"work_types": 5, "payment_authority": "NONE",
                            "automatic_execution": False, "language_interpretation_installed": False,
                            "paypal_installed": False, "completed_deliverables": 0},
+                       "tasks_pr2": {"paypal_sandbox_adapter_installed": True,
+                           "actual_paypal_sandbox_transactions": 0, "public_paypal_configured": False,
+                           "worker": "BUSINESS_CSV_CLEANUP", "fixture_deliverable_only": True,
+                           "owner_approval_required": True, "live_money_enabled": False},
                        "production_paths": {"distinct_changed_boundary_tests": 121,
                            "actual_public_market_native_profiles": 4, "new_customer_payments": 0,
                            "new_paid_inference_jobs": 0, "new_venue_orders": 0,
