@@ -806,11 +806,39 @@
     if (view === "playground")
       byId("ops-compile").disabled = !writable() && API_PREFIX !== "/commerce";
   }
+  const updateRuntimeLabel = () => {
+    byId("ops-decision-summary").hidden = true;
+    const financial = byId("ops-language").value === "economics";
+    byId("ops-compile").textContent = financial ? "Evaluate decision" : "Compile program";
+    byId("ops-runtime-label").textContent = financial ? "C++ · state → decision · no signing" :
+      byId("ops-language").value === "native" ? "Native C++ · bounded candidate" : "Economic IR · static validation";
+  };
+  byId("ops-language").addEventListener("change", updateRuntimeLabel);
+  updateRuntimeLabel();
+  byId("ops-program").addEventListener("input", () => {
+    byId("ops-decision-summary").hidden = true;
+    byId("ops-compiled").textContent = "Inputs changed. Evaluate again for the current decision.";
+  });
   byId("ops-compile").addEventListener("click", async () => {
+    byId("ops-decision-summary").hidden = true;
     try {
       const source = JSON.parse(byId("ops-program").value);
+      const exact = (value) => {
+        if (typeof value === "number" && !Number.isSafeInteger(value)) {
+          throw new Error('Use {"integer":"exact decimal"} for amounts or IDs beyond the browser integer range.');
+        }
+        if (value && typeof value === "object") Object.values(value).forEach(exact);
+      };
+      if (byId("ops-language").value === "economics") exact(source);
       let result;
-      if (byId("ops-language").value === "native") {
+      if (byId("ops-language").value === "economics") {
+        if (API_PREFIX === "/commerce" && record?.read_only) {
+          const response = await fetch(API_PREFIX + "/demo/economics/evaluate", {
+            method: "POST", credentials: "omit", headers: {"Content-Type": "application/json"}, body: JSON.stringify(source)});
+          result = await response.json();
+          if (!response.ok) throw new Error(result.error || "Economic scenario rejected.");
+        } else result = await request("/economics/evaluate", source);
+      } else if (byId("ops-language").value === "native") {
         if (API_PREFIX === "/commerce") {
           const response = await fetch(API_PREFIX + "/demo/native-program", {
             method: "POST", credentials: "omit", headers: {"Content-Type": "application/json"}, body: JSON.stringify(source)});
@@ -829,15 +857,23 @@
           throw new Error(result.error || "Static compilation rejected.");
       } else result = await request("/programs/compile", source);
       byId("ops-compiled").textContent = JSON.stringify(result, null, 2);
+      if (byId("ops-language").value === "economics") {
+        const summary = byId("ops-decision-summary");
+        summary.replaceChildren(el("strong", "", result.computed ? (result.action || "Computed") : "Abstained"),
+          el("span", "", `${result.demonstration ? "Synthetic inputs" : "Input assumptions"} · ${result.language_model_calls} model calls`));
+        summary.hidden = false;
+      }
     } catch (e) {
       byId("ops-compiled").textContent = e.message;
     }
   });
   byId("ops-example").hidden = API_PREFIX !== "/commerce";
   byId("ops-example").addEventListener("click", async () => {
+    byId("ops-decision-summary").hidden = true;
     try {
       const native = byId("ops-language").value === "native";
-      const response = await fetch(API_PREFIX + (native ? "/demo/native-program/example" : "/demo/engine/example"), {
+      const economics = byId("ops-language").value === "economics";
+      const response = await fetch(API_PREFIX + (economics ? "/demo/economics/example" : native ? "/demo/native-program/example" : "/demo/engine/example"), {
         credentials: "omit",
       });
       if (!response.ok) throw new Error("Example is unavailable.");
@@ -847,7 +883,7 @@
         2,
       );
       byId("ops-compiled").textContent =
-        native ? "Synthetic numeric state loaded. C++ evaluation returns a candidate and grants no execution authority." : "Synthetic historical fixture loaded. Static compilation only; no execution authority.";
+        economics ? "Economic program loaded. Change the fact value from 100000000 to 200000000 to compare REDUCE with HOLD. Synthetic inputs; no signing authority." : native ? "Synthetic numeric state loaded. C++ evaluation returns a candidate and grants no execution authority." : "Synthetic historical fixture loaded. Static compilation only; no execution authority.";
     } catch (error) {
       notify(error.message, true);
     }

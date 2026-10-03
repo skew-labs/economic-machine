@@ -21,7 +21,7 @@ from .atlas import load_report
 
 CHAIN_ID = 421614
 USDC = "0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d"
-RPCS = ("https://sepolia-rollup.arbitrum.io/rpc", "https://arbitrum-sepolia-rpc.publicnode.com")
+RPCS = ("https://sepolia-rollup.arbitrum.io/rpc", "https://arbitrum-sepolia.drpc.org")
 ROOT = Path(__file__).resolve().parents[2]
 
 

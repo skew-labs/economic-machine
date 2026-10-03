@@ -1,19 +1,24 @@
 {
   "schema": "machine-line-audit-1",
   "engine_implementation": {
-    "files": 61,
-    "physical": 15119,
-    "nonblank": 14121
+    "files": 79,
+    "physical": 21557,
+    "nonblank": 20200
+  },
+  "native_cpp_implementation": {
+    "files": 21,
+    "physical": 6690,
+    "nonblank": 6310
   },
   "tests": {
-    "files": 36,
-    "physical": 6398,
-    "nonblank": 5703
+    "files": 38,
+    "physical": 7481,
+    "nonblank": 6734
   },
   "operational_scripts": {
-    "files": 29,
-    "physical": 3280,
-    "nonblank": 2923
+    "files": 32,
+    "physical": 3687,
+    "nonblank": 3290
   },
   "implementation_files": [
     {
@@ -138,8 +143,8 @@
     },
     {
       "path": "src/machine_commerce/portal.py",
-      "physical": 379,
-      "nonblank": 337
+      "physical": 426,
+      "nonblank": 380
     },
     {
       "path": "src/machine_commerce/providers.py",
@@ -193,8 +198,18 @@
     },
     {
       "path": "src/machine_engine/control.py",
-      "physical": 623,
-      "nonblank": 590
+      "physical": 628,
+      "nonblank": 595
+    },
+    {
+      "path": "src/machine_engine/economic_examples.py",
+      "physical": 77,
+      "nonblank": 65
+    },
+    {
+      "path": "src/machine_engine/economics.py",
+      "physical": 421,
+      "nonblank": 399
     },
     {
       "path": "src/machine_engine/native.py",
@@ -208,8 +223,8 @@
     },
     {
       "path": "src/machine_engine/routes.py",
-      "physical": 208,
-      "nonblank": 157
+      "physical": 216,
+      "nonblank": 163
     },
     {
       "path": "src/machine_engine/scheduler.py",
@@ -223,13 +238,13 @@
     },
     {
       "path": "src/machine_engine/workspace.py",
-      "physical": 196,
-      "nonblank": 182
+      "physical": 199,
+      "nonblank": 185
     },
     {
       "path": "web/agents.js",
-      "physical": 177,
-      "nonblank": 174
+      "physical": 185,
+      "nonblank": 182
     },
     {
       "path": "web/app.css",
@@ -258,13 +273,13 @@
     },
     {
       "path": "web/operations.css",
-      "physical": 428,
-      "nonblank": 427
+      "physical": 434,
+      "nonblank": 433
     },
     {
       "path": "web/operations.js",
-      "physical": 880,
-      "nonblank": 878
+      "physical": 916,
+      "nonblank": 914
     },
     {
       "path": "web/submission.css",
@@ -287,6 +302,81 @@
       "nonblank": 63
     },
     {
+      "path": "native/include/machine/economics/abi.hpp",
+      "physical": 158,
+      "nonblank": 134
+    },
+    {
+      "path": "native/include/machine/economics/allocation.hpp",
+      "physical": 435,
+      "nonblank": 419
+    },
+    {
+      "path": "native/include/machine/economics/amm.hpp",
+      "physical": 268,
+      "nonblank": 255
+    },
+    {
+      "path": "native/include/machine/economics/decision.hpp",
+      "physical": 404,
+      "nonblank": 388
+    },
+    {
+      "path": "native/include/machine/economics/derivatives.hpp",
+      "physical": 306,
+      "nonblank": 290
+    },
+    {
+      "path": "native/include/machine/economics/execution.hpp",
+      "physical": 448,
+      "nonblank": 433
+    },
+    {
+      "path": "native/include/machine/economics/lending.hpp",
+      "physical": 285,
+      "nonblank": 269
+    },
+    {
+      "path": "native/include/machine/economics/oracle.hpp",
+      "physical": 233,
+      "nonblank": 223
+    },
+    {
+      "path": "native/include/machine/economics/routing.hpp",
+      "physical": 414,
+      "nonblank": 397
+    },
+    {
+      "path": "native/include/machine/economics/runtime.hpp",
+      "physical": 311,
+      "nonblank": 282
+    },
+    {
+      "path": "native/include/machine/economics/state.hpp",
+      "physical": 503,
+      "nonblank": 470
+    },
+    {
+      "path": "native/include/machine/economics/statistics.hpp",
+      "physical": 317,
+      "nonblank": 303
+    },
+    {
+      "path": "native/include/machine/economics/strategy.hpp",
+      "physical": 580,
+      "nonblank": 561
+    },
+    {
+      "path": "native/include/machine/economics/transition.hpp",
+      "physical": 558,
+      "nonblank": 535
+    },
+    {
+      "path": "native/include/machine/economics/value.hpp",
+      "physical": 273,
+      "nonblank": 241
+    },
+    {
       "path": "native/include/machine/kernel.hpp",
       "physical": 270,
       "nonblank": 241
@@ -300,6 +390,11 @@
       "path": "native/src/benchmark.cpp",
       "physical": 92,
       "nonblank": 88
+    },
+    {
+      "path": "native/src/economics.cpp",
+      "physical": 334,
+      "nonblank": 308
     },
     {
       "path": "native/src/kernel.cpp",
@@ -424,6 +519,11 @@
       "nonblank": 117
     },
     {
+      "path": "tests/test_native_economics.py",
+      "physical": 252,
+      "nonblank": 224
+    },
+    {
       "path": "tests/test_operations.py",
       "physical": 134,
       "nonblank": 114
@@ -482,6 +582,11 @@
       "path": "native/tests/conformance.cpp",
       "physical": 122,
       "nonblank": 115
+    },
+    {
+      "path": "native/tests/economics.cpp",
+      "physical": 831,
+      "nonblank": 807
     },
     {
       "path": "native/tests/program.cpp",

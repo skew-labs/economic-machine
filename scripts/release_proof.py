@@ -32,21 +32,47 @@ def main():
         for path in (ROOT / folder).rglob("*"):
             if path.is_file() and path.suffix in suffixes and "__pycache__" not in path.parts:
                 paths.add(str(path.relative_to(ROOT)))
-    paths.update({"README.md", "LICENSE", "pyproject.toml", "requirements-verified.txt", "docs/ATLAS_DATAPASS_NATIVE.md", "docs/AGENT_CONTROL.md"})
+    paths.update({"README.md", "LICENSE", "pyproject.toml", "requirements-verified.txt", "docs/ATLAS_DATAPASS_NATIVE.md", "docs/AGENT_CONTROL.md", "docs/ECONOMIC_PRIMITIVES.md"})
     for name in ["atlas.json", "brief.json", "source-audit.json", "native-build.json",
-                 "native-benchmark.json", "datapass-build.json", "datapass-tests.log", "integration-tests.log",
+                 "native-benchmark.json", "economics-build.json", "economics-integration-tests.log", "economics-portal-final.log", "economics-live-check.json",
+                 "datapass-build.json", "datapass-tests.log", "integration-tests.log",
                  "agent-control-tests.log", "agent-focused-tests.log", "agent-portal-tests.log", "agent-control-validation.json", "native-integration-tests.log", "dataset-scope-tests.log", "final-source-tests.log", "line-count.json", "live-web-check.json"]:
         paths.add("artifacts/atlas-release/" + name)
-    for path in (ROOT / "artifacts/atlas-release/screenshots").glob("*.png"):
-        paths.add(str(path.relative_to(ROOT)))
+    paths.update({"artifacts/arbitrum-sepolia/datapass-deployment.json", "artifacts/arbitrum-sepolia/datapass-deployment-review.json"})
+    for path in (ROOT / "artifacts/atlas-release/screenshots").iterdir():
+        if path.suffix in {".png", ".jpg"}:
+            paths.add(str(path.relative_to(ROOT)))
+    paths.add("deploy/native-economics.conf")
     files = [file_evidence(ROOT, path) for path in sorted(paths)]
     report = json.loads((ROOT / "artifacts/atlas-release/atlas.json").read_text())
     audit = json.loads((ROOT / "artifacts/atlas-release/source-audit.json").read_text())
     if not audit["accepted"] or audit["report_sha256"] != report["report_sha256"]:
         raise RuntimeError("Source audit does not match report")
+    deployment = json.loads((ROOT / "artifacts/arbitrum-sepolia/datapass-deployment.json").read_text())
+    unsigned_proof = {key: value for key, value in deployment.items() if key != "proof_sha256"}
+    if (digest(unsigned_proof) != deployment["proof_sha256"] or deployment["status"] != "PUBLIC_TESTNET_DEPLOYED"
+            or deployment["purchase_executed"] or deployment["network"] != "eip155:421614"
+            or len(deployment["observations"]) != 2):
+        raise RuntimeError("Public deployment proof is inconsistent")
+    observations = deployment["observations"]
+    if (observations[0]["rpc"] == observations[1]["rpc"] or any(
+            row["receipt_status"] != 1 or row["finalized_block"] < row["block_number"]
+            or row["contract_address"] != deployment["contract_address"] or row["tx_hash"] != deployment["tx_hash"]
+            or row["block_hash"] != observations[0]["block_hash"] or row["runtime_sha256"] != observations[0]["runtime_sha256"]
+            for row in observations)):
+        raise RuntimeError("Deployment observations disagree")
+    build = json.loads((ROOT / "artifacts/atlas-release/datapass-build.json").read_text())
+    if (observations[0]["runtime_sha256"] != build["contracts"]["SkewDataPass"]["runtime_sha256"]
+            or deployment["source_sha256"] != build["sources"]["SkewDataPass.sol"]):
+        raise RuntimeError("Public deployment and compiled source differ")
+    lines = json.loads((ROOT / "artifacts/atlas-release/line-count.json").read_text())
     body = {"schema": "machine-release-proof-1", "created_at": int(time.time()), "files": files,
             "claims": {"report_sha256": report["report_sha256"], "observations": audit["observations_checked"],
-                       "arbitrum_datapass_public_deployment": "NOT_DEPLOYED", "live_new_datapass_purchases": 0,
+                       "arbitrum_datapass_public_deployment": deployment["status"],
+                       "datapass_contract": deployment["contract_address"], "deployment_proof_sha256": deployment["proof_sha256"],
+                       "live_new_datapass_purchases": 0, "economic_operations": 20,
+                       "engine_implementation_nonblank": lines["engine_implementation"]["nonblank"],
+                       "target_30000_engine_nonblank_reached": lines["target_30000_engine_nonblank_reached"],
                        "native_authority": "CANDIDATE_ONLY", "agent_control": "SAME_ENGINE_DATABASE_SHARED_USDT_TURNOVER", "raw_archives_publicly_resold": False},
             "assurance": "SOURCE_AUDIT_PLUS_REPRODUCIBLE_LOCAL_EVM_AND_NATIVE_TESTS_NOT_PRODUCTION_CERTIFICATION"}
     manifest = body | {"manifest_sha256": digest(body)}

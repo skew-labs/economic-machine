@@ -3,7 +3,7 @@
 (() => {
   const C = window.MachineConsole;
   const {el, button, notify} = C;
-  const titles = {SYNC_CONNECTION: "Sync account", NATIVE_CANDIDATE: "Evaluate native program", PLAN_VENUE_ORDER: "Prepare venue order"};
+  const titles = {SYNC_CONNECTION: "Sync account", NATIVE_CANDIDATE: "Evaluate native program", PLAN_VENUE_ORDER: "Prepare venue order", ECONOMIC_DECISION: "Assess financial state"};
   let sequence = 0;
   function field(form, title, kind = "text", value = "") {
     const label = el("label", "", title), input = el(kind === "select" ? "select" : "input");
@@ -139,6 +139,14 @@
         const quantity = field(payloadFields, "Base quantity", "text", ""), price = field(payloadFields, "Limit price · USDT", "text", ""), tif = field(payloadFields, "Time in force", "select"); options(tif, [["IOC","Immediate or cancel"],["GTC","Good until canceled"]]);
         const reduce = field(payloadFields, "Position mode", "select"); options(reduce, [["false","Spot"],["true","Reduce-only futures"]]);
         payload = () => ({policy_id:child.value, symbol:symbol.value, side:side.value, quantity:quantity.value, price:price.value, time_in_force:tif.value, reduce_only:reduce.value === "true"});
+      } else if (operation.value === "ECONOMIC_DECISION") {
+        const label = el("label", "", "Economic task · typed input"), source = el("textarea");
+        source.id = `agent-economic-${++sequence}`; label.htmlFor = source.id; source.rows = 8; source.spellcheck = false;
+        const example = {operation: "DERIVATIVE_RISK", input: {instrument: 1, signed_quantity: 1000000, entry_price: 100000000, mark_price: 100000000, collateral: 20000000, accrued_funding: 0, unpaid_fees: 0, initial_margin_rate: 100000, maintenance_margin_rate: 50000}};
+        source.value = JSON.stringify(example, null, 2);
+        const guide = el("a", "ops-inline-link", "Economic API schemas"); guide.href = "#playground";
+        payloadFields.append(label, source, el("p", "ops-note", "Example assumptions only. Prices, positions and margin rules must come from your verified adapters. Native calculations produce a receipt, never an order."), guide);
+        payload = () => JSON.parse(source.value);
       } else if (operation.value === "NATIVE_CANDIDATE") {
         const label = el("label", "", "Typed native program and numeric state"), source = el("textarea"); source.id = `agent-native-${++sequence}`; label.htmlFor = source.id; source.rows = 8; source.spellcheck = false;
         payloadFields.append(label, source, el("p", "ops-note", "Use the native program format from Playground. This produces a candidate receipt and grants no order authority.")); payload = () => JSON.parse(source.value);

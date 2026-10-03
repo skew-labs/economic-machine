@@ -53,6 +53,14 @@ another version for an existing license.
 
 ## Native core
 
+Public DataPass deployment on 2026-10-03:
+`0x2C9619Cd327418571963A3334EA674FA1F4Fb234`, Arbitrum Sepolia (421614).
+Transaction `0x6edc6f928c7e48aabdf8b1140eaa024ddd1e02084ea8e3278fdc597808160bc8`
+is finalized under both RPC observations in
+`artifacts/arbitrum-sepolia/datapass-deployment.json`. Runtime code matches the compiled source
+artifact byte-for-byte. This deploys the data access contract; it does not place the C++ engine
+inside the EVM, register a release or prove a new customer purchase.
+
 The C++20 path uses fixed-width amounts, fixed state slots, bounded power-of-two
 SPSC rings, cache-line separation, sequence checks and fixed decision receipts.
 It evaluates price age, deadline, available balance, exposure, minimum notional,

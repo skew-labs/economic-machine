@@ -253,6 +253,18 @@ async function dataPass() {
     catalog.datapass.status === "NOT_DEPLOYED"
       ? "Arbitrum deployment pending"
       : "Configured · Verify on-chain";
+  if (catalog.datapass.status !== "NOT_DEPLOYED") {
+    const proof = await api("/demo/datapass/deployment");
+    if (proof.status === "PUBLIC_TESTNET_DEPLOYED" &&
+        proof.contract_address.toLowerCase() === catalog.datapass.contract.toLowerCase()) {
+      const link = document.createElement("a");
+      link.href = `https://sepolia.arbiscan.io/address/${proof.contract_address}`;
+      link.textContent = "Arbitrum Sepolia · View contract";
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      $("datapass-status").replaceChildren(link);
+    }
+  }
   for (const [label, value] of [
     [
       "Coverage",

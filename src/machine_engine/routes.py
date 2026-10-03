@@ -14,6 +14,14 @@ def engine_routes(workspace_dependency, *, require_owner=None):
     def control_status(work=Depends(workspace_dependency)):
         return work.control.status()
 
+    @router.get("/economics")
+    def economic_catalogue(work=Depends(workspace_dependency)):
+        return work.economics.catalogue()
+
+    @router.post("/economics/evaluate")
+    def economic_evaluate(raw: dict, work=Depends(workspace_dependency)):
+        return work.economics.evaluate(raw)
+
     @router.post("/control-policies", dependencies=owner)
     def control_policy(raw: dict, work=Depends(workspace_dependency)):
         return work.control.policy(raw)

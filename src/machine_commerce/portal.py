@@ -142,6 +142,8 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
     evidence_path = Path(evidence_path or ROOT / "artifacts/submission/completed-trade.json")
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
     gate = asyncio.Semaphore(4)
+    from machine_engine.economics import EconomicLibrary
+    native_economics = EconomicLibrary(None)
 
     @app.middleware("http")
     async def public_headers(request, call_next):
@@ -203,6 +205,21 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
             return JSONResponse({"error": "Dataset releases unavailable"}, status_code=503)
         return JSONResponse(result, headers={"Cache-Control": "no-store", "Access-Control-Allow-Origin": "*"})
 
+    @app.get("/demo/datapass/deployment")
+    async def datapass_deployment_proof():
+        from economic_machine.values import digest
+        path = ROOT / "artifacts/arbitrum-sepolia/datapass-deployment.json"
+        try:
+            if path.is_symlink() or path.stat().st_size > 16000:
+                raise ValueError("Deployment proof file rejected")
+            proof = json.loads(path.read_text())
+            body = {key: value for key, value in proof.items() if key != "proof_sha256"}
+            if digest(body) != proof["proof_sha256"]:
+                raise ValueError("Deployment proof checksum differs")
+        except (OSError, ValueError, KeyError, TypeError):
+            return JSONResponse({"error": "Public deployment proof unavailable"}, status_code=503)
+        return JSONResponse(proof, headers={"Cache-Control": "no-store", "Access-Control-Allow-Origin": "*"})
+
     @app.get("/demo/native")
     async def native_evidence():
         path = ROOT / "artifacts/atlas-release/native-benchmark.json"
@@ -240,6 +257,36 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         except (OSError, ValueError, KeyError, TypeError):
             return JSONResponse({"error": "Release proof unavailable or inconsistent"}, status_code=503)
         return JSONResponse(result, headers={"Cache-Control": "no-store", "Access-Control-Allow-Origin": "*"})
+
+    @app.get("/demo/economics")
+    async def economic_catalogue():
+        return JSONResponse(native_economics.catalogue(), headers={"Cache-Control": "no-store"})
+
+    @app.get("/demo/economics/example")
+    async def economic_example():
+        from machine_engine.economic_examples import strategy_example
+        return {"example": strategy_example(), "scope": "SYNTHETIC_ASSUMPTIONS_NOT_CUSTOMER_ACCOUNT"}
+
+    @app.post("/demo/economics/evaluate")
+    async def economic_calculation(request: Request):
+        body = bytearray()
+        async for chunk in request.stream():
+            body.extend(chunk)
+            if len(body) > 32000:
+                return JSONResponse({"error": "Economic scenario too large"}, status_code=413)
+        try:
+            raw = json.loads(body)
+            if not isinstance(raw, dict) or raw.get("operation") not in {
+                "DERIVATIVE_RECOVERY", "REPAYMENT_DECISION", "REBALANCE_DECISION", "DERIVATIVE_RISK",
+                "FUNDING_CASHFLOW", "LENDING_RATES", "FORWARD_YIELD", "LENDING_HEALTH", "SCENARIO_TAIL_RISK",
+                "STATE_FRAME", "ECONOMIC_PROGRAM"
+            }:
+                raise MachineError("PUBLIC_BOUNDED_ECONOMIC_SCENARIO_REQUIRED")
+            async with gate:
+                result = await run_in_threadpool(native_economics.calculate, raw)
+        except (MachineError, ValueError, TypeError, KeyError):
+            return JSONResponse({"error": "Check the economic scenario against the API schemas"}, status_code=400)
+        return JSONResponse(result, headers={"Cache-Control": "no-store"})
 
     @app.post("/demo/site-lens")
     async def capacity_analysis(request: Request):

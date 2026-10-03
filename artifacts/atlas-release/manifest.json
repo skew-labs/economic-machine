@@ -1,6 +1,6 @@
 {
   "schema": "machine-release-proof-1",
-  "created_at": 1790969937,
+  "created_at": 1791001782,
   "files": [
     {
       "path": "LICENSE",
@@ -9,8 +9,18 @@
     },
     {
       "path": "README.md",
-      "bytes": 14980,
-      "sha256": "aa41e169a2d36f2bb8c04e83b234d02f188bd54e7fccb1c3949ff72e79bce056"
+      "bytes": 16090,
+      "sha256": "8bb19a4d00491d7e03dba1bc5c0990fe7b9cf6c66d50f8387291ca96f3751fa8"
+    },
+    {
+      "path": "artifacts/arbitrum-sepolia/datapass-deployment-review.json",
+      "bytes": 880,
+      "sha256": "6a859ae4523f3949a1080a3e252fc100ca83b9468101f23a98d107e5a1f03c80"
+    },
+    {
+      "path": "artifacts/arbitrum-sepolia/datapass-deployment.json",
+      "bytes": 2624,
+      "sha256": "9126ec4244d3d806e9e5cd71b7ef04d19dafd63714af94aca83e578709c78727"
     },
     {
       "path": "artifacts/atlas-release/agent-control-tests.log",
@@ -58,6 +68,26 @@
       "sha256": "48fefa3384cfc99cb8ecf9cc129f63be07cac22eb943ef4e66a972da0179ad51"
     },
     {
+      "path": "artifacts/atlas-release/economics-build.json",
+      "bytes": 2618,
+      "sha256": "4450ec3d6c495ad2ec797127333dfe9cf6410a8585a6570fc27eccda4efedcac"
+    },
+    {
+      "path": "artifacts/atlas-release/economics-integration-tests.log",
+      "bytes": 2807,
+      "sha256": "9c41f1dd1f6f97d19b380fb28beb45270ce4ac44e8ff5b97ec361bc19c58d54e"
+    },
+    {
+      "path": "artifacts/atlas-release/economics-live-check.json",
+      "bytes": 52642,
+      "sha256": "f7711a447ce63da399dffbc01679ad336e9444bf5027c1b1353460789358934a"
+    },
+    {
+      "path": "artifacts/atlas-release/economics-portal-final.log",
+      "bytes": 545,
+      "sha256": "3de318f200906ce851c7240a9940bc7253453e3e2ebdefa402313182d6028c60"
+    },
+    {
       "path": "artifacts/atlas-release/final-source-tests.log",
       "bytes": 4084,
       "sha256": "358b0f563c4905b4cdaedb8464c0d97e50754e372cb353b5a97a2e28cb1ec70c"
@@ -69,8 +99,8 @@
     },
     {
       "path": "artifacts/atlas-release/line-count.json",
-      "bytes": 10613,
-      "sha256": "08ac5cecd3a5fe202c2cf0a22dc163189d83d19e814924d5876147bbe2d24417"
+      "bytes": 13043,
+      "sha256": "6a0951bc943733f783a303f978dad6fae568c0a16f98a2e19906f7c6bdbde078"
     },
     {
       "path": "artifacts/atlas-release/live-web-check.json",
@@ -116,6 +146,26 @@
       "path": "artifacts/atlas-release/screenshots/console-data.png",
       "bytes": 82492,
       "sha256": "0c8325724cfff18176923fee23ab7c450f2aac8a65ad319e56fd5feb42b9d0c0"
+    },
+    {
+      "path": "artifacts/atlas-release/screenshots/economic-decision-hold.jpg",
+      "bytes": 73319,
+      "sha256": "78acb29aea87de990ba10e56964437586f8cd5948561ffd5c2d663c1420ccf55"
+    },
+    {
+      "path": "artifacts/atlas-release/screenshots/economic-decision-reduce.jpg",
+      "bytes": 74020,
+      "sha256": "c97593de52c6f60b3a97efeb89a84b5a1f9c9cd3599953230b4378fd65eb0887"
+    },
+    {
+      "path": "artifacts/atlas-release/screenshots/economic-program-hold.jpg",
+      "bytes": 71575,
+      "sha256": "0921535a0505b6710331b74cc2883c0a2083aba7233b1ee8866041aa712f9833"
+    },
+    {
+      "path": "artifacts/atlas-release/screenshots/economic-program-reduce.jpg",
+      "bytes": 74747,
+      "sha256": "466c54da8012775919cc59ea2bc50dd6139362197088d27a4b4a3da4f894cda0"
     },
     {
       "path": "artifacts/atlas-release/screenshots/engine-console-home.png",
@@ -168,19 +218,104 @@
       "sha256": "86f0b23f24aac14f2ae4806b92c215bd53605eb7cb40109ac57cf4b6e40bef95"
     },
     {
+      "path": "deploy/native-economics.conf",
+      "bytes": 541,
+      "sha256": "3ded96b845eb672a30709d3269aaf06a312ff2de13d01f7214f2efbf5f15df41"
+    },
+    {
       "path": "docs/AGENT_CONTROL.md",
       "bytes": 7626,
       "sha256": "2a7bdd267757079e57359307d57808e655ee25b84e9a482ef0e133678bb39351"
     },
     {
       "path": "docs/ATLAS_DATAPASS_NATIVE.md",
-      "bytes": 7090,
-      "sha256": "60a7a2df84fc2b50719468c7e0f218a247a62b60ffca7ef64a7a39b2a40a5604"
+      "bytes": 7592,
+      "sha256": "2a27a5c500ff43570287991f82ae781433294c68e919df8c5e4462e0fd4510ae"
+    },
+    {
+      "path": "docs/ECONOMIC_PRIMITIVES.md",
+      "bytes": 7828,
+      "sha256": "674810b0e5f50609556f1f80cd4e522355cebb64200454cfe756161254e9f421"
     },
     {
       "path": "native/CMakeLists.txt",
-      "bytes": 952,
-      "sha256": "336da13307b8f97edd53408ca66211bc32440216456d0bc4e61da451d86b57a2"
+      "bytes": 1360,
+      "sha256": "73872595b5669ef647adfe2cfa6b20df7aabd19fb31f6dc6974a4f582f45da02"
+    },
+    {
+      "path": "native/include/machine/economics/abi.hpp",
+      "bytes": 3769,
+      "sha256": "feb69f11bf0a68fd1693a1d6a3e13e65c24b9935dcbca5386b56c6e04d38d818"
+    },
+    {
+      "path": "native/include/machine/economics/allocation.hpp",
+      "bytes": 17536,
+      "sha256": "c0ca502a691e0c1ba525f330f28142d2101bb8ed398c39cf61d8672955349892"
+    },
+    {
+      "path": "native/include/machine/economics/amm.hpp",
+      "bytes": 9374,
+      "sha256": "7937673ce450993816d66f631fbd7866770566ecf104b57829a668fcc2e9a5cc"
+    },
+    {
+      "path": "native/include/machine/economics/decision.hpp",
+      "bytes": 15674,
+      "sha256": "e419a6d56db07d0b741870cb51f3a777540b3aa352869f7d2767161ecf63def2"
+    },
+    {
+      "path": "native/include/machine/economics/derivatives.hpp",
+      "bytes": 12218,
+      "sha256": "968d8b9bcedb42e8538ff3476eb7fbc79d8527aaf1391a3dd89f6faa30a5decd"
+    },
+    {
+      "path": "native/include/machine/economics/execution.hpp",
+      "bytes": 22288,
+      "sha256": "7015e2771ec04cf272d8c3e24edcb0e0065454c07af83b0701b173e44386af7d"
+    },
+    {
+      "path": "native/include/machine/economics/lending.hpp",
+      "bytes": 11110,
+      "sha256": "d564769f843c4ed429b67ecf86f44a5104174651b49f43258ba846ff2e0ed1f3"
+    },
+    {
+      "path": "native/include/machine/economics/oracle.hpp",
+      "bytes": 8946,
+      "sha256": "3d6c484c9cdebe26c5bcb19fe982da89eb93923e839e41ef093054a65ea08e7d"
+    },
+    {
+      "path": "native/include/machine/economics/routing.hpp",
+      "bytes": 17358,
+      "sha256": "1122660fa3211e3754402390fcf76037fa24f0ee93fc2d2b8bb298e18e9efdd8"
+    },
+    {
+      "path": "native/include/machine/economics/runtime.hpp",
+      "bytes": 13274,
+      "sha256": "cf43b885f1935cf12e01b900fd64680934e978e65d72d7ba00062998e1290619"
+    },
+    {
+      "path": "native/include/machine/economics/state.hpp",
+      "bytes": 18516,
+      "sha256": "03feba244bcacfb29e9cb3595dded00a9c31cacc6cb5bd1429272f2a2e04c4f9"
+    },
+    {
+      "path": "native/include/machine/economics/statistics.hpp",
+      "bytes": 12432,
+      "sha256": "939c77229b9d007b94466db26670dcf201f4b2ede228f6e031f79a00f2217682"
+    },
+    {
+      "path": "native/include/machine/economics/strategy.hpp",
+      "bytes": 23512,
+      "sha256": "d42658b319608599c330876f56abaad8ff96723c2989a2e371e0fd479de4dc20"
+    },
+    {
+      "path": "native/include/machine/economics/transition.hpp",
+      "bytes": 22998,
+      "sha256": "4e915aacbcc3d5ee0a2db836b73403170f77e097e9ba361e53c8d6f3993bed0c"
+    },
+    {
+      "path": "native/include/machine/economics/value.hpp",
+      "bytes": 7505,
+      "sha256": "390287301d6ecc06451f52003a203596a2775dcd2bae049ea91c2b73d6dbb248"
     },
     {
       "path": "native/include/machine/kernel.hpp",
@@ -198,6 +333,11 @@
       "sha256": "a0af1a3f1afdf881c6a4da1bf2a264ab677c62306d9d89c266d5e2cc902433b7"
     },
     {
+      "path": "native/src/economics.cpp",
+      "bytes": 14760,
+      "sha256": "26b1ba782b984f9849bcb170aa84c18230f0cc68d6e0c448e36b568229236665"
+    },
+    {
       "path": "native/src/kernel.cpp",
       "bytes": 3499,
       "sha256": "204e550fe04c87489a68929cda90bfba407355f8778ce8e2cd0b6ab4f367eae8"
@@ -211,6 +351,11 @@
       "path": "native/tests/conformance.cpp",
       "bytes": 7413,
       "sha256": "76cf9a419519ba150c6dacda1d0323b13cd390aa231a3ec7c6fdce050fea4cec"
+    },
+    {
+      "path": "native/tests/economics.cpp",
+      "bytes": 46294,
+      "sha256": "33e6587632256c565c2d18ca974f498b7cd5e33b17cca44ab38e0af7ef173f0e"
     },
     {
       "path": "native/tests/program.cpp",
@@ -251,6 +396,11 @@
       "path": "scripts/benchmark_settlement.py",
       "bytes": 5891,
       "sha256": "5daa0242f501519c66db243ff6c5601161b53d1050718b531d6432dba2af3038"
+    },
+    {
+      "path": "scripts/build_economics.py",
+      "bytes": 2645,
+      "sha256": "1eaef570774d22c38ec1f0f78f7c28343024c9148c639658616c1abe41b931c3"
     },
     {
       "path": "scripts/build_native.py",
@@ -309,8 +459,13 @@
     },
     {
       "path": "scripts/count_release_lines.py",
-      "bytes": 2508,
-      "sha256": "74de79fb5c6873748445ba94f4e2c547d60df9f1fc211b847975f8b4eb6e218d"
+      "bytes": 2628,
+      "sha256": "622cb8fe2b4181a7baa88b06ff21da3ca8b383bd6fa25c6311660d5c017e6de2"
+    },
+    {
+      "path": "scripts/deploy_datapass_sepolia.py",
+      "bytes": 12008,
+      "sha256": "f39eb5af98900517735b80844ebbaeb9ff5057cd8ae032c9be461e057cda62c9"
     },
     {
       "path": "scripts/evidence_manifest.py",
@@ -339,8 +494,8 @@
     },
     {
       "path": "scripts/release_proof.py",
-      "bytes": 3557,
-      "sha256": "e4975582f791088b88f8d0eb2ddf8e7378fb9d1ba7c167ebd6130d34aa765f84"
+      "bytes": 5856,
+      "sha256": "9c9c2cc46b10477460c7cbba9116ca2d5c6234075eed8267c936a2e4cd9b8ddd"
     },
     {
       "path": "scripts/sepolia_demo.py",
@@ -351,6 +506,11 @@
       "path": "scripts/sepolia_merchant.py",
       "bytes": 16215,
       "sha256": "4fad0c4ec59d9377726166944f4d02050c02b8cbde5a5d9882deafaf0534b5cc"
+    },
+    {
+      "path": "scripts/verify_economics_live.py",
+      "bytes": 5013,
+      "sha256": "03492b49afdccabea44ccf11f12c501328b8915651e7f45f4e879323853d3912"
     },
     {
       "path": "scripts/verify_engine_release.py",
@@ -489,8 +649,8 @@
     },
     {
       "path": "site/tools.js",
-      "bytes": 10003,
-      "sha256": "536c58e6dd8e923750fdd27cd4169e93d37ded640ddfc8b275b8515e1b5a9a8d"
+      "bytes": 10582,
+      "sha256": "e1253b7734ca9059fca03ba5a23a8267d89ae161cd380c9381b45b5b14e0b438"
     },
     {
       "path": "src/economic_machine/__init__.py",
@@ -564,8 +724,8 @@
     },
     {
       "path": "src/machine_commerce/access.py",
-      "bytes": 12047,
-      "sha256": "d0bab2af43013f5fd1bb7ba4733d08dd43b74398b3215f9c335802425878079c"
+      "bytes": 12106,
+      "sha256": "d3c49c94d98456596c7e992974b6c82ff4d24d4a27c1c94af7aac51198bb7090"
     },
     {
       "path": "src/machine_commerce/api.py",
@@ -579,8 +739,8 @@
     },
     {
       "path": "src/machine_commerce/datapass.py",
-      "bytes": 21044,
-      "sha256": "67f35be635a1218af5728941196ddcf1958c754405b2f2827c2d293d055b3b5a"
+      "bytes": 21034,
+      "sha256": "26d6c15d28989551df7f1c45945c84d89e0e0759b5494fcc272ded320ed53931"
     },
     {
       "path": "src/machine_commerce/domain.py",
@@ -614,8 +774,8 @@
     },
     {
       "path": "src/machine_commerce/portal.py",
-      "bytes": 21361,
-      "sha256": "66b5dedea82b31119673414538b2ae3a1afb23adc6d3c1a5a1cf72d56d740e5f"
+      "bytes": 23937,
+      "sha256": "7f6bf8ef4261de179a6ca14a1ebb3b2b89babd06053ff8333f3ddfbc27e827f7"
     },
     {
       "path": "src/machine_commerce/providers.py",
@@ -669,8 +829,18 @@
     },
     {
       "path": "src/machine_engine/control.py",
-      "bytes": 28645,
-      "sha256": "153529a604a1211cf22d684ee3e95b77cc723d20448ebbca75f389dc986c841c"
+      "bytes": 29032,
+      "sha256": "c5d6956d262ed5017d4aacfd5bce42b349679e62fb973be2c60cac72af0ac045"
+    },
+    {
+      "path": "src/machine_engine/economic_examples.py",
+      "bytes": 5128,
+      "sha256": "4a6c20fcd2d9c2363327311b8fd7f3b543a11522a479d22391615d7855288f35"
+    },
+    {
+      "path": "src/machine_engine/economics.py",
+      "bytes": 28080,
+      "sha256": "ee4f0a05f68e48193e56c31d36e36085acc5c9c36d3fda2ae63f88baf39108e4"
     },
     {
       "path": "src/machine_engine/native.py",
@@ -684,8 +854,8 @@
     },
     {
       "path": "src/machine_engine/routes.py",
-      "bytes": 8276,
-      "sha256": "b1f4f3481d826a1fe99852484442d3233ccf87b5eb1ba8b9b2059a7f13227a7e"
+      "bytes": 8572,
+      "sha256": "3307f24f6fd49ff30063df9f9eacf13b32819a5fcc16de0c66c23b52dca4a5c0"
     },
     {
       "path": "src/machine_engine/scheduler.py",
@@ -699,8 +869,8 @@
     },
     {
       "path": "src/machine_engine/workspace.py",
-      "bytes": 12365,
-      "sha256": "b3dbd6adc0164642b35f7a91c82d72b35e8b656faa9c7f1508a1667ad9320957"
+      "bytes": 12509,
+      "sha256": "66c785da2561a73b3d4e8aad3854d609bffa588baea1e6583780997a0870a736"
     },
     {
       "path": "tests/agent_console_fixture.py",
@@ -803,6 +973,11 @@
       "sha256": "5269023814603f9890b556d7c4faf3caa3f02ae19d610514bc3aab6d453629d0"
     },
     {
+      "path": "tests/test_native_economics.py",
+      "bytes": 14795,
+      "sha256": "a669862f75d9f65ecea9d68b5c63d97f07a814b08a9e4189c4bcaffaac593917"
+    },
+    {
       "path": "tests/test_operations.py",
       "bytes": 7330,
       "sha256": "3e280ec8cc3eda33ce26e32e91395ded5376bd920e79e26c7174f8b7e21dc779"
@@ -859,8 +1034,8 @@
     },
     {
       "path": "web/agents.js",
-      "bytes": 15404,
-      "sha256": "66501d89b9e812e2b669ee538dfcc13b10801b1438d4dcd7353b436360db0b0c"
+      "bytes": 16440,
+      "sha256": "b2ba6614ed7b9d3c97bf3f8bf793b8ca038862b700d1dd58208eb89ef2790e35"
     },
     {
       "path": "web/app.css",
@@ -889,18 +1064,18 @@
     },
     {
       "path": "web/index.html",
-      "bytes": 21699,
-      "sha256": "53e70ad6fe65ea980444115f0b99c5b2beb0d5bf073528bcd1dd6aeceed1093a"
+      "bytes": 21873,
+      "sha256": "2991ddb955f9f94c74442c40e1810af8962e1a45f80414d33ec7c242df0da67a"
     },
     {
       "path": "web/operations.css",
-      "bytes": 9031,
-      "sha256": "167f29f7cc199ca0bb045d23d56b0f12936d20d005c7a16d106dd03237a90fe6"
+      "bytes": 9311,
+      "sha256": "dace324b9b2c45c728fc949afb42375dbe979b4f7974359a1e71c398dfd20056"
     },
     {
       "path": "web/operations.js",
-      "bytes": 28686,
-      "sha256": "1dde29f3b60ff57a16bc9d3c17ea8c6e38d1a60582268f31e5ce8b47b1036c01"
+      "bytes": 31161,
+      "sha256": "be985be00d3e2a0d44d9a170479c78b26a03558804749470d35f1efe7f25fd2d"
     },
     {
       "path": "web/submission.css",
@@ -926,12 +1101,17 @@
   "claims": {
     "report_sha256": "89fe2015672e89516e16aa73f0dfd81cb3136cfd225659ecc2302a4a71e92e2d",
     "observations": 497,
-    "arbitrum_datapass_public_deployment": "NOT_DEPLOYED",
+    "arbitrum_datapass_public_deployment": "PUBLIC_TESTNET_DEPLOYED",
+    "datapass_contract": "0x2C9619Cd327418571963A3334EA674FA1F4Fb234",
+    "deployment_proof_sha256": "ed24181d7869e91d5f6b3ebc09603236d2d45b4073d9c548dc6036bd75a6d458",
     "live_new_datapass_purchases": 0,
+    "economic_operations": 20,
+    "engine_implementation_nonblank": 20200,
+    "target_30000_engine_nonblank_reached": false,
     "native_authority": "CANDIDATE_ONLY",
     "agent_control": "SAME_ENGINE_DATABASE_SHARED_USDT_TURNOVER",
     "raw_archives_publicly_resold": false
   },
   "assurance": "SOURCE_AUDIT_PLUS_REPRODUCIBLE_LOCAL_EVM_AND_NATIVE_TESTS_NOT_PRODUCTION_CERTIFICATION",
-  "manifest_sha256": "f597217c6c0666de9ecebab9560112161edddf2346e0aeb2dcedc2f720bdaff1"
+  "manifest_sha256": "7dcc5c5ded9647337356329d5419077efc592c835e4ba36e25a7eb596c7768f1"
 }

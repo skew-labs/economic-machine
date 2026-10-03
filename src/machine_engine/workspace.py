@@ -51,6 +51,8 @@ class Workspace:
         self.native_program = NativeProgram(self.native)
         from .control import AgentControl
         self.control = AgentControl(self)
+        from .economics import EconomicLibrary
+        self.economics = EconomicLibrary(self)
 
     def event(self, db, kind, value):
         if not verify_journal(db):
@@ -193,4 +195,5 @@ class Workspace:
             "capital_aggregation": "NO_CROSS_ASSET_VALUATION_WITHOUT_PRICE_EVIDENCE",
             "credential_namespace": self.credential_prefix,
             "sync_jobs": self.scheduler.status(), "trading": self.trading.status(), "native": self.native.status(),
-            "control": self.control.status(), "product": "USER_OWNED_AGENT_OPERATIONS_CONSOLE"}
+            "control": self.control.status(), "economics": self.economics.status(),
+            "product": "USER_OWNED_AGENT_OPERATIONS_CONSOLE"}

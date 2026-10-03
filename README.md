@@ -58,8 +58,12 @@ DataPass's ERC-721 contract binds immutable report, terms and provenance roots t
 optionally transferable access license. The API verifies wallet identity, runtime bytecode and two
 finalized RPC observations before delivery. Historic versions remain available by content hash.
 Registration, deployment, purchase and secondary-sale APIs produce unsigned plans. Resale binds
-the seller, price and listing nonce and preserves the original license expiry. **Public deployment and new
-DataPass purchases are not recorded.** Native ERC-20 purchases and x402 must not charge the same sale.
+the seller, price and listing nonce and preserves the original license expiry. DataPass is publicly
+deployed on **Arbitrum Sepolia** at
+[0x2C9619Cd327418571963A3334EA674FA1F4Fb234](https://sepolia.arbiscan.io/address/0x2C9619Cd327418571963A3334EA674FA1F4Fb234).
+[Deployment proof](artifacts/arbitrum-sepolia/datapass-deployment.json) records the finalized transaction,
+two RPC observations, bytecode/source hashes and actual test-gas cost. No new DataPass purchase is
+recorded. Native ERC-20 purchases and x402 must not charge the same sale.
 MIT applies to software; an NFT does not assign rights in upstream provider archives or hardware.
 
 The Canada tools mirror is accessible without a Sites account:
@@ -75,6 +79,16 @@ overflow, stale states and expired decisions. All outputs remain candidates; dur
 and signing boundaries remain separate. The public Playground can evaluate synthetic numerical
 programs through the actual compiled C++ ABI without language-model calls or financial transmissions.
 AF_XDP, SmartNIC, FPGA and end-to-end exchange latency are not claimed.
+
+The new financial C++ library exposes **20 typed operations** through this same Engine:
+oracle aggregation, lending/yield/health, linear derivatives and funding, bounded recovery and
+repayment, net-cost rebalance, AMM/depth routing, finite-grid allocation, scenario VaR/CVaR,
+return/factor risk, transition recovery, canonical state frames, economic programs and
+dependency-ordered transaction projections. `ECONOMIC_DECISION` agent tasks write to the existing
+workspace journal. The fixed event runtime schedules dependent programs and expiry interrupts,
+preserves output backpressure and makes no language-model calls. Its live feed wiring remains
+separate from the deployed calculation API.
+[Financial primitives, assumptions and reproduction](docs/ECONOMIC_PRIMITIVES.md).
 
 [Release method and reproduction](docs/ATLAS_DATAPASS_NATIVE.md) ·
 [Integrity manifest](https://machine.148-113-153-116.nip.io/commerce/demo/release-proof).

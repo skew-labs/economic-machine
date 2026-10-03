@@ -286,6 +286,12 @@
 .ops-result {
   min-width: 0;
 }
+.ops-decision-summary {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.ops-decision-summary strong { display: block; font-size: 24px; letter-spacing: -0.6px; }
+.ops-decision-summary span { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; }
 .ops-result pre {
   margin: 0;
   padding: 20px;

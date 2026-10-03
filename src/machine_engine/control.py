@@ -13,7 +13,7 @@ from decimal import localcontext
 
 from economic_machine.values import MachineError, canonical, decimal, decstr, digest, ident, require_keys
 
-OPERATIONS = {"SYNC_CONNECTION", "NATIVE_CANDIDATE", "PLAN_VENUE_ORDER"}
+OPERATIONS = {"SYNC_CONNECTION", "NATIVE_CANDIDATE", "PLAN_VENUE_ORDER", "ECONOMIC_DECISION"}
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS engine_control_policies (
  id TEXT PRIMARY KEY, body TEXT NOT NULL, status TEXT NOT NULL, spent_usdt TEXT NOT NULL);
@@ -67,7 +67,7 @@ class AgentControl:
         ident(raw["name"], "shared policy name")
         unique_ids(raw["connection_ids"], "connections")
         unique_ids(raw["venue_policy_ids"], "venue policies", empty=True)
-        operations = unique_ids(raw["allowed_operations"], "operations", maximum=3)
+        operations = unique_ids(raw["allowed_operations"], "operations", maximum=4)
         if not set(operations) <= OPERATIONS:
             raise MachineError("SUPPORTED_AGENT_OPERATION_REQUIRED")
         budget, maximum = decimal(raw["turnover_limit_usdt"]), decimal(raw["max_order_usdt"])
@@ -121,7 +121,7 @@ class AgentControl:
         ):
             raise MachineError("PRINTABLE_AGENT_ROLE_REQUIRED")
         unique_ids(raw["connection_ids"], "connections")
-        unique_ids(raw["operations"], "operations", maximum=3)
+        unique_ids(raw["operations"], "operations", maximum=4)
         aid = "agent-" + secrets.token_hex(12)
         with self.work.runtime.connect() as db:
             db.execute("BEGIN IMMEDIATE")
@@ -317,6 +317,8 @@ class AgentControl:
                 require_keys(raw["payload"], set(), "sync task")
             elif raw["operation"] == "NATIVE_CANDIDATE":
                 self.work.native_program.compile(raw["payload"].get("program"))
+            elif raw["operation"] == "ECONOMIC_DECISION":
+                self.work.economics.validate_request(raw["payload"])
             else:
                 require_keys(
                     raw["payload"],
@@ -379,6 +381,9 @@ class AgentControl:
                 result = self.work.native_program.evaluate(raw["payload"])
                 result["input_assurance"] = "CALLER_SUPPLIED_NUMERIC_STATE_NOT_AN_ACCOUNT_ATTESTATION"
                 status, error = ("SUCCEEDED", None) if result["accepted"] else ("ABSTAINED", result["code"])
+            elif raw["operation"] == "ECONOMIC_DECISION":
+                result = self.work.economics.evaluate(raw["payload"])
+                status, error = ("SUCCEEDED", None) if result["computed"] else ("ABSTAINED", result["reason"])
             else:
                 result = self.work.trading.plan(
                     raw["payload"] | {"request_id": self.venue_request(rid)}, control_run_id=rid

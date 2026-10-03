@@ -36,6 +36,7 @@ def main():
     tests += [row for row in contracts if Path(row["path"]).name in fixtures]
     tools = records(ROOT / "scripts", {".py", ".mjs", ".sh"})
     result = {"schema": "machine-line-audit-1", "engine_implementation": total(implementation),
+              "native_cpp_implementation": total([row for row in implementation if row["path"].startswith("native/")]),
               "tests": total(tests), "operational_scripts": total(tools),
               "implementation_files": implementation, "test_files": tests,
               "counted_as_engine": ["src", "web", "native implementation", "production contracts"],
