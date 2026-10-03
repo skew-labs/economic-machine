@@ -47,6 +47,8 @@ def main():
         if path.suffix in {".png", ".jpg"}:
             paths.add(str(path.relative_to(ROOT)))
     paths.add("deploy/native-economics.conf")
+    paths.update({"docs/CONSOLE_UX_20261003.md", "artifacts/atlas-release/console-ux-browser.json",
+                  "artifacts/atlas-release/console-ux-site-deployment.json"})
     files = [file_evidence(ROOT, path) for path in sorted(paths)]
     report = json.loads((ROOT / "artifacts/atlas-release/atlas.json").read_text())
     audit = json.loads((ROOT / "artifacts/atlas-release/source-audit.json").read_text())

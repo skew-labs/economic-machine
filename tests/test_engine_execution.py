@@ -505,7 +505,7 @@ class IntegrationTests(unittest.TestCase):
             self.assertEqual(
                 client.post("/api/engine/connections/foreign/schedule", json={}).status_code, 401
             )
-            for path in ["operations.js", "operations.css"]:
+            for path in ["operations.js", "operations.css", "workspace.css", "assets/app-engine.svg"]:
                 self.assertEqual(client.get("/" + path).status_code, 200)
             client.close()
 

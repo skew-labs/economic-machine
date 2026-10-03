@@ -29,9 +29,13 @@ class EnginePortal(unittest.TestCase):
         response = self.client.get("/console")
         self.assertEqual(response.status_code, 200)
         self.assertIn('name="machine-api-prefix" content="/commerce"', response.text)
-        for asset in ["operations.css", "operations.js", "agents.js", "assets/ui-icons.svg"]:
+        for asset in ["operations.css", "operations.js", "agents.js", "workspace.css", "assets/app-engine.svg", "assets/ui-icons.svg"]:
             self.assertIn("/commerce/" + asset, response.text)
             self.assertEqual(self.client.get("/" + asset).status_code, 200)
+        self.assertEqual(response.text.count('/commerce/workspace.css?v='), 1)
+        self.assertGreater(response.text.index('/commerce/workspace.css'), response.text.index('/commerce/operations.css'))
+        self.assertEqual(self.client.get('/assets/app-engine.svg').headers['content-type'], 'image/svg+xml')
+        self.assertEqual(self.client.get('/assets/../../.env').status_code, 404)
         self.assertIn("frame-ancestors 'none'", response.headers["content-security-policy"])
         self.assertEqual(response.headers["cache-control"], "no-store")
 

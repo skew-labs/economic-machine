@@ -10,11 +10,11 @@ const state = {view: 'overview', snapshot: null, keys: [], offers: [], expires: 
 const names = {'csv-normalize': 'CSV normalization', 'arbitrum-state': 'Arbitrum state data', 'apac-compute-brief': 'Atlas APAC Compute Brief'};
 const scopeNames = {read: 'Read', 'demands:write': 'Demand', 'supplies:write': 'Supply', 'orders:write': 'Orders', 'payments:request': 'Payment requests', 'agents:run': 'Bound agent tasks'};
 const headings = {
-  overview: ['Overview', 'Accounts, positions and execution in one workspace.', null],
-  connections: ['Connections', 'Your credentials stay in your environment.', null],
-  agents: ['Agents & limits', 'Named agents. Shared budgets and rules. One execution history.', null],
-  execution: ['Execution', 'Compile a bounded order. Review the exact plan before transmission.', null],
-  playground: ['Playground', 'Typed economic programs. Deterministic validation.', null],
+  overview: ['Overview', 'Your accounts and agents, working under one set of rules.', null],
+  connections: ['Connections', 'Connect your APIs. See balances, positions and usage in one place.', null],
+  agents: ['Agents & limits', 'Give each agent a job. Choose what it can do and spend.', null],
+  execution: ['Order desk', 'Prepare an order, review the plan and track its outcome.', null],
+  playground: ['Developer lab', 'Test a program with sample inputs. No account access or transactions.', null],
   usage: ['API usage', 'Reported consumption, with its source attached.', null],
   data: ['Data licenses', 'Version-bound compute intelligence. Wallet-owned access.', null],
   keys: ['API keys', 'Give your agents access. Keep control of what they can spend.', 'Create API key'],
@@ -103,7 +103,6 @@ async function api(path, body) {
   try { result = await response.json(); } catch { throw new Error('The server returned an unreadable response. Refresh and try again.'); }
   if (!response.ok) {
     if (response.status === 401) {
-      if (state.mode === 'production' && !$('login-dialog').open) $('login-dialog').showModal();
       throw new Error(state.mode === 'production' ? 'Sign in to continue.' : 'This test workspace has expired. Reload to open a new workspace.');
     }
     const detail = result.error || result.detail;
@@ -136,6 +135,10 @@ function setView(view) {
   $('primary-action').replaceChildren(uiIcon('plus'), document.createTextNode(action || ''));
   window.EngineConsole?.render(view);
   window.DataConsole?.render(view);
+  document.querySelector('.sidebar').classList.remove('menu-open');
+  $('navigation-toggle').setAttribute('aria-expanded', 'false');
+  $('navigation-toggle').setAttribute('aria-label', 'Open navigation');
+  window.scrollTo({top: 0});
 }
 function empty(title, description, action, actionText = '', icon = 'key') {
   const node = el('div', 'empty');
@@ -463,6 +466,12 @@ async function copy(text, success) {
 }
 
 for (const node of document.querySelectorAll('[data-view]')) node.addEventListener('click', () => setView(node.dataset.view));
+$('navigation-toggle').addEventListener('click', () => {
+  const open = document.querySelector('.sidebar').classList.toggle('menu-open');
+  $('navigation-toggle').setAttribute('aria-expanded', String(open));
+  $('navigation-toggle').setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+});
+$('help-shortcut').addEventListener('click', () => $('guide-dialog').showModal());
 for (const node of document.querySelectorAll('[data-close]')) node.addEventListener('click', () => closeDialog(node.dataset.close));
 for (const dialog of document.querySelectorAll('dialog')) dialog.addEventListener('cancel', (event) => { if (state.busy === dialog.id) event.preventDefault(); });
 $('secret-dialog').addEventListener('close', () => { $('key-secret').value = ''; });

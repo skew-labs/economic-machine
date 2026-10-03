@@ -61,6 +61,16 @@
       root.dataset.agentEvents = "bound";
     }
     const connections = record.connections.filter(c => c.status !== "DISCONNECTED" && c.status !== "RECORDED");
+    if (!allowed) {
+      const intro = el("section", "connect-intro");
+      intro.append(el("h2", "", "A team that follows your rules."), el("p", "", "Each agent gets a name, a job and access to selected accounts. Shared limits apply across the whole team."));
+      const steps = el("div", "agent-howto");
+      for (const [title, detail] of [["Choose the budget", "Set allowed tasks and a shared spending cap."], ["Assign the job", "Give each agent only the accounts and actions it needs."], ["Follow each run", "Review outcomes, held funds and failure reasons."]]) {
+        const row = el("div"); row.append(el("h3", "", title), el("p", "", detail)); steps.append(row);
+      }
+      intro.append(steps, button("Start with a connection", "button primary", () => C.setView("connections")));
+      root.append(intro); return;
+    }
     summary(root, control);
     if (!allowed) root.append(el("p", "ops-record", "Connect your wallet or unlock your self-hosted runtime to create agents. Historical payment records are separate from your agent roster."));
     const budgets = section("Shared budgets & rules", "One engine ledger · limits, holds and actual turnover");
@@ -77,7 +87,8 @@
       if (entry.status === "ACTIVE") card.append(controlButton("Pause shared policy", allowed, async () => {await request(`/control-policies/${entry.id}/pause`, {}); await refresh();}));
       budgets.append(card);
     }
-    const rules = el("details", "agent-setup"), policyForm = el("form", "ops-form"); rules.append(el("summary", "", "Create a shared policy"));
+    const rules = el("details", "agent-setup"), policyForm = el("form", "ops-form"); rules.id = "agent-policy-setup"; rules.open = allowed && connections.length > 0 && !control.policies.length; rules.append(el("summary", "", "Create shared limits"));
+    if (!allowed || !connections.length) rules.append(el("p", "ops-note", "First connect an account in Connections. Its APIs can then be assigned to this policy."));
     const policyName = field(policyForm, "Policy name", "text", "TEAM");
     const policyConnections = picks(policyForm, "Connected APIs", connections.map(c => [c.id, c.name]));
     const venuePolicies = picks(policyForm, "Approved venue rules", (record.trading?.policies || []).filter(p => p.status === "ACTIVE").map(p => [p.id, p.policy.name]));
@@ -110,7 +121,8 @@
       card.append(integration); cards.append(card);
     }
     roster.append(cards);
-    const create = el("details", "agent-setup"), form = el("form", "ops-form"); create.append(el("summary", "", "Register an agent"));
+    const create = el("details", "agent-setup"), form = el("form", "ops-form"); create.id = "agent-register-setup"; create.open = allowed && control.policies.some(p => p.status === "ACTIVE") && !control.agents.length; create.append(el("summary", "", "Add an agent"));
+    if (!control.policies.some(p => p.status === "ACTIVE")) create.append(el("p", "ops-note", "Create shared limits above, then choose them for your agent."));
     const name = field(form, "Agent name", "text", "WATCH"), role = field(form, "Role", "text", "Account monitor"), policy = field(form, "Shared policy", "select");
     options(policy, control.policies.filter(p => p.status === "ACTIVE").map(p => [p.id, p.policy.name]));
     const narrow = el("div"); form.append(narrow);

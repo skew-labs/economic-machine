@@ -458,6 +458,14 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     def operations_stylesheet():
         return FileResponse(web / "operations.css")
 
+    @app.get("/workspace.css")
+    def workspace_stylesheet():
+        return FileResponse(web / "workspace.css")
+
+    @app.get("/assets/app-engine.svg")
+    def engine_logo():
+        return FileResponse(web / "assets/app-engine.svg")
+
     @app.get("/console-theme.css")
     def console_stylesheet():
         return FileResponse(web / "console-theme.css")

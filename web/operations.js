@@ -158,7 +158,7 @@
       el(
         "span",
         "",
-        `Recorded Sepolia purchase · evidence checked ${stamp(record.as_of)} · balances are historical`,
+        `Historical Sepolia evidence · ${stamp(record.as_of)} · not your account`,
       ),
     );
     const link = el("a", "", "View receipt ↗");
@@ -166,16 +166,75 @@
     bar.append(link);
     return bar;
   }
+  function startGuide(root) {
+    const live = writable();
+    const control = record?.control || {policies: [], agents: [], runs: []};
+    const connected = live && record.connections.some(c => c.status === "CONNECTED");
+    const policy = live && control.policies.some(p => p.status === "ACTIVE");
+    const agent = live && control.agents.some(a => a.status === "ACTIVE");
+    const section = el("section", "setup-guide");
+    section.setAttribute("aria-label", "Workspace setup");
+    const intro = el("div", "setup-intro");
+    intro.append(el("span", "setup-eyebrow", "YOUR WORKSPACE"),
+      el("h2", "", agent ? "Your agents. Under control." : "Set up once. Stay in control."),
+      el("p", "", "Connect an account, set its limits, then give your agents a job."));
+    const access = el("div", "setup-access");
+    if (!live) {
+      access.append(el("span", "setup-status", C.PREVIEW ? "Read-only preview" : C.LOCAL_ENGINE ? "Runtime locked" : "Not signed in"));
+      const signIn = button(C.PREVIEW ? "Open your workspace" : C.LOCAL_ENGINE ? "Unlock your runtime" : "Connect wallet", "button primary", () => {
+        if (C.PREVIEW) location.assign(API_PREFIX + "/console#overview");
+        else if (C.LOCAL_ENGINE) byId("local-owner-token").focus();
+        else byId("wallet-account").click();
+      });
+      access.append(signIn);
+    } else access.append(el("span", "setup-status ready", "Workspace connected"));
+    const head = el("div", "setup-head"); head.append(intro, access); section.append(head);
+    const steps = el("ol", "setup-steps");
+    const entries = [
+      ["Connect an account", "Exchange, wallet, data or AI API.", "connections", connected],
+      ["Set shared limits", "Choose a budget and allowed actions.", "agents", policy],
+      ["Add your agents", "Assign a name, job and policy.", "agents", agent],
+      ["Review every run", "See outcomes, failures and receipts.", "agents", live && control.runs.length > 0],
+    ];
+    entries.forEach(([title, detail, view, done], index) => {
+      const item = el("li", done ? "complete" : "");
+      const link = button("", "setup-step", () => {
+        C.setView(view);
+        if (index === 1 || index === 2) {
+          const target = document.querySelector(index === 1 ? "#agent-policy-setup" : "#agent-register-setup");
+          if (target) {target.open = true; target.scrollIntoView({block: "center", behavior: "smooth"});}
+        }
+      });
+      link.append(el("span", "step-number", done ? "✓" : String(index + 1)), el("strong", "", title), el("span", "step-detail", detail));
+      item.append(link); steps.append(item);
+    });
+    section.append(steps);
+    const foot = el("div", "setup-foot");
+    foot.append(el("span", "", "Keys stay in your environment. Orders require the approval set in your rules."));
+    foot.append(button("How it works", "quiet setup-help", () => byId("guide-dialog").showModal()));
+    section.append(foot); root.append(section);
+  }
   function overview() {
     const root = byId("ops-overview");
     root.replaceChildren();
+    startGuide(root);
     if (!record) {
       root.append(
         el("p", "ops-empty", "Connect your runtime to read accounts."),
       );
       return;
     }
-    if (record.read_only) root.append(banner());
+    if (record.read_only) {
+      const history = el("details", "recorded-details");
+      history.append(el("summary", "", "View recorded payment evidence"), banner(),
+        table("Historical balances", ["Asset / account", "Balance", "Source"], record.assets.map(a => [identity(a.symbol, a.connection), a.quantity, "Historical · not a live balance"]), "No recorded balances."));
+      root.append(history);
+      const next = el("div", "workspace-empty");
+      next.append(C.uiIcon("plugs-connected"), el("h3", "", "Your accounts will appear here."), el("p", "", "Connect your wallet to sign in, then add the APIs you want your agents to use."),
+        button("Explore connections", "button secondary", () => C.setView("connections")));
+      root.append(next);
+      return;
+    }
     window.AgentConsole?.summary(root, record.control || {agents: [], policies: [], runs: []});
     const metrics = el("div", "ops-summary");
     for (const [label, value] of [
@@ -291,7 +350,19 @@
     const root = byId("ops-connections");
     root.replaceChildren();
     if (!record) return;
-    if (record.read_only) root.append(banner());
+    if (record.read_only) {
+      const intro = el("section", "connect-intro");
+      intro.append(el("h2", "", "Bring the accounts you already use."), el("p", "", "Sign in to your workspace to configure a connection. Keep API keys in your server environment."));
+      const choices = el("div", "connection-choices");
+      for (const [icon, title, detail] of [["chart-line-up", "Exchange", "Binance Spot & USD-M"], ["wallet", "Wallet", "Arbitrum account reads"], ["database", "Data", "Your HTTP data source"], ["code", "AI API", "OpenAI-compatible model catalog"]]) {
+        const card = el("div", "connection-choice"); card.append(C.uiIcon(icon), el("h3", "", title), el("p", "", detail)); choices.append(card);
+      }
+      intro.append(choices);
+      const signIn = button(C.PREVIEW ? "Open your workspace" : "Connect wallet", "button primary", () => C.PREVIEW ? location.assign(API_PREFIX + "/console#connections") : byId("wallet-account").click());
+      intro.append(signIn, el("p", "ops-note", "Wallet login identifies your workspace. It does not authorize a trade or payment."));
+      root.append(intro);
+      return;
+    }
     const split = el("div", "ops-split");
     split.append(
       table(
@@ -430,6 +501,13 @@
     const root = byId("ops-execution");
     root.replaceChildren();
     if (!record) return;
+    if (!writable()) {
+      const intro = el("section", "connect-intro");
+      intro.append(el("h2", "", "Review the plan before an order is sent."), el("p", "", "Connect an exchange and create venue rules. The engine prepares the price, quantity and limits for your approval."),
+        el("p", "ops-record", "Live exchange transmission is disabled on this hosted runtime."),
+        button("Connect an exchange", "button primary", () => C.setView("connections")));
+      root.append(intro); return;
+    }
     const trading = record.trading || {
       policies: [],
       orders: [],
@@ -478,6 +556,7 @@
     const submit = el("button", "button primary", "Compile order");
     submit.type = "submit";
     submit.disabled = !writable() || !trading.policies.length;
+    if (submit.disabled) form.append(el("p", "ops-record", !writable() ? "Sign in and connect an exchange before preparing an order." : "Create venue rules below before preparing an order."));
     form.append(submit);
     left.append(form);
     const output = el(
@@ -822,6 +901,7 @@
   byId("ops-compile").addEventListener("click", async () => {
     byId("ops-decision-summary").hidden = true;
     try {
+      if (!byId("ops-program").value.trim()) throw new Error("Load an example or paste a program before running it.");
       const source = JSON.parse(byId("ops-program").value);
       const exact = (value) => {
         if (typeof value === "number" && !Number.isSafeInteger(value)) {
@@ -864,7 +944,7 @@
         summary.hidden = false;
       }
     } catch (e) {
-      byId("ops-compiled").textContent = e.message;
+      byId("ops-compiled").textContent = e instanceof SyntaxError ? "This program is not valid JSON. Check the brackets and commas, or load an example." : e.message;
     }
   });
   byId("ops-example").hidden = API_PREFIX !== "/commerce";
@@ -900,6 +980,7 @@
     }
   });
   window.EngineConsole = { refresh, render, openOrder: async id => {currentPlan = await request(`/trade/orders/${id}`); C.setView("execution");}, isView: (view) => views.has(view) };
+  render(C.state.view);
   setInterval(() => {
     if (
       !document.hidden &&

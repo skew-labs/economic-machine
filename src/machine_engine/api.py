@@ -20,8 +20,8 @@ from .connections import PROFILES
 from .workspace import Workspace, now_iso
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSETS = {"app.js", "app.css", "wallet.js", "console-theme.css", "operations.js", "operations.css",
-          "agents.js", "data.js", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt"}
+ASSETS = {"app.js", "app.css", "wallet.js", "console-theme.css", "operations.js", "operations.css", "workspace.css",
+          "agents.js", "data.js", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/app-engine.svg"}
 
 
 def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:8800", workspace=None, clock=time.time):

@@ -334,6 +334,10 @@ td.numeric {
   height: 34px;
   color: var(--slate);
 }
+.product-entry > .app-mark { width: 60px; height: 60px; flex: none; filter: drop-shadow(0 3px 3px #1424310a); }
+.tool-app-mark { display: block; width: 72px; height: 72px; margin-top: 26px; }
+.product-entry div { min-width: 0; }
+.home-hero > *, .workspace, .split-workspace > * { min-width: 0; }
 .product-entry div {
   flex: 1;
 }

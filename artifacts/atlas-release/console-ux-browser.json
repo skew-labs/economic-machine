@@ -1,0 +1,546 @@
+{
+  "schema": "console-ux-browser-1",
+  "observed_at": "2026-10-03T05:04:54.906Z",
+  "console": "https://machine.148-113-153-116.nip.io/commerce/console",
+  "console_views": [
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "view": "Overview",
+      "width": 1280
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "view": "Connections",
+      "width": 1280
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "view": "Agents & limits",
+      "width": 1280
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "view": "Order desk",
+      "width": 1280
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "view": "Activity",
+      "width": 1280
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "view": "Data licenses",
+      "width": 1280
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "view": "Service payments",
+      "width": 1280
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "view": "API usage",
+      "width": 1280
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "view": "Developer lab",
+      "width": 1280
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "view": "API keys",
+      "width": 1280
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 768,
+      "view": "Overview",
+      "width": 768
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 768,
+      "view": "Connections",
+      "width": 768
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 768,
+      "view": "Agents & limits",
+      "width": 768
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 768,
+      "view": "Order desk",
+      "width": 768
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 768,
+      "view": "Activity",
+      "width": 768
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 768,
+      "view": "Data licenses",
+      "width": 768
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 768,
+      "view": "Service payments",
+      "width": 768
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 768,
+      "view": "API usage",
+      "width": 768
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 768,
+      "view": "Developer lab",
+      "width": 768
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 768,
+      "view": "API keys",
+      "width": 768
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Overview",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Connections",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Agents & limits",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Order desk",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Activity",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Data licenses",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Service payments",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "API usage",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Developer lab",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "API keys",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Overview",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Connections",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Agents & limits",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Order desk",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Activity",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Data licenses",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Service payments",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "API usage",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Developer lab",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "API keys",
+      "width": 320
+    }
+  ],
+  "final_mobile_views": [
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Overview",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Connections",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Agents & limits",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Order desk",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Activity",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Data licenses",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Service payments",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "API usage",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "Developer lab",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "view": "API keys",
+      "width": 320
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Overview",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Connections",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Agents & limits",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Order desk",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Activity",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Data licenses",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Service payments",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "API usage",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "Developer lab",
+      "width": 390
+    },
+    {
+      "offscreenControls": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "view": "API keys",
+      "width": 390
+    }
+  ],
+  "tool_views": [
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "title": "Web tools | skew",
+      "width": 1280
+    },
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "title": "Atlas | skew",
+      "width": 1280
+    },
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "title": "SiteLens | skew",
+      "width": 1280
+    },
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "title": "DataPass | skew",
+      "width": 1280
+    },
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 1280,
+      "title": "Engine | skew",
+      "width": 1280
+    },
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "title": "Web tools | skew",
+      "width": 390
+    },
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "title": "Atlas | skew",
+      "width": 390
+    },
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "title": "SiteLens | skew",
+      "width": 390
+    },
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "title": "DataPass | skew",
+      "width": 390
+    },
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 390,
+      "title": "Engine | skew",
+      "width": 390
+    },
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "title": "Web tools | skew",
+      "width": 320
+    },
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "title": "Atlas | skew",
+      "width": 320
+    },
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "title": "SiteLens | skew",
+      "width": 320
+    },
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "title": "DataPass | skew",
+      "width": 320
+    },
+    {
+      "missingImages": [],
+      "overflow": false,
+      "pageWidth": 320,
+      "title": "Engine | skew",
+      "width": 320
+    }
+  ],
+  "interactions": {
+    "guide_open_close": "observed",
+    "manual_login_open_close": "observed; no wallet extension",
+    "setup_connection_navigation": "observed",
+    "mobile_menu_selection": "observed",
+    "empty_editor_message": "observed",
+    "native_example": "REDUCE; synthetic inputs; 0 model calls; execution authority NONE"
+  },
+  "assurance": "UNAUTHENTICATED_AND_RECORDED_UI_NOT_CUSTOMER_EXECUTION",
+  "initial_auto_login_open": false
+}

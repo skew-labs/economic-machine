@@ -1,9 +1,9 @@
 {
   "schema": "machine-line-audit-1",
   "engine_implementation": {
-    "files": 79,
-    "physical": 21557,
-    "nonblank": 20200
+    "files": 80,
+    "physical": 21845,
+    "nonblank": 20484
   },
   "native_cpp_implementation": {
     "files": 21,
@@ -12,13 +12,13 @@
   },
   "tests": {
     "files": 38,
-    "physical": 7481,
-    "nonblank": 6734
+    "physical": 7485,
+    "nonblank": 6738
   },
   "operational_scripts": {
     "files": 32,
-    "physical": 3691,
-    "nonblank": 3294
+    "physical": 3692,
+    "nonblank": 3295
   },
   "implementation_files": [
     {
@@ -98,8 +98,8 @@
     },
     {
       "path": "src/machine_commerce/api.py",
-      "physical": 477,
-      "nonblank": 407
+      "physical": 485,
+      "nonblank": 413
     },
     {
       "path": "src/machine_commerce/atlas.py",
@@ -143,8 +143,8 @@
     },
     {
       "path": "src/machine_commerce/portal.py",
-      "physical": 426,
-      "nonblank": 380
+      "physical": 429,
+      "nonblank": 383
     },
     {
       "path": "src/machine_commerce/providers.py",
@@ -243,8 +243,8 @@
     },
     {
       "path": "web/agents.js",
-      "physical": 185,
-      "nonblank": 182
+      "physical": 197,
+      "nonblank": 194
     },
     {
       "path": "web/app.css",
@@ -253,8 +253,8 @@
     },
     {
       "path": "web/app.js",
-      "physical": 629,
-      "nonblank": 625
+      "physical": 638,
+      "nonblank": 634
     },
     {
       "path": "web/console-theme.css",
@@ -268,8 +268,8 @@
     },
     {
       "path": "web/index.html",
-      "physical": 85,
-      "nonblank": 84
+      "physical": 88,
+      "nonblank": 85
     },
     {
       "path": "web/operations.css",
@@ -278,8 +278,8 @@
     },
     {
       "path": "web/operations.js",
-      "physical": 916,
-      "nonblank": 914
+      "physical": 997,
+      "nonblank": 995
     },
     {
       "path": "web/submission.css",
@@ -300,6 +300,11 @@
       "path": "web/wallet.js",
       "physical": 63,
       "nonblank": 63
+    },
+    {
+      "path": "web/workspace.css",
+      "physical": 172,
+      "nonblank": 172
     },
     {
       "path": "native/include/machine/economics/abi.hpp",
@@ -490,8 +495,8 @@
     },
     {
       "path": "tests/test_engine_portal.py",
-      "physical": 80,
-      "nonblank": 66
+      "physical": 84,
+      "nonblank": 70
     },
     {
       "path": "tests/test_engine_workspace.py",
