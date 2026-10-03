@@ -15,6 +15,7 @@ def main():
         if cmd=='seal':
             for name in ['contract','miner','secret-file']:p.add_argument('--'+name,required=True)
             p.add_argument('--round',type=int,required=True)
+            p.add_argument('--chain-id',type=int,choices=[42161,421614],default=421614)
     p=sub.add_parser('reveal');p.add_argument('--secret-file',required=True);args=parser.parse_args()
     if args.command=='reveal':result=reveal(args.secret_file)
     else:
@@ -24,7 +25,7 @@ def main():
             if path.stat().st_size>10000:raise ValueError('Candidate file bound')
             bits=json.loads(path.read_text())['bits']
         raw={'seed':args.seed,'problem':args.problem,'budget':args.budget,'search_seed':args.search_seed,'algorithm':args.algorithm,'bits':bits}
-        if args.command=='seal':result=seal(raw,contract=args.contract,round_id=args.round,miner=args.miner,secret_file=args.secret_file)
+        if args.command=='seal':result=seal(raw,contract=args.contract,round_id=args.round,miner=args.miner,secret_file=args.secret_file,chain_id=args.chain_id)
         else:result=SolutionLab().calculate(raw)
     print(json.dumps(result,indent=2))
 

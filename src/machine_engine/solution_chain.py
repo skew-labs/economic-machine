@@ -66,7 +66,7 @@ class FinalizedChain:
     def __init__(self, first, second, contract, expected_code_sha256, *, chain_id=421614, working_confirmations=4):
         if first.identity == second.identity:
             raise MachineError('SOLUTION_INDEPENDENT_RPC_HOSTS_REQUIRED')
-        if chain_id != 421614 or not isinstance(expected_code_sha256, str) or len(expected_code_sha256) != 64:
+        if type(chain_id) is not int or chain_id not in {42161,421614} or not isinstance(expected_code_sha256, str) or len(expected_code_sha256) != 64:
             raise MachineError('SOLUTION_CHAIN_CONFIG')
         try:
             bytes.fromhex(expected_code_sha256)

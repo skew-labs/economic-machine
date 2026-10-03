@@ -9,6 +9,13 @@ invariants, capital reservations and verifiable receipts.
 [Self-hosting](docs/SELF_HOSTING.md) · [MIT license](LICENSE) ·
 [Core extraction and provenance](docs/CORE_EXTRACTION.md).
 
+The [Skew Solution mainnet candidate](docs/SOLUTION_MAINNET.md) adds an Arbitrum One-compatible
+bounded-emission contract and separate owner-local miner/signer. It starts with zero supply,
+admits only verified winning solutions and retains private nonce/gas reservations before submission.
+Source-bound tests and actual mainnet **read-only** network evidence are in
+`artifacts/solution-mainnet/`. Our mining contract is not deployed on mainnet and public issuance
+remains closed pending owner deployment/VRF configuration and production qualification.
+
 The unified console keeps wallet login, API keys, payment limits and activity alongside accounts,
 positions, execution, program validation and API usage. Signed-in owners have isolated, durable
 workspaces. The public recorded view shows the completed Arbitrum Sepolia purchase.

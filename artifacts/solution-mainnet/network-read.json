@@ -1,0 +1,33 @@
+{
+  "schema": "solution-network-read-1",
+  "chain_id": 42161,
+  "network": "Arbitrum One",
+  "anchor": {
+    "number": 511399830,
+    "timestamp": 1791057603,
+    "hash": "0x7d54fc91315b1504f4cc93b938fb8609ceb5ab63b67bbd12e5202534e477d0a4"
+  },
+  "providers": [
+    "arb1.arbitrum.io",
+    "arbitrum-one.public.blastapi.io"
+  ],
+  "contracts": {
+    "coordinator": {
+      "address": "0x3C0Ca683b403E37668AE3DC4FB62F4B29B6f7a3e",
+      "code_sha256": "287eff51f9623ac289842faa422b4dfae0a36659c2f86a95ddc735010f30ed4f",
+      "size": 24094
+    },
+    "link": {
+      "address": "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4",
+      "code_sha256": "6ab97b215f4e53837e736ac937b35a733f6360e54f269422b14f1e8a61b5ad0b",
+      "size": 760
+    }
+  },
+  "subscription": null,
+  "configuration_source": "https://docs.chain.link/vrf/v2-5/supported-networks",
+  "security_source": "https://docs.chain.link/vrf/v2-5/security",
+  "own_contract_deployed": false,
+  "signatures": 0,
+  "submitted_transactions": 0,
+  "assurance": "TWO_RPC_HOSTS_AGREE_ON_FINALIZED_STATE_NOT_INDEPENDENT_OPERATOR_PROOF"
+}

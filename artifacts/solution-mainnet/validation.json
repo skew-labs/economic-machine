@@ -1,0 +1,60 @@
+{
+  "schema": "solution-mainnet-validation-1",
+  "accepted": true,
+  "distinct_cases": 36,
+  "expected_cases": 36,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "seconds": 68.845,
+  "targets": [
+    "test_solution_mainnet",
+    "test_solution_signer",
+    "test_solution_preflight",
+    "test_solution_operations.ChainBoundary",
+    "test_solution_operations.LocalEVMLifecycle"
+  ],
+  "source_sha256": {
+    "contracts/SkewSolutionMining.sol": "3f797d327f7816e288f127ca162c006b8615542c055ed7de4f9faf7d75388742",
+    "contracts/SkewVRFMock.sol": "74f883d6b866d3f5b8e58e6f9c49185a00d01f63583647a6c68d66f5acebdc35",
+    "src/machine_engine/solution_client.py": "da18b7580965dd63d54eacc0748a8f0007ef395d9eac6bf9f45a177cfa9cca9c",
+    "src/machine_engine/solution_chain.py": "75b98c41531d3a5fdc34c1ff1c075c520643d42c66434d846eb4e1a4bc9d4d85",
+    "src/machine_engine/solution_operations.py": "5a57ed847c858e0ccf917f4e358a14f2c192ce6d221322a58b059083bab65307",
+    "src/machine_engine/solution_signer.py": "0682405f2b6bca12549b69a683f993d79b8955d5afa0745ae7e9aee31312f9a8",
+    "src/machine_engine/solution_networks.py": "6e3d8d1cdae0a630597d06a817176db27e7b9102e95d799d0056925124ab773c",
+    "scripts/solution_signer.py": "b4ceb9b9208058e7033e28a85f4c8b49985906d9b30aedd3c62da0ebb1d49f82",
+    "scripts/solution_mainnet_preflight.py": "03b68247225e82600efa76f583b7d87472172b1591d239cad916259db6123de0",
+    "scripts/solution_operator.py": "2e239631ae925d8e38508fe0ab4d86d427585d1dda4ad1afa0731bf39819fa8a",
+    "scripts/solution_cli.py": "705aec4f9891e1152ac98d9d5c568462da47f2715f40188ec2fff64047eef5d3",
+    "scripts/compile_solution_mainnet.py": "870d9d8c21fc09d04671c90ada053cabf769c15c4955fe77bddd38e8c6ce858e",
+    "scripts/validate_solution_mainnet.py": "23bb993926fb3e6df7877c8213522fd1449409597d0da24577e7d5f3ce9d4583",
+    "tests/test_solution_mainnet.py": "ea83aa209eec7ad947ca80610ac36833afd78bb487d06281ec8be89422047721",
+    "tests/test_solution_signer.py": "3aead49c2065b1ab462841f31f05f29e514b9becea8eb06a7121163b67992961",
+    "tests/test_solution_preflight.py": "fe131c3f68e37708d4edebff5bbc5728a57a2bcfe5bacb3ba0ae715eae93d7e5",
+    "tests/test_solution_operations.py": "cc1522a8c17727209e7066a320f8acbad23d9d7d1be3838f9d3cf8312eae8d7d"
+  },
+  "compiler": {
+    "compiler_sha256": "fb03a29a517452b9f12bcf459ef37d0a543765bb3bbc911e70a87d6a37c30d5f",
+    "sources": {
+      "SkewSolutionMining.sol": "3f797d327f7816e288f127ca162c006b8615542c055ed7de4f9faf7d75388742",
+      "SkewVRFMock.sol": "74f883d6b866d3f5b8e58e6f9c49185a00d01f63583647a6c68d66f5acebdc35"
+    },
+    "runtime_sizes": {
+      "SkewSolutionMining": 9331,
+      "SkewSolutionToken": 1703,
+      "SkewVRFMock": 1910
+    },
+    "warnings": 0,
+    "actual_deployments": 0,
+    "audit": "INDEPENDENT_REVIEW_REQUIRED",
+    "test_randomness": "MOCK_ONLY",
+    "artifact_sha256": "0412273fe0d147c7a55637175c311a201b22f670f7b2fa4a6660970b540c9f98"
+  },
+  "log_sha256": "bca0e93242ab104327f2915c583d5c23b72a3b29ec76b1d7e4ef16ae53952d76",
+  "scope": "CHANGED_CODE_AND_CONNECTION_REGRESSION_NOT_FULL_SUITE_OR_EXTERNAL_AUDIT",
+  "randomness": "MOCK_ONLY",
+  "signature_keys": "DISPOSABLE_PYEVM_ONLY",
+  "public_deployments": 0,
+  "mainnet_minted_tokens": "0",
+  "public_launch_ready": false
+}

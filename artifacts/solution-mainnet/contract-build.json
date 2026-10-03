@@ -1,0 +1,17 @@
+{
+  "compiler_sha256": "fb03a29a517452b9f12bcf459ef37d0a543765bb3bbc911e70a87d6a37c30d5f",
+  "sources": {
+    "SkewSolutionMining.sol": "3f797d327f7816e288f127ca162c006b8615542c055ed7de4f9faf7d75388742",
+    "SkewVRFMock.sol": "74f883d6b866d3f5b8e58e6f9c49185a00d01f63583647a6c68d66f5acebdc35"
+  },
+  "runtime_sizes": {
+    "SkewSolutionMining": 9331,
+    "SkewSolutionToken": 1703,
+    "SkewVRFMock": 1910
+  },
+  "warnings": 0,
+  "actual_deployments": 0,
+  "audit": "INDEPENDENT_REVIEW_REQUIRED",
+  "test_randomness": "MOCK_ONLY",
+  "artifact_sha256": "0412273fe0d147c7a55637175c311a201b22f670f7b2fa4a6660970b540c9f98"
+}
