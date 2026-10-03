@@ -1,0 +1,32 @@
+# One bounded test, no recurring timer and no wallet or network access.
+[Unit]
+Description=SKEW bounded native solution qualification
+
+[Service]
+Type=simple
+User=solution-miner
+Group=solution-miner
+WorkingDirectory=/opt/skew-solution
+Environment=PYTHONPATH=src:scripts
+ExecStart=/opt/skew-solution/.venv/bin/python scripts/qualify_solution_runtime.py --seconds 86400 --checkpoint /var/lib/skew-solution/qualification-24h.json
+Restart=no
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+CapabilityBoundingSet=
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX
+LockPersonality=yes
+MemoryMax=256M
+CPUQuota=25%
+Nice=19
+TasksMax=16
+ReadWritePaths=/var/lib/skew-solution
+TimeoutStopSec=20
+RuntimeMaxSec=90000

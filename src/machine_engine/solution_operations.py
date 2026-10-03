@@ -11,7 +11,9 @@ from pathlib import Path
 
 from eth_abi import encode
 from eth_utils import keccak
+
 from economic_machine.values import MachineError, digest
+
 from .solution import ALGORITHMS, Answer, Edge, Graph, graph
 from .solution_client import reveal, seal
 
@@ -74,7 +76,7 @@ class NativePipeline:
         if self.cpus is not None:
             command += ['--search-cpu', str(self.cpus[0]), '--verify-cpu', str(self.cpus[1])]
         try:
-            run = subprocess.run(command, input=b''.join(frames), capture_output=True, timeout=30,
+            run = subprocess.run(command, input=b''.join(frames), capture_output=True, timeout=30, check=False,
                                  env={'PATH': '/usr/bin:/bin'}, start_new_session=True)
         except subprocess.TimeoutExpired:
             raise MachineError('SOLUTION_PIPELINE_TIMEOUT') from None
@@ -135,7 +137,18 @@ class MiningJournal:
     def close(self):
         self.db.close()
 
+    def require_active(self):
+        # A restored snapshot cannot prove that a second machine stopped or that
+        # later handoffs/spending did not occur. Reads and reconciliation remain
+        # available; new work/export needs an explicit recovery review.
+        marker = self.directory / 'RECOVERY_HOLD'
+        persisted = self.db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='recovery_control'").fetchone()
+        if (marker.exists() or marker.is_symlink() or (persisted and
+                self.db.execute('SELECT held FROM recovery_control WHERE id=1').fetchone() != (0,))):
+            raise MachineError('SOLUTION_RECOVERY_RECONCILIATION_REQUIRED')
+
     def reserve(self, binding, budget, daily_limit, *, now=None):
+        self.require_active()
         if type(budget) is not int or not 496 <= budget <= 10000000 or type(daily_limit) is not int or not budget <= daily_limit <= 1000000000:
             raise MachineError('SOLUTION_DAILY_WORK_BOUND')
         now = int(time.time()) if now is None else now
@@ -178,6 +191,7 @@ class MiningJournal:
         return {'binding':json.loads(row[0]),'state':row[1],'result':json.loads(row[2]) if row[2] else None}
 
     def prepare(self, job, action, payload):
+        self.require_active()
         if action not in {'commit','reveal','claim'}:
             raise MachineError('SOLUTION_INTENT_ACTION')
         identifier = digest({'job':job,'action':action})
@@ -203,6 +217,7 @@ class MiningJournal:
         return {'id':identifier,'job':row[0],'action':row[1],'payload':json.loads(row[2]),'state':row[3],'tx_hash':row[4]}
 
     def handoff(self, identifier):
+        self.require_active()
         # Persist before any owner export. A crash after this cannot return to UNSIGNED automatically.
         if self.db.execute('UPDATE intents SET state=? WHERE id=? AND state=?',('HANDED_OFF',identifier,'UNSIGNED')).rowcount != 1:
             raise MachineError('SOLUTION_HANDOFF_ONCE')
@@ -277,6 +292,7 @@ class LocalMiner:
         return {'state':'CANDIDATES_SAVED','jobs':completed,'authority':'NONE'}
 
     def prepare(self, job, action, *, now=None):
+        self.journal.require_active()
         now = int(time.time()) if now is None else now
         record = self.journal.job(job); bound = record['binding']
         snapshot = self.chain.snapshot(round_id=bound['round'],finalized=action=='claim')
