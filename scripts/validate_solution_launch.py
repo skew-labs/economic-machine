@@ -30,7 +30,11 @@ def main():
     names += re.findall(
         r"^(test_[^\n]+ \(test_solution_launch\.Launch\.[^\n]+\)) \.\.\. ok$", first, re.MULTILINE
     )
-    if len(set(names)) != 21:
+    publishing = (folder / "publishing-tests.log").read_text()
+    if not re.search(r"Ran 3 tests in [0-9.]+s\s+OK\s*$", publishing):
+        raise RuntimeError("Public metadata connection tests did not pass")
+    names += re.findall(r"^([^\n]+) \.\.\. ok$", publishing, re.MULTILINE)
+    if len(set(names)) != 24:
         raise RuntimeError("Focused current evidence case count differs")
     soak = read("artifacts/solution-launch/soak-complete.json")
     crash = read("artifacts/solution-launch/soak-crash-checkpoint.json")
@@ -81,7 +85,7 @@ def main():
     report = {
         "schema": "solution-launch-validation-1",
         "observed_at": int(time.time()),
-        "distinct_changed_and_connection_tests": 21,
+        "distinct_changed_and_connection_tests": 24,
         "native_pipeline_sha256": build["sha256"],
         "qualification_180_seconds_complete": True,
         "parent_crash_checkpoint_resumed": True,

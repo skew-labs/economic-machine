@@ -1,7 +1,7 @@
 {
   "schema": "solution-launch-validation-1",
-  "observed_at": 1791055915,
-  "distinct_changed_and_connection_tests": 21,
+  "observed_at": 1791056594,
+  "distinct_changed_and_connection_tests": 24,
   "native_pipeline_sha256": "70e80d33e7db13410d3ae99c54c3ce99b54ccdbdf2837bb4150413abf20dc035",
   "qualification_180_seconds_complete": true,
   "parent_crash_checkpoint_resumed": true,
@@ -10,7 +10,7 @@
   "qualified_elapsed_ns": 180098272874,
   "score_or_frame_failures": 0,
   "qualification_24h_state_at_observation": "RUNNING",
-  "qualification_24h_verified_elapsed_ns_at_observation": 56451405657,
+  "qualification_24h_verified_elapsed_ns_at_observation": 767465542935,
   "qualification_24h_completed": false,
   "actual_vrf_coordinator_read": true,
   "actual_subscription_configured": false,
@@ -29,5 +29,5 @@
     "src/machine_engine/solution_operations.py": "ffcf3d60f58973788a2823e5d87d11add6140743ab70c321940e8219eea22c5f",
     "tests/test_solution_launch.py": "72dee3a9fc2fcf136ea2f63939f79fc27da87b5f5c23f9dea7f341200e721cb6"
   },
-  "validation_sha256": "9d48cb130d294be1dfdffa14bab62bc798316ea1af28f93aabcff0d7ede63da1"
+  "validation_sha256": "4f4d35de2358e8212b2a5a0b895578c7c743fff8caf73f4e4d170842d468ea4a"
 }

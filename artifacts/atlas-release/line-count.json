@@ -11,14 +11,14 @@
     "nonblank": 6722
   },
   "tests": {
-    "files": 56,
-    "physical": 11073,
-    "nonblank": 9948
+    "files": 57,
+    "physical": 11138,
+    "nonblank": 10003
   },
   "operational_scripts": {
-    "files": 68,
-    "physical": 6554,
-    "nonblank": 5879
+    "files": 69,
+    "physical": 6692,
+    "nonblank": 6008
   },
   "implementation_files": [
     {
@@ -742,6 +742,11 @@
       "path": "tests/test_solution.py",
       "physical": 225,
       "nonblank": 194
+    },
+    {
+      "path": "tests/test_solution_evidence.py",
+      "physical": 65,
+      "nonblank": 55
     },
     {
       "path": "tests/test_solution_launch.py",
