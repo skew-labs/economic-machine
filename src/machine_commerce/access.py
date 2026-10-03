@@ -176,10 +176,12 @@ class Access:
                 if principal.engine_agent_id != parts[3]:
                     raise PermissionError("API key is bound to another engine agent")
                 scope = "agents:run"
-            elif method == "GET" and (path in {"/api/engine/overview", "/api/engine/profiles", "/api/engine/control", "/api/engine/economics"}
+            elif method == "GET" and (path in {"/api/engine/overview", "/api/engine/profiles", "/api/engine/control", "/api/engine/economics", "/api/engine/tasks"}
+                    or (len(parts) == 4 and parts[2] == "tasks")
                     or (len(parts) == 5 and parts[2:4] == ["trade", "orders"])):
                 scope = "engine:read"
-            elif method == "POST" and (path in {"/api/engine/trade/orders", "/api/engine/usage", "/api/engine/programs/compile", "/api/engine/native/evaluate", "/api/engine/native/programs/compile", "/api/engine/native/programs/evaluate", "/api/engine/economics/evaluate"}
+            elif method == "POST" and (path in {"/api/engine/trade/orders", "/api/engine/usage", "/api/engine/programs/compile", "/api/engine/native/evaluate", "/api/engine/native/programs/compile", "/api/engine/native/programs/evaluate", "/api/engine/economics/evaluate", "/api/engine/tasks"}
+                    or (len(parts) == 5 and parts[2] == "tasks" and parts[4] == "revise")
                     or (len(parts) == 6 and parts[2:4] == ["trade", "orders"] and parts[5] == "reconcile")
                     or (len(parts) == 5 and parts[2] == "connections" and parts[4] == "sync")):
                 scope = "engine:write"

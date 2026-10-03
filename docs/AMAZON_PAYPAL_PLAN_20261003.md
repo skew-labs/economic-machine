@@ -1,6 +1,7 @@
 # SKEW Tasks — Amazon and PayPal extension plan
 
-Status: proposed implementation, not an installed integration or contest entry.
+Status: PR1 task foundation implemented; PR2–PR6 integrations remain proposed.
+No Alexa+, AWS model, PayPal integration or contest entry is claimed.
 Checked against official competition pages on 2026-10-03. Existing commerce,
 native calculation and owner-workspace code is the foundation. The inspected
 checkout has no Alexa+, MCP, Bedrock, Strands or PayPal runtime integration yet.
@@ -11,8 +12,14 @@ SKEW Tasks lets a person delegate a finished task under a price ceiling, approve
 the exact purchase, and return later to the result and receipt. The existing
 console remains its operational view; tasks and commerce share its workspace.
 
-First scenario: “Prepare an APAC GPU price comparison for tomorrow's meeting,
-under $10. Use the same regions as last time, and tell me what changed.”
+Practical first scenarios: compare CRM or logistics vendors, prepare a sourced
+competitor brief, draft a customer proposal, clean a CRM import, or localize a
+product catalog. GPU pricing is one optional specialization, not the task system.
+
+Example: “Compare three CRM vendors for our procurement meeting under $10,
+using the same confirmed criteria and regions as last time.” In PR1 the user
+explicitly supplies typed conditions; language interpretation is PR5. PR1 saves
+briefs and their revisions, not completed comparisons or paid deliveries.
 
 Remember region/report preferences and explicitly confirmed conditions. Retrieve
 the previous completed report as context. Find eligible report options, show two
@@ -87,7 +94,7 @@ more services solely to display sponsor logos.
 
 | PR | Scope | Acceptance |
 | --- | --- | --- |
-| 1 | Durable task schema, typed USD price ceiling, confirmed preferences, report SKU registry | Cross-session resume; ambiguous units/merchant/price rejected; prior preferences cannot authorize spending |
+| 1 | Durable task schema, typed USD price ceiling, confirmed preferences, practical work templates and versioned service SKU registry | Cross-session brief resume; five work types; ambiguous USD amounts rejected; confirmed preferences cannot authorize spending |
 | 2 | PayPal sandbox adapter, scoped checkout UI, capture/readback and entitlement | Real sandbox approve → capture completed → one entitlement → report download; exact payee/currency/amount match |
 | 3 | Signed webhook admission, crash recovery, cancellation and refund state | Duplicate webhook/click cannot double-deliver; unknown capture retains hold and is queried; paid cancellation is a refund request, not fictitious unpaid cancellation |
 | 4 | Authenticated Streamable HTTP MCP server and typed task tools | Version negotiation and real runtime calls; agent cannot approve its own payment or read another owner's report |
