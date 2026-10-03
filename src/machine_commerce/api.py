@@ -14,18 +14,21 @@ from fastapi.responses import FileResponse, JSONResponse
 from economic_machine.values import MachineError, require_keys
 
 from .access import Access
+from .checkout import DEFAULT_PLANS, Checkout
 from .domain import CATALOG, DEFAULT_REQUESTS, now_seconds, terms_hash
 from .market import Market
-from .operations import Operations, Settings
+from .operations import Operations, Settings, config_file
 from .payments import Payments
 from .providers import CommerceEngine, Workers
 from .store import Store
 from .wallet_auth import WalletAuth
+from .x402 import address
 
 LOGGER = logging.getLogger(__name__)
 
 
-def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, payment_transport=None, payment_chain=None):
+def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, payment_transport=None, payment_chain=None,
+               subscription_plans=None):
     root = Path(__file__).resolve().parents[2]
     web = root / "web"
     store = Store(db_path or os.environ.get("COMMERCE_DB", str(root / "runtime/commerce.sqlite3")), clock)
@@ -33,6 +36,9 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     market = Market(store)
     settings = (settings or Settings.environment()).validate()
     payments = Payments(store, market, settings.resources, payment_transport, payment_chain)
+    plan_file = os.environ.get("MACHINE_SUBSCRIPTIONS_FILE")
+    checkout = Checkout(store, market, payments, subscription_plans if subscription_plans is not None
+                        else config_file(plan_file) if plan_file else DEFAULT_PLANS)
     operations = Operations(store, settings)
     access = Access(store, settings.mode)
     wallet_auth = WalletAuth(store, settings.origin)
@@ -77,6 +83,7 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     app.state.access = access
     app.state.wallet_auth = wallet_auth
     app.state.market, app.state.payments, app.state.operations = market, payments, operations
+    app.state.checkout = checkout
     app.state.timer_error = None
     app.state.payment_worker_error = None
 
@@ -186,6 +193,13 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     def data_plan(purchase_id: str, version: str | None = None, sid=Depends(buyer)):
         return data_products.plan(wallet_auth.identity(sid), purchase_id, version)
 
+    @app.get("/api/data/purchase-status")
+    def data_purchase_status(purchase_id: str, version: str | None = None, sid=Depends(buyer)):
+        try:
+            return data_products.purchase_status(wallet_auth.identity(sid), purchase_id, version)
+        except PermissionError as exc:
+            raise HTTPException(403, str(exc)) from exc
+
     @app.post("/api/data/release-plan")
     def data_release(raw: dict, request: Request, sid=Depends(buyer), approved=Depends(engine_owner)):
         require_keys(raw, {"price_atoms", "sale_duration_seconds"}, "dataset release")
@@ -235,6 +249,45 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
         return {"offers": [{**offer, "default_request": DEFAULT_REQUESTS[offer_id],
                              "terms_hash": terms_hash(offer_id)} for offer_id, offer in CATALOG.items()],
                 "settlement_mode": "SANDBOX_LEDGER", "asset": "TEST_CREDIT"}
+
+    @app.get("/api/commerce/catalog")
+    def commerce_catalog():
+        return checkout.catalog()
+
+    @app.get("/api/commerce/checkouts")
+    def commerce_checkouts(sid=Depends(buyer)):
+        return checkout.snapshot(sid)
+
+    @app.post("/api/commerce/checkouts")
+    def commerce_quote(raw: dict, sid=Depends(buyer)):
+        return checkout.quote(sid, raw)
+
+    @app.get("/api/commerce/checkouts/{cid}")
+    def commerce_detail(cid: str, sid=Depends(buyer)):
+        return checkout.get(sid, cid)
+
+    @app.get("/api/commerce/subscriptions/{plan_id}/delivery")
+    def subscription_delivery(plan_id: str, sid=Depends(buyer)):
+        grant = checkout.require_access(sid, plan_id)
+        if plan_id != "atlas-monthly":
+            raise HTTPException(404, "this subscription has no hosted Atlas delivery adapter")
+        from .atlas import load_report
+        report = load_report(data_products.path)
+        return {"entitlement": grant, "report": report["derived"], "report_sha256": report["report_sha256"],
+                "source_observation_root": report["derived"]["source_observation_root"], "usage_rights": "internal-use",
+                "assurance": "PUBLIC_LIST_PRICE_RESEARCH_NOT_CAPACITY_OR_EXECUTABLE_QUOTE"}
+
+    @app.post("/api/commerce/checkouts/{cid}/prepare")
+    def commerce_prepare(cid: str, raw: dict, request: Request, sid=Depends(buyer)):
+        require_keys(raw, {"mandate_id"}, "checkout preparation")
+        bind_payment(request, raw["mandate_id"])
+        identity = wallet_auth.identity(sid)
+        if identity:
+            mandates = payments.snapshot(sid)["mandates"]
+            mandate = next((m for m in mandates if m["id"] == raw["mandate_id"]), None)
+            if not mandate or address(mandate["payer"]) != address(identity["address"]):
+                raise HTTPException(403, "payment limit must use your signed-in wallet")
+        return checkout.prepare(sid, cid, raw["mandate_id"])
 
     @app.post("/api/sessions")
     def sessions(raw: dict, request: Request):
@@ -461,6 +514,14 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     @app.get("/workspace.css")
     def workspace_stylesheet():
         return FileResponse(web / "workspace.css")
+
+    @app.get("/commerce.js")
+    def commerce_javascript():
+        return FileResponse(web / "commerce.js")
+
+    @app.get("/commerce.css")
+    def commerce_stylesheet():
+        return FileResponse(web / "commerce.css")
 
     @app.get("/assets/app-engine.svg")
     def engine_logo():

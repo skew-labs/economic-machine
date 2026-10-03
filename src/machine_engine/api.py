@@ -20,7 +20,7 @@ from .connections import PROFILES
 from .workspace import Workspace, now_iso
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSETS = {"app.js", "app.css", "wallet.js", "console-theme.css", "operations.js", "operations.css", "workspace.css",
+ASSETS = {"app.js", "app.css", "wallet.js", "console-theme.css", "operations.js", "operations.css", "workspace.css", "commerce.js", "commerce.css",
           "agents.js", "data.js", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/app-engine.svg"}
 
 

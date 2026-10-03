@@ -1,9 +1,9 @@
 {
   "schema": "machine-line-audit-1",
   "engine_implementation": {
-    "files": 80,
-    "physical": 21849,
-    "nonblank": 20488
+    "files": 83,
+    "physical": 22751,
+    "nonblank": 21359
   },
   "native_cpp_implementation": {
     "files": 21,
@@ -11,14 +11,14 @@
     "nonblank": 6310
   },
   "tests": {
-    "files": 38,
-    "physical": 7485,
-    "nonblank": 6738
+    "files": 39,
+    "physical": 7935,
+    "nonblank": 7150
   },
   "operational_scripts": {
-    "files": 32,
-    "physical": 3693,
-    "nonblank": 3296
+    "files": 33,
+    "physical": 3752,
+    "nonblank": 3348
   },
   "implementation_files": [
     {
@@ -93,13 +93,13 @@
     },
     {
       "path": "src/machine_commerce/access.py",
-      "physical": 212,
-      "nonblank": 193
+      "physical": 219,
+      "nonblank": 200
     },
     {
       "path": "src/machine_commerce/api.py",
-      "physical": 485,
-      "nonblank": 413
+      "physical": 546,
+      "nonblank": 465
     },
     {
       "path": "src/machine_commerce/atlas.py",
@@ -107,9 +107,14 @@
       "nonblank": 247
     },
     {
+      "path": "src/machine_commerce/checkout.py",
+      "physical": 285,
+      "nonblank": 266
+    },
+    {
       "path": "src/machine_commerce/datapass.py",
-      "physical": 339,
-      "nonblank": 302
+      "physical": 360,
+      "nonblank": 322
     },
     {
       "path": "src/machine_commerce/domain.py",
@@ -143,8 +148,8 @@
     },
     {
       "path": "src/machine_commerce/portal.py",
-      "physical": 429,
-      "nonblank": 383
+      "physical": 431,
+      "nonblank": 385
     },
     {
       "path": "src/machine_commerce/providers.py",
@@ -253,8 +258,18 @@
     },
     {
       "path": "web/app.js",
-      "physical": 638,
-      "nonblank": 634
+      "physical": 657,
+      "nonblank": 653
+    },
+    {
+      "path": "web/commerce.css",
+      "physical": 53,
+      "nonblank": 52
+    },
+    {
+      "path": "web/commerce.js",
+      "physical": 312,
+      "nonblank": 311
     },
     {
       "path": "web/console-theme.css",
@@ -263,13 +278,13 @@
     },
     {
       "path": "web/data.js",
-      "physical": 102,
-      "nonblank": 101
+      "physical": 165,
+      "nonblank": 164
     },
     {
       "path": "web/index.html",
-      "physical": 88,
-      "nonblank": 85
+      "physical": 92,
+      "nonblank": 89
     },
     {
       "path": "web/operations.css",
@@ -298,8 +313,8 @@
     },
     {
       "path": "web/wallet.js",
-      "physical": 63,
-      "nonblank": 63
+      "physical": 138,
+      "nonblank": 138
     },
     {
       "path": "web/workspace.css",
@@ -454,6 +469,11 @@
       "nonblank": 27
     },
     {
+      "path": "tests/test_checkout.py",
+      "physical": 266,
+      "nonblank": 236
+    },
+    {
       "path": "tests/test_commerce.py",
       "physical": 208,
       "nonblank": 182
@@ -465,8 +485,8 @@
     },
     {
       "path": "tests/test_datapass_reader.py",
-      "physical": 160,
-      "nonblank": 141
+      "physical": 213,
+      "nonblank": 188
     },
     {
       "path": "tests/test_datapass_resale.py",
@@ -495,8 +515,8 @@
     },
     {
       "path": "tests/test_engine_portal.py",
-      "physical": 84,
-      "nonblank": 70
+      "physical": 89,
+      "nonblank": 75
     },
     {
       "path": "tests/test_engine_workspace.py",
@@ -540,8 +560,8 @@
     },
     {
       "path": "tests/test_portal.py",
-      "physical": 125,
-      "nonblank": 104
+      "physical": 130,
+      "nonblank": 109
     },
     {
       "path": "tests/test_qwen_comparison.py",
@@ -580,8 +600,8 @@
     },
     {
       "path": "tests/wallet_client.test.cjs",
-      "physical": 48,
-      "nonblank": 48
+      "physical": 169,
+      "nonblank": 167
     },
     {
       "path": "native/tests/conformance.cpp",

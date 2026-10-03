@@ -1,0 +1,230 @@
+{
+  "checked_at": "2026-10-03T06:26:48.049Z",
+  "url": "https://machine.148-113-153-116.nip.io/commerce/console",
+  "scope": "REAL_DEPLOYED_SIGNED_OUT_UI",
+  "accepted": true,
+  "samples": [
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 1280,
+      "requested": 1280,
+      "view": "market",
+      "width": 1280
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 1280,
+      "requested": 1280,
+      "view": "subscriptions",
+      "width": 1280
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 1280,
+      "requested": 1280,
+      "view": "data",
+      "width": 1280
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 1280,
+      "requested": 1280,
+      "view": "keys",
+      "width": 1280
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 1280,
+      "requested": 1280,
+      "view": "funds",
+      "width": 1280
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 768,
+      "requested": 768,
+      "view": "market",
+      "width": 768
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 768,
+      "requested": 768,
+      "view": "subscriptions",
+      "width": 768
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 768,
+      "requested": 768,
+      "view": "data",
+      "width": 768
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 768,
+      "requested": 768,
+      "view": "keys",
+      "width": 768
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 768,
+      "requested": 768,
+      "view": "funds",
+      "width": 768
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 390,
+      "requested": 390,
+      "view": "market",
+      "width": 390
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 390,
+      "requested": 390,
+      "view": "subscriptions",
+      "width": 390
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 390,
+      "requested": 390,
+      "view": "data",
+      "width": 390
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 390,
+      "requested": 390,
+      "view": "keys",
+      "width": 390
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 390,
+      "requested": 390,
+      "view": "funds",
+      "width": 390
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 320,
+      "requested": 320,
+      "view": "market",
+      "width": 320
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 320,
+      "requested": 320,
+      "view": "subscriptions",
+      "width": 320
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 320,
+      "requested": 320,
+      "view": "data",
+      "width": 320
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 320,
+      "requested": 320,
+      "view": "keys",
+      "width": 320
+    },
+    {
+      "brokenImages": [],
+      "horizontalOverflow": false,
+      "outsideControls": [],
+      "pageWidth": 320,
+      "requested": 320,
+      "view": "funds",
+      "width": 320
+    },
+    {
+      "outsideControls": [],
+      "overflow": false,
+      "scrollWidth": 1280,
+      "stage": "FINAL_DATA_UI",
+      "view": "#data",
+      "width": 1280
+    },
+    {
+      "outsideControls": [],
+      "overflow": false,
+      "scrollWidth": 768,
+      "stage": "FINAL_DATA_UI",
+      "view": "#data",
+      "width": 768
+    },
+    {
+      "outsideControls": [],
+      "overflow": false,
+      "scrollWidth": 390,
+      "stage": "FINAL_DATA_UI",
+      "view": "#data",
+      "width": 390
+    },
+    {
+      "outsideControls": [],
+      "overflow": false,
+      "scrollWidth": 320,
+      "stage": "FINAL_DATA_UI",
+      "view": "#data",
+      "width": 320
+    }
+  ],
+  "interactions": [
+    "compute filter truthfully shows no active compute merchant",
+    "Atlas Monthly shows 10 USDC for 30 days without automatic charge",
+    "expired block merchant cannot be purchased",
+    "DataPass purchase prompts for wallet sign-in",
+    "native purchase controls and release hashes are separated from publisher details"
+  ],
+  "customer_wallet_signatures": 0,
+  "customer_payments": 0,
+  "gpu_workloads": 0
+}

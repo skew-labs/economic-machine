@@ -1,15 +1,23 @@
 import hashlib
-import unittest
 import json
 import tempfile
+import unittest
 from pathlib import Path
 
 from eth_abi import encode
 from eth_utils import keccak
+from test_atlas import NOW, sample_report
 
 from economic_machine.values import MachineError
-from machine_commerce.datapass import CHAIN_ID, RPCS, USDC, DataPassChain, DataProducts, bytes32, release_identity
-from test_atlas import NOW, sample_report
+from machine_commerce.datapass import (
+    CHAIN_ID,
+    RPCS,
+    USDC,
+    DataPassChain,
+    DataProducts,
+    bytes32,
+    release_identity,
+)
 
 BUYER = "0x" + "1" * 40
 SELLER = "0x" + "2" * 40
@@ -24,6 +32,7 @@ class Reader:
         self.expiry = NOW + 100; self.accepted = True; self.offset = 0
         self.price = 10000; self.content = sample_report()["report_sha256"]
         self.wrong_release = False
+        self.purchase_token = 0
         self.asset = USDC
     def __call__(self, url, method, params):
         self.calls.append((method, params))
@@ -33,6 +42,8 @@ class Reader:
         if method == "eth_getCode": return CODE
         if method == "eth_call":
             selector = params[0]["data"][2:10]
+            if selector == keccak(text="purchaseIds(address,bytes32)")[:4].hex():
+                return "0x" + encode(["uint256"], [self.purchase_token]).hex()
             if selector == keccak(text="publishers(address)")[:4].hex():
                 return "0x" + encode(["bool"], [self.accepted]).hex()
             if selector == keccak(text="entitlement(uint256,address,bytes32,bytes32)")[:4].hex():
@@ -158,3 +169,45 @@ class DataPassReaderTests(unittest.TestCase):
             path.write_text("{}")
             self.assertEqual(service.version(self.report["report_sha256"]), self.report)
             with self.assertRaises(MachineError): service.version("../release")
+
+
+class PurchaseStatusTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.reader = Reader()
+        self.report = sample_report()
+        path = Path(self.tmp.name) / "atlas.json"
+        path.write_text(json.dumps(self.report))
+        chain = DataPassChain(CONTRACT, CODE_HASH, self.reader, lambda: NOW)
+        self.service = DataProducts(path, chain)
+        self.identity = {"address": BUYER, "chain_id": CHAIN_ID}
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_absent_finalized_purchase_does_not_authorize_payment_retry(self):
+        result = self.service.purchase_status(self.identity, "a" * 64)
+        self.assertEqual(result["status"], "NOT_FINALIZED")
+        self.assertFalse(result["safe_to_retry_payment"])
+        calls = [params for method, params in self.reader.calls if method == "eth_call"]
+        self.assertEqual(len(calls), 2)
+        self.assertTrue(all(params[0]["data"].endswith(BUYER[2:].rjust(64, "0") + "a" * 64) for params in calls))
+        self.assertEqual(result["evidence"]["sources"], list(RPCS))
+
+    def test_finalized_purchase_still_requires_owned_unexpired_release_before_delivery(self):
+        self.reader.purchase_token = 7
+        result = self.service.purchase_status(self.identity, "a" * 64)
+        self.assertEqual(result["token_id"], "7")
+        self.assertEqual(result["delivery"]["artifact_sha256"], self.report["report_sha256"])
+        self.reader.expiry = NOW
+        with self.assertRaises(PermissionError): self.service.purchase_status(self.identity, "a" * 64)
+        self.reader.expiry = NOW + 100
+        self.reader.accepted = False
+        with self.assertRaises(PermissionError): self.service.purchase_status(self.identity, "a" * 64)
+
+    def test_wrong_identity_or_rpc_disagreement_cannot_report_delivery(self):
+        with self.assertRaises(MachineError): self.service.purchase_status(None, "a" * 64)
+        with self.assertRaises(MachineError): self.service.purchase_status(self.identity | {"chain_id": 1}, "a" * 64)
+        self.reader.hashes[1] = "0x" + "b" * 64
+        with self.assertRaisesRegex(MachineError, "DISAGREEMENT"):
+            self.service.purchase_status(self.identity, "a" * 64)

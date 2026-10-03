@@ -1,4 +1,5 @@
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -103,6 +104,10 @@ class PortalHTTP(unittest.TestCase):
         self.assertIn('name="machine-api-prefix" content="/commerce"', response.text)
         self.assertIn('src="/commerce/app.js?v=', response.text)
         self.assertIn('src="/commerce/wallet.js?v=', response.text)
+        versions = re.findall(r'src="/commerce/(?:wallet|data|commerce)\.js\?v=([^"]+)', response.text)
+        self.assertEqual(len(versions), 3)
+        self.assertEqual(len(set(versions)), 1)
+        self.assertNotIn('atlas-20261003', versions)
         self.assertIn('href="/commerce/console-theme.css?v=', response.text)
         self.assertIn('href="/commerce/assets/ui-icons.svg?v=', response.text)
         self.assertNotIn('href="/assets/ui-icons.svg', response.text)

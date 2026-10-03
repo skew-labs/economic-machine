@@ -49,6 +49,11 @@ def main():
     paths.add("deploy/native-economics.conf")
     paths.update({"docs/CONSOLE_UX_20261003.md", "artifacts/atlas-release/console-ux-browser.json",
                   "artifacts/atlas-release/console-ux-site-deployment.json"})
+    paths.add("docs/SERVICE_COMMERCE.md")
+    for name in ["commerce-checkout-tests.log", "commerce-portal-tests.log", "commerce-portal-tests.initial.log",
+                 "commerce-recovery-tests.log", "commerce-wallet-tests.log", "commerce-native-tests.log",
+                 "commerce-wallet-native-tests.log", "commerce-cache-tests.log", "commerce-live-check.json", "commerce-browser.json"]:
+        paths.add("artifacts/atlas-release/" + name)
     files = [file_evidence(ROOT, path) for path in sorted(paths)]
     report = json.loads((ROOT / "artifacts/atlas-release/atlas.json").read_text())
     audit = json.loads((ROOT / "artifacts/atlas-release/source-audit.json").read_text())

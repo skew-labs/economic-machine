@@ -1,0 +1,16 @@
+✔ wallet flow requests only account access and personal signature, then verifies (2.687203ms)
+✔ rejected signature never reaches verification (1.014009ms)
+✔ account change during signing cannot log into the previous wallet (1.303136ms)
+✔ untrusted icons are data images rendered separately, not markup or remote tracking (0.773273ms)
+✔ x402 review signs exactly one EIP-3009 authorization and never sends a transaction (1.333245ms)
+✔ mismatched price, recipient, domain, chain, nonce or expired challenge stops before wallet signing (1.146544ms)
+✔ different payer account or network cannot approve a purchase (3.932885ms)
+✔ wallet change or rejection during payment signing produces no submission payload (0.641613ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 94.757387

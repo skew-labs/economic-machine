@@ -1,0 +1,13 @@
+/srv/skew/economic-machine-commerce-20261002/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_absent_finalized_purchase_does_not_authorize_payment_retry (test_datapass_reader.PurchaseStatusTests.test_absent_finalized_purchase_does_not_authorize_payment_retry) ... ok
+test_finalized_purchase_still_requires_owned_unexpired_release_before_delivery (test_datapass_reader.PurchaseStatusTests.test_finalized_purchase_still_requires_owned_unexpired_release_before_delivery) ... ok
+test_wrong_identity_or_rpc_disagreement_cannot_report_delivery (test_datapass_reader.PurchaseStatusTests.test_wrong_identity_or_rpc_disagreement_cannot_report_delivery) ... ok
+test_native_purchase_status_requires_auth_and_preserves_delivery_denial (test_checkout.CheckoutTests.test_native_purchase_status_requires_auth_and_preserves_delivery_denial) ... ok
+test_subscribed_delivery_checks_paid_access_and_expiry (test_checkout.CheckoutTests.test_subscribed_delivery_checks_paid_access_and_expiry) ... ok
+test_http_checkout_permissions_mandate_binding_and_asset_routes (test_checkout.CheckoutTests.test_http_checkout_permissions_mandate_binding_and_asset_routes) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.460s
+
+OK

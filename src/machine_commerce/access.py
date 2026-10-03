@@ -183,12 +183,19 @@ class Access:
                     or (len(parts) == 6 and parts[2:4] == ["trade", "orders"] and parts[5] == "reconcile")
                     or (len(parts) == 5 and parts[2] == "connections" and parts[4] == "sync")):
                 scope = "engine:write"
-        elif method == "GET" and path.startswith("/api/data/"):
+        elif method == "GET" and (path.startswith("/api/data/") or
+                (len(parts) == 5 and parts[1:3] == ["commerce", "subscriptions"] and parts[4] == "delivery")):
             scope = "data:read"
-        elif method == "GET" and len(parts) >= 2 and parts[1] in {"workspace", "market", "orders", "demands", "payments"}:
+        elif method == "GET" and (path == "/api/commerce/checkouts" or
+                (len(parts) == 4 and parts[1:3] == ["commerce", "checkouts"]) or
+                (len(parts) >= 2 and parts[1] in {"workspace", "market", "orders", "demands", "payments"})):
             scope = "read"
         elif method == "POST":
-            if path == "/api/demands":
+            if path == "/api/commerce/checkouts":
+                scope = "demands:write"
+            elif len(parts) == 5 and parts[1:3] == ["commerce", "checkouts"] and parts[4] == "prepare":
+                scope = "payments:request"
+            elif path == "/api/demands":
                 scope = "demands:write"
             elif path == "/api/supplies" or (len(parts) == 4 and parts[1] == "supplies" and parts[3] == "refresh"):
                 scope = "supplies:write"

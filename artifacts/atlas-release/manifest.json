@@ -1,6 +1,6 @@
 {
   "schema": "machine-release-proof-1",
-  "created_at": 1791004361,
+  "created_at": 1791008844,
   "files": [
     {
       "path": "LICENSE",
@@ -51,6 +51,56 @@
       "path": "artifacts/atlas-release/brief.json",
       "bytes": 20432,
       "sha256": "a77a374fec6c59b59197f5c94c1def6a1337949e19195b715d1ef5d5ed89f8fc"
+    },
+    {
+      "path": "artifacts/atlas-release/commerce-browser.json",
+      "bytes": 5204,
+      "sha256": "cbc96cd8ba909dedebf68ddc93ff8b7f35ddd1b01916c4dae08739b238c6653c"
+    },
+    {
+      "path": "artifacts/atlas-release/commerce-cache-tests.log",
+      "bytes": 520,
+      "sha256": "ebff66de355266558c0804c7e65de0bbadf9169afc4fb5cab93a5707cec90b37"
+    },
+    {
+      "path": "artifacts/atlas-release/commerce-checkout-tests.log",
+      "bytes": 2945,
+      "sha256": "9cd345d40f02c71def2222f5cb88f3d93a980300bdec8a3ef7c665e1051f2906"
+    },
+    {
+      "path": "artifacts/atlas-release/commerce-live-check.json",
+      "bytes": 3171,
+      "sha256": "3f8e6c2f780a79e8e1f1aabd8478bc56ee2bdd1080f5b421055dfd2ecfb3c24f"
+    },
+    {
+      "path": "artifacts/atlas-release/commerce-native-tests.log",
+      "bytes": 1438,
+      "sha256": "82798126dbb2a8ceacc5276aa878fa8344c901160571ea20732b7db40b23b614"
+    },
+    {
+      "path": "artifacts/atlas-release/commerce-portal-tests.initial.log",
+      "bytes": 1088,
+      "sha256": "2b68e0b22d796c86960dbb67ea3faa0bd90abd854f9bd5726f870c5d622666f6"
+    },
+    {
+      "path": "artifacts/atlas-release/commerce-portal-tests.log",
+      "bytes": 988,
+      "sha256": "8b708ad80940913c7cd14a7d1e252d7b4ac16d2d9bbfe0e1515cc4dd382c7e49"
+    },
+    {
+      "path": "artifacts/atlas-release/commerce-recovery-tests.log",
+      "bytes": 723,
+      "sha256": "1b323732ba0f6a209db578ccbf512d909c4fa8e5d5cd66b94a106baeaace0388"
+    },
+    {
+      "path": "artifacts/atlas-release/commerce-wallet-native-tests.log",
+      "bytes": 541,
+      "sha256": "c337de4cff0974717b1ef2db2abcbfc4c014217b12b0e9ae7330bef94e09ce1d"
+    },
+    {
+      "path": "artifacts/atlas-release/commerce-wallet-tests.log",
+      "bytes": 848,
+      "sha256": "0749f685601fbd30a64dc518fe7b17e872ebbda29426384e81663ca92d5f7010"
     },
     {
       "path": "artifacts/atlas-release/console-ux-browser.json",
@@ -124,8 +174,8 @@
     },
     {
       "path": "artifacts/atlas-release/line-count.json",
-      "bytes": 13137,
-      "sha256": "5fe7b656fb02b65892e42c64dacfd2ce284218ae5cdc67c1c2e4061775826ed8"
+      "bytes": 13528,
+      "sha256": "7c33e2e1f84b048848d6852982f55afa608666756389529e9c50a17f86670cd2"
     },
     {
       "path": "artifacts/atlas-release/live-web-check.json",
@@ -218,9 +268,24 @@
       "sha256": "5949b279ad36ae4b5f62112b147b963024ad99f92be9a8c76e771be27281ff74"
     },
     {
+      "path": "artifacts/atlas-release/screenshots/services-desktop.jpg",
+      "bytes": 83968,
+      "sha256": "1edee9348208fbe274d1dfde93c2e171a890f1d667bd4bcd9395918aa4910d75"
+    },
+    {
       "path": "artifacts/atlas-release/screenshots/site-lens.png",
       "bytes": 57921,
       "sha256": "b52006151a3a74f6148170a0cc0094ee5aa6304f888541cd23af13fa02207e7b"
+    },
+    {
+      "path": "artifacts/atlas-release/screenshots/subscription-review-mobile.jpg",
+      "bytes": 21295,
+      "sha256": "a301b89c01dbf66b69422c170dda16ddfde344a3f40b52eb0f2bbddb7af917c6"
+    },
+    {
+      "path": "artifacts/atlas-release/screenshots/subscriptions-desktop.jpg",
+      "bytes": 62596,
+      "sha256": "b436b06a74d18899d34cc3a1379e79093047d2747103e0b6a0d4a1e01aae6951"
     },
     {
       "path": "artifacts/atlas-release/screenshots/tools-app-marks-desktop.jpg",
@@ -291,6 +356,11 @@
       "path": "docs/ECONOMIC_RELEASE_20261003.md",
       "bytes": 4572,
       "sha256": "a2e663ec2dc11cd2546472f5704d18db5f7b55f1dfcb455bba348d21423f4d27"
+    },
+    {
+      "path": "docs/SERVICE_COMMERCE.md",
+      "bytes": 9173,
+      "sha256": "20197e6ac53556f390d3cf94117518bbad3230707eb8ad00bb87eb91852f0643"
     },
     {
       "path": "native/CMakeLists.txt",
@@ -549,8 +619,8 @@
     },
     {
       "path": "scripts/release_proof.py",
-      "bytes": 6329,
-      "sha256": "e3e313566bb11ea77399fc6843fb867f019c53c7439b9d98f3ecd12db0d2f9ee"
+      "bytes": 6779,
+      "sha256": "b8e826ce14254a0f4f6dd932430387a1a9aef5d16a552c6d8136aa3cfd8a79b1"
     },
     {
       "path": "scripts/sepolia_demo.py",
@@ -561,6 +631,11 @@
       "path": "scripts/sepolia_merchant.py",
       "bytes": 16215,
       "sha256": "4fad0c4ec59d9377726166944f4d02050c02b8cbde5a5d9882deafaf0534b5cc"
+    },
+    {
+      "path": "scripts/verify_commerce_release.py",
+      "bytes": 2856,
+      "sha256": "0a9c0daf6578847e80a5c62eaf3e1396ff3bc9163b96c900bd9de7742e7286d1"
     },
     {
       "path": "scripts/verify_economics_live.py",
@@ -799,13 +874,13 @@
     },
     {
       "path": "src/machine_commerce/access.py",
-      "bytes": 12106,
-      "sha256": "d3c49c94d98456596c7e992974b6c82ff4d24d4a27c1c94af7aac51198bb7090"
+      "bytes": 12597,
+      "sha256": "053fbed8a171168289aaedbb9b99e9a18e65c05a1f228c91f85b350dc201ba26"
     },
     {
       "path": "src/machine_commerce/api.py",
-      "bytes": 22670,
-      "sha256": "2b4db7d304aca50ca33414ec254060e93e913f09a0d7ac2e86195791099f31fe"
+      "bytes": 25583,
+      "sha256": "42364d39e222a2e0076749af7642e314d8940d36fe8ee1da8582bed366900d33"
     },
     {
       "path": "src/machine_commerce/atlas.py",
@@ -813,9 +888,14 @@
       "sha256": "281ef1ba837d3fe408b6e1f26c62166db3adbe07841d78a231cfad9157c5d253"
     },
     {
+      "path": "src/machine_commerce/checkout.py",
+      "bytes": 18165,
+      "sha256": "ff2bb8ae5c2d960e99fd21280ee2e37baa26a2b958f6932a75dc42d8f3a3232d"
+    },
+    {
       "path": "src/machine_commerce/datapass.py",
-      "bytes": 21034,
-      "sha256": "26d6c15d28989551df7f1c45945c84d89e0e0759b5494fcc272ded320ed53931"
+      "bytes": 22321,
+      "sha256": "988cb7bd603e49198657653c8b65797c347e517cb2480320f0e86f93d85522e4"
     },
     {
       "path": "src/machine_commerce/domain.py",
@@ -849,8 +929,8 @@
     },
     {
       "path": "src/machine_commerce/portal.py",
-      "bytes": 24457,
-      "sha256": "958713b6b5be641e58ddfca22a48a5fd945dc92834b8a7deefe0d9e1cb00cdd6"
+      "bytes": 24716,
+      "sha256": "85026a2f8cf066c363184e2431e3379998c176f09cec87286b0373b4902fffc5"
     },
     {
       "path": "src/machine_commerce/providers.py",
@@ -889,8 +969,8 @@
     },
     {
       "path": "src/machine_engine/api.py",
-      "bytes": 12242,
-      "sha256": "c30f19b5475e53a117d39c0855d11628c3b14800ee00aad5874388c227f27c30"
+      "bytes": 12273,
+      "sha256": "84795fd310ea998bcc958bbfb42b52bf89b131f3b0ea3bd7bc0f08bbf55bff80"
     },
     {
       "path": "src/machine_engine/broker.py",
@@ -978,6 +1058,11 @@
       "sha256": "befc29bd5b526a5ea4fccbd0bca1af3ed602a0fd8d8227a70f81c53c674dbe75"
     },
     {
+      "path": "tests/test_checkout.py",
+      "bytes": 16702,
+      "sha256": "568289b5407ebb8ac3898f0340a31ff5cc7a14b4ad59fbd536ec27d07f5c4e22"
+    },
+    {
       "path": "tests/test_commerce.py",
       "bytes": 10086,
       "sha256": "19757cd31ba8182d3817d59fdde9a1e2fc47383a2a7b3d535436d57f4177562b"
@@ -989,8 +1074,8 @@
     },
     {
       "path": "tests/test_datapass_reader.py",
-      "bytes": 8612,
-      "sha256": "11ab2f84f2245101f4d74d768ad9010fc93fd7e1b73ba4aaa988dafc9e9a4d3d"
+      "bytes": 11080,
+      "sha256": "9f7de35c9b3807bf9d5888bfb1063e832945986974b17486d3fe48301e93ea7a"
     },
     {
       "path": "tests/test_datapass_resale.py",
@@ -1019,8 +1104,8 @@
     },
     {
       "path": "tests/test_engine_portal.py",
-      "bytes": 4383,
-      "sha256": "cce2c9c5fa1143b3b8777c238992234b07e6cd9c61ee288cf09158479fa5ad9e"
+      "bytes": 4746,
+      "sha256": "d4da61f471fddf53697417f3e1c5e246cc04206abcb9010fcd69825c44ab3e4c"
     },
     {
       "path": "tests/test_engine_workspace.py",
@@ -1064,8 +1149,8 @@
     },
     {
       "path": "tests/test_portal.py",
-      "bytes": 6168,
-      "sha256": "bd5ef7145f973b22981a66da13ffb06e09a8108e26402042322fa97e8600302c"
+      "bytes": 6426,
+      "sha256": "a5ea7c32a123042af69cce03bfc92b10cf48498a5dc6f4507d156d900db3469a"
     },
     {
       "path": "tests/test_qwen_comparison.py",
@@ -1104,8 +1189,8 @@
     },
     {
       "path": "tests/wallet_client.test.cjs",
-      "bytes": 2554,
-      "sha256": "f38e3685259bb668f6d48cbea6653cd06ea0b4477546617a84f35cfc29188d2f"
+      "bytes": 9650,
+      "sha256": "3f1110cc7e60ff6888d4292e8b1e43acfb194329da6aa2bb3dd78d2d6871819a"
     },
     {
       "path": "web/agents.js",
@@ -1119,8 +1204,8 @@
     },
     {
       "path": "web/app.js",
-      "bytes": 34698,
-      "sha256": "dc38ffd355b88e47682b82ad9af7f0ef3609267aaf463fe00bd518dad8fa537d"
+      "bytes": 35919,
+      "sha256": "b1fc6ab266546ac0a3376848b3327d5d56d9a8109f32daf556ef0096fcce4b58"
     },
     {
       "path": "web/assets/app-atlas.svg",
@@ -1148,19 +1233,29 @@
       "sha256": "75ec2f132050fc02e6aa1ebff7127862e4ff8437a936683f9ffb3080173eccb5"
     },
     {
+      "path": "web/commerce.css",
+      "bytes": 4479,
+      "sha256": "dd18b22a15acc29b8d71a71c89f1c4f8410895d18d09399eb63f3c63b267416e"
+    },
+    {
+      "path": "web/commerce.js",
+      "bytes": 23741,
+      "sha256": "e268c4b1b9462745d3fbb8cbf73ec8d4389aadb3c5f7f4982732212178c402d8"
+    },
+    {
       "path": "web/console-theme.css",
       "bytes": 847,
       "sha256": "f704b011090154634a9c681f207db7e327c52f72b67277c141bca1c6f062a076"
     },
     {
       "path": "web/data.js",
-      "bytes": 6537,
-      "sha256": "71648048fd093adc28ada489809a3f0ec91781e3a02b44eb59ea7678ef983f3c"
+      "bytes": 11628,
+      "sha256": "9d1462a088d5eb6604b4a7bb1817e2e7a09b172a3bfa04cdc3ddb9641badd484"
     },
     {
       "path": "web/index.html",
-      "bytes": 23738,
-      "sha256": "b906461d6eadd54d54bc30b43662b1b0c07a52841d970f608b42450cf91966da"
+      "bytes": 24932,
+      "sha256": "d1001a9303563b2ef1f49a1a6fa9a00219f1ac936a72882139fc0349e6e797ca"
     },
     {
       "path": "web/operations.css",
@@ -1189,8 +1284,8 @@
     },
     {
       "path": "web/wallet.js",
-      "bytes": 4121,
-      "sha256": "99b67b22f4377a0adffc3bcb20f822cd12cec9d38aee0ecb02a3c93663017231"
+      "bytes": 10439,
+      "sha256": "188e14490816fa846c97b858bc5f62d3181d3f2a6fe0114d9f516c814a3b4194"
     },
     {
       "path": "web/workspace.css",
@@ -1206,12 +1301,12 @@
     "deployment_proof_sha256": "ed24181d7869e91d5f6b3ebc09603236d2d45b4073d9c548dc6036bd75a6d458",
     "live_new_datapass_purchases": 0,
     "economic_operations": 20,
-    "engine_implementation_nonblank": 20488,
+    "engine_implementation_nonblank": 21359,
     "target_30000_engine_nonblank_reached": false,
     "native_authority": "CANDIDATE_ONLY",
     "agent_control": "SAME_ENGINE_DATABASE_SHARED_USDT_TURNOVER",
     "raw_archives_publicly_resold": false
   },
   "assurance": "SOURCE_AUDIT_PLUS_REPRODUCIBLE_LOCAL_EVM_AND_NATIVE_TESTS_NOT_PRODUCTION_CERTIFICATION",
-  "manifest_sha256": "731f1a471bc8e6a0078c40503ef41ae67be11d876b1a6865d6a070c079194c2a"
+  "manifest_sha256": "bfae14199ef99376e0ca48eb27587f5e8dd4a0729434fde3930d68d3c729cea7"
 }

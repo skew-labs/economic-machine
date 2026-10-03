@@ -270,6 +270,27 @@ class DataProducts:
             raise MachineError("AUTHENTICATED_ARBITRUM_WALLET_REQUIRED")
         return self.chain.purchase_plan(identity["address"], self.version(version), purchase_id)
 
+    def purchase_status(self, identity, purchase_id, version=None):
+        if not identity or identity.get("chain_id") != CHAIN_ID:
+            raise MachineError("AUTHENTICATED_ARBITRUM_WALLET_REQUIRED")
+        holder = address(identity["address"])
+        order_id = bytes32(purchase_id)
+        report = self.version(version)
+        values, evidence = self.chain.read_many([
+            call_data("purchaseIds(address,bytes32)", ["address", "bytes32"], [holder, order_id])])
+        try:
+            token_id = decode(["uint256"], values[0])[0]
+        except Exception as exc:
+            raise MachineError("INVALID_PURCHASE_ID_ABI") from exc
+        if not token_id:
+            # A finalized block can lag a broadcast. Never call this UNPAID or
+            # authorize a replay solely because its purchase ID is not visible.
+            return {"status": "NOT_FINALIZED", "purchase_id": "0x" + order_id.hex(),
+                    "token_id": None, "evidence": evidence, "safe_to_retry_payment": False}
+        delivery = self.delivery(token_id, identity, report["report_sha256"])
+        return {"status": "DELIVERED", "purchase_id": "0x" + order_id.hex(), "token_id": str(token_id),
+                "evidence": evidence, "delivery": delivery, "safe_to_retry_payment": False}
+
     def sell(self, identity, token_id, price_atoms, sale_duration_seconds, version=None):
         if not identity or identity.get("chain_id") != CHAIN_ID:
             raise MachineError("AUTHENTICATED_ARBITRUM_WALLET_REQUIRED")

@@ -17,6 +17,8 @@ const headings = {
   playground: ['Developer lab', 'Test a program with sample inputs. No account access or transactions.', null],
   usage: ['API usage', 'Reported consumption, with its source attached.', null],
   data: ['Data licenses', 'Version-bound compute intelligence. Wallet-owned access.', null],
+  market: ['Buy services', 'Data, compute and services. One budget-controlled checkout.', null],
+  subscriptions: ['Subscriptions', 'Choose a plan. Review its price and access period before paying.', null],
   keys: ['API keys', 'Give your agents access. Keep control of what they can spend.', 'Create API key'],
   funds: ['Service payments', 'External data and compute purchases. Limits stay in their own currency.', 'Create policy'],
   activity: ['Activity', 'Track execution, delivery and settlement in your workspace.', null]
@@ -131,10 +133,11 @@ function setView(view) {
   $('breadcrumb-current').textContent = title;
   $('page-description').textContent = description;
   $('primary-action').hidden = !action;
-  $('balance-shortcut').hidden = LOCAL_ENGINE || Boolean(window.EngineConsole?.isView(view));
+  $('balance-shortcut').hidden = LOCAL_ENGINE || !state.connected || state.mode === 'production' || Boolean(window.EngineConsole?.isView(view));
   $('primary-action').replaceChildren(uiIcon('plus'), document.createTextNode(action || ''));
   window.EngineConsole?.render(view);
   window.DataConsole?.render(view);
+  window.CommerceConsole?.render(view);
   document.querySelector('.sidebar').classList.remove('menu-open');
   $('navigation-toggle').setAttribute('aria-expanded', 'false');
   $('navigation-toggle').setAttribute('aria-label', 'Open navigation');
@@ -319,12 +322,24 @@ function closeDialog(id) {
   if (state.busy === id) return;
   $(id).close();
 }
-function openKey() {
+function openKey(preset = 'custom') {
   if (!state.connected) return notify('Connect to the API before creating a key.', true);
   $('key-form').reset();
+  $('key-preset').value = typeof preset === 'string' ? preset : 'custom';
+  applyKeyPreset();
   formError('key-error');
   updateKeyPolicy();
   $('key-dialog').showModal();
+}
+function applyKeyPreset() {
+  const presets = {
+    reader: ['read', 'engine:read', 'data:read'],
+    buyer: ['read', 'data:read', 'demands:write', 'payments:request'],
+    seller: ['read', 'supplies:write']
+  };
+  const scopes = presets[$('key-preset').value];
+  if (scopes) for (const node of document.querySelectorAll('#key-form input[name="scope"]')) node.checked = scopes.includes(node.value);
+  updateKeyPolicy();
 }
 function updateKeyPolicy() {
   const needsPolicy = $('order-scope').checked;
@@ -343,7 +358,7 @@ function updateKeyPolicy() {
     option.value = '';
     $('key-policy').append(option);
   } else if (policies.some((p) => p.id === selected)) $('key-policy').value = selected;
-  $('key-policy-help').textContent = policies.length ? 'All keys on this policy share one budget.' : 'Create a policy in Funds & limits before enabling order execution.';
+  $('key-policy-help').textContent = policies.length ? 'All keys on this policy share one budget.' : 'Create a policy in Service payments before enabling test order execution.';
   const needsMandate = $('payment-scope').checked;
   $('key-mandate-field').hidden = !needsMandate;
   $('key-mandate').required = needsMandate;
@@ -355,7 +370,7 @@ function updateKeyPolicy() {
     $('key-mandate').append(option);
   }
   if (!mandates.length) $('key-mandate').append(el('option', '', 'No active payment limits'));
-  $('key-mandate-help').textContent = 'Create a payment limit in Funds & limits. Linked keys share its budget.';
+  $('key-mandate-help').textContent = mandates.length ? 'Keys linked to this limit share its budget. Wallet signing stays external.' : 'First create a payment limit in Buy services or Service payments, then return to create this buyer key.';
   $('order-scope').disabled = state.mode === 'production';
   $('create-key-submit').disabled = (needsPolicy && !policies.length) || (needsMandate && !mandates.length);
 }
@@ -480,6 +495,8 @@ $('refresh').addEventListener('click', () => window.EngineConsole?.isView(state.
 $('balance-shortcut').addEventListener('click', () => setView('funds'));
 $('primary-action').addEventListener('click', () => state.view === 'keys' ? openKey() : state.mode === 'production' ? openMandate() : openPolicy());
 $('key-form').addEventListener('submit', createKey);
+$('key-preset').addEventListener('change', applyKeyPreset);
+$('key-limit-setup').addEventListener('click', () => { closeDialog('key-dialog'); setView('funds'); });
 $('order-scope').addEventListener('change', updateKeyPolicy);
 $('payment-scope').addEventListener('change', updateKeyPolicy);
 $('policy-form').addEventListener('submit', createPolicy);
@@ -521,6 +538,7 @@ async function initialize() {
       $('balance-shortcut').hidden = true;
       $('key-list').replaceChildren(empty('Connect your wallet', 'Sign in to manage agent access and payment limits.', null, '', 'wallet'));
       await window.EngineConsole?.refresh();
+      setView(state.view);
       return;
     }
     state.offers = (await api('/api/catalog')).offers;
@@ -622,6 +640,7 @@ $('wallet-logout').addEventListener('click', async () => {
 WalletBridge.subscribe(renderWallets);
 showWalletIdentity(null);
 window.MachineConsole = {api, state, notify, el, uiIcon, button, setView, API_PREFIX, PREVIEW, LOCAL_ENGINE,
+  refresh, openKey, signIn: () => $('wallet-account').click(),
   engineStatus: record => {
     if (LOCAL_ENGINE) {
       connection(true, 'Owner connected');
