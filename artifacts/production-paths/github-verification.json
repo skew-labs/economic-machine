@@ -1,0 +1,11 @@
+{
+  "accepted": true,
+  "manifest_sha256": "e41cf887cf81810f2c7cfb866e0d12d51d86899031b3ffeb82b7db9178fec7ac",
+  "files_checked": 355,
+  "assurance": "FILE_INTEGRITY_NOT_EXTERNAL_TRUTH_OR_PRODUCTION_CERTIFICATION",
+  "github_checkout_commit": "af45df317d1ae87d821294bceb8802f5d3728edf",
+  "retrieval": "FRESH_SHALLOW_CLONE_FROM_GITHUB_ON_CANADA",
+  "verified_at": 1791023707,
+  "tests_rerun": false,
+  "scope": "INDEPENDENT_SOURCE_AND_EVIDENCE_HASH_CHECK_NOT_NEW_CUSTOMER_SETTLEMENT"
+}
