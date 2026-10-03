@@ -250,3 +250,7 @@ must not be presented as an actual PayPal transaction.
 ## Machine Mining
 
 An additional useful-work protocol in the same Economic Machine console: requester-funded tasks, local C++ candidate search, sender-bound commit/reveal, an on-chain fixed-model verifier and exact token reward credits. See [Machine Mining](docs/MACHINE_MINING.md) for implementation, CLI and evidence boundaries. The first task is frozen constant-product route optimization. No public mining contract or emission reward is claimed by this release.
+
+## Solution Mining research
+
+A separate Max-Cut research mode in the same Mining console. Sixteen fixed problems per round, native CPU search, Solidity score verification, VRF callback gating, bounded future difficulty and a capped research token. The public console only computes candidates; no public issuance or live VRF is enabled. The confirmed commitment-slot saturation weakness keeps real issuance closed. See [Solution Mining](docs/SOLUTION_MINING.md) and `artifacts/solution` for actual measurements and unrun GPU/AI comparisons.

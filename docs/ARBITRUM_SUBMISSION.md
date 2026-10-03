@@ -2,6 +2,12 @@
 
 Updated 2026-10-04. New vertical: requester-funded useful-work tasks and verifiable token rewards, integrated into the existing owner console and C++ runtime. This extends the data/service commerce app; it does not relabel earlier x402 transfers as mining rewards.
 
+## Solution Mining research extension
+
+The same Mining console now has a Solution research mode: 32-node weighted Max-Cut, 16 problems per round, sender-bound commit/reveal, Solidity score replay, fixed research-token issuance caps and a bounded next-round difficulty controller. The public UI runs C++ candidate searches only. No public research-token issuance or live VRF subscription is enabled.
+
+The remote attack suite deliberately demonstrates a remaining admission weakness: 64 wallets can fill one problem’s commitment slots. This does not increase issuance, but it prevents claiming production-ready mining. CPU algorithm and local-EVM verification-cost comparisons are recorded; GPU and paid AI comparisons have not run. See [Solution Mining](SOLUTION_MINING.md) for the exact research scope and open gates. Existing public settlement evidence must not be relabeled as emission/mining activity.
+
 ## Machine Mining demonstration
 
 1. Open `/commerce/console#mining`, authenticate and freeze a work request.

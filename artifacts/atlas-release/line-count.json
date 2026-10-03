@@ -1,24 +1,24 @@
 {
   "schema": "machine-line-audit-1",
   "engine_implementation": {
-    "files": 101,
-    "physical": 26109,
-    "nonblank": 24467
+    "files": 105,
+    "physical": 26567,
+    "nonblank": 24896
   },
   "native_cpp_implementation": {
-    "files": 22,
-    "physical": 6792,
-    "nonblank": 6411
+    "files": 23,
+    "physical": 6901,
+    "nonblank": 6518
   },
   "tests": {
-    "files": 50,
-    "physical": 10118,
-    "nonblank": 9091
+    "files": 53,
+    "physical": 10361,
+    "nonblank": 9303
   },
   "operational_scripts": {
-    "files": 53,
-    "physical": 5486,
-    "nonblank": 4921
+    "files": 58,
+    "physical": 5711,
+    "nonblank": 5119
   },
   "implementation_files": [
     {
@@ -258,8 +258,8 @@
     },
     {
       "path": "src/machine_engine/mining_routes.py",
-      "physical": 30,
-      "nonblank": 22
+      "physical": 42,
+      "nonblank": 32
     },
     {
       "path": "src/machine_engine/native.py",
@@ -287,6 +287,16 @@
       "nonblank": 102
     },
     {
+      "path": "src/machine_engine/solution.py",
+      "physical": 96,
+      "nonblank": 81
+    },
+    {
+      "path": "src/machine_engine/solution_client.py",
+      "physical": 40,
+      "nonblank": 35
+    },
+    {
       "path": "src/machine_engine/task_checkout.py",
       "physical": 384,
       "nonblank": 359
@@ -308,8 +318,8 @@
     },
     {
       "path": "src/machine_engine/workspace.py",
-      "physical": 217,
-      "nonblank": 203
+      "physical": 220,
+      "nonblank": 206
     },
     {
       "path": "web/agents.js",
@@ -353,8 +363,8 @@
     },
     {
       "path": "web/mining.js",
-      "physical": 74,
-      "nonblank": 74
+      "physical": 99,
+      "nonblank": 99
     },
     {
       "path": "web/operations.css",
@@ -512,6 +522,11 @@
       "nonblank": 225
     },
     {
+      "path": "native/src/solution.cpp",
+      "physical": 109,
+      "nonblank": 107
+    },
+    {
       "path": "contracts/MachineCommerceEscrow.sol",
       "physical": 194,
       "nonblank": 175
@@ -525,6 +540,11 @@
       "path": "contracts/SkewDataPass.sol",
       "physical": 354,
       "nonblank": 314
+    },
+    {
+      "path": "contracts/SolutionMining.sol",
+      "physical": 173,
+      "nonblank": 168
     }
   ],
   "test_files": [
@@ -694,6 +714,11 @@
       "nonblank": 187
     },
     {
+      "path": "tests/test_solution.py",
+      "physical": 204,
+      "nonblank": 174
+    },
+    {
       "path": "tests/test_submission_evidence.py",
       "physical": 201,
       "nonblank": 166
@@ -759,6 +784,11 @@
       "nonblank": 174
     },
     {
+      "path": "native/tests/solution.cpp",
+      "physical": 23,
+      "nonblank": 22
+    },
+    {
       "path": "contracts/DataPassAdversaries.sol",
       "physical": 53,
       "nonblank": 49
@@ -767,6 +797,11 @@
       "path": "contracts/MiningAdversary.sol",
       "physical": 26,
       "nonblank": 25
+    },
+    {
+      "path": "contracts/SolutionVRFMock.sol",
+      "physical": 16,
+      "nonblank": 16
     },
     {
       "path": "contracts/TestCommerceToken.sol",

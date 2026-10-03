@@ -1,0 +1,16 @@
+{
+  "compiler_sha256": "fb03a29a517452b9f12bcf459ef37d0a543765bb3bbc911e70a87d6a37c30d5f",
+  "sources": {
+    "SolutionMining.sol": "27704396950824ff47a4bd2335076a8389220ba75ae3d4f69e20af8dd3ccb243",
+    "SolutionVRFMock.sol": "efbc4d3d01181594b5965f81d6301b22e49479280db26541a2a349779090c476"
+  },
+  "warnings": [],
+  "runtime_sizes": {
+    "SolutionMining": 7377,
+    "SolutionResearchToken": 1589,
+    "SolutionVRFMock": 989
+  },
+  "deployment": "NONE",
+  "vrf": "MOCK_TESTS_ONLY_NOT_PUBLIC_PROOF",
+  "emission": "LOCAL_EVM_RESEARCH_ONLY"
+}

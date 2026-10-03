@@ -1,0 +1,181 @@
+/srv/skew/economic-machine-commerce-20261002/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_admission_saturation_is_bounded_but_remains_research_dos_risk (test_solution.SolutionContract.test_admission_saturation_is_bounded_but_remains_research_dos_risk) ... ok
+test_all16_qualified_round_emission_cap_and_future_threshold_only (test_solution.SolutionContract.test_all16_qualified_round_emission_cap_and_future_threshold_only) ... ERROR
+test_commitment_python_abi_and_immutable_seed_callback (test_solution.SolutionContract.test_commitment_python_abi_and_immutable_seed_callback) ... ok
+test_cpp_graph_score_parity_for_all16_problems (test_solution.SolutionContract.test_cpp_graph_score_parity_for_all16_problems) ... ERROR
+test_duplicate_canonical_solutions_one_reward_earlier_commit_wins (test_solution.SolutionContract.test_duplicate_canonical_solutions_one_reward_earlier_commit_wins) ... ERROR
+test_duplicate_randomness_and_pending_round_no_reroll (test_solution.SolutionContract.test_duplicate_randomness_and_pending_round_no_reroll) ... ok
+test_local_evm_emission_only_after_finalized_winner_once (test_solution.SolutionContract.test_local_evm_emission_only_after_finalized_winner_once) ... ERROR
+test_no_valid_answers_no_emission_and_bounded_difficulty (test_solution.SolutionContract.test_no_valid_answers_no_emission_and_bounded_difficulty) ... ok
+test_sender_round_problem_binding_and_reveal_order_tie (test_solution.SolutionContract.test_sender_round_problem_binding_and_reveal_order_tie) ... ERROR
+test_vrf_spoof_timeout_and_late_callback_cannot_restart (test_solution.SolutionContract.test_vrf_spoof_timeout_and_late_callback_cannot_restart) ... ok
+test_withholding_cannot_lower_below_floor_or_mint_any_tokens (test_solution.SolutionContract.test_withholding_cannot_lower_below_floor_or_mint_any_tokens) ... ok
+test_exact_small_graph_and_canonical_duplicate (test_solution.SolutionNative.test_exact_small_graph_and_canonical_duplicate) ... ok
+test_malformed_bounds_and_research_only_api (test_solution.SolutionNative.test_malformed_bounds_and_research_only_api) ... FAIL
+test_private_seal_restart_reveal_and_tamper_detection (test_solution.SolutionNative.test_private_seal_restart_reveal_and_tamper_detection) ... ERROR
+test_random_and_anneal_same_budget_and_exact_rescore (test_solution.SolutionNative.test_random_and_anneal_same_budget_and_exact_rescore) ... ERROR
+
+======================================================================
+ERROR: test_all16_qualified_round_emission_cap_and_future_threshold_only (test_solution.SolutionContract.test_all16_qualified_round_emission_cap_and_future_threshold_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/tests/test_solution.py", line 102, in test_all16_qualified_round_emission_cap_and_future_threshold_only
+    bits=int(lab.calculate(request(problem=str(p)))['bits']);solutions.append(bits);self.commit(p,bits,salt,self.a)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/machine_engine/solution.py", line 84, in calculate
+    result={'model':'MAXCUT_V1_RESEARCH','input_sha256':digest(raw),'graph_sha256':digest(edges),
+                                                                                   ^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 57, in digest
+    return hashlib.sha256(canonical(value)).hexdigest()
+                          ^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 51, in canonical
+    check(value)
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 48, in check
+    check(child)
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 50, in check
+    raise MachineError("unsupported canonical value")
+economic_machine.values.MachineError: unsupported canonical value
+
+======================================================================
+ERROR: test_cpp_graph_score_parity_for_all16_problems (test_solution.SolutionContract.test_cpp_graph_score_parity_for_all16_problems)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/tests/test_solution.py", line 56, in test_cpp_graph_score_parity_for_all16_problems
+    result=lab.calculate(request(problem=str(p)));score,total=self.machine.functions.score(1,p,int(result['bits'])).call()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/machine_engine/solution.py", line 84, in calculate
+    result={'model':'MAXCUT_V1_RESEARCH','input_sha256':digest(raw),'graph_sha256':digest(edges),
+                                                                                   ^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 57, in digest
+    return hashlib.sha256(canonical(value)).hexdigest()
+                          ^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 51, in canonical
+    check(value)
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 48, in check
+    check(child)
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 50, in check
+    raise MachineError("unsupported canonical value")
+economic_machine.values.MachineError: unsupported canonical value
+
+======================================================================
+ERROR: test_duplicate_canonical_solutions_one_reward_earlier_commit_wins (test_solution.SolutionContract.test_duplicate_canonical_solutions_one_reward_earlier_commit_wins)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/tests/test_solution.py", line 86, in test_duplicate_canonical_solutions_one_reward_earlier_commit_wins
+    self.start();bits=int(SolutionLab().calculate(request())['bits']);salt=b'c'*32
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/machine_engine/solution.py", line 84, in calculate
+    result={'model':'MAXCUT_V1_RESEARCH','input_sha256':digest(raw),'graph_sha256':digest(edges),
+                                                                                   ^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 57, in digest
+    return hashlib.sha256(canonical(value)).hexdigest()
+                          ^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 51, in canonical
+    check(value)
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 48, in check
+    check(child)
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 50, in check
+    raise MachineError("unsupported canonical value")
+economic_machine.values.MachineError: unsupported canonical value
+
+======================================================================
+ERROR: test_local_evm_emission_only_after_finalized_winner_once (test_solution.SolutionContract.test_local_evm_emission_only_after_finalized_winner_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/tests/test_solution.py", line 62, in test_local_evm_emission_only_after_finalized_winner_once
+    self.start();bits=int(SolutionLab().calculate(request())['bits']);salt=b'a'*32
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/machine_engine/solution.py", line 84, in calculate
+    result={'model':'MAXCUT_V1_RESEARCH','input_sha256':digest(raw),'graph_sha256':digest(edges),
+                                                                                   ^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 57, in digest
+    return hashlib.sha256(canonical(value)).hexdigest()
+                          ^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 51, in canonical
+    check(value)
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 48, in check
+    check(child)
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 50, in check
+    raise MachineError("unsupported canonical value")
+economic_machine.values.MachineError: unsupported canonical value
+
+======================================================================
+ERROR: test_sender_round_problem_binding_and_reveal_order_tie (test_solution.SolutionContract.test_sender_round_problem_binding_and_reveal_order_tie)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/tests/test_solution.py", line 75, in test_sender_round_problem_binding_and_reveal_order_tie
+    self.start();bits=int(SolutionLab().calculate(request())['bits']);salt=b'b'*32
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/machine_engine/solution.py", line 84, in calculate
+    result={'model':'MAXCUT_V1_RESEARCH','input_sha256':digest(raw),'graph_sha256':digest(edges),
+                                                                                   ^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 57, in digest
+    return hashlib.sha256(canonical(value)).hexdigest()
+                          ^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 51, in canonical
+    check(value)
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 48, in check
+    check(child)
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 50, in check
+    raise MachineError("unsupported canonical value")
+economic_machine.values.MachineError: unsupported canonical value
+
+======================================================================
+ERROR: test_private_seal_restart_reveal_and_tamper_detection (test_solution.SolutionNative.test_private_seal_restart_reveal_and_tamper_detection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/tests/test_solution.py", line 188, in test_private_seal_restart_reveal_and_tamper_detection
+    path=Path(temp)/'salt.json';out=seal(request(),contract='0x'+'1'*40,round_id=1,miner='0x'+'2'*40,secret_file=path)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/machine_engine/solution_client.py", line 17, in seal
+    result=SolutionLab().calculate(raw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/machine_engine/solution.py", line 84, in calculate
+    result={'model':'MAXCUT_V1_RESEARCH','input_sha256':digest(raw),'graph_sha256':digest(edges),
+                                                                                   ^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 57, in digest
+    return hashlib.sha256(canonical(value)).hexdigest()
+                          ^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 51, in canonical
+    check(value)
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 48, in check
+    check(child)
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 50, in check
+    raise MachineError("unsupported canonical value")
+economic_machine.values.MachineError: unsupported canonical value
+
+======================================================================
+ERROR: test_random_and_anneal_same_budget_and_exact_rescore (test_solution.SolutionNative.test_random_and_anneal_same_budget_and_exact_rescore)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/tests/test_solution.py", line 164, in test_random_and_anneal_same_budget_and_exact_rescore
+    result=lab.calculate(request(algorithm=algorithm,budget='50000'))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/machine_engine/solution.py", line 84, in calculate
+    result={'model':'MAXCUT_V1_RESEARCH','input_sha256':digest(raw),'graph_sha256':digest(edges),
+                                                                                   ^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 57, in digest
+    return hashlib.sha256(canonical(value)).hexdigest()
+                          ^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 51, in canonical
+    check(value)
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 48, in check
+    check(child)
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/src/economic_machine/values.py", line 50, in check
+    raise MachineError("unsupported canonical value")
+economic_machine.values.MachineError: unsupported canonical value
+
+======================================================================
+FAIL: test_malformed_bounds_and_research_only_api (test_solution.SolutionNative.test_malformed_bounds_and_research_only_api)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/skew/economic-machine-commerce-20261002/build/solution-pr1/tests/test_solution.py", line 184, in test_malformed_bounds_and_research_only_api
+    self.assertEqual(response.status_code,200);self.assertEqual(response.json()['confirmed_reward'],'0')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 409 != 200
+
+----------------------------------------------------------------------
+Ran 15 tests in 10.444s
+
+FAILED (failures=1, errors=7)
