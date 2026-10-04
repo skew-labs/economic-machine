@@ -192,7 +192,7 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
         if not request.state.principal.owner:
             raise HTTPException(403, "owner approval required")
 
-    app.include_router(engine_routes(engine_workspace, require_owner=engine_owner))
+    app.include_router(engine_routes(engine_workspace, require_owner=engine_owner, mcp_origin=settings.origin))
     from machine_engine.task_webhooks import webhook_routes
     app.include_router(webhook_routes(hosted_engine))
 
