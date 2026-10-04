@@ -16,3 +16,7 @@ for each report version.
 
 Historical replay JSON under `artifacts/` is evidence or a test fixture, not current configuration,
 a live quote, a recommended deployment, or a user's authorization.
+
+The Inception member badge is the unmodified RGB SVG from NVIDIA's official program brand kit.
+[Badge provenance](site/assets/nvidia-inception-provenance.json) records its source and checksum.
+It is used for SKEW membership identification, not product or token endorsement.

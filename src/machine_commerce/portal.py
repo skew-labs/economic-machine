@@ -446,6 +446,7 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         if asset in {"", "index.html"}:
             return HTMLResponse((site / "index.html").read_text().replace('<head>', '<head><base href="/commerce/">'))
         if asset not in {"style.css", "site.js", "favicon.svg", "evidence.json", "assets/nvidia-logo.svg",
+                         "assets/nvidia-inception-badge.svg", "assets/nvidia-inception-provenance.json",
                          "assets/arbitrum-logo.svg", "assets/provider-orbit.svg", "assets/provider-relay.svg",
                          "assets/provider-archive.svg", "assets/provider-prism.svg", "assets/provider-signal.svg",
                          "assets/provider-scope.svg"}:
