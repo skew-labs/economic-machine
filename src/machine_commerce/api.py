@@ -22,6 +22,7 @@ from .payments import Payments
 from .providers import CommerceEngine, Workers
 from .store import Store
 from .wallet_auth import WalletAuth
+from .wallet_connectors import agent_wallet_status, public_wallet_config, wallet_csp, privy_asset
 from .x402 import address
 
 LOGGER = logging.getLogger(__name__)
@@ -153,9 +154,8 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
         response.headers["Cache-Control"] = "no-store"
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "same-origin"
-        response.headers["Content-Security-Policy"] = (
-            "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
-            "connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
+        response.headers["Content-Security-Policy"] = wallet_csp(
+            privy=request.url.path in {"/", "/console"} and bool(public_wallet_config()["privy"]))
         return response
 
     def buyer(request: Request):
@@ -193,6 +193,20 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
             raise HTTPException(403, "owner approval required")
 
     app.include_router(engine_routes(engine_workspace, require_owner=engine_owner, mcp_origin=settings.origin))
+
+    @app.get("/api/wallet-connectors/metamask")
+    def metamask_status(request: Request, sid=Depends(buyer), approved=Depends(engine_owner)):
+        return agent_wallet_status(wallet_auth.identity(sid), clock())
+
+    @app.post("/api/wallet-connectors/metamask/connect")
+    def metamask_connect(raw: dict, request: Request, sid=Depends(buyer), approved=Depends(engine_owner)):
+        require_keys(raw, set(), "agent wallet connection")
+        status = agent_wallet_status(wallet_auth.identity(sid), clock())
+        if status["status"] != "READY":
+            raise HTTPException(409, "A fresh, guard-mode Agent Wallet login is required.")
+        work = engine_workspace(request, sid)
+        return work.connect({"name": "MetaMask Agent Wallet", "profile": "arbitrum-one-wallet",
+                             "config": {"address": status["address"]}}, reuse=True)
     from machine_engine.task_webhooks import webhook_routes
     app.include_router(webhook_routes(hosted_engine))
 
@@ -551,6 +565,7 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
         return JSONResponse(order["receipt"], headers={"Content-Disposition":
             f'attachment; filename="{oid}-receipt.json"'})
 
+    @app.head("/")
     @app.get("/")
     def index():
         return FileResponse(web / "index.html")
@@ -566,6 +581,19 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     @app.get("/wallet.js")
     def wallet_javascript():
         return FileResponse(web / "wallet.js")
+
+    @app.get("/wallet-config")
+    def wallet_config():
+        return public_wallet_config()
+
+    @app.get("/wallet-connectors.js")
+    def wallet_connectors_script():
+        return FileResponse(web / "wallet-connectors.js")
+
+    @app.get("/privy/{asset}")
+    def managed_wallet_asset(asset):
+        target = privy_asset(web, asset)
+        return FileResponse(target) if target else JSONResponse({"error": "Not found"}, status_code=404)
 
     @app.get("/agents.js")
     def agents_javascript():
