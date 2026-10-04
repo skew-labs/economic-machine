@@ -425,6 +425,14 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
 
     @app.get("/{asset:path}")
     async def files(asset):
+        # Explicit brand exports, not a directory-wide static mount: runtime
+        # journals and deployment files must remain outside this public route.
+        brand_assets = {f"assets/brand/skew-{kind}-{color}.{extension}"
+                        for kind in ("mark", "wordmark") for color in ("ink", "white", "blue")
+                        for extension in ("svg", "png")}
+        if asset in {"brand.html", "brand.css", "assets/brand/skew-brand-kit.zip", *brand_assets}:
+            target = site / asset
+            return FileResponse(target) if target.is_file() else JSONResponse({"error": "Not found"}, status_code=404)
         tool_pages = {"tools": "tools.html", "tools/atlas": "atlas.html", "tools/site-lens": "site-lens.html", "tools/data-pass": "data-pass.html", "tools/engine": "engine-product.html"}
         if asset.rstrip("/") in tool_pages:
             return HTMLResponse((site / tool_pages[asset.rstrip("/")]).read_text().replace('<head>', '<head><base href="/commerce/">'))
@@ -433,7 +441,7 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
             return FileResponse(target) if target.is_file() else JSONResponse({"error": "Not found"}, status_code=404)
         if asset in {"swap-crypto.js", "assistant.js", "assistant.css", "swap-wallet.js", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "submission.css", "submission.js", "launch.js", "launch-wallet.js", "launch.css"}:
             return FileResponse(ROOT / "web" / asset)
-        if asset in {"assets/phantom-wallet.png", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/icon-provenance.json", "assets/app-engine.svg", "assets/app-atlas.svg", "assets/app-site-lens.svg", "assets/app-data-pass.svg"}:
+        if asset in {"assets/phantom-wallet.png", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/icon-provenance.json", "assets/app-engine.svg", "assets/app-atlas.svg", "assets/app-site-lens.svg", "assets/app-data-pass.svg", "assets/app-mining.svg", "assets/app-fuel.svg"}:
             return FileResponse(ROOT / "web" / asset)
         if asset in {"", "index.html"}:
             return HTMLResponse((site / "index.html").read_text().replace('<head>', '<head><base href="/commerce/">'))

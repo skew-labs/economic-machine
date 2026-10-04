@@ -1,7 +1,0 @@
-test_explicit_scp_error_is_sanitized (test_strands_boundary.StrandsBoundaryTests.test_explicit_scp_error_is_sanitized) ... ok
-test_real_sdk_tool_loop_with_bounded_stubbed_converse (test_strands_boundary.StrandsBoundaryTests.test_real_sdk_tool_loop_with_bounded_stubbed_converse) ... ok
-
-----------------------------------------------------------------------
-Ran 2 tests in 0.269s
-
-OK

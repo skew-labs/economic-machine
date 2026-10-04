@@ -1,6 +1,0 @@
-test_cpp_to_private_commit_reveal_claim_and_finalized_reward_readback (test_solution_operations.LocalEVMLifecycle.test_cpp_to_private_commit_reveal_claim_and_finalized_reward_readback) ... ok
-
-----------------------------------------------------------------------
-Ran 1 test in 3.082s
-
-OK

@@ -1,1 +1,0 @@
-{"scope": "ISOLATED_REAL_UI_API_CPP_NO_CHAIN_TX", "checks": ["ui_to_owner_scoped_frozen_job", "ui_to_cpp_route_search", "receipt_download_matches_api", "owner_job_persists_after_reload", "responsive_1440", "responsive_390"], "javascript_errors": [], "financial_transactions": 0, "new_mining_deployment": null}

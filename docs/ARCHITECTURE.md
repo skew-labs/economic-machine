@@ -1,89 +1,87 @@
-# Economic Machine for bilateral agent commerce
+# Architecture
 
-The engine executes policies shared by buying and selling agents. LLMs can draft typed policies and handle
-exceptions. The observation, matching, bounded negotiation, capital and settlement loops do not call an LLM.
+SKEW is a shared execution layer for agents that purchase services, trade licensed data and
+produce verifiable work. Economic Machine is the runtime; the console is its owner-facing interface.
+
+## Responsibility map
+
+| Layer | Owns | Does not own |
+| --- | --- | --- |
+| Agent / intent adapter | Interpret a request, propose a typed plan | Wallet authority or financial truth |
+| Engine | Typed state, policies, shared reservations, allowed transitions, receipts | Private keys or external finality |
+| Atlas / SiteLens | Source-linked observations and explicit capacity scenarios | Cloud inventory guarantees |
+| DataPass | Version identity, license rules, entitlement and delivery checks | Legal certification of upstream data |
+| Mining | Frozen jobs, deterministic scoring, bounded reward rules | Guaranteed commercial value or profit |
+| Swap / Fuel | Exact quotes and orders, gas acquisition, recovery | Free gas or arbitrary cross-chain routing |
+| External signer / chain / venue | Owner signature, external execution and settlement | Automatically satisfying off-chain delivery |
 
 ```mermaid
-flowchart TD
-    B[Buyer agent] --> D[Typed demand]
-    S[Seller agent] --> R[Seller rule]
-    E[Registration / version / expiry event] --> I[Data-type index]
-    D --> I
-    R --> I
-    I --> N[Bounded deterministic negotiation]
-    N -->|Outside either policy| X[Escalation + reason codes]
-    N -->|Both policies satisfied| T[Terms + hash + expiry]
-    O[Owner console] --> K[Scoped API key + capital mandate]
-    T --> G[Owner / version / terms / budget verification]
-    K --> G
-    A[Approved merchant + token + recipient registry] --> G
-    G --> P[Persistent preparation + x402 challenge]
-    P --> W[External customer signature]
-    W --> U[Commit SUBMITTED before one transmission]
-    U --> C[Canonical nonce + token transfer reconciliation]
-    C --> F[Confirmed payment / delivery missing / expired unpaid]
-    U -->|Ambiguous response| H[Capital hold + read-only recovery]
-    H --> C
+flowchart TB
+  Agent[Agent / intent adapter] --> Plan[Typed plan]
+  Console[Owner console] --> Approval[Exact-plan approval]
+  Plan --> Kernel[Engine: state + policy + invariants]
+  Approval --> Kernel
+  Kernel --> Reserve[Atomic shared reservation]
+  Reserve --> Execution[Configured execution adapter]
+  Execution --> External[Wallet / venue / service]
+  External --> Reconcile[Canonical receipt + account readback]
+  Reconcile --> Journal[Durable journal]
+  Journal --> Kernel
+  Execution -->|Timeout / uncertain| Hold[Keep reservation]
+  Hold --> Reconcile
 ```
 
-All boxes have runtime implementations except the external customer signer/merchant/facilitator themselves.
-Those external systems must be independently provisioned. They are fixtures in the current EVM tests.
-The active private service has no approved real resource registry and remains in development mode.
+## State and authority
 
-## Semantics
+1. Observations carry source, sequence and time. Old or incompatible state cannot silently become fresh.
+2. The compiler checks typed programs before registration. The kernel evaluates transitions and invariants.
+3. C++ or model outputs are candidates. A candidate does not gain permission to execute.
+4. The engine reserves capital before dispatch so competing agents cannot independently spend it.
+5. Owner approval binds the plan, amount, recipient, network and expiry accepted by the adapter.
+6. Submission uncertainty is persisted before external calls. Recovery follows the original operation.
+7. Settlement and delivery are separate states. A transaction hash alone is not completion.
 
-Demand and seller rules describe payment asset, price and quantity bounds, freshness, refresh cadence,
-response deadline, purpose and license. Negotiation is one bounded offer/counter/accept path, not an auction
-or a strategic multi-round bargaining model. It never relaxes either participant's constraints.
+Known transitions do not call a language model. Conversation providers sit outside the deterministic
+loop and may propose plans or explain state; a model cannot change the kernel's invariants.
 
-TradeTerms include both owners/policy IDs, data version, quantities, prices, usage conditions and explicit asset.
-Canonical JSON/SHA-256 binds them for admission. A version change invalidates earlier agreements; replaying
-an unchanged version does not extend its freshness. Agreement expiry is the minimum of policy/freshness bounds.
-`AGREED` means accepted economic conditions, not delivered data or a paid transaction.
+## Data products and work
 
-Demand registration returns its current agreements inside the same exclusive database transaction. Supply
-registration/refresh compares only the affected supply against same-type demands. No full cross-product replay.
-Each side/data type admits at most 100 active policies. Current inventory limits are per request, not globally reserved stock.
+```mermaid
+flowchart LR
+  Work[Frozen job] --> Search[Participant search]
+  Search --> Verify[Deterministic verifier]
+  Verify --> Rights[Publisher rights declaration]
+  Rights --> Product[Immutable DataPass product]
+  Product --> Purchase[Approved purchase]
+  Purchase --> Delivery[Entitlement + delivered content hash]
+  Product --> Reward[Eligible protocol reward]
+```
 
-Real payment mandates and the test-credit ledger are separate. Real assets require an explicit CAIP-19 identity
-and an operator-approved merchant/token/recipient binding. A TEST_CREDIT agreement cannot become a real payment.
-Each payment-enabled key binds to one mandate; reservation and confirmed spending share that mandate's budget.
+`SkewArtifactMining` requires winning work and a matching publication for token eligibility.
+It does not require a later customer purchase. The separate requester-funded and VRF research
+protocols use different reward semantics. A rights declaration is an accountable assertion, not
+an oracle of legal ownership.
 
-`PREPARED → CHALLENGE_READY → SUBMITTED → SETTLEMENT_REPORTED/UNKNOWN → SETTLED`.
-Alternative outcomes include `PAID_DELIVERY_MISSING`, `EXPIRED_UNPAID`, and never-transmitted `CANCELLED`.
-No phase substitutes for another: merchant reporting is not chain proof; payment is not data-quality assurance.
-The default x402 path cannot automatically refund a paid bad delivery. Separate escrow is an optional,
-undeployed contract path and is not silently inserted into an x402 transaction.
+DataPass and x402 are distinct payment rails. Access must not be billed through both for the same sale.
+Atlas can supply a report to a publisher, but a report hash grants no additional data rights.
 
-## Invariants and authority
+## Native execution boundary
 
-- Demand/supply agree on asset, price, quantity and usage constraints before payment admission.
-- The buyer owns the agreement and presents its current terms hash; current seller data version must match.
-- Only an owner creates credentials and mandates. Agents cannot raise their own limits.
-- Reservation plus confirmed spending never exceeds mandate budget; payment idempotency prevents re-preparation.
-- Platform signing authority is absent. Only a valid external payer signature reaches the approved merchant.
-- SUBMITTED commits before transmitting a bearer authorization; subsequent submit calls never resend it.
-- Ambiguity retains capital. Finalized unused-nonce evidence after expiration is required to release an uncertain unpaid hold.
-- Successful canonical receipt, exact AuthorizationUsed and exact Transfer are required to confirm spending.
-- Delivery remains missing if terms/version payload verification fails, even when the payment succeeded.
-- Production has authenticated provisioned owners, HTTPS cookies and persistent throttles; no seeded test funds or test orders.
-- Exact registered HTTPS URLs only; public DNS pinning, preserved certificate hostname, no redirects, bounded bodies/timeouts.
+The C++20 libraries use bounded input structs, checked arithmetic and fixed-capacity queues.
+Python binds to a configured library hash. Linux's worker pipeline separates search and validation
+and applies a process sandbox; provider and signing credentials remain outside the worker.
+The public CMake entry point builds libraries and conformance programs, with assertions retained
+in Release configurations. It does not claim kernel-bypass networking or end-to-end exchange latency.
 
-The 15-second recovery worker performs chain reads, not signing or payment retransmission. Stale/unknown
-outcomes are observable through payment records and degraded worker health. See [Production](PRODUCTION.md)
-for the detailed HTTP contract, supported token/signature types, limits and operation gates.
+## Source map
 
-## Storage and assurance
+- [Kernel and ISA](ENGINE_ARCHITECTURE.md): `src/economic_machine/`.
+- [Self-hosting](SELF_HOSTING.md): `src/machine_engine/`, `web/`.
+- [Financial primitives](ECONOMIC_PRIMITIVES.md): `native/include/machine/economics/`.
+- [Commerce](SERVICE_COMMERCE.md): `src/machine_commerce/`.
+- [Tool guides](../products/README.md): code, contracts and entry points for each tool.
+- [Security](../SECURITY.md): trust and signing boundaries.
 
-The service uses one process, SQLite WAL and BEGIN IMMEDIATE mutations. A hash journal is verified once
-per exclusive transaction before appends, without cross-transaction caching. The journal is local corruption
-detection; it has no external anchor against privileged database rewriting. RPC finality relies on an approved
-provider's finalized tag and canonical readback, not an independently proved parent-chain finality claim.
-
-Public customer rollout still requires real merchant integration, customer-authorized signing, approved live
-payment, backup/restore, alerting, operational review and independent security review. Multi-region failover,
-public signup/OIDC, push subscriptions, inventory reservations and large-market throughput remain outside this release.
-
-Sources: [x402 v2](https://github.com/x402-foundation/x402/blob/main/specs/x402-specification-v2.md),
-[exact EVM](https://github.com/x402-foundation/x402/blob/main/specs/schemes/exact/scheme_exact_evm.md),
-[EIP-3009](https://eips.ethereum.org/EIPS/eip-3009).
+Operate from a source checkout. Keep runtime databases, signer material, raw licensed inputs and
+operator configuration outside version control. Historical fixtures under `artifacts/` are replay
+inputs; they never confer live authority.

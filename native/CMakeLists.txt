@@ -22,3 +22,36 @@ target_compile_options(machine_economics PRIVATE -Wall -Wextra -Werror)
 add_executable(machine_economics_conformance tests/economics.cpp)
 target_link_libraries(machine_economics_conformance PRIVATE machine_economics)
 add_test(NAME economic_conformance COMMAND machine_economics_conformance)
+
+# All reusable native tools build through the same portable entry point.
+add_library(machine_mining SHARED src/mining.cpp)
+target_include_directories(machine_mining PUBLIC include)
+add_library(machine_solution SHARED src/solution.cpp)
+target_include_directories(machine_solution PUBLIC include)
+add_executable(machine_mining_conformance tests/mining.cpp)
+target_include_directories(machine_mining_conformance PRIVATE include)
+add_executable(machine_solution_conformance tests/solution.cpp)
+target_include_directories(machine_solution_conformance PRIVATE include)
+add_test(NAME mining_conformance COMMAND machine_mining_conformance)
+add_test(NAME solution_conformance COMMAND machine_solution_conformance)
+
+# The sandbox depends on Linux seccomp; do not silently publish an unsandboxed
+# pipeline on other platforms. The pure libraries above remain portable.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  add_executable(machine_solution_pipeline src/solution_pipeline.cpp)
+  target_link_libraries(machine_solution_pipeline PRIVATE Threads::Threads)
+  add_executable(machine_pipeline_conformance tests/solution_pipeline.cpp)
+  target_link_libraries(machine_pipeline_conformance PRIVATE Threads::Threads)
+  add_test(NAME pipeline_conformance COMMAND machine_pipeline_conformance)
+  add_test(NAME pipeline_sandbox COMMAND machine_solution_pipeline --sandbox-self-test)
+endif()
+
+# The conformance programs use assert(). Keep their checks enabled even when
+# users choose Release; otherwise CTest could return a false pass.
+foreach(target machine_conformance machine_program_conformance machine_economics_conformance
+               machine_mining_conformance machine_solution_conformance)
+  target_compile_options(${target} PRIVATE -UNDEBUG)
+endforeach()
+if(TARGET machine_pipeline_conformance)
+  target_compile_options(machine_pipeline_conformance PRIVATE -UNDEBUG)
+endif()
