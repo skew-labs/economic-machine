@@ -272,6 +272,62 @@ class GasRouterTests(unittest.TestCase):
             with self.subTest(expected=expected), self.assertRaisesRegex(MachineError, expected):
                 GasRouter(changed, self.net.api, lambda: self.net.now).prepare(TEST.address, 2000000)
 
+    def finalized_balance_reader(self, mutate=lambda url, method, params, value: value):
+        original = self.net.read
+        def read(url, method, params):
+            if method == 'eth_getBlockByNumber' and params[0] == 'finalized':
+                value = {'number': '0x30' if url == RPCS[0] else '0x20', 'hash': '0x'+'cd'*32}
+            elif method == 'eth_getBlockByNumber' and params[0] == '0x20':
+                value = {'number': '0x20', 'hash': '0x'+'cd'*32}
+            elif method == 'eth_getBalance':
+                # Settlement history was pruned. Only the common finalized
+                # state is available; latest-tip balances are forbidden.
+                self.assertEqual(params[1], '0x20')
+                value = hex(10**15)
+            else:
+                value = original(url, method, params)
+            return mutate(url, method, params, value)
+        return read
+
+    def test_pruned_settlement_balance_uses_common_finalized_block(self):
+        p = self.intent(); self.net.intent = p; self.net.provider_status = 'fulfilled'
+        result = GasRouter(self.finalized_balance_reader(), self.net.api).status(p)
+        self.assertTrue(result['chain_verified'])
+        for proof in result['proofs']:
+            self.assertEqual(proof['block_number'], 16)
+            self.assertEqual(proof['balance_block_number'], 32)
+            self.assertEqual(proof['balance_block_hash'], '0x'+'cd'*32)
+            self.assertEqual(proof['eth_balance_wei'], str(10**15))
+
+    def test_finalized_balance_rpc_disagreement_is_not_completion(self):
+        p = self.intent(); self.net.intent = p; self.net.provider_status = 'fulfilled'
+        for changed_field in ('balance', 'block_hash', 'block_number'):
+            def mutate(url, method, params, value):
+                if url == RPCS[1]:
+                    if changed_field == 'balance' and method == 'eth_getBalance':
+                        return hex(10**15+1)
+                    if method == 'eth_getBlockByNumber' and params[0] == '0x20':
+                        if changed_field == 'block_hash': return {**value, 'hash': '0x'+'ef'*32}
+                        if changed_field == 'block_number': return {**value, 'number': '0x21'}
+                return value
+            with self.subTest(field=changed_field), self.assertRaises(MachineError):
+                GasRouter(self.finalized_balance_reader(mutate), self.net.api).status(p)
+
+    def test_spent_balance_stays_in_reconciliation_and_unfinalized_fill_waits(self):
+        p = self.intent(); self.net.intent = p; self.net.provider_status = 'fulfilled'
+        def spent(url, method, params, value):
+            return '0x0' if method == 'eth_getBalance' else value
+        result = GasRouter(self.finalized_balance_reader(spent), self.net.api).status(p)
+        self.assertEqual(result['status'], 'BALANCE_RECONCILIATION_REQUIRED')
+        self.assertFalse(result['chain_verified'])
+        def lagging(url, method, params, value):
+            if url == RPCS[1] and method == 'eth_getBlockByNumber' and params[0] == 'finalized':
+                return {**value, 'number': '0xf'}
+            return value
+        result = GasRouter(self.finalized_balance_reader(lagging), self.net.api).status(p)
+        self.assertEqual(result['status'], 'AWAITING_FINALITY')
+        self.assertFalse(result['chain_verified'])
+
     def test_expired_order_requires_finalized_unfilled_proof_on_both_rpcs(self):
         p = self.intent(); self.net.intent = p
         self.net.now = p["valid_to"]+1

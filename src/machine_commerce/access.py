@@ -176,6 +176,8 @@ class Access:
                 scope = "engine:read"
             elif method == "POST" and len(parts) == 6 and parts[2:4] == ["fuel", "requests"] and parts[5] == "reconcile":
                 scope = "engine:write"
+            elif method == "POST" and len(parts) == 6 and parts[2:4] == ["fuel", "requests"] and parts[5] == "watch":
+                scope = "engine:read"
             elif len(parts) in {4, 5, 6} and parts[2] == "agents" and (
                     (method == "GET" and (len(parts) == 4 or (len(parts) == 6 and parts[4] == "runs")))
                     or (method == "POST" and len(parts) == 5 and parts[4] == "runs")):

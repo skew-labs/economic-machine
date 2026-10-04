@@ -15,6 +15,13 @@ from machine_commerce.gas_router import CHAIN, USDC, GasRouter
 # JSON integer precision and SQLite accounting representation, not a USD policy.
 MAX_LEDGER_ATOMS = (1 << 53) - 1
 
+
+def recover_fuel(work):
+    with work.runtime.connect() as db:
+        if not db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='engine_fuel_requests'").fetchone():
+            return 0
+    return Fuel(work).tracker().tick(limit=1)
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS engine_fuel_policies (
  id TEXT PRIMARY KEY, body TEXT NOT NULL, status TEXT NOT NULL, spent_atoms INTEGER NOT NULL);
@@ -207,6 +214,19 @@ class Fuel:
                 db.execute("UPDATE engine_fuel_requests SET status='EXPIRED_UNFILLED',held_atoms=0,receipt=? WHERE id=?", (canonical(result).decode(), fid))
                 self.work.event(db, "FUEL_EXPIRED_WITHOUT_FILL", {"id": fid})
         return {**self.get(fid), "settlement": result}
+
+    def tracker(self):
+        from machine_commerce.swap_tracking import SwapTracker
+        def read(sid):
+            with self.work.runtime.connect() as db:
+                row = db.execute('SELECT id FROM engine_fuel_requests WHERE swap_id=?', (sid,)).fetchone()
+            if not row:
+                raise MachineError('BOUND_FUEL_REQUEST_REQUIRED')
+            return self.reconcile(row['id'])['settlement']
+        return SwapTracker(self.swaps, read)
+
+    def watch(self, fid):
+        return self.tracker().watch(self.get(fid)['swap']['id'])
 
     def resume_review(self, fid, parent_hash):
         current = self.get(fid)

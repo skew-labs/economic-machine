@@ -38,6 +38,25 @@ class EngineFuelTests(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
+    def test_automatic_tracking_charges_once_and_keeps_parent_approval(self):
+        from machine_engine.fuel import recover_fuel
+        p=self.fuel.propose(self.request)
+        order=self.fuel.wallet_step(p['id'],'order',sign(p['swap']['permit']))
+        self.net.intent=order
+        self.fuel.wallet_step(p['id'],'submit',sign(order['order']))
+        self.net.provider_status='fulfilled'
+        with patch('machine_engine.fuel.GasRouter',return_value=self.router):
+            self.assertEqual(recover_fuel(self.work),1)
+            self.assertEqual(recover_fuel(self.work),0)
+        watched=self.fuel.watch(p['id'])
+        self.assertTrue(watched['chain_verified'])
+        self.assertFalse(watched['tracking']['active'])
+        latest=self.fuel.get(p['id'])
+        self.assertEqual(latest['charged_atoms'],2000000)
+        self.assertEqual(latest['held_atoms'],1000000)
+        self.assertEqual(latest['status'],'PARENT_REPLAN_REQUIRED')
+        self.assertEqual(self.net.posts,1)
+
     def test_shared_usdc_budget_covers_both_agents_and_parent_purchase(self):
         first = self.fuel.propose(self.request)
         self.assertEqual(first["held_atoms"], 3000000)
@@ -137,6 +156,10 @@ class EngineFuelTests(unittest.TestCase):
         self.assertEqual(result["charged_atoms"], 0)
 
     def test_agent_key_can_propose_and_reconcile_but_cannot_authorize_or_raise_limits(self):
+        reader = Principal("session", "reader", frozenset({"engine:read"}))
+        Access.authorize(reader, "POST", "/api/engine/fuel/requests/fuel-1/watch")
+        with self.assertRaises(PermissionError):
+            Access.authorize(reader, "POST", "/api/engine/fuel/requests/fuel-1/reconcile")
         writer = Principal("session", "key", frozenset({"engine:write", "engine:read"}))
         for method, path in [("POST", "/api/engine/fuel/requests"), ("GET", "/api/engine/fuel/requests/fuel-1"),
                              ("POST", "/api/engine/fuel/requests/fuel-1/reconcile")]:
@@ -161,6 +184,8 @@ class EngineFuelTests(unittest.TestCase):
                 self.assertEqual(p["wallet_review_url"], "/commerce/console?fuel=" + p["id"] + "#overview")
                 self.assertEqual(guest.get(path).status_code, 401)
                 self.assertEqual(agent.get(path).status_code, 200)
+                self.assertEqual(agent.post(path+"/watch", json={}).status_code, 200)
+                self.assertEqual(guest.post(path+"/watch", json={}).status_code, 401)
                 for suffix in ["order", "submit", "resume-review", "cancel-parent"]:
                     self.assertEqual(agent.post(path+"/"+suffix, json={}).status_code, 403)
                 order = owner.post(path+"/order", json={"signature": sign(p["swap"]["permit"])})

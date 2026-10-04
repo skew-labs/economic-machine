@@ -45,6 +45,11 @@ def fuel_routes(workspace_dependency, *, require_owner=None):
         require_keys(raw, set(), "fuel reconciliation")
         return Fuel(work).reconcile(fid)
 
+    @router.post("/fuel/requests/{fid}/watch")
+    def watch(fid: str, raw: dict, work=Depends(workspace_dependency)):
+        require_keys(raw, set(), "fuel tracking")
+        return Fuel(work).watch(fid)
+
     @router.post("/fuel/requests/{fid}/resume-review", dependencies=owner)
     def resume(fid: str, raw: dict, work=Depends(workspace_dependency)):
         require_keys(raw, {"parent_action_hash"}, "bound parent review")
