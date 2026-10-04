@@ -30,14 +30,11 @@
   }
   function showDraft(value) {
     draft = value;
-    const node = document.getElementById("data-plan");
-    node.textContent = JSON.stringify(value, null, 2);
-    node.hidden = false;
     if (value.purchase_id && value.transactions?.[1]?.purpose === 'VERSION_BOUND_LICENSE_PURCHASE') {
       nativeStage = 'REVIEW'; nativePlan=value; nativePurchase = {owner:value.from.toLowerCase(),purchase_id:value.purchase_id,version:value.report_sha256,stage:nativeStage,plan:value};
-      savePurchase(); paint();
+      savePurchase();
     }
-    if (value.schema === 'skew-datapass-publication-1') paint();
+    paint();
   }
   function savePurchase() {
     if (nativePurchase) sessionStorage.setItem(storageKey(nativePurchase.owner),JSON.stringify(nativePurchase));
