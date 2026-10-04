@@ -12,6 +12,7 @@ server. The Mac was used for source edits and remote orchestration.
 | `live-readonly-probe.json` | Verified mainnet quote | Actual CoW simulation using an unfunded ephemeral signer, public contract/RPC/feed checks, zero order submissions |
 | `browser-verification.json` | 4 checks passed | Public desktop/mobile rendering, actual quote HTTP path, invalidating an edited review, unauthenticated engine denial |
 | `deployment.json` | Matching SHA-256 | Release sources and installed service/nginx configuration |
+| `github-verification.json` | 6 critical files match | Independently downloaded public GitHub sources equal the deployed router, guard, store, budget engine and browser signature code |
 
 The static source checker passed for the new Python modules, tests and scripts.
 The 48 tests above are distinct cases across focused runs, not a repeated full
