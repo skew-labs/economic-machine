@@ -94,6 +94,7 @@ No wallet authentication is needed; this endpoint cannot sign, swap or mint.
 to `/`. Legacy product links under `/home/` redirect to their `/commerce/`
 counterparts. `/commerce/console` is the sole console entry point.
 The Sites worker must run before static assets (`assets.run_worker_first: true`)
-so a historical static copy cannot bypass these redirects. Only allowlisted
+and historical `/home` files must be removed from public build output, since
+asset dispatch can bypass worker redirects. Only allowlisted
 commerce session cookies reach the fixed upstream; landing requests do not
 forward credentials. Old application APIs remain inaccessible.
