@@ -1,6 +1,37 @@
 (function(root) {
   'use strict';
   const ADDRESS=/^0x[0-9a-fA-F]{40}$/, HASH=/^0x[0-9a-fA-F]{64}$/, HEX=/^0x[0-9a-fA-F]+$/;
+  function eth(value) {
+    const atoms=BigInt(value), whole=atoms/1000000000000000000n;
+    const fraction=(atoms%1000000000000000000n).toString().padStart(18,'0').replace(/0+$/,'');
+    return whole.toString()+(fraction?'.'+fraction:'');
+  }
+  function quantity(value, field) {
+    // Some MetaMask versions return the pending nonce as a JS number, unlike
+    // the hexadecimal quantities returned by the chain RPC. Never round it.
+    if (['pending_nonce','latest_nonce'].includes(field) && typeof value==='number'
+        && Number.isSafeInteger(value) && value>=0) return '0x'+BigInt(value).toString(16);
+    if (typeof value==='string' && HEX.test(value)) return value;
+    const detail=typeof value==='string'?JSON.stringify(value.slice(0,64)):
+      typeof value==='number'||value===null?String(value):typeof value;
+    throw new Error(`Wallet RPC returned an invalid ${field} (${detail}). No transaction was sent. Reconnect or check the wallet RPC.`);
+  }
+  async function inspectWallet(provider, owner) {
+    if (!provider || typeof provider.request!=='function' || !ADDRESS.test(owner || ''))
+      throw new Error('Connect the reviewed owner wallet first.');
+    const accounts=await provider.request({method:'eth_accounts',params:[]});
+    const chain=await provider.request({method:'eth_chainId',params:[]});
+    if (Number(chain)!==42161 || accounts?.[0]?.toLowerCase()!==owner.toLowerCase())
+      throw new Error('Select the reviewed owner wallet on Arbitrum One.');
+    const methods=[['balance','eth_getBalance',[owner,'latest']],
+      ['pending_nonce','eth_getTransactionCount',[owner,'pending']],
+      ['latest_nonce','eth_getTransactionCount',[owner,'latest']],['gas_price','eth_gasPrice',[]]];
+    const values=await Promise.all(methods.map(async ([field,method,params])=>{
+      const value=await provider.request({method,params});
+      return [field,quantity(value,field)];
+    }));
+    return {owner,chain_id:42161,...Object.fromEntries(values)};
+  }
   async function sendLaunch(provider, review, persist, sha256) {
     let attempted=false;
     try {
@@ -18,17 +49,9 @@
           BigInt(review.maximum_gas_wei)>BigInt(review.owner_cap_wei) || BigInt(tx.gasPrice)<=0n ||
           await sha256(tx.data)!==review.initcode_sha256)
         throw new Error('A current source-bound Arbitrum deployment review is required.');
-      const accounts=await provider.request({method:'eth_accounts'});
-      const chain=await provider.request({method:'eth_chainId'});
-      if (Number(chain)!==42161 || accounts[0]?.toLowerCase()!==review.owner.toLowerCase())
-        throw new Error('Select the reviewed owner wallet on Arbitrum One.');
-      const [balance,pending,latest,price]=await Promise.all([
-        provider.request({method:'eth_getBalance',params:[review.owner,'latest']}),
-        provider.request({method:'eth_getTransactionCount',params:[review.owner,'pending']}),
-        provider.request({method:'eth_getTransactionCount',params:[review.owner,'latest']}),
-        provider.request({method:'eth_gasPrice'})]);
-      if (![balance,pending,latest,price].every(x=>HEX.test(x)) || BigInt(balance)<BigInt(review.maximum_gas_wei))
-        throw new Error('Native ETH for the reviewed gas envelope is still required.');
+      const {balance,pending_nonce:pending,latest_nonce:latest,gas_price:price}=await inspectWallet(provider,review.owner);
+      if (BigInt(balance)<BigInt(review.maximum_gas_wei))
+        throw new Error(`Wallet RPC reports ${eth(balance)} ETH; this deployment needs up to ${eth(review.maximum_gas_wei)} ETH. If the verified balance is higher, refresh the wallet RPC before retrying. No transaction was sent.`);
       if (BigInt(pending)!==BigInt(tx.nonce) || BigInt(latest)!==BigInt(tx.nonce) || BigInt(price)>BigInt(tx.gasPrice))
         throw new Error('Nonce or fees changed. Refresh the deployment review.');
       const estimate=await provider.request({method:'eth_estimateGas',params:[tx]});
@@ -50,6 +73,6 @@
       throw error;
     }
   }
-  if (typeof module!=='undefined' && module.exports) {module.exports={sendLaunch};return;}
-  root.SkewLaunchWallet={sendLaunch};
+  if (typeof module!=='undefined' && module.exports) {module.exports={sendLaunch,inspectWallet,formatEth:eth};return;}
+  root.SkewLaunchWallet={sendLaunch,inspectWallet,formatEth:eth};
 })(typeof window!=='undefined'?window:globalThis);
