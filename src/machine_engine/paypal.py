@@ -172,6 +172,25 @@ class PayPalSandbox:
             "POST", "/v2/checkout/orders/" + provider_id(oid) + "/capture", request_id=request_id, body={}
         )
 
+    def read_capture(self, cid):
+        return self._request('GET','/v2/payments/captures/'+provider_id(cid))
+
+    def refund(self, cid, amount, request_id):
+        return self._request('POST','/v2/payments/captures/'+provider_id(cid)+'/refund',
+            request_id=request_id,body={'amount':{'currency_code':'USD','value':amount}})
+
+    def verify_webhook(self, headers, event, webhook_id):
+        mapping = {'auth_algo':'paypal-auth-algo','cert_url':'paypal-cert-url',
+            'transmission_id':'paypal-transmission-id','transmission_sig':'paypal-transmission-sig',
+            'transmission_time':'paypal-transmission-time'}
+        body = {name:headers.get(key) for name,key in mapping.items()}
+        if any(not isinstance(v,str) or not 1 <= len(v) <= 4096 for v in body.values()):
+            raise MachineError('PAYPAL_WEBHOOK_HEADERS_REQUIRED')
+        result = self._request('POST','/v1/notifications/verify-webhook-signature',
+            body={**body,'webhook_id':webhook_id,'webhook_event':event})
+        if result.get('verification_status') != 'SUCCESS':
+            raise MachineError('PAYPAL_WEBHOOK_SIGNATURE_INVALID')
+
 
 def bound_order(order, plan, merchant, oid=None, *, paid=False):
     """Require one exact, merchant-bound, full USD capture from a fresh GET."""

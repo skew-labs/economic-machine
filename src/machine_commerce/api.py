@@ -193,6 +193,8 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
             raise HTTPException(403, "owner approval required")
 
     app.include_router(engine_routes(engine_workspace, require_owner=engine_owner))
+    from machine_engine.task_webhooks import webhook_routes
+    app.include_router(webhook_routes(hosted_engine))
 
     from .datapass import DataProducts
     data_products = DataProducts()
@@ -604,6 +606,13 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     @app.get("/commerce.css")
     def commerce_stylesheet():
         return FileResponse(web / "commerce.css")
+
+    @app.get("/assistant.js")
+    @app.get("/assistant.css")
+    @app.get("/swap-wallet.js")
+    @app.get("/swap-crypto.js")
+    def conversation_asset(request: Request):
+        return FileResponse(web / request.url.path.removeprefix("/"))
 
     @app.get("/assets/app-engine.svg")
     def engine_logo():
