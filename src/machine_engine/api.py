@@ -201,7 +201,7 @@ def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:880
         return HTMLResponse(html)
 
     from .routes import engine_routes
-    router = engine_routes(lambda: work)
+    router = engine_routes(lambda: work, mcp_origin=origin)
     existing = {route.path for route in app.routes if hasattr(route, "path")}
     router.routes = [route for route in router.routes if getattr(route, "path", None) not in existing]
     app.include_router(router)

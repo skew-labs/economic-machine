@@ -170,7 +170,9 @@ class Access:
         parts = path.strip("/").split("/")
         scope = None
         if path.startswith("/api/engine/"):
-            if method == "POST" and path == "/api/engine/fuel/requests":
+            if path == "/api/engine/mcp" and method in {"GET","POST","DELETE"}:
+                scope = "engine:read"
+            elif method == "POST" and path == "/api/engine/fuel/requests":
                 scope = "engine:write"
             elif method == "GET" and len(parts) == 5 and parts[2:4] == ["fuel", "requests"]:
                 scope = "engine:read"
