@@ -117,12 +117,12 @@ function nativeFixture() {
     {to:contract,value:'0x0',data:'0x9e25f4a8'+p.release_id.slice(2)+p.report_sha256+p.terms_sha256+price+p.purchase_id.slice(2)}];
   return p;
 }
-function nativeProvider({allowance='0x2710', reject=false, missing=false, fail=false, account=a}={}) {
+function nativeProvider({allowance='0x2710', reject=false, missing=false, fail=false, account=a, chain='0x66eee'}={}) {
   const calls=[];
   return {calls,async request({method,params}) {
     calls.push({method,params});
     if(method==='eth_accounts') return [account];
-    if(method==='eth_chainId') return '0x66eee';
+    if(method==='eth_chainId') return chain;
     if(method==='eth_call') return allowance;
     if(method==='eth_sendTransaction') {
       if(reject) throw Object.assign(new Error('Rejected'),{code:4001});
@@ -166,4 +166,16 @@ test('wallet rejection is retryable but lost native submission or missing hash r
       assert.equal(error.submission_uncertain,!args.reject);return true;
     });
   }
+});
+test('mainnet DataPass uses native Arbitrum USDC and rejects the testnet asset and wallet',async()=>{
+  const p=nativeFixture(); p.chain_id=42161;
+  p.asset='0xaf88d065e77c8cc2239327c5edb3a432268e5831'; p.transactions[0].to=p.asset;
+  const wallet=nativeProvider({chain:'0xa4b1'});
+  await sendDataPassStep(wallet,p,b,0);
+  assert.equal(wallet.calls.at(-1).params[0].to,p.asset);
+  await assert.rejects(sendDataPassStep(nativeProvider(),p,b,0));
+  p.asset='0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d';p.transactions[0].to=p.asset;
+  const other=nativeProvider({chain:'0xa4b1'});
+  await assert.rejects(sendDataPassStep(other,p,b,0));
+  assert.equal(other.calls.some(c=>c.method==='eth_sendTransaction'),false);
 });

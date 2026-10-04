@@ -150,7 +150,7 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-        if request.url.path in {"/console", "/submission", "/engine"}:
+        if request.url.path in {"/console", "/submission", "/engine", "/launch"}:
             response.headers["Content-Security-Policy"] = (
                 "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
                 "connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
@@ -378,6 +378,17 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
     async def submission():
         return HTMLResponse((ROOT / "web/submission.html").read_text(), headers={"Cache-Control": "no-store"})
 
+    @app.get("/launch", response_class=HTMLResponse)
+    async def launch():
+        return HTMLResponse((ROOT / "web/launch.html").read_text(), headers={"Cache-Control": "no-store"})
+
+    @app.get("/demo/mainnet-launch")
+    async def launch_review():
+        path = ROOT / "artifacts/datapass-mining/latest-launch-review.json"
+        if not path.is_file() or path.is_symlink() or path.stat().st_size > 128000:
+            return JSONResponse({"status": "NO_REVIEW"}, status_code=503)
+        return JSONResponse(json.loads(path.read_text()), headers={"Cache-Control": "no-store"})
+
     @app.get("/console", response_class=HTMLResponse)
     async def console():
         html = (ROOT / "web/index.html").read_text()
@@ -420,7 +431,7 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         if asset in {"landing.css", "landing.js", "tools.css", "tools.js", "tools.html", "atlas.html", "site-lens.html", "data-pass.html", "engine-product.html", "atlas.json", "evidence.html", "evidence.css", "evidence.js"}:
             target = site / asset
             return FileResponse(target) if target.is_file() else JSONResponse({"error": "Not found"}, status_code=404)
-        if asset in {"swap-crypto.js", "assistant.js", "assistant.css", "swap-wallet.js", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "submission.css", "submission.js"}:
+        if asset in {"swap-crypto.js", "assistant.js", "assistant.css", "swap-wallet.js", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "submission.css", "submission.js", "launch.js", "launch-wallet.js", "launch.css"}:
             return FileResponse(ROOT / "web" / asset)
         if asset in {"assets/phantom-wallet.png", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/icon-provenance.json", "assets/app-engine.svg", "assets/app-atlas.svg", "assets/app-site-lens.svg", "assets/app-data-pass.svg"}:
             return FileResponse(ROOT / "web" / asset)

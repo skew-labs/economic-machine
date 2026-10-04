@@ -2,7 +2,7 @@
 (() => {
   const {el, button: makeButton, notify} = window.MachineConsole;
   const button = (text, action) => makeButton(text, 'button secondary', action);
-  let selected = null, identity = null, busy = false, mode = 'routes', solutionResult = null;
+  let selected = null, identity = null, busy = false, mode = 'token', solutionResult = null;
   const initialSolution = () => ({seed:'12345',problem:'0',budget:'100000',algorithm:'integer_anneal'});
   let solutionDraft = initialSolution();
   const download = (value, name) => {
@@ -21,7 +21,18 @@
       root.append(el('div','task-empty','Sign in to create a work request or run the native solver. API keys stay in your environment.'));
       return;
     }
-    const modes=el('div','dialog-actions');modes.append(button('Funded work requests',async()=>{mode='routes';await refresh();}),button('Solution research',async()=>{mode='solutions';await refresh();}));root.append(modes);
+    const modes=el('div','dialog-actions');modes.append(button('SKEW token mining',async()=>{mode='token';await refresh();}),button('Funded work requests',async()=>{mode='routes';await refresh();}),button('Solution research',async()=>{mode='solutions';await refresh();}));root.append(modes);
+    if(mode==='token'){
+      const panel=el('section','task-editor');root.append(panel);
+      panel.append(el('h3','','Work becomes a product. Verified products earn SKEW.'),
+        el('div','status-chip','Mainnet release prepared · signature pending'),
+        el('p','task-hint','Search a frozen routing problem, commit your result, then reveal it. The contract checks the integer calculation. An eligible DataPass release unlocks the winning miner’s reward.'),
+        el('p','task-hint','1 SKEW per accepted job · 160,000 SKEW maximum · zero premine. Publisher admission and a licensed release are required. This is not cash income or a promise of token value.'));
+      const link=el('a','button secondary','Review mainnet release');link.href='/commerce/launch';panel.append(link,
+        button('Try the search worker',async()=>{mode='routes';await refresh();}),
+        el('p','task-hint','No mainnet token address is announced until deployment is finalized and independently verified. The draft work-request reward is separate from SKEW issuance.'));
+      return;
+    }
     if(mode==='solutions'){
       const status=record.solution,panel=el('section','task-editor');root.append(panel);
       panel.append(el('h3','','Mine a verified solution'),el('p','task-hint','Split a weighted graph into two groups. Improve the crossing-edge score. The research contract has 16 problems per round and one capped reward per problem.'),

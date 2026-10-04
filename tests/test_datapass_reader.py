@@ -74,7 +74,7 @@ class DataPassReaderTests(unittest.TestCase):
     def test_delivery_requires_both_pinned_rpc_and_runtime(self):
         proof = self.verify()
         self.assertTrue(proof["accepted"])
-        self.assertEqual(proof["evidence"]["sources"], list(RPCS))
+        self.assertEqual(proof["evidence"]["sources"], ["ARBITRUM_PRIMARY", "ARBITRUM_VERIFIER"])
         self.assertEqual(proof["evidence"]["block_number"], 256)
         self.assertFalse(any(method.startswith("eth_send") for method, _ in self.reader.calls))
         self.assertEqual(proof["evidence"]["calls_at_same_block"], 2)
@@ -192,7 +192,7 @@ class PurchaseStatusTests(unittest.TestCase):
         calls = [params for method, params in self.reader.calls if method == "eth_call"]
         self.assertEqual(len(calls), 2)
         self.assertTrue(all(params[0]["data"].endswith(BUYER[2:].rjust(64, "0") + "a" * 64) for params in calls))
-        self.assertEqual(result["evidence"]["sources"], list(RPCS))
+        self.assertEqual(result["evidence"]["sources"], ["ARBITRUM_PRIMARY", "ARBITRUM_VERIFIER"])
 
     def test_finalized_purchase_still_requires_owned_unexpired_release_before_delivery(self):
         self.reader.purchase_token = 7
