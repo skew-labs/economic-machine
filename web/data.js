@@ -86,6 +86,7 @@
   function paint() {
     const root = document.getElementById("ops-data");
     root.replaceChildren();
+    window.WorkspaceVisuals?.dataHeading(root);
     const shopping = panel("Purchase data for your agents", "Use Buy services for x402 checkout or Subscriptions for monthly Atlas access. DataPass licenses use a separate contract purchase.");
     shopping.append(C.button("Buy services", "button secondary", () => C.setView("market")),
       C.button("Atlas subscription", "button secondary", () => C.setView("subscriptions")));
@@ -101,7 +102,7 @@
       product.append(C.el("p", "", "24-hour transferable access to an original derived report. Public prices do not establish available capacity."));
       const hashes = C.el("pre", "receipt-json", `Report ${item.version}\nTerms  ${item.terms_sha256}\nSources ${item.source_observation_root}`);
       const details = C.el("details", "release-details"); details.append(C.el("summary", "", "Release details"), hashes);
-      product.append(links, details); root.append(product);
+      product.append(links, details); window.WorkspaceVisuals?.releaseCard(product,item);root.append(product);
     }
     const live = catalog.datapass.status !== "NOT_DEPLOYED";
     const licensing = panel("Arbitrum DataPass", live ? "Configured contract. Each delivery verifies finalized state against two RPC providers." : "Contract validated locally on the server. Public Arbitrum deployment has not been recorded.");

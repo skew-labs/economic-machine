@@ -16,21 +16,19 @@
     if (busy || root.querySelector('textarea:focus')) return;
     root.replaceChildren();
     const data = record?.mining;
-    root.append(el('h2','',mode==='solutions'?'Verified solutions, bounded rewards':'Useful work earns tokens'), el('p','task-hint',mode==='solutions'?'Compare search strategies on the same fixed problem.':'Find a better execution route. C++ searches; the contract verifies the frozen calculation.'));
-    if (!writable() || !data) {
-      root.append(el('div','task-empty','Sign in to create a work request or run the native solver. API keys stay in your environment.'));
+    const modes=el('div','mining-tabs');
+    for(const [id,label] of [['token','SKEW overview'],['routes','Search worker'],['solutions','Research lab']]){
+      const tab=button(label,async()=>{mode=id;render(root,record,{request,refresh,writable});});
+      tab.setAttribute('aria-pressed',String(mode===id));modes.append(tab);
+    }root.append(modes);
+    if(mode==='token'){
+      window.WorkspaceVisuals.mining(root,record,{tryWorker:()=>{mode='routes';render(root,record,{request,refresh,writable});}});
       return;
     }
-    const modes=el('div','dialog-actions');modes.append(button('SKEW token mining',async()=>{mode='token';await refresh();}),button('Funded work requests',async()=>{mode='routes';await refresh();}),button('Solution research',async()=>{mode='solutions';await refresh();}));root.append(modes);
-    if(mode==='token'){
-      const panel=el('section','task-editor');root.append(panel);
-      panel.append(el('h3','','Work becomes a product. Verified products earn SKEW.'),
-        el('div','status-chip','Mainnet release prepared · signature pending'),
-        el('p','task-hint','Search a frozen routing problem, commit your result, then reveal it. The contract checks the integer calculation. An eligible DataPass release unlocks the winning miner’s reward.'),
-        el('p','task-hint','1 SKEW per accepted job · 160,000 SKEW maximum · zero premine. Publisher admission and a licensed release are required. This is not cash income or a promise of token value.'));
-      const link=el('a','button secondary','Review mainnet release');link.href='/commerce/launch';panel.append(link,
-        button('Try the search worker',async()=>{mode='routes';await refresh();}),
-        el('p','task-hint','No mainnet token address is announced until deployment is finalized and independently verified. The draft work-request reward is separate from SKEW issuance.'));
+    if (!writable() || !data) {
+      const panel=el('div','mining-workbench');panel.append(el('h2','',mode==='solutions'?'Explore the research worker':'Run your first search'),
+        el('p','task-hint','Connect your wallet to save a frozen job, run the C++ search and inspect the verified route.'),
+        button('Connect wallet',()=>window.MachineConsole.signIn()));root.append(panel);
       return;
     }
     if(mode==='solutions'){
@@ -46,10 +44,12 @@
       for(const [value,title] of [['integer_anneal','Integer annealing'],['greedy','Greedy local search'],['random','Random baseline']]){const option=el('option','',title);option.value=value;choose.append(option);}choose.value=solutionDraft.algorithm;choose.addEventListener('change',()=>{solutionDraft.algorithm=choose.value;});label.append(choose);form.append(label);
       const run=button(status?.enabled?'Search and verify':'Research worker unavailable',()=>{});run.type='submit';run.disabled=!status?.enabled;form.append(run);
       form.addEventListener('submit',async event=>{event.preventDefault();if(busy)return;busy=true;run.disabled=true;
+        run.textContent='Searching…';
+        const progress=el('div','worker-running','Evaluating the fixed graph. Waiting for the verifier…');progress.setAttribute('role','status');panel.append(progress);
         try{solutionResult=await request('/mining/solution/evaluate',{seed:fields.seed.value,problem:fields.problem.value,budget:fields.budget.value,search_seed:'42',algorithm:choose.value,bits:null});notify('Candidate verified locally. No tokens issued.');}
         catch(error){notify(error.message,true);}finally{busy=false;await refresh();}
       });panel.append(form);
-      if(solutionResult){const r=solutionResult;panel.append(el('h3','','Verified candidate'),el('p','task-hint',`Cut score ${r.score} / ${r.total_weight} · quality ${(r.quality_bps/100).toFixed(2)}% · ${r.edge_visits} edge visits`),
+      if(solutionResult){const r=solutionResult;window.WorkspaceVisuals.solution(panel,r);panel.append(el('h3','','Verified candidate'),el('p','task-hint',`Cut score ${r.score} / ${r.total_weight} · quality ${(r.quality_bps/100).toFixed(2)}% · ${r.edge_visits} edge visits`),
         el('p','task-hint','The score is exact. This search does not prove a global optimum. Confirmed rewards: 0.'),button('Download solution receipt',()=>download(r,'solution-receipt.json')));}
       panel.append(el('h3','','Use your own worker'),el('code','','python scripts/solution_cli.py search --seed 12345 --problem 0'),
         el('p','task-hint','Your agent can supply a bit string. Verify it locally before sealing; keep keys and the reveal salt on your machine. GPU and paid AI comparisons have not run.'));
@@ -85,12 +85,14 @@
         facts.append(el('dt','',key),el('dd','',value));
       }panel.append(facts);
       const run=button(data.enabled?'Run native solver':'Native solver unavailable',async()=>{
-        if(busy)return;busy=true;run.disabled=true;
+        if(busy)return;busy=true;run.disabled=true;run.textContent='Searching…';
+        const progress=el('div','worker-running','Searching allowed routes, then verifying the result…');progress.setAttribute('role','status');panel.append(progress);
         try{await request('/mining/jobs/'+current.id+'/solve',{budget:70000});notify('Search complete. Review the candidate before any chain action.');}
         catch(error){notify(error.message,true);}finally{busy=false;await refresh();}
       });run.disabled=!data.enabled;panel.append(run,button('Download frozen job',()=>download(current.snapshot,current.id+'.json')));
       if(current.result){
         const r=current.result;
+        window.WorkspaceVisuals.routeResult(panel,r);
         panel.append(el('h3','',r.valid?'Verified native candidate':'No feasible candidate'),
           el('p','task-hint',r.valid?`Route ${r.path.map(i=>i+1).join(' → ')} · net ${r.net_output} · cost ${r.cost} · ${r.expansions} expansions`:'Try different conditions or a larger search budget.'),
           el('p','task-hint',r.search_complete?'Complete search of the allowed frozen paths. No language-model calls.':'Bounded search stopped early. Optimality is not established.'),

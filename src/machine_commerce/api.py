@@ -635,6 +635,22 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     def commerce_stylesheet():
         return FileResponse(web / "commerce.css")
 
+    from .token_market import TokenMarket
+    market_feed = TokenMarket()
+
+    @app.get("/market/skew")
+    async def skew_market():
+        return JSONResponse(await market_feed.snapshot(), headers={"Cache-Control": "no-store"})
+
+    @app.get("/workspace-visuals.js")
+    @app.get("/workspace-visuals.css")
+    @app.get("/token-market.js")
+    @app.get("/token-market.css")
+    @app.get("/assets/skew-token.svg")
+    @app.get("/assets/app-mining.svg")
+    @app.get("/assets/app-atlas.svg")
+    @app.get("/assets/app-data-pass.svg")
+    @app.get("/assets/app-fuel.svg")
     @app.get("/assistant.js")
     @app.get("/assistant.css")
     @app.get("/swap-wallet.js")

@@ -159,6 +159,13 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
             response.headers["Cache-Control"] = "no-store"
         return response
 
+    from .token_market import TokenMarket
+    market_feed = TokenMarket()
+
+    @app.get("/market/skew")
+    async def skew_market():
+        return JSONResponse(await market_feed.snapshot(), headers={"Cache-Control": "no-store"})
+
     @app.options("/demo/run")
     async def preflight():
         return JSONResponse({}, headers={"Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -396,7 +403,7 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         html = html.replace('  <link rel="stylesheet" href="/operations.css?v=wallet-20261002-3">', '')
         html = html.replace('  <link rel="stylesheet" href="/workspace.css?v=wallet-20261002-3">', '')
         version = hashlib.sha256(b"".join((ROOT / "web" / name).read_bytes() for name in
-            ["index.html", "app.css", "app.js", "wallet.js", "wallet-connectors.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "assistant.js", "assistant.css", "swap-wallet.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "assets/app-engine.svg", "assets/ui-icons.svg"])
+            ["workspace-visuals.js", "workspace-visuals.css", "token-market.js", "token-market.css", "assets/skew-token.svg", "assets/app-atlas.svg", "assets/app-mining.svg", "assets/app-fuel.svg", "assets/app-data-pass.svg", "index.html", "app.css", "app.js", "wallet.js", "wallet-connectors.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "assistant.js", "assistant.css", "swap-wallet.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "assets/app-engine.svg", "assets/ui-icons.svg"])
             + ((ROOT / "web/privy/entry.js").read_bytes() if (ROOT / "web/privy/entry.js").is_file() else b"")).hexdigest()[:16]
         html = html.replace('  <link rel="stylesheet" href="/assistant.css?v=console-20261004">', '')
         html = html.replace("Machine Market | Console", "skew | Console")
@@ -414,8 +421,14 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         html = html.replace('src="/commerce.js', 'src="/commerce/commerce.js').replace('href="/commerce.css', 'href="/commerce/commerce.css')
         html = html.replace('href="/assets/ui-icons.svg', 'href="/commerce/assets/ui-icons.svg')
         html = html.replace('src="/assets/app-', 'src="/commerce/assets/app-').replace('href="/assets/app-', 'href="/commerce/assets/app-')
-        for asset in ("assistant.js", "swap-wallet.js", "swap-crypto.js"):
+        for asset in ("assistant.js", "swap-wallet.js", "swap-crypto.js", "token-market.js", "workspace-visuals.js"):
             html = html.replace('src="/' + asset, 'src="/commerce/' + asset)
+        html = html.replace('href="/token-market.css', 'href="/commerce/token-market.css').replace('href="/workspace-visuals.css', 'href="/commerce/workspace-visuals.css')
+        # Visual overrides load after the shared console theme, in every hosting mode.
+        for sheet in ("token-market.css", "workspace-visuals.css"):
+            tag = '<link rel="stylesheet" href="/commerce/' + sheet + '?v=visual-1">'
+            html = html.replace(tag, '').replace('</head>', tag + '</head>')
+        html = html.replace("visual-1", version)
         html = html.replace("console-20261004", version)
         html = html.replace("wallet-20261002-3", version)
         html = html.replace("control-20261003", version)
@@ -455,10 +468,10 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         if asset in {"landing.css", "landing.js", "tools.css", "tools.js", "tools.html", "atlas.html", "site-lens.html", "data-pass.html", "engine-product.html", "atlas.json", "evidence.html", "evidence.css", "evidence.js"}:
             target = site / asset
             return FileResponse(target) if target.is_file() else JSONResponse({"error": "Not found"}, status_code=404)
-        if asset in {"swap-crypto.js", "assistant.js", "assistant.css", "swap-wallet.js", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "submission.css", "submission.js", "launch.js", "launch-wallet.js", "launch.css"}:
-            return FileResponse(ROOT / "web" / asset)
-        if asset in {"assets/phantom-wallet.png", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/icon-provenance.json", "assets/app-engine.svg", "assets/app-atlas.svg", "assets/app-site-lens.svg", "assets/app-data-pass.svg", "assets/app-mining.svg", "assets/app-fuel.svg"}:
-            return FileResponse(ROOT / "web" / asset)
+        if asset in {"workspace-visuals.js", "workspace-visuals.css", "token-market.js", "token-market.css", "swap-crypto.js", "assistant.js", "assistant.css", "swap-wallet.js", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "submission.css", "submission.js", "launch.js", "launch-wallet.js", "launch.css"}:
+            return FileResponse(ROOT / "web" / asset, headers={"Cache-Control": "no-cache"})
+        if asset in {"assets/skew-token.svg", "assets/phantom-wallet.png", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/icon-provenance.json", "assets/app-engine.svg", "assets/app-atlas.svg", "assets/app-site-lens.svg", "assets/app-data-pass.svg", "assets/app-mining.svg", "assets/app-fuel.svg"}:
+            return FileResponse(ROOT / "web" / asset, headers={"Cache-Control": "no-cache"})
         if asset in {"", "index.html"}:
             return HTMLResponse((site / "index.html").read_text().replace('<head>', '<head><base href="/commerce/">'))
         if asset not in {"style.css", "site.js", "favicon.svg", "evidence.json", "assets/nvidia-logo.svg",
