@@ -45,6 +45,8 @@
         panel.append(button('Confirm payment after PayPal approval','button secondary',()=>act(path+'/capture',{plan_hash:p.hash})));
       }
       if(['AWAITING_APPROVAL','CAPTURING','CAPTURE_UNKNOWN'].includes(purchase.status))panel.append(button('Check payment status','button secondary',()=>act(path+'/reconcile',{})));
+      if(['PLANNED','AWAITING_APPROVAL','CAPTURING','CAPTURE_UNKNOWN','PAID','DELIVERED'].includes(purchase.status))panel.append(button('Request cancellation','button secondary',()=>act(path+'/cancel',{plan_hash:p.hash})));
+      if(purchase.status==='REFUND_REQUIRED')panel.append(button('Approve full sandbox refund','button secondary',()=>act(path+'/refund',{plan_hash:p.hash})));
       if(purchase.status==='PAID')panel.append(button('Prepare my result','button primary',()=>act(path+'/fulfill',{})));
       if(purchase.status==='DELIVERED')panel.append(button('Download result','button primary',async()=>{
         try{const result=await request(path+'/result');const url=URL.createObjectURL(new Blob([result.content],{type:result.content_type}));const a=el('a');a.href=url;a.download=result.filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('Result downloaded.');}catch(e){notify(e.message,true);}

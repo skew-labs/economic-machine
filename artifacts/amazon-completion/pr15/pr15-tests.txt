@@ -1,0 +1,63 @@
+/srv/skew/economic-machine-commerce-20261002/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_bedrock_org_deny_does_not_call_other_provider (test_task_results.LocalWorkTests.test_bedrock_org_deny_does_not_call_other_provider) ... ok
+test_bedrock_secret_never_enters_conversation_or_task (test_task_results.LocalWorkTests.test_bedrock_secret_never_enters_conversation_or_task) ... ok
+test_concurrent_retry_is_one_result_and_resumes_after_restart (test_task_results.LocalWorkTests.test_concurrent_retry_is_one_result_and_resumes_after_restart) ... ok
+test_http_result_requires_owner_and_validated_completion (test_task_results.LocalWorkTests.test_http_result_requires_owner_and_validated_completion) ... ok
+test_revision_invalidates_plan (test_task_results.LocalWorkTests.test_revision_invalidates_plan) ... ERROR
+test_two_real_plans_produce_different_bounded_results (test_task_results.LocalWorkTests.test_two_real_plans_produce_different_bounded_results) ... ok
+test_wrong_owner_expiry_tamper_and_changed_input_fail_closed (test_task_results.LocalWorkTests.test_wrong_owner_expiry_tamper_and_changed_input_fail_closed) ... ok
+test_daily_limit_counts_failed_attempts (test_assistant.AssistantTests.test_daily_limit_counts_failed_attempts) ... ok
+test_http_owner_boundary_and_cross_workspace_history (test_assistant.AssistantTests.test_http_owner_boundary_and_cross_workspace_history) ... ok
+test_last_preferences_are_not_invented (test_assistant.AssistantTests.test_last_preferences_are_not_invented) ... ok
+test_missing_budget_cannot_be_accepted (test_assistant.AssistantTests.test_missing_budget_cannot_be_accepted) ... ok
+test_owner_isolation (test_assistant.AssistantTests.test_owner_isolation) ... ok
+test_proposal_requires_review_and_task_acceptance_is_idempotent (test_assistant.AssistantTests.test_proposal_requires_review_and_task_acceptance_is_idempotent) ... ok
+test_provider_failure_is_durable_and_not_repeated (test_assistant.AssistantTests.test_provider_failure_is_durable_and_not_repeated) ... ok
+test_qwen_failure_never_leaks_provider_details (test_assistant.AssistantTests.test_qwen_failure_never_leaks_provider_details) ... ok
+test_qwen_global_attempt_cap_prevents_network_call (test_assistant.AssistantTests.test_qwen_global_attempt_cap_prevents_network_call) ... ok
+test_qwen_transport_bounds_and_validated_result (test_assistant.AssistantTests.test_qwen_transport_bounds_and_validated_result) ... ok
+test_retry_is_cached_and_conflicting_id_is_rejected (test_assistant.AssistantTests.test_retry_is_cached_and_conflicting_id_is_rejected) ... ok
+test_secret_is_rejected_before_persistence (test_assistant.AssistantTests.test_secret_is_rejected_before_persistence) ... ok
+test_swap_amount_has_no_fixed_dollar_cap (test_assistant.AssistantTests.test_swap_amount_has_no_fixed_dollar_cap) ... ok
+test_unsupported_actions_and_overspend_are_rejected (test_assistant.AssistantTests.test_unsupported_actions_and_overspend_are_rejected) ... ok
+test_agent_writer_can_draft_but_cannot_confirm_cancel_or_remember (test_tasks.TaskRoutesTests.test_agent_writer_can_draft_but_cannot_confirm_cancel_or_remember) ... ok
+test_hosted_and_local_assets_serve_task_ui_without_replacement_console (test_tasks.TaskRoutesTests.test_hosted_and_local_assets_serve_task_ui_without_replacement_console) ... ok
+test_hosted_owner_tasks_overview_and_foreign_read_memory_are_isolated (test_tasks.TaskRoutesTests.test_hosted_owner_tasks_overview_and_foreign_read_memory_are_isolated) ... ok
+test_local_owner_console_uses_same_task_routes_and_requires_token (test_tasks.TaskRoutesTests.test_local_owner_console_uses_same_task_routes_and_requires_token) ... ok
+test_read_key_cannot_create_task_and_missing_auth_fails (test_tasks.TaskRoutesTests.test_read_key_cannot_create_task_and_missing_auth_fails) ... ok
+test_budget_is_exact_usd_and_is_not_inherited (test_tasks.TasksTests.test_budget_is_exact_usd_and_is_not_inherited) ... ok
+test_cancel_is_idempotent_unsent_and_prevents_edits (test_tasks.TasksTests.test_cancel_is_idempotent_unsent_and_prevents_edits) ... ok
+test_catalogue_has_no_invented_merchants_prices_or_purchase_authority (test_tasks.TasksTests.test_catalogue_has_no_invented_merchants_prices_or_purchase_authority) ... ok
+test_concurrent_retries_create_one_task (test_tasks.TasksTests.test_concurrent_retries_create_one_task) ... ok
+test_connections_must_belong_to_workspace_and_remain_active (test_tasks.TasksTests.test_connections_must_belong_to_workspace_and_remain_active) ... ok
+test_explicit_override_and_pinned_preference_version (test_tasks.TasksTests.test_explicit_override_and_pinned_preference_version) ... ok
+test_five_real_work_categories_with_typed_deliverables (test_tasks.TasksTests.test_five_real_work_categories_with_typed_deliverables) ... ok
+test_immutable_revisions_and_optimistic_concurrent_edits (test_tasks.TasksTests.test_immutable_revisions_and_optimistic_concurrent_edits) ... ok
+test_invalid_fields_and_common_credentials_rejected_without_journal (test_tasks.TasksTests.test_invalid_fields_and_common_credentials_rejected_without_journal) ... ok
+test_last_context_missing_does_not_fabricate_regions (test_tasks.TasksTests.test_last_context_missing_does_not_fabricate_regions) ... ok
+test_modified_preference_body_fails_integrity_check (test_tasks.TasksTests.test_modified_preference_body_fails_integrity_check) ... ok
+test_modified_revision_body_fails_integrity_check (test_tasks.TasksTests.test_modified_revision_body_fails_integrity_check) ... ok
+test_no_payment_credentials_or_permissions_can_be_remembered (test_tasks.TasksTests.test_no_payment_credentials_or_permissions_can_be_remembered) ... ok
+test_preference_expiry_and_task_deadline_are_live_read_checks (test_tasks.TasksTests.test_preference_expiry_and_task_deadline_are_live_read_checks) ... ok
+test_preferences_are_scoped_by_work_type (test_tasks.TasksTests.test_preferences_are_scoped_by_work_type) ... ok
+test_request_replay_is_exact_conflicting_key_rejected (test_tasks.TasksTests.test_request_replay_is_exact_conflicting_key_rejected) ... ok
+test_restart_preserves_tasks_preferences_and_integrity (test_tasks.TasksTests.test_restart_preserves_tasks_preferences_and_integrity) ... ok
+test_revoke_invalidates_inherited_context_not_explicit_overrides (test_tasks.TasksTests.test_revoke_invalidates_inherited_context_not_explicit_overrides) ... ok
+
+======================================================================
+ERROR: test_revision_invalidates_plan (test_task_results.LocalWorkTests.test_revision_invalidates_plan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/skew/economic-machine-commerce-20261002/build/amazon-completion-20261004/tests/test_task_results.py", line 49, in test_revision_invalidates_plan
+    self.work.tasks.revise(self.task['id'],revised)
+  File "/srv/skew/economic-machine-commerce-20261002/build/amazon-completion-20261004/src/machine_engine/tasks.py", line 361, in revise
+    require_keys(raw, {"request_id", "expected_revision", "draft"}, "task revision")
+  File "/srv/skew/economic-machine-commerce-20261002/build/amazon-completion-20261004/src/economic_machine/values.py", line 82, in require_keys
+    raise MachineError(f"{label} requires exactly {sorted(keys)}")
+economic_machine.values.MachineError: task revision requires exactly ['draft', 'expected_revision', 'request_id']
+
+----------------------------------------------------------------------
+Ran 44 tests in 5.822s
+
+FAILED (errors=1)

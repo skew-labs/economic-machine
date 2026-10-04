@@ -87,7 +87,7 @@ def text(value, maximum, *, multiline=False):
         not isinstance(value, str)
         or not 1 <= len(value.strip()) <= maximum
         or any(ord(c) < 32 and not (multiline and c in "\n\r\t") for c in value)
-        or re.search(r"-----BEGIN .*PRIVATE KEY-----|sk-(?:proj-|ant-|bk-)[A-Za-z0-9_-]{20,}", value)
+        or re.search(r"ABSK[A-Za-z0-9+/=]{20,}|-----BEGIN .*PRIVATE KEY-----|sk-(?:proj-|ant-|bk-)[A-Za-z0-9_-]{20,}", value)
     ):
         raise MachineError("BOUNDED_TASK_TEXT_WITHOUT_CREDENTIALS_REQUIRED")
     return value.strip()

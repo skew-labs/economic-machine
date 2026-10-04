@@ -1,0 +1,8 @@
+{
+  "strands-agents": "1.57.2",
+  "boto3": "1.43.108",
+  "botocore": "1.43.108",
+  "fastapi": "0.142.2",
+  "httpx": "0.28.1",
+  "pydantic": "2.13.5"
+}

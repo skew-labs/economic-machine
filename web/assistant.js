@@ -6,7 +6,7 @@
   let trackingTimer=null, trackingKey=null, trackingRow=null;
   const prefix=C.API_PREFIX || '', storedKey=()=> 'skew-console-swap-'+(C.state.identity?.address?.toLowerCase()||'');
   const api=(path,body)=>C.api('/api/engine'+path,body);
-  const friendly = error => ({FRESH_CHAIN_STATE_REQUIRED:'The chain data could not be verified as current. Request a fresh quote; no order was sent.',INSUFFICIENT_USDC:'This amount exceeds the USDC available in your wallet.',ASSISTANT_BEDROCK_NOT_CONFIGURED:'Amazon Bedrock needs to be connected by the workspace operator. You can use the actions below in the meantime.',ASSISTANT_BEDROCK_CREDENTIALS_REQUIRED:'AWS sign-in is required for the assistant. Your workspace actions are still available.',ASSISTANT_BEDROCK_UNAVAILABLE_OR_INVALID:'Amazon Bedrock could not finish this request. No transaction was sent.',ASSISTANT_PROVIDER_NOT_CONFIGURED:'Your assistant is not connected yet. Your workspace tools are still available.',
+  const friendly = error => ({ASSISTANT_BEDROCK_ORGANIZATION_DENY:'Amazon Bedrock is blocked by the AWS organization policy. The account administrator must allow access. No fallback model is used; workspace actions still work.',FRESH_CHAIN_STATE_REQUIRED:'The chain data could not be verified as current. Request a fresh quote; no order was sent.',INSUFFICIENT_USDC:'This amount exceeds the USDC available in your wallet.',ASSISTANT_BEDROCK_NOT_CONFIGURED:'Amazon Bedrock needs to be connected by the workspace operator. You can use the actions below in the meantime.',ASSISTANT_BEDROCK_CREDENTIALS_REQUIRED:'AWS sign-in is required for the assistant. Your workspace actions are still available.',ASSISTANT_BEDROCK_UNAVAILABLE_OR_INVALID:'Amazon Bedrock could not finish this request. No transaction was sent.',ASSISTANT_PROVIDER_NOT_CONFIGURED:'Your assistant is not connected yet. Your workspace tools are still available.',
     ASSISTANT_PROVIDER_UNAVAILABLE_OR_INVALID:'The assistant could not finish this request. No transaction was sent. Try a shorter request.',
     ASSISTANT_DAILY_LIMIT_REACHED:'Today’s conversation limit is reached. You can still use the workspace tools.',
     ASSISTANT_REQUEST_IN_PROGRESS:'Your previous message is still being processed.',
@@ -188,17 +188,70 @@
     catch(e){indicator.querySelector('.chat-text').textContent=friendly(e);indicator.classList.remove('chat-pending');}
     finally{busy=false;submit.disabled=false;input.focus();}
   }
+  function localPlanCard(job) {
+    const n=card('Choose how to clean your data','Both options run in this workspace. No external service fee; local compute is not priced.');
+    const options=el('div','chat-plan-grid');n.append(options);
+    for(const p of job.plans){
+      const option=card(p.title);details(option,[['External charge','$0.00'],['Output',p.format.toUpperCase()]]);
+      option.append(action('Approve this plan',async()=>{
+        const done=await api('/local-work/'+job.id+'/run',{plan_hash:p.hash});
+        if(done.status!=='DELIVERED')throw new Error('The result is not verified yet.');
+        const result=await api('/local-work/'+job.id+'/result');
+        n.replaceChildren(el('h3','','Done. Your result is ready.'),el('p','',`${result.rows} rows delivered · ${result.removed_rows} exact duplicates removed.`));
+        resultButton(n,'/local-work/'+job.id+'/result');return true;
+      }));options.append(option);
+    }return n;
+  }
+  function resultButton(node,path){node.append(action('Download result',async()=>{
+    const result=await api(path);const url=URL.createObjectURL(new Blob([result.content],{type:result.content_type}));
+    const a=el('a');a.href=url;a.download=result.filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }));}
+  async function workProgress(){
+    const state=await api('/assistant/work'),n=card('Your saved work','Status comes from the execution records, without a new model call.');
+    for(const t of state.tasks.slice(0,10))n.append(el('p','',t.brief.title+' · '+t.status.replaceAll('_',' ').toLowerCase()));
+    for(const job of state.local){
+      if(job.status==='DELIVERED'){const item=card('Completed data task','Result saved and verified.');resultButton(item,'/local-work/'+job.id+'/result');n.append(item);}
+      else n.append(localPlanCard(job));
+    }
+    for(const p of state.purchases){const item=card(p.plan.service.name,p.status.replaceAll('_',' ').toLowerCase());
+      if(p.status==='DELIVERED')resultButton(item,'/task-purchases/'+p.id+'/result');
+      else item.append(go('Review payment or recovery','tasks'));n.append(item);}
+    if(!state.tasks.length)n.append(el('p','','No saved work yet.'));
+    n.append(go('Manage tasks','tasks'));add('assistant','Here is the latest saved state of your work.',n);
+  }
+  function officeWork(){
+    const n=card('Clean a customer or supplier list','Paste CSV with a header. Compare keeping all rows with removing exact duplicates. No payment or AI call is needed.'),source=el('textarea');
+    source.rows=5;source.maxLength=20000;source.placeholder='name,email\nAlex,alex@example.com';source.setAttribute('aria-label','CSV to clean');n.append(source);
+    let draftId=crypto.randomUUID();source.addEventListener('input',()=>{draftId=crypto.randomUUID();});
+    n.append(action('Compare two plans',async()=>{
+      const columns=source.value.split(/\r?\n/)[0].split(',').map(v=>v.trim());
+      if(!columns.length||columns.some(c=>!c))throw new Error('Add a CSV header with named columns.');
+      const task=await api('/tasks',{request_id:draftId,kind:'data_cleanup',title:'Clean business data',instructions:'Trim cells. Review whether exact duplicate rows should be removed.',budget:{currency:'USD',maximum:'0'},deadline_at:null,constraints:{output_format:'csv',required_fields:columns},preference_id:null,connection_ids:[]});
+      const job=await api('/tasks/'+task.id+'/local-plans',{request_id:draftId+'-plans',expected_revision:task.revision,input:{csv:source.value}});
+      add('assistant','Choose the transformation you want. Neither plan sends a payment.',localPlanCard(job));return true;
+    }));add('assistant','Let’s finish a practical data task.',n);
+  }
   function init() {
     if(ready)return;ready=true;root.replaceChildren();
     const welcome=el('div','chat-welcome');welcome.id='chat-welcome';
     welcome.append(el('span','chat-wordmark','skew'),el('h1','','What would you like to get done?'),el('p','','Your accounts, agents and work. One conversation.'));
     const suggestions=el('div','chat-suggestions');
     for(const [label,prompt]of [['Get ETH for gas','Swap 2 USDC to ETH for gas on Arbitrum One.'],['Check my accounts','Check my balances, positions and recent orders.'],['Run a mining job','Show my mining jobs and help me run a bounded search.'],['Create a work task','Help me prepare a vendor comparison for my team.']])suggestions.append(button(label,'chat-suggestion',()=>{document.getElementById('chat-input').value=prompt;document.getElementById('chat-input').focus();}));
+    suggestions.append(button('Clean business data','chat-suggestion',()=>officeWork()),button('Resume my work','chat-suggestion',()=>workProgress().catch(e=>C.notify(friendly(e),true))));
     const conversation=el('div','conversation');conversation.id='conversation';conversation.setAttribute('aria-live','polite');conversation.setAttribute('aria-label','Conversation');
     const composer=el('form','chat-composer');composer.id='chat-composer';
     const input=el('textarea');input.id='chat-input';input.rows=2;input.maxLength=1800;input.placeholder='Ask Skew to plan, check or do something…';input.setAttribute('aria-label','Message Skew');
     const bar=el('div','composer-bar'),hint=el('span','composer-hint','You approve spending. Skew tracks the rest.');
     const submit=button('Send','chat-send');submit.type='submit';submit.id='chat-send';
+    const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(Recognition){const voice=button('Dictate','button secondary',()=>{
+      const recognition=new Recognition();recognition.lang=navigator.language||'en-US';recognition.interimResults=false;recognition.maxAlternatives=1;
+      recognition.onresult=event=>{input.value=(input.value+' '+event.results[0][0].transcript).trim().slice(0,1800);input.focus();};
+      recognition.onerror=()=>{C.notify('Voice input was unavailable. You can type instead.',true);};
+      recognition.onend=()=>{voice.disabled=false;voice.textContent='Dictate';};
+      voice.disabled=true;voice.textContent='Listening…';
+      try{recognition.start();}catch{voice.disabled=false;voice.textContent='Dictate';}
+    });voice.title='Browser voice input. Review the transcript before sending. This is not an Alexa device connection.';bar.append(voice);}
     bar.append(hint,submit);composer.append(input,bar);composer.onsubmit=e=>{e.preventDefault();send(input.value);};
     input.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();send(input.value);}};
     root.append(welcome,suggestions,conversation,composer);boundRequest();
@@ -208,6 +261,7 @@
     if(owner&&owner!==historyOwner){historyOwner=owner;
       try{const h=await api('/assistant');turns=h.turns;document.getElementById('conversation').replaceChildren();for(const t of turns){add('user',t.message);if(t.result)proposal(t.result,t.action_result);else add('assistant',t.status==='RUNNING'?'This request is pending. Check again before retrying.':'This request did not complete. No transaction was sent.');}}catch(e){C.notify(friendly(e),true);}
     }
+    try{const p=await api('/assistant/provider');if(p.status==='ORGANIZATION_DENY')add('assistant','Amazon Bedrock is connected in configuration, but AWS organization policy is blocking model access. Your direct workspace actions still work.');}catch{}
     boundShown=false;boundRequest();
     startTracking();
     if(pending){const value=pending;pending='';await send(value);}
