@@ -1,0 +1,43 @@
+/srv/skew/economic-machine-commerce-20261002/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_commitment_binds_miner_artifact_and_closed_windows (test_artifact_mining.ArtifactMining.test_commitment_binds_miner_artifact_and_closed_windows) ... ok
+test_complete_reward_purchase_delivery_and_exact_balances (test_artifact_mining.ArtifactMining.test_complete_reward_purchase_delivery_and_exact_balances) ... ok
+test_mainnet_reader_network_identity_and_payment_asset (test_artifact_mining.ArtifactMining.test_mainnet_reader_network_identity_and_payment_asset) ... ok
+test_one_deployment_bundle_retains_owner_and_zero_supply (test_artifact_mining.ArtifactMining.test_one_deployment_bundle_retains_owner_and_zero_supply) ... ok
+test_publisher_only_admission_duplicate_work_and_no_admin_mint (test_artifact_mining.ArtifactMining.test_publisher_only_admission_duplicate_work_and_no_admin_mint) ... ok
+test_replay_matches_contract_score_and_tamper_rejected (test_artifact_mining.ArtifactMining.test_replay_matches_contract_score_and_tamper_rejected) ... ok
+test_ties_follow_commit_order_and_empty_job_mints_nothing (test_artifact_mining.ArtifactMining.test_ties_follow_commit_order_and_empty_job_mints_nothing) ... ok
+test_wrong_rights_release_duplicate_claim_and_pause (test_artifact_mining.ArtifactMining.test_wrong_rights_release_duplicate_claim_and_pause) ... ok
+test_launch_review (unittest.loader._FailedTest.test_launch_review) ... ERROR
+test_alternate_release_with_same_content_does_not_grant_canonical_access (test_datapass_reader.DataPassReaderTests.test_alternate_release_with_same_content_does_not_grant_canonical_access) ... ok
+test_delivery_requires_both_pinned_rpc_and_runtime (test_datapass_reader.DataPassReaderTests.test_delivery_requires_both_pinned_rpc_and_runtime) ... ok
+test_finality_lag_does_not_extend_expired_license (test_datapass_reader.DataPassReaderTests.test_finality_lag_does_not_extend_expired_license) ... ok
+test_historical_version_is_retained_when_current_release_changes (test_datapass_reader.DataPassReaderTests.test_historical_version_is_retained_when_current_release_changes) ... ok
+test_price_cap_self_sale_and_invalid_token_fail_closed (test_datapass_reader.DataPassReaderTests.test_price_cap_self_sale_and_invalid_token_fail_closed) ... ok
+test_registration_plan_matches_the_actual_compiled_contract_abi (test_datapass_reader.DataPassReaderTests.test_registration_plan_matches_the_actual_compiled_contract_abi) ... ok
+test_resale_plan_binds_nonce_price_and_remaining_original_license (test_datapass_reader.DataPassReaderTests.test_resale_plan_binds_nonce_price_and_remaining_original_license) ... ok
+test_two_rpc_disagreement_blocks_access (test_datapass_reader.DataPassReaderTests.test_two_rpc_disagreement_blocks_access) ... ok
+test_unconfigured_contract_cannot_claim_a_deployment (test_datapass_reader.DataPassReaderTests.test_unconfigured_contract_cannot_claim_a_deployment) ... ok
+test_unsigned_exact_purchase_binds_version_terms_and_price (test_datapass_reader.DataPassReaderTests.test_unsigned_exact_purchase_binds_version_terms_and_price) ... ok
+test_wrong_chain_runtime_future_and_stale_block_fail_closed (test_datapass_reader.DataPassReaderTests.test_wrong_chain_runtime_future_and_stale_block_fail_closed) ... ok
+test_absent_finalized_purchase_does_not_authorize_payment_retry (test_datapass_reader.PurchaseStatusTests.test_absent_finalized_purchase_does_not_authorize_payment_retry) ... ok
+test_finalized_purchase_still_requires_owned_unexpired_release_before_delivery (test_datapass_reader.PurchaseStatusTests.test_finalized_purchase_still_requires_owned_unexpired_release_before_delivery) ... ok
+test_wrong_identity_or_rpc_disagreement_cannot_report_delivery (test_datapass_reader.PurchaseStatusTests.test_wrong_identity_or_rpc_disagreement_cannot_report_delivery) ... ok
+
+======================================================================
+ERROR: test_launch_review (unittest.loader._FailedTest.test_launch_review)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_launch_review
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/skew/economic-machine-commerce-20261002/build/amazon-completion-20261004/tests/test_launch_review.py", line 5, in <module>
+    import prepare_datapass_launch as launch
+ModuleNotFoundError: No module named 'prepare_datapass_launch'
+
+
+----------------------------------------------------------------------
+Ran 23 tests in 5.518s
+
+FAILED (errors=1)

@@ -197,6 +197,30 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     from .datapass import DataProducts
     data_products = DataProducts()
 
+    def work_products():
+        from .work_artifacts import WorkProducts
+        directory, grants = os.environ.get("MACHINE_WORK_RELEASES"), os.environ.get("MACHINE_WORK_GRANTS")
+        if not directory or not grants:
+            raise HTTPException(503, "Work artifact publication is not configured")
+        return WorkProducts(directory, grants, data_products.chain)
+
+    @app.get("/api/data/work/{version}/purchase-plan")
+    def work_purchase_plan(version: str, purchase_id: str, sid=Depends(buyer)):
+        return work_products().plan(wallet_auth.identity(sid), purchase_id, version)
+
+    @app.get("/api/data/work/{version}/purchase-status")
+    def work_purchase_status(version: str, purchase_id: str, sid=Depends(buyer)):
+        return work_products().purchase_status(wallet_auth.identity(sid), purchase_id, version)
+
+    @app.get("/api/data/work/{version}/licenses/{token_id}/delivery")
+    def work_delivery(version: str, token_id: int, sid=Depends(buyer)):
+        return work_products().delivery(token_id, wallet_auth.identity(sid), version)
+
+    @app.post("/api/data/work/{version}/release-plan")
+    def work_publication(version: str, raw: dict, sid=Depends(buyer), approved=Depends(engine_owner)):
+        require_keys(raw, {"price_atoms", "sale_duration_seconds"}, "work publication")
+        return work_products().publication(wallet_auth.identity(sid), version, raw["price_atoms"], raw["sale_duration_seconds"])
+
     @app.get("/api/data/catalog")
     def data_catalog(sid=Depends(buyer)):
         return data_products.catalog()

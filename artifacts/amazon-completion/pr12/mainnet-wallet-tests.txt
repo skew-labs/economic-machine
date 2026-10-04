@@ -1,0 +1,24 @@
+✔ launch preflights owner chain balance fees and nonce before one exact deployment (2.479121ms)
+✔ changed initcode gas cap owner nonce and insufficient gas cannot transmit (1.78003ms)
+✔ lost deployment remains unknown while explicit wallet rejection can be retried (2.286809ms)
+✔ wallet flow requests only account access and personal signature, then verifies (3.461084ms)
+✔ rejected signature never reaches verification (2.378753ms)
+✔ account change during signing cannot log into the previous wallet (0.532756ms)
+✔ untrusted icons are data images rendered separately, not markup or remote tracking (1.914775ms)
+✔ x402 review signs exactly one EIP-3009 authorization and never sends a transaction (1.299949ms)
+✔ mismatched price, recipient, domain, chain, nonce or expired challenge stops before wallet signing (1.76292ms)
+✔ different payer account or network cannot approve a purchase (0.554608ms)
+✔ wallet change or rejection during payment signing produces no submission payload (1.149084ms)
+✔ native DataPass approval sends exact allowance and purchase sends separately after allowance read (3.053726ms)
+✔ native DataPass rejects changed asset, ABI, version, price, expiry or double x402 payment before sending (1.295959ms)
+✔ unconfirmed allowance or changed buyer prevents license purchase (1.897495ms)
+✔ wallet rejection is retryable but lost native submission or missing hash remains uncertain (0.623146ms)
+✔ mainnet DataPass uses native Arbitrum USDC and rejects the testnet asset and wallet (0.353164ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 139.949556

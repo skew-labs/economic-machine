@@ -107,9 +107,9 @@
     try {
       if (!provider || typeof provider.request !== 'function') throw new Error('Reconnect your signing wallet.');
       const hash = value => typeof value === 'string' && /^0x[0-9a-fA-F]{64}$/.test(value);
-      const usdc = '0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d';
+      const usdc = {421614:'0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d',42161:'0xaf88d065e77c8cc2239327c5edb3a432268e5831'}[plan?.chain_id];
       if (![0,1].includes(step) || typeof contract !== 'string' || !ADDRESS.test(contract) || /^0x0{40}$/i.test(contract) ||
-          plan?.chain_id !== 421614 || plan.x402_payment_required !== false || plan.broadcasts !== 0 ||
+          !usdc || plan.x402_payment_required !== false || plan.broadcasts !== 0 ||
           plan.signing_authority !== 'CUSTOMER_WALLET_ONLY' || plan.asset?.toLowerCase() !== usdc ||
           !/^\d+$/.test(plan.amount_atoms || '') || BigInt(plan.amount_atoms) <= 0n || BigInt(plan.amount_atoms) > 1000000n ||
           !hash(plan.purchase_id) || !hash(plan.report_sha256 && '0x' + plan.report_sha256) ||
@@ -125,8 +125,8 @@
           throw new Error('DataPass transaction differs from its reviewed asset, allowance, version or purchase ID.');
       }
       const selected = await accountState(provider);
-      if (selected.chain_id !== 421614 || selected.address.toLowerCase() !== plan.from?.toLowerCase())
-        throw new Error('Choose the buyer wallet on Arbitrum Sepolia.');
+      if (selected.chain_id !== plan.chain_id || selected.address.toLowerCase() !== plan.from?.toLowerCase())
+        throw new Error('Choose the buyer wallet on the purchase plan’s Arbitrum network.');
       if (step === 1) {
         const allowance = await provider.request({method:'eth_call',params:[{to:usdc,data:'0xdd62ed3e' + selected.address.slice(2).toLowerCase().padStart(64,'0') + contract.slice(2).toLowerCase().padStart(64,'0')},'latest']});
         if (!/^0x[0-9a-fA-F]{1,64}$/.test(allowance || '') || BigInt(allowance) < BigInt(plan.amount_atoms))
