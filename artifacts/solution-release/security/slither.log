@@ -1,0 +1,82 @@
+'/srv/skew/economic-machine-commerce-20261002/tools/solc-0.8.24 --version' running
+'/srv/skew/economic-machine-commerce-20261002/tools/solc-0.8.24 contracts/SkewSolutionMining.sol --combined-json abi,ast,bin,bin-runtime,srcmap,srcmap-runtime,userdoc,devdoc,hashes --via-ir --optimize --optimize-runs 200 --evm-version shanghai --allow-paths .,/srv/skew/economic-machine-commerce-20261002/build/solution-release-pr8/contracts' running
+
+SkewSolutionMining._claim(uint256,uint8) (contracts/SkewSolutionMining.sol#229-233) uses a dangerous strict equality:
+	- require(bool,string)(rounds[id].state == 3 && problem < PROBLEMS,FINALIZED_PROBLEM_REQUIRED) (contracts/SkewSolutionMining.sol#230)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#dangerous-strict-equalities
+
+Reentrancy in SkewSolutionMining.request() (contracts/SkewSolutionMining.sol#150-165):
+	External calls:
+	- req = coordinator.requestRandomWords(SkewVRF.Request(keyHash,subscription,3,250000,1,abi.encodeWithSelector(bytes4(keccak256(bytes)(VRF ExtraArgsV1)),false))) (contracts/SkewSolutionMining.sol#161-162)
+	State variables written after the call(s):
+	- r.requestId = req (contracts/SkewSolutionMining.sol#164)
+	SkewSolutionMining.rounds (contracts/SkewSolutionMining.sol#93) can be used in cross function reentrancies:
+	- SkewSolutionMining._claim(uint256,uint8) (contracts/SkewSolutionMining.sol#229-233)
+	- SkewSolutionMining.commit(uint256,uint8,bytes32) (contracts/SkewSolutionMining.sol#182-189)
+	- SkewSolutionMining.finalize(uint256) (contracts/SkewSolutionMining.sol#217-228)
+	- SkewSolutionMining.rawFulfillRandomWords(uint256,uint256[]) (contracts/SkewSolutionMining.sol#166-178)
+	- SkewSolutionMining.request() (contracts/SkewSolutionMining.sol#150-165)
+	- SkewSolutionMining.reveal(uint256,uint8,uint32,bytes32) (contracts/SkewSolutionMining.sol#203-216)
+	- SkewSolutionMining.rounds (contracts/SkewSolutionMining.sol#93)
+	- SkewSolutionMining.score(uint256,uint8,uint32) (contracts/SkewSolutionMining.sol#194-202)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-1
+
+SkewSolutionMining.finalize(uint256).sum (contracts/SkewSolutionMining.sol#222) is a local variable never initialized
+SkewSolutionMining.score(uint256,uint8,uint32).edge (contracts/SkewSolutionMining.sol#197) is a local variable never initialized
+SkewSolutionMining._subscriptionReady().admitted (contracts/SkewSolutionMining.sol#123) is a local variable never initialized
+SkewSolutionMining.finalize(uint256).qualified (contracts/SkewSolutionMining.sol#219) is a local variable never initialized
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#uninitialized-local-variables
+
+SkewSolutionMining._subscriptionReady() (contracts/SkewSolutionMining.sol#120-126) ignores return value by (balance,None,None,None,consumers) = coordinator.getSubscription(subscription) (contracts/SkewSolutionMining.sol#121)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-return
+
+SkewSolutionMining._claim(uint256,uint8) (contracts/SkewSolutionMining.sol#229-233) has external calls inside a loop: rewardToken.mint(msg.sender,REWARD) (contracts/SkewSolutionMining.sol#232)
+	Calls stack containing the loop:
+		SkewSolutionMining.claimMany(uint256[],uint8[])
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation/#calls-inside-a-loop
+
+Reentrancy in SkewSolutionMining.request() (contracts/SkewSolutionMining.sol#150-165):
+	External calls:
+	- req = coordinator.requestRandomWords(SkewVRF.Request(keyHash,subscription,3,250000,1,abi.encodeWithSelector(bytes4(keccak256(bytes)(VRF ExtraArgsV1)),false))) (contracts/SkewSolutionMining.sol#161-162)
+	State variables written after the call(s):
+	- requestRound[req] = id (contracts/SkewSolutionMining.sol#164)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-2
+
+Reentrancy in SkewSolutionMining._claim(uint256,uint8) (contracts/SkewSolutionMining.sol#229-233):
+	External calls:
+	- rewardToken.mint(msg.sender,REWARD) (contracts/SkewSolutionMining.sol#232)
+	Event emitted after the call(s):
+	- Claimed(id,problem,msg.sender,REWARD) (contracts/SkewSolutionMining.sol#232)
+Reentrancy in SkewSolutionMining.request() (contracts/SkewSolutionMining.sol#150-165):
+	External calls:
+	- req = coordinator.requestRandomWords(SkewVRF.Request(keyHash,subscription,3,250000,1,abi.encodeWithSelector(bytes4(keccak256(bytes)(VRF ExtraArgsV1)),false))) (contracts/SkewSolutionMining.sol#161-162)
+	Event emitted after the call(s):
+	- Requested(id,req) (contracts/SkewSolutionMining.sol#164)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-3
+
+SkewSolutionMining.request() (contracts/SkewSolutionMining.sol#150-165) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(previous.state == 3,PREVIOUS_NOT_FINALIZED) (contracts/SkewSolutionMining.sol#155)
+	- require(bool,string)(block.timestamp >= previous.requestedAt + REQUEST_INTERVAL,REQUEST_COOLDOWN) (contracts/SkewSolutionMining.sol#156)
+SkewSolutionMining.rawFulfillRandomWords(uint256,uint256[]) (contracts/SkewSolutionMining.sol#166-178) uses timestamp for comparisons
+	Dangerous comparisons:
+	- id == 0 || rounds[id].state != 1 (contracts/SkewSolutionMining.sol#169)
+	- words.length != 1 || block.timestamp > type()(uint64).max - 1200 (contracts/SkewSolutionMining.sol#170)
+SkewSolutionMining.commit(uint256,uint8,bytes32) (contracts/SkewSolutionMining.sol#182-189) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(! admissionPaused && r.state == 2 && block.timestamp < r.commitEnd,COMMIT_CLOSED) (contracts/SkewSolutionMining.sol#184)
+SkewSolutionMining.score(uint256,uint8,uint32) (contracts/SkewSolutionMining.sol#194-202) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)((r.state == 2 || r.state == 3) && problem < PROBLEMS && (bits & 1) == 0,CANONICAL_SOLUTION) (contracts/SkewSolutionMining.sol#196)
+SkewSolutionMining.reveal(uint256,uint8,uint32,bytes32) (contracts/SkewSolutionMining.sol#203-216) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(r.state == 2 && block.timestamp >= r.commitEnd && block.timestamp < r.revealEnd,REVEAL_CLOSED) (contracts/SkewSolutionMining.sol#205)
+	- require(bool,string)(uint256(cut) * 10000 >= uint256(total) * r.threshold,BELOW_THRESHOLD) (contracts/SkewSolutionMining.sol#210)
+SkewSolutionMining.finalize(uint256) (contracts/SkewSolutionMining.sol#217-228) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(r.state == 2 && block.timestamp >= r.revealEnd,FINALIZE_CLOSED) (contracts/SkewSolutionMining.sol#218)
+SkewSolutionMining._claim(uint256,uint8) (contracts/SkewSolutionMining.sol#229-233) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(rounds[id].state == 3 && problem < PROBLEMS,FINALIZED_PROBLEM_REQUIRED) (contracts/SkewSolutionMining.sol#230)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+contracts/SkewSolutionMining.sol analyzed (3 contracts with 100 detectors), 18 result(s) found
