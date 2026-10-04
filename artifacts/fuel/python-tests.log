@@ -1,0 +1,26 @@
+/srv/skew/economic-machine-commerce-20261002/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_amount_fee_recipient_asset_and_hook_tampering_fail_closed (test_gas_router.GasRouterTests.test_amount_fee_recipient_asset_and_hook_tampering_fail_closed) ... ok
+test_expired_order_requires_finalized_unfilled_proof_on_both_rpcs (test_gas_router.GasRouterTests.test_expired_order_requires_finalized_unfilled_proof_on_both_rpcs) ... ok
+test_http_limits_origin_exact_fields_and_static_private_path (test_gas_router.GasRouterTests.test_http_limits_origin_exact_fields_and_static_private_path) ... ok
+test_independent_price_floor_and_outage_guards (test_gas_router.GasRouterTests.test_independent_price_floor_and_outage_guards) ... ok
+test_persist_before_submission_and_never_resubmit_after_timeout_or_restart (test_gas_router.GasRouterTests.test_persist_before_submission_and_never_resubmit_after_timeout_or_restart) ... ok
+test_provider_filled_is_not_chain_confirmation (test_gas_router.GasRouterTests.test_provider_filled_is_not_chain_confirmation) ... ok
+test_two_rpc_nonce_domain_and_relayer_agreement (test_gas_router.GasRouterTests.test_two_rpc_nonce_domain_and_relayer_agreement) ... ok
+test_unverified_final_quote_never_reaches_order_signature (test_gas_router.GasRouterTests.test_unverified_final_quote_never_reaches_order_signature) ... ok
+test_wrong_signer_and_expired_intent_rejected (test_gas_router.GasRouterTests.test_wrong_signer_and_expired_intent_rejected) ... ok
+test_zero_eth_preview_exact_permit_native_output_and_signed_intent (test_gas_router.GasRouterTests.test_zero_eth_preview_exact_permit_native_output_and_signed_intent) ... ok
+test_agent_key_can_propose_and_reconcile_but_cannot_authorize_or_raise_limits (test_engine_fuel.EngineFuelTests.test_agent_key_can_propose_and_reconcile_but_cannot_authorize_or_raise_limits) ... ok
+test_chain_receipt_is_required_and_charged_exactly_once (test_engine_fuel.EngineFuelTests.test_chain_receipt_is_required_and_charged_exactly_once) ... ok
+test_concurrent_requests_cannot_overreserve_after_slow_quote (test_engine_fuel.EngineFuelTests.test_concurrent_requests_cannot_overreserve_after_slow_quote) ... ok
+test_disconnected_wallet_and_unapproved_agent_cannot_use_policy (test_engine_fuel.EngineFuelTests.test_disconnected_wallet_and_unapproved_agent_cannot_use_policy) ... ok
+test_expired_unsigned_proposal_releases_both_holds (test_engine_fuel.EngineFuelTests.test_expired_unsigned_proposal_releases_both_holds) ... ok
+test_mainnet_connector_pins_chain_token_and_finalized_height (test_engine_fuel.EngineFuelTests.test_mainnet_connector_pins_chain_token_and_finalized_height) ... ok
+test_pause_blocks_signing_but_retains_ambiguous_reservation (test_engine_fuel.EngineFuelTests.test_pause_blocks_signing_but_retains_ambiguous_reservation) ... ok
+test_shared_usdc_budget_covers_both_agents_and_parent_purchase (test_engine_fuel.EngineFuelTests.test_shared_usdc_budget_covers_both_agents_and_parent_purchase) ... ok
+test_wallet_inventory_includes_other_policies_parent_reservations (test_engine_fuel.EngineFuelTests.test_wallet_inventory_includes_other_policies_parent_reservations) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 1.066s
+
+OK

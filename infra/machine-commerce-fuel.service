@@ -1,0 +1,28 @@
+[Unit]
+Description=SKEW Fuel wallet-signed gas acquisition
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+WorkingDirectory=/srv/skew/economic-machine-commerce-20261002/releases/fuel-20261004
+Environment=PYTHONPATH=/srv/skew/economic-machine-commerce-20261002/releases/fuel-20261004/src
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=SKEW_SWAP_DB=/var/lib/machine-commerce-fuel/data/swaps.sqlite3
+Environment=SKEW_SWAP_ORIGIN=https://machine.148-113-153-116.nip.io
+ExecStart=/srv/skew/economic-machine-commerce-20261002/.venv/bin/uvicorn machine_commerce.gas_portal:app --host 127.0.0.1 --port 4271 --workers 1 --limit-concurrency 24 --timeout-keep-alive 3 --no-access-log
+StateDirectory=machine-commerce-fuel
+StateDirectoryMode=0700
+UMask=0077
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+MemoryMax=256M
+TasksMax=32
+
+[Install]
+WantedBy=multi-user.target
