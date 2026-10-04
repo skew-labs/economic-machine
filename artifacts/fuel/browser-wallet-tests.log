@@ -1,0 +1,12 @@
+✔ real EIP-712 signatures and permit ABI match the bounded review (86.680479ms)
+✔ receiver amount spender hooks chain expiry and domain tampering never signs (8.085223ms)
+✔ storage failure prevents requesting an order signature (3.723357ms)
+✔ wallet nonce and network changes block permit signatures (3.177263ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 275.743784
