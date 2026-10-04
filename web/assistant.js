@@ -3,6 +3,7 @@
   const C = window.MachineConsole, {el,button} = C;
   const root = document.getElementById('ops-overview');
   let ready=false, busy=false, pending='', historyOwner=null, turns=[], quoteVersion=0, boundShown=false;
+  let conversationRevision=0;
   let trackingTimer=null, trackingKey=null, trackingRow=null;
   const prefix=C.API_PREFIX || '', storedKey=()=> 'skew-console-swap-'+(C.state.identity?.address?.toLowerCase()||'');
   const api=(path,body)=>C.api('/api/engine'+path,body);
@@ -12,6 +13,7 @@
     ASSISTANT_REQUEST_IN_PROGRESS:'Your previous message is still being processed.',
     DO_NOT_SEND_PRIVATE_KEYS_OR_API_SECRETS:'Keep private keys and API secrets out of chat. Add a connection through Connections.'}[error.message] || WalletBridge.connectionError(error));
   function add(role,text,content) {
+    conversationRevision++;
     const row=el('article','chat-message '+role), label=el('span','chat-speaker',role==='user'?'You':'Skew');
     row.append(label,el('p','chat-text',text)); if(content)row.append(content);
     document.getElementById('conversation').append(row);
@@ -258,8 +260,14 @@
   }
   async function connected() {
     init();const owner=C.state.identity?.address;
-    if(owner&&owner!==historyOwner){historyOwner=owner;
-      try{const h=await api('/assistant');turns=h.turns;document.getElementById('conversation').replaceChildren();for(const t of turns){add('user',t.message);if(t.result)proposal(t.result,t.action_result);else add('assistant',t.status==='RUNNING'?'This request is pending. Check again before retrying.':'This request did not complete. No transaction was sent.');}}catch(e){C.notify(friendly(e),true);}
+    if(owner&&owner!==historyOwner){
+      if(historyOwner){document.getElementById('conversation').replaceChildren();conversationRevision++;}
+      historyOwner=owner;const revision=conversationRevision;
+      try{const h=await api('/assistant');
+        if(C.state.identity?.address!==owner)return;
+        turns=h.turns;
+        if(revision===conversationRevision&&!document.getElementById('conversation').childElementCount){document.getElementById('conversation').replaceChildren();for(const t of turns){add('user',t.message);if(t.result)proposal(t.result,t.action_result);else add('assistant',t.status==='RUNNING'?'This request is pending. Check again before retrying.':'This request did not complete. No transaction was sent.');}}
+      }catch(e){C.notify(friendly(e),true);}
     }
     try{const p=await api('/assistant/provider');if(p.status==='ORGANIZATION_DENY')add('assistant','Amazon Bedrock is connected in configuration, but AWS organization policy is blocking model access. Your direct workspace actions still work.');}catch{}
     boundShown=false;boundRequest();

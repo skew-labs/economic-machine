@@ -1,10 +1,13 @@
 # SKEW Tasks — Amazon and PayPal extension plan
 
-Status: PR1 task foundation implemented; PR2–PR6 integrations remain proposed.
-No Alexa+, AWS model, PayPal integration or contest entry is claimed.
-Checked against official competition pages on 2026-10-03. Existing commerce,
-native calculation and owner-workspace code is the foundation. The inspected
-checkout has no Alexa+, MCP, Bedrock, Strands or PayPal runtime integration yet.
+Status updated 2026-10-04: PR1 task foundation and PR2 checkout code exist.
+The original PR3–PR5 implementation is now in GitHub PR13–PR15; PR6 packaging
+and deployment evidence is in GitHub PR16. Mainnet token preparation is PR12.
+Code completion is distinct from live acceptance: AWS Bedrock is blocked by an
+explicit organization SCP denial; PayPal sandbox seller/buyer configuration,
+actual payment receipts, public video URLs and contest submission readback are
+still required. See `submission/AMAZON.md`, `submission/PAYPAL.md` and
+`AMAZON_PR5_EXPERIENCE.md` for exact implemented scope and evidence.
 
 ## Product and first customer outcome
 
