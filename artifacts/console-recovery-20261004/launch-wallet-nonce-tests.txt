@@ -1,0 +1,16 @@
+✔ launch preflights owner chain balance fees and nonce before one exact deployment (2.415282ms)
+✔ changed initcode gas cap owner nonce and insufficient gas cannot transmit (3.197152ms)
+✔ lost deployment remains unknown while explicit wallet rejection can be retried (0.963907ms)
+✔ read-only wallet diagnostics identify malformed RPC data rather than missing funds (1.253045ms)
+✔ diagnostics read balances without signing or requesting a transaction (0.352098ms)
+✔ insufficient balance error shows both amounts and does not request a signature (0.327791ms)
+✔ MetaMask safe numeric pending nonce is normalized and still matched against the review (1.59621ms)
+✔ unsafe numeric nonces and numeric money quantities cannot bypass wallet checks (1.851585ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 79.149441

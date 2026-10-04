@@ -1,0 +1,37 @@
+{
+  "at": 1791109696,
+  "origin": "https://skew.deals",
+  "provider": {
+    "provider": "qwen",
+    "status": "CONFIGURED_NOT_PROBED",
+    "fallback": false,
+    "model_response_verified": false
+  },
+  "reply": {
+    "request_id": "qwen-restore-27378fab557a451a9ee0ae80c1bf0064",
+    "proposal": {
+      "reply": "저는 경제 기계의 역할을 수행하는 보조 AI로서, 사용자의 요청에 따라 정보를 제공하고 작업을 제안합니다.",
+      "action": "status",
+      "amount": null,
+      "task": null
+    },
+    "trace": {
+      "provider": "kiln",
+      "model": "qwen3-32b",
+      "latency_ms": 1703,
+      "usage": {
+        "prompt_tokens": 401,
+        "completion_tokens": 63
+      },
+      "response_hash": "45d0f3a2a5b7ce1dc9cadc0382ba1e1675b6574ec4edc5825f2a43279e50bb7f",
+      "model_calls": 1,
+      "source": "PROVIDER_RESPONSE"
+    },
+    "authority": "PROPOSE_ONLY",
+    "created": 1791109694
+  },
+  "history_verified": true,
+  "financial_signatures": 0,
+  "chain_writes": 0,
+  "bedrock_calls": 0
+}

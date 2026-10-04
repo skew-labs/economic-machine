@@ -1,4 +1,21 @@
-# Arbitrum submission — Economic Machine + Machine Mining
+# Arbitrum submission — SKEW Engine + DataPass
+
+## Active recording scope — owner correction, 2026-10-04
+
+Use [the Arbitrum demo script](ARBITRUM_DEMO_SCRIPT.md) for the current film:
+one agent request → bounded purchase → Arbitrum DataPass → verified data delivery.
+Product-backed SKEW mining appears as the supply-side ending only with matching
+work, publication and reward evidence. Qwen3 32B is the selected intent provider;
+Amazon/Bedrock/PayPal and the contact-list task demo are outside this submission
+film. Public entry: https://skew.deals/commerce/console.
+
+The research modes, requester-funded mining and earlier x402 packet below are
+historical engineering context. They are not additional scenes to combine into
+this film, and their receipts cannot substitute for the new DataPass purchase or
+SKEW issuance. The current product-backed release semantics are documented in
+[MAINNET_TOKEN_RELEASE_20261004.md](MAINNET_TOKEN_RELEASE_20261004.md).
+
+## Earlier implementation and evidence notes
 
 Updated 2026-10-04. New vertical: requester-funded useful-work tasks and verifiable token rewards, integrated into the existing owner console and C++ runtime. This extends the data/service commerce app; it does not relabel earlier x402 transfers as mining rewards.
 
