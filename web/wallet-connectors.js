@@ -38,9 +38,12 @@
     async logout() {if (sdk) await (await sdk).logout();},
     async agentPanel(root, refresh) {
       if (C.PREVIEW || C.LOCAL_ENGINE || !C.state.identity) return;
-      const panel = C.el('section', 'ops-section');
-      panel.append(C.el('h2', '', 'MetaMask Agent Wallet'));
-      const detail = C.el('p', 'ops-note', 'Checking your agent wallet…'); panel.append(detail); root.prepend(panel);
+      const panel = C.el('section', 'ops-section connection-wallet');
+      const head = C.el('div', 'ops-section-head');
+      head.append(C.el('h2', '', 'MetaMask Agent Wallet'));
+      const body = C.el('div', 'connection-wallet-body');
+      const detail = C.el('p', 'ops-note', 'Checking your agent wallet…');
+      body.append(detail); panel.append(head, body); root.prepend(panel);
       try {
         const result = await C.api('/api/wallet-connectors/metamask');
         if (!panel.isConnected) return;
@@ -58,7 +61,7 @@
           }
           catch (error) {C.notify(error.message, true); add.disabled = false;}
         });
-        panel.append(add, C.el('p', 'ops-note', 'Signing remains in your MetaMask Agent Wallet. Connecting this account grants no payment approval.'));
+        body.append(add, C.el('p', 'ops-note connection-wallet-note', 'Signing remains in your MetaMask Agent Wallet. Connecting this account grants no payment approval.'));
       } catch (_) {panel.remove();}
     },
   };
