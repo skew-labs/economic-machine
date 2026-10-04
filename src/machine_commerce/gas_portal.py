@@ -7,6 +7,7 @@ import secrets
 import sqlite3
 import threading
 import time
+from contextlib import asynccontextmanager, suppress
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -15,6 +16,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from economic_machine.values import MachineError
 
 from .gas_router import GasRouter
+from .swap_tracking import SwapTracker
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -110,9 +112,35 @@ class SwapStore:
 
 
 def create_gas_portal(store=None):
-    app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
     gate = asyncio.Semaphore(4)
     instance = store
+
+    def current_store():
+        nonlocal instance
+        if instance is None:
+            instance = SwapStore(os.environ.get("SKEW_SWAP_DB", str(ROOT / "runtime/gas-swaps.sqlite3")), GasRouter())
+        return instance
+
+    @asynccontextmanager
+    async def lifespan(app):
+        tracker = SwapTracker(current_store())
+        async def recover():
+            while True:
+                try:
+                    await asyncio.to_thread(tracker.tick)
+                    app.state.tracking_error = None
+                except Exception:
+                    app.state.tracking_error = 'TRACKING_WORKER_RECOVERING'
+                await asyncio.sleep(5)
+        worker = asyncio.create_task(recover())
+        try:
+            yield
+        finally:
+            worker.cancel()
+            with suppress(asyncio.CancelledError):
+                await worker
+
+    app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
 
     @app.middleware("http")
     async def headers(request, call_next):
@@ -130,7 +158,9 @@ def create_gas_portal(store=None):
         return {"status": "ok", "version": "fuel-1", "chain_id": 42161,
                 "signing_authority": "USER_WALLET_ONLY", "route": "COW_PERMIT_INTENT",
                 "server_wallet_keys": False, "max_usdc_atoms": None,
-                "amount_limit": "WALLET_BALANCE_AND_OWNER_POLICY"}
+                "amount_limit": "WALLET_BALANCE_AND_OWNER_POLICY",
+                "tracking": "SERVER_SIDE_READ_ONLY",
+                "tracking_error": getattr(app.state, 'tracking_error', None)}
 
     @app.get("/commerce/swap-assets/{asset}")
     def static(asset: str):
@@ -141,7 +171,7 @@ def create_gas_portal(store=None):
     @app.post("/commerce/swap-api/{action}")
     async def api(action: str, request: Request):
         nonlocal instance
-        if action not in {"quote", "order", "submit", "status"}:
+        if action not in {"quote", "order", "submit", "status", "watch"}:
             return JSONResponse({"error": "UNKNOWN_OPERATION"}, status_code=404)
         # The public service accepts same-origin JSON, not cross-site form posts.
         expected_origin = os.environ.get("SKEW_SWAP_ORIGIN", "https://machine.148-113-153-116.nip.io")
@@ -154,10 +184,14 @@ def create_gas_portal(store=None):
                 return JSONResponse({"error": "REQUEST_TOO_LARGE"}, status_code=413)
         try:
             parsed = json.loads(body)
-            if instance is None:
-                instance = SwapStore(os.environ.get("SKEW_SWAP_DB", str(ROOT / "runtime/gas-swaps.sqlite3")), GasRouter())
+            current_store()
             async with gate:
-                result = await asyncio.to_thread(instance.call, action, parsed)
+                if action == 'watch':
+                    if not isinstance(parsed, dict) or set(parsed) != {'id'}:
+                        raise MachineError('EXACT_REQUEST_FIELDS_REQUIRED')
+                    result = await asyncio.to_thread(SwapTracker(instance).watch, parsed['id'])
+                else:
+                    result = await asyncio.to_thread(instance.call, action, parsed)
             return JSONResponse(result)
         except MachineError as exc:
             return JSONResponse({"error": str(exc)}, status_code=409)

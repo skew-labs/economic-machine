@@ -222,6 +222,7 @@ class HostedWorkspaces:
 
     def cycle(self):
         from .workspace import Workspace
+        from .fuel import recover_fuel
 
         # Bound each pass. No unbounded tasks or implicit financial dispatch.
         count = 0
@@ -229,6 +230,7 @@ class HostedWorkspaces:
             work = Workspace(
                 path, clock=self.clock, credential_prefix="ENGINE_" + path.stem[:20].upper() + "_"
             )
+            recover_fuel(work)
             work.scheduler.run_once()
             work.control.recover_once()
             for oid in work.trading.pending_ids(limit=1):

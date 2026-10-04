@@ -262,7 +262,7 @@ class GasRouter:
             raise MachineError("SETTLEMENT_RECEIPT_REQUIRED")
         result["tx_hashes"] = hashes
         topic = "0x" + keccak(text="Trade(address,address,address,uint256,uint256,uint256,bytes)").hex()
-        proofs = []
+        proofs, finalized_heights = [], []
         for index, url in enumerate(RPCS):
             if int(self.reader(url, "eth_chainId", []), 16) != CHAIN:
                 raise MachineError("WRONG_CHAIN")
@@ -273,6 +273,7 @@ class GasRouter:
             final = self.reader(url, "eth_getBlockByNumber", ["finalized", False])
             if block["hash"] != receipt["blockHash"] or int(final["number"], 16) < int(receipt["blockNumber"], 16):
                 return {**result, "status": "AWAITING_FINALITY"}
+            finalized_heights.append(int(final["number"], 16))
             matching = []
             for event in receipt["logs"]:
                 if event["address"].lower() != SETTLEMENT or not event["topics"] or event["topics"][0].lower() != topic:
@@ -287,12 +288,25 @@ class GasRouter:
                 or values[0].lower() != USDC or values[1].lower() != ETH
                 or values[2] != int(intent["amount_atoms"]) or values[3] < int(intent["minimum_buy_wei"])):
                 raise MachineError("SETTLEMENT_POLICY_MISMATCH")
-            after = int(self.reader(url, "eth_getBalance", [intent["owner"], receipt["blockNumber"]]), 16)
-            before = max(int(r["eth_wei"]) for r in intent["observations"])
-            if after < before + int(intent["minimum_buy_wei"]):
-                return {**result, "status": "BALANCE_RECONCILIATION_REQUIRED"}
             proofs.append({"rpc": source_label(index), "block_hash": receipt["blockHash"], "buy_wei": str(values[3]),
-                           "sell_atoms": str(values[2]), "eth_balance_wei": str(after)})
-        if proofs[0]["block_hash"] != proofs[1]["block_hash"] or proofs[0]["buy_wei"] != proofs[1]["buy_wei"]:
+                           "block_number": int(receipt["blockNumber"], 16), "sell_atoms": str(values[2])})
+        if any(proofs[0][key] != proofs[1][key] for key in ("block_hash", "block_number", "buy_wei")):
             raise MachineError("RPC_SETTLEMENT_DISAGREEMENT")
+        # Reconcile holdings at the same newer finalized block on both RPCs.
+        # This avoids requiring the old settlement-state trie indefinitely and
+        # also detects funds spent since settlement. Never use the latest tip.
+        balance_height = min(finalized_heights)
+        before = max(int(r["eth_wei"]) for r in intent["observations"])
+        for index, url in enumerate(RPCS):
+            tag = hex(balance_height)
+            block = self.reader(url, "eth_getBlockByNumber", [tag, False])
+            if int(block["number"], 16) != balance_height or balance_height < proofs[index]["block_number"]:
+                raise MachineError("FINALIZED_BALANCE_BLOCK_REQUIRED")
+            after = int(self.reader(url, "eth_getBalance", [intent["owner"], tag]), 16)
+            proofs[index].update({"balance_block_number": balance_height, "balance_block_hash": block["hash"],
+                                  "eth_balance_wei": str(after)})
+        if any(proofs[0][key] != proofs[1][key] for key in ("balance_block_hash", "eth_balance_wei")):
+            raise MachineError("RPC_BALANCE_DISAGREEMENT")
+        if int(proofs[0]["eth_balance_wei"]) < before + int(intent["minimum_buy_wei"]):
+            return {**result, "status": "BALANCE_RECONCILIATION_REQUIRED"}
         return {**result, "status": "FILLED_FINALIZED", "chain_verified": True, "proofs": proofs}
