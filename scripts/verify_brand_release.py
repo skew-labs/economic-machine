@@ -48,12 +48,20 @@ def main():
             page.locator('.tool-row[data-product="engine"]').click()
             page.evaluate('window.scrollTo(0, 0)')
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+            # A product selection changes the image source asynchronously. Wait
+            # for its decode instead of treating network latency as a bad asset.
+            page.wait_for_function('Array.from(document.images).every(i=>i.complete && i.naturalWidth>0)')
             assert page.locator('img').evaluate_all('(images)=>images.every(i=>i.complete && i.naturalWidth>0)')
+            badge = page.locator('.inception-badge').bounding_box()
+            own_mark = page.locator('.membership-skew').bounding_box()
+            assert badge['height'] >= 30
+            assert badge['width'] <= own_mark['width'] and badge['height'] <= own_mark['height']
             page.screenshot(path=str(args.output / f'landing-{width}.png'), full_page=True)
             checks.append({'page': 'landing', 'width': width, 'products': 6, 'overflow': False})
             response = page.goto(args.base + '/brand.html', wait_until='networkidle')
             assert response.status == 200
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+            page.wait_for_function('Array.from(document.images).every(i=>i.complete && i.naturalWidth>0)')
             assert page.locator('img').evaluate_all('(images)=>images.every(i=>i.complete && i.naturalWidth>0)')
             page.screenshot(path=str(args.output / f'brand-{width}.png'), full_page=True)
             checks.append({'page': 'brand', 'width': width, 'overflow': False})
