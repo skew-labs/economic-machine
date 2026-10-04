@@ -1,9 +1,9 @@
 {
   "schema": "machine-line-audit-1",
   "engine_implementation": {
-    "files": 108,
-    "physical": 27401,
-    "nonblank": 25677
+    "files": 110,
+    "physical": 27775,
+    "nonblank": 26022
   },
   "native_cpp_implementation": {
     "files": 24,
@@ -11,14 +11,14 @@
     "nonblank": 6722
   },
   "tests": {
-    "files": 55,
-    "physical": 10750,
-    "nonblank": 9657
+    "files": 57,
+    "physical": 11138,
+    "nonblank": 10003
   },
   "operational_scripts": {
-    "files": 64,
-    "physical": 6027,
-    "nonblank": 5400
+    "files": 69,
+    "physical": 6692,
+    "nonblank": 6008
   },
   "implementation_files": [
     {
@@ -302,9 +302,19 @@
       "nonblank": 38
     },
     {
+      "path": "src/machine_engine/solution_launch.py",
+      "physical": 131,
+      "nonblank": 120
+    },
+    {
       "path": "src/machine_engine/solution_operations.py",
-      "physical": 344,
-      "nonblank": 315
+      "physical": 360,
+      "nonblank": 328
+    },
+    {
+      "path": "src/machine_engine/solution_recovery.py",
+      "physical": 227,
+      "nonblank": 212
     },
     {
       "path": "src/machine_engine/task_checkout.py",
@@ -732,6 +742,16 @@
       "path": "tests/test_solution.py",
       "physical": 225,
       "nonblank": 194
+    },
+    {
+      "path": "tests/test_solution_evidence.py",
+      "physical": 65,
+      "nonblank": 55
+    },
+    {
+      "path": "tests/test_solution_launch.py",
+      "physical": 323,
+      "nonblank": 291
     },
     {
       "path": "tests/test_solution_operations.py",

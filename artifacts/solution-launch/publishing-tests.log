@@ -1,0 +1,8 @@
+test_publication_changes_copy_permissions_and_preserves_private_source (test_solution_evidence.PublicMetadata.test_publication_changes_copy_permissions_and_preserves_private_source) ... ok
+test_tampered_checkpoint_symlink_and_outside_path_fail_closed (test_solution_evidence.PublicMetadata.test_tampered_checkpoint_symlink_and_outside_path_fail_closed) ... ok
+test_unknown_private_fields_never_publish_even_with_valid_hash (test_solution_evidence.PublicMetadata.test_unknown_private_fields_never_publish_even_with_valid_hash) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.011s
+
+OK
