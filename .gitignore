@@ -18,8 +18,35 @@ artifacts/contracts.json
 tools/
 .ruff_cache/
 
-# Generated evidence stays in the operator archive; tracked replay fixtures remain.
+# Generated reports stay in the operator archive; tests own their explicit fixtures.
 artifacts/
 # Internal release plans belong outside the public toolkit.
 docs/submission/
 docs/*_20*.md
+
+# Public guides are intentional exports, not a workspace journal.
+docs/**/*.md
+docs/*.md
+!docs/AGENT_CONTROL.md
+!docs/ARCHITECTURE.md
+!docs/CONSOLE.md
+!docs/ECONOMIC_PRIMITIVES.md
+!docs/ENGINE_ARCHITECTURE.md
+!docs/FUEL.md
+!docs/MACHINE_MINING.md
+!docs/PRODUCTION.md
+!docs/SELF_HOSTING.md
+!docs/SERVICE_COMMERCE.md
+!docs/SOLUTION_MAINNET.md
+!docs/SOLUTION_MINING.md
+!docs/SOLUTION_OPERATIONS.md
+!docs/TASK_MCP.md
+!docs/TASK_PAYMENT_RECOVERY.md
+!docs/UNIFIED_ENGINE.md
+!docs/wallet-connectors.md
+**/*DEMO_SCRIPT*.md
+**/*_PLAN*.md
+**/*ROADMAP*.md
+**/PR[0-9]*.md
+internal/
+planning/

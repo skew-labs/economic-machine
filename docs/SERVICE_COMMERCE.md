@@ -36,7 +36,7 @@ plans and transaction IDs survive a tab reload in wallet-scoped session storage.
 Wallet rejection can be retried; an uncertain submission disables another
 signature and retains the purchase ID for reconciliation. This is separate
 from x402 and Atlas Monthly. Deployment, release administration and resale
-remain unsigned plan preparation; no live customer purchase was performed.
+produce unsigned plans and require separate operator approval.
 
 ## Agent keys
 
@@ -164,8 +164,7 @@ usage rights; checkout reuses exactly the same market and x402 path.
 A production compute adapter must separately implement capacity admission,
 reservation/lease identity, job launch, delivery evidence, and expiry/recovery.
 This checkout does not invent a compute seller or bypass the applicable signed
-lease required to start work. No compute merchant is registered in the current
-hosted deployment.
+lease required to start work. Only registered, admitted merchants may enter the payable catalog.
 
 The hosted seller implementation is now available in `machine_commerce.merchant`.
 It forwards only an admitted customer's exact authorization to the configured
@@ -181,12 +180,9 @@ registries without signing or transferring funds. Load both files in the same
 service revision using `deploy/subscriptions.conf`. Existing differing recipients
 are rejected rather than silently replaced. The managed seller identity publishes
 immutable 10-USDC offers and refreshes them without extending human logins or
-changing an in-flight quote. On 2026-10-03 the owner requested creation of a new
-receiver. Atlas Monthly now uses `0xD432a628a9860A8d0Be98c1782B2a0cD136Da00e`
-on Arbitrum One and is available for customer-approved 10-USDC checkout.
-The operator configures the receiver separately; source code does not provision custody or authorize receipt of customer funds.
-The root-only encrypted key is outside the API service; no paid customer
-subscription was executed during setup verification.
+changing an in-flight quote. Configure the receiving address separately for each installation.
+Source code does not provision custody or authorize receipt of customer funds. Receiving keys
+must remain outside the API service.
 
 The console also lists a keyless Gate402 inference connection. Its unsigned
 Arbitrum USDC challenge is queried through a bounded, cached, DNS-pinned request.
@@ -196,18 +192,12 @@ recovery adapter exists; `purchase_enabled` remains false. A read-only connectio
 check requires an authenticated owner and sends no wallet signature. Existing
 GPU lease and workload approval requirements continue to apply.
 
-## Verification scope
+## Integration tests
 
-Changed-code checks run only on the Canadian server. New coverage includes
-checkout replay/concurrency, budget rollback, expiry, seller and SKU binding,
-key permissions/mandate binding, subscription grant/finality/access/renewal,
-and reviewed wallet signature fields. An integration test uses an actual
-EIP-712 signature and token transfer in **ephemeral PyEVM**, through the new
-checkout, and verifies one payment and delivery. It is not a public-chain payment.
-
-Browser evidence covers the deployed signed-out storefront, subscription price
-and modal, existing navigation and responsive layouts. No customer wallet was
-signed, no live subscription was bought, and no GPU workload was started.
+Tests cover checkout replay/concurrency, budget rollback, expiry, seller and SKU
+binding, mandate scopes, subscription grants, finality, access and renewal. An
+isolated EVM test connects an EIP-712 authorization, token transfer, checkout and
+delivery. Local EVM results do not establish public-chain settlement.
 
 Protocol references: [x402 EVM exact specification](https://github.com/x402-foundation/x402/blob/main/specs/schemes/exact/scheme_exact_evm.md)
 and [Circle USDC addresses](https://developers.circle.com/stablecoins/usdc-contract-addresses).

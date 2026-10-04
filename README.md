@@ -6,7 +6,24 @@ Connect APIs, give agents a shared budget, and trace what they actually execute.
 Economic Machine handles policy, approval, payment recovery and receipts. Your keys stay in your environment.
 
 [Website](https://skew.deals) · [Console](https://skew.deals/commerce/console) ·
-[Architecture](docs/ARCHITECTURE.md) · [Self-host](docs/SELF_HOSTING.md) · [Contribute](CONTRIBUTING.md)
+[Architecture](docs/ARCHITECTURE.md) · [C++ engine](native/README.md) ·
+[Smart contracts](contracts/README.md) · [Self-host](docs/SELF_HOSTING.md)
+
+## Source map
+
+| Directory | Contents |
+| --- | --- |
+| [src/economic_machine](src/economic_machine/) | Typed state, ISA, compiler, invariants and deterministic runtime |
+| [native](native/) | C++ kernel, financial primitives, search and sandboxed workers |
+| [contracts](contracts/) | Solidity DataPass, commerce, mining and token contracts |
+| [src/machine_engine](src/machine_engine/) | Accounts, shared budgets, agent policies and execution recovery |
+| [src/machine_commerce](src/machine_commerce/) | Service discovery, payment adapters, licensing and delivery |
+| [tests](tests/) / [cases](cases/) | Boundary tests, adversarial cases and typed example programs |
+| [web](web/) / [site](site/) | Console and public tool interfaces |
+| [docs](docs/) / [products](products/) | Architecture, integration references and tool guides |
+
+Build outputs, operational records, private configuration and internal planning are
+not part of the public toolkit. See [contributing](CONTRIBUTING.md).
 
 ## Choose a tool
 

@@ -60,7 +60,8 @@ class PortalHTTP(unittest.TestCase):
         self.directory = tempfile.TemporaryDirectory()
         self.site = Path(self.directory.name)
         (self.site / "index.html").write_text("<html><head></head><body>Preview</body></html>")
-        self.client = TestClient(create_portal(self.site))
+        self.client = TestClient(create_portal(self.site,
+            proof_path=ROOT / "tests/fixtures/sepolia-workspace.json"))
 
     def tearDown(self):
         self.client.close()
@@ -128,7 +129,7 @@ class PortalHTTP(unittest.TestCase):
         self.assertEqual(self.client.get("/runtime/commerce.sqlite3").status_code, 404)
 
     def test_reject_nonverified_record(self):
-        proof = json.loads((ROOT / "artifacts/arbitrum-sepolia/proof.json").read_text())
+        proof = json.loads((ROOT / "tests/fixtures/sepolia-workspace.json").read_text())
         proof["verified"] = False
         path = self.site / "proof.json"
         path.write_text(json.dumps(proof))

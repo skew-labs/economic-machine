@@ -1,6 +1,8 @@
-# Solution Mining — operations candidate
+# Solution Mining operations
 
-The initial Max-Cut research release is now extended with an executable C++ pipeline, an owner-local daemon/CLI, durable submission state and read-only dual-RPC reconciliation. This is a concrete production engineering increment, **not certification equivalent to Firedancer or ORE**. The mining contract and research token are not publicly deployed or issued. Existing commerce deployments do not prove this mining protocol is deployed.
+The C++ worker pipeline connects to an owner-local CLI, durable submission journal
+and read-only dual-RPC reconciliation. Search, verification, signing and settlement
+remain separate authority boundaries.
 
 ## Runtime layout
 
@@ -28,13 +30,13 @@ Frames are **local little-endian x86_64 ABI**, version 1, 24,240-byte requests a
 
 The same console's `SolutionLab` API routes search through this pinned sandboxed executable when `ENGINE_SOLUTION_PIPELINE`/`ENGINE_SOLUTION_PIPELINE_SHA256` are configured. Exact candidate verification remains a bounded trusted scalar C++ call. The receipt identifies the backend and executable hash. Two concurrent native subprocesses per Python service process are admitted; stalled workers cause subsequent requests to return busy, and completion/failure releases capacity. The parent daemon still owns read-only network access and journal I/O; no API/wallet credentials are inherited by native children.
 
-## Protocol changes
+## Protocol limits
 
-- Removed the first-come global 64-commitment cap. A compiled-EVM regression funds 64 test wallets, then admits miner 65 and lets that miner reveal/win/claim. Counts/priority ordinals use uint256. Scoring and finalization do not iterate the submission population.
+- Commitments have no global first-come cap. Counts and priority ordinals use uint256. Scoring and finalization do not iterate the submission population.
 - One address commits once per problem. Qualification, one winner/problem, one claim and lifetime token cap are unchanged. Creating wallets does not multiply reward supply.
 - The deployer becomes an immutable round operator, solely to authorize funded VRF requests and toggle admission pause. No transfer/upgrade function exists; operator key loss is an availability risk requiring a new deployment. Operator censorship is a disclosed trust boundary.
 - Admission pause blocks new requests/commitments, but permits already-committed reveal, finalization and reward claims. It does not rewrite deadlines, seeds, scores or rewards.
-- This removes one admission exploit, not all spam, validator/sequencer ordering or censorship. Attacker-paid persistent chain storage has no application-level total-submission ceiling. L2 throughput and long-term storage costs still need adversarial measurement.
+- Uncapped admission does not prevent spam, validator/sequencer ordering or censorship. Attacker-paid persistent chain storage has no application-level total-submission ceiling. L2 throughput and long-term storage costs still need adversarial measurement.
 
 ## Chain consistency and recovery
 
@@ -88,18 +90,15 @@ PYTHONPATH=src python scripts/solution_operator.py --config owner.json prepare -
 
 `deploy/solution-miner.service.example` supplies a dedicated-user service profile: no privilege escalation, read-only system, private temp/devices, no capabilities, restricted address families, 256MB memory, one CPU quota and sixteen-task maximum. It is a template, not an installed live mining service. Configure reviewed paths and private owner state before use. The Python daemon has RPC network access; the native child installs its own seccomp filter. This does not reproduce Firedancer's complete privilege separation or validator responsibilities and does not claim zero syscalls.
 
-## Evidence and remaining production gates
+## Verification
 
-`artifacts/solution-operations` records compiled artifacts, native ASan/UBSan and TSan, concurrency tests, failure/recovery tests and a 120-second fixed-frame soak. Initial integration failure was a missing mining-library setting; only that failed connection test is repeated after correcting the environment. Successful unchanged contract/native tests are retained rather than gratuitously rerun.
+`tests/test_solution_operations.py` exercises persistence, concurrent reservations,
+restart recovery, RPC disagreement and commit/reveal/claim reconciliation. Native
+conformance tests cover queue backpressure, frame ordering, integer scores and the
+Linux syscall sandbox. Sanitizers supplement these checks; they are not a security
+proof. Benchmarks must report search time separately from RPC, signing, inclusion
+and finality.
 
-Focused validation covers 40 distinct current cases across the retained runs. A separate public-browser check exercises only the newly changed console/backend connection and receipt download, preserving earlier responsive/UI evidence. Release manifests remain size-bounded and now admit at most 1,000 files to accommodate this actual source/evidence corpus; individual path, symlink, duplicate and file-hash checks remain enforced.
-
-The final sandboxed executable completed **102,432 jobs in 120.006 seconds**, zero frame/order/score failures. Native search p50 **0.272ms**, p99 **0.696ms** at 100,000 edge visits; 16-job process round-trip p50 **6.496ms**, p99 **16.159ms**, including process spawn. Peak child rusage reports 43,856KiB (process-lifecycle accounting, not a precise steady-state native RSS measurement). This synthetic fixed workload excludes RPC, VRF, operator approval, signing, chain inclusion and finality. It is not equal-cost GPU/AI comparison or a Firedancer/ORE benchmark. The pre-seccomp baseline is retained separately.
-
-The final TSan run initially failed at startup due to this kernel's address-space mapping. The same compiled concurrency test passed with ASLR disabled for that test process alone (`setarch x86_64 -R`); the production worker retains normal ASLR. ASan/UBSan and real sandboxed process tests also passed. This is measured test coverage, not a formal race-freedom/security proof.
-
-Still required before public issuance: independent contract/native security review, funded real VRF subscription/consumer registration, public testnet lifecycle with separately approved signatures, 24h/7d soak and restart chaos, multiple operators under actual L2 congestion, encrypted off-host private-state restore, reward/difficulty incentives and useful-task economics. No audit, public mining deployment, mainnet issuance, paid GPU/API job, automatic signer, AF_XDP, FPGA or SIMD improvement is claimed.
-
-A public read-only two-provider probe observed matching working-block hashes on Arbitrum Sepolia and a finalized head roughly 855 seconds behind observation time. This demonstrates why ten-minute commit preparation cannot be driven solely from finalized state. Earlier unavailable read samples are retained. The full C++ → private commitment → local EVM reveal → claim → mint-event and balance readback integration uses disposable accounts, a mock VRF coordinator and simulated finality; it is not a public testnet transaction. The resource-restricted service smoke only checks CLI startup, not continuous funded mining.
-
-Reference implementations reviewed for operational responsibilities: [Firedancer](https://github.com/firedancer-io/firedancer), [ORE](https://github.com/regolith-labs/ore). No code is copied from either and their production maturity is not inherited by citing them.
+An operator must independently review deployed code, VRF registration and funding,
+key recovery, restart handling and reward economics before enabling public issuance.
+Mocks and isolated EVM results do not establish a live VRF or token deployment.

@@ -1,9 +1,9 @@
-# Skew Solution mainnet candidate
+# Skew Solution protocol and signer
 
-This increment supplies an Arbitrum One-compatible emission contract and an owner-local
-miner/signing path. It has not deployed our contract, funded VRF, minted a public token,
-or passed an independent security audit. Existing research deployments and commerce
-remain separate. The research contract is preserved, not silently upgraded.
+The Arbitrum One-compatible emission contract works with a separate owner-local
+miner and signer. Source availability does not establish deployment, funded VRF,
+public token issuance or an independent security audit. Research contracts and
+requester-funded mining use separate reward semantics.
 
 ## What a participant runs
 
@@ -100,13 +100,12 @@ the round pending, emits a diagnostic and does not invent randomness. Availabili
 need coordinator/subscription incident handling. Search starts after seed disclosure, with
 fixed commit/reveal windows; this is optimization competition, not a pre-draw betting scheme.
 
-## Reproducible release and gates
+## Compilation and deployment prerequisites
 
-Remote-only `compile_solution_mainnet.py` pins Solidity 0.8.24 by binary SHA256, Shanghai,
+`compile_solution_mainnet.py` pins Solidity 0.8.24 by binary SHA256, Shanghai,
 optimizer 200/viaIR, zero warnings, EIP-170/EIP-3860 limits and source/artifact hashes.
-`validate_solution_mainnet.py` runs new contract/signer/release tests and existing changed
-chain/lifecycle connections, not unrelated prior full suites. It retains log hashes and source
-pins. `SkewVRFMock` is test-only and excluded from implementation-line counts.
+`validate_solution_mainnet.py` runs contract, signer and chain-lifecycle tests. It retains log hashes and source
+pins. `SkewVRFMock` is a test-only coordinator without a cryptographic randomness proof.
 
 `solution_mainnet_preflight.py` performs only read methods: actual chain ID, common finalized
 block, official coordinator/LINK code agreement and optional subscription balance/consumers.
@@ -118,5 +117,4 @@ Actual public mining remains closed until an owner-reviewed deployment, funded s
 consumer registration, activation, actual VRF request/fulfillment and independent participant
 commit/reveal/claim have finalized and balances have been checked. Independent security review,
 completed duration qualification, keeper incident procedure and off-host secret recovery also
-remain production launch gates. An in-progress 24-hour test is not a completed soak. This release
-makes the implementation reviewable; it does not certify parity with Firedancer or ORE.
+remain production launch gates. Duration qualification must finish before it is reported as completed.

@@ -1,9 +1,9 @@
 # C++ Economic Machine primitive library
 
-The original MEA plan defines an economic computer: OBSERVE → TRANSITION → VERIFY,
+The runtime follows OBSERVE → TRANSITION → VERIFY with
 typed economic instructions, bounded capital, external settlement and reproducible receipts.
 The native economic library implements financial calculations and decision functions inside
-that boundary. It does not acquire general intelligence from its source-line count.
+that boundary.
 
 ## Executable domains
 
@@ -39,8 +39,8 @@ remain outside the C++ arithmetic loop. No LLM, HTTP, heap-backed state store or
 programs dirty, coalesces events under a minimum interval and wakes on candidate/state expiry.
 Its fixed SPSC queue retains pending results and applies backpressure to ingestion rather than
 overwriting financial state. Idle monitoring neither re-emits missing-state exceptions nor invokes
-a model. This library is conformance-tested; it is not yet connected to production feed threads.
-The calculation API is deployed independently in the same existing console service.
+a model. Feed adapters supply observations through the typed input boundary; the library does not
+open market connections itself. The calculation API uses the same console service.
 
 Execution projections treat `available` as unencumbered free tokens and `reserved` as supplied
 collateral in the declared lending model. These fields do not release authority-ledger budget holds.
@@ -70,9 +70,9 @@ Plain numeric strings, decimal fractions and noncanonical literals remain reject
 The native library path is immutable and SHA-256 pinned. The existing native program
 library remains separately pinned; no loaded shared-object file is overwritten.
 
-## Evidence and remaining scope
+## Verification and supported models
 
-`scripts/build_economics.py` builds on the authorized Canada host and runs the new
+`scripts/build_economics.py` builds on Linux and runs the
 conformance suite normally and under AddressSanitizer/UndefinedBehaviorSanitizer.
 `tests/test_native_economics.py` exercises the real shared library through the same
 workspace, HTTP routes and named-agent ledger. Funding rounding is differentially
@@ -88,7 +88,3 @@ Still outside the declared financial models: cross-margin venue liquidation, inv
 contracts, options pricing/assignment, continuous-space global optimization, calibrated
 market-regime prediction, general financial opcode lowering into every protocol adapter and deployment
 of the off-chain C++ runtime inside a blockchain VM. A large source tree does not prove those.
-
-The implementation-only 30,000-line objective remains separate from test and tooling
-counts. `scripts/count_release_lines.py` retains that denominator and rejects counting
-data, generated cases, dependencies, logs, docs or landing-page copy as engine code.

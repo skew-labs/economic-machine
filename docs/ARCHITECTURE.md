@@ -83,5 +83,6 @@ in Release configurations. It does not claim kernel-bypass networking or end-to-
 - [Security](../SECURITY.md): trust and signing boundaries.
 
 Operate from a source checkout. Keep runtime databases, signer material, raw licensed inputs and
-operator configuration outside version control. Historical fixtures under `artifacts/` are replay
-inputs; they never confer live authority.
+operator configuration outside version control. Recorded inputs under `tests/fixtures/` are
+explicit test data; they never confer live authority. Generated compiler output and operational
+reports belong in the ignored `artifacts/` directory.

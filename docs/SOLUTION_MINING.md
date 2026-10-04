@@ -14,7 +14,7 @@ This adds `MAXCUT_V1_RESEARCH` beside requester-funded Machine Mining in the sam
 - The research token has a hard cap of 160,000 SKEWSIM over at most 10,000 rounds. No premine or administrator mint exists. Token parameters are research fixtures, not a launched monetary policy.
 - A winner can claim only once, after finalization. Actual `mint` authorization belongs only to the deployed research protocol. The token has no demonstrated price, redemption or revenue.
 
-The current contract/token have **not been deployed publicly**. Tests execute real compiled bytecode in a local EVM on the Canadian host; any tokens minted there are simulation state. The console can only calculate/download candidates and cannot request paid randomness, sign, issue tokens or broadcast.
+Tests execute compiled bytecode in an isolated EVM; tokens minted there are simulation state and do not establish a public deployment. The console can only calculate/download candidates and cannot request paid randomness, sign, issue tokens or broadcast.
 
 ## Commit/reveal and ordering
 
@@ -40,11 +40,16 @@ The initial threshold is 55%, the floor 52%, the ceiling 80%. Only finalized rou
 
 The controller uses result qualification, not wallets, deposits, self-reported GPU time or API usage. Withholding can still drive qualification down and reduce future difficulty; the eight-round withholding test reaches the floor without minting. Bounds limit the attack's effect, but do not eliminate the strategic incentive.
 
-## Admission hardening after the initial research release
+## Admission and operator authority
 
-The initial research release admitted only 64 commitments per problem. Its attack test confirmed slot exclusion. The operations release removes that global first-come limit and widens commitment ordinals to uint256: 64 attacker commitments cannot exclude miner 65, and no finalization/claim loop enumerates submitters. One commitment per address/problem remains; reward quantity remains one per problem. New compiled-EVM tests reproduce the original setup and verify miner 65 can win and claim.
+Commitment ordinals use uint256 and there is no global first-come commitment cap.
+One commitment per address/problem and one reward per problem remain. Scoring,
+finalization and claims do not loop over all submitters. Tests verify that 64
+attacker commitments do not exclude a subsequent valid participant.
 
-This fixes the specific slot attack, not all Sybil/congestion issues. Attackers can still pay to create persistent chain state and compete on transaction ordering. The immutable round operator limits funded VRF requests; emergency admission pause leaves reveal, finalize and claim available. The operator cannot alter seeds, rewards or scores. Public issuance remains unlaunched pending audit, live VRF integration and longer operation. The UI does not expose issuance.
+Multiple wallets can still create persistent state and compete on transaction
+ordering. The immutable round operator controls funded VRF requests; admission
+pause preserves reveal, finalize and claim. It cannot alter seeds, rewards or scores.
 
 ## Native worker and hardware boundary
 
@@ -78,12 +83,15 @@ The candidate file contains an exact decimal `bits` string. Any agent can genera
 
 Offline drafts do not authenticate an on-chain round. Before signing, verify deployed code/coordinator, actual seed/threshold/window and existing commitment. Do not auto-retry unknown submissions. This CLI does not read or use wallet private keys.
 
-## Measured research evidence
+## Verification and benchmarks
 
-`artifacts/solution` retains the initial canonical-encoding failure and the corrected passing tests, compiler/source hashes, sanitizer result, real isolated/public UI checks, and benchmarking. It tests 16-problem native/Solidity score agreement, capped local issuance, replay/recipient binding, canonical duplicates, no-result issuance, future-only difficulty, spoofed/late randomness, withheld answers and slot saturation.
+The test suite checks native/Solidity score agreement, capped issuance, replay and
+recipient binding, canonical duplicates, no-result rounds, future-only difficulty,
+VRF callback errors and withheld answers. `scripts/benchmark_solution.py` compares
+CPU random, greedy and annealing search under edge-visit and wall-clock budgets;
+small exact problems provide a reference gap.
 
-Benchmarks compare CPU random/greedy/anneal over 16 fixed problems with (a) the same edge-visit budget and (b) separate 20ms native-call wall-clock budgets. These are **not equal-dollar-cost measurements**: hardware rental, electricity, GPU billing and AI provider invoices are unavailable. Eight small problems also use exact solutions to measure gaps. Native score latency and actual local-EVM score gas are separately reported; source generation, VRF proof, network/chain latency and settlement cost are excluded from the native figure.
-
-GPU comparison is `NOT_RUN_NO_AUTHORIZED_GPU_LEASE`; AI comparison is `NOT_RUN_NO_APPROVED_PAID_PROVIDER_BUDGET`. No GPU/AI superiority is inferred. A random graph is not automatically useful economic output. The next decision is whether measured difficulty, verification cost and admission security justify this task family; otherwise change task family before public token issuance.
-
-Solidity was chosen for the bounded verifier. The current [Stylus pause notice](https://docs.arbitrum.io/notices/stylus-activation-pause-notice) specifically covers new/expired activations on **Arbitrum One and Nova**, and says Solidity/EVM execution is unaffected. It is not a blanket claim that Sepolia Stylus is unavailable.
+Native scoring latency excludes problem generation, network requests, VRF,
+settlement and signing. Equal work budgets do not establish equal monetary cost.
+No GPU or model-performance advantage follows from these CPU benchmarks. Random
+graph solutions do not by themselves establish external economic value.

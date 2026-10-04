@@ -125,42 +125,22 @@ keys support Fuel proposals and reconciliation.
   bounded bodies, rate limits, scoped owner workspaces and static-file allowlists
   protect the public entry. No key or seed input exists.
 
-## Deployment and evidence
+## Hosting and verification
 
-The deployed Fuel service runs with `DynamicUser`, a read-only filesystem, private
-state directory and 256 MB limit on the authorized Canadian host. The state file
-is `/var/lib/machine-commerce-fuel/data/swaps.sqlite3`; the extra `data` directory
-preserves the store's symlink refusal despite systemd's StateDirectory symlink.
-No existing production secrets, mining routes or DataPass launch changes were
-included in this focused release.
-
-`scripts/deploy_fuel.py --activate` fences the previous deployment's hashes and
-saves source/config backups before installing this initial release. It is an
-initial release script, not an automatic updater; a repeated invocation refuses
-to overwrite a release. Backups are under `release-backups/fuel-20261004`.
-Rollback restores those four baseline files and nginx configuration, restarts the
-core API and disables the Fuel service. Preserve the Fuel journal whenever signed
-orders may exist; rolling back code does not revoke their authority.
-
-Verification artifacts live under `artifacts/fuel`. Run tests/builds only remotely:
+The service templates use a dedicated systemd identity, private state directory,
+read-only filesystem and bounded memory. Preserve the private order journal across
+upgrades and rollback: changing code does not revoke an already signed order.
+Configure server-only RPC credentials separately from the browser.
 
 ```sh
 PYTHONPATH=src:tests python -m unittest test_gas_router test_engine_fuel -v
 node --test tests/swap_wallet.test.cjs
-PYTHONPATH=src python scripts/probe_fuel_readonly.py --owner <public-address>
-python scripts/verify_fuel_browser.py --owner <public-address>
 ```
 
-Use the configured project Python, browser QA Python and pinned Node runtime.
-`scripts/build_swap_crypto.sh` rebuilds the browser bundle from the checked-in
-lockfile; generated bundle/vendor code is not counted as authored engine code.
-
-The live probe signs a permit with a fresh **unfunded ephemeral test identity**,
-obtains a verified mainnet quote, and forbids `/orders` at its transport boundary.
-Browser verification uses a synthetic read-only provider and never asks for a
-financial signature. Neither establishes a real customer's completed swap.
-This release has no independent security audit and no customer mainnet fill
-evidence yet. It does not demonstrate mining rewards or DataPass delivery.
+`scripts/build_swap_crypto.sh` rebuilds the browser helper from its dependency
+lockfile. Read-only probes and synthetic browser providers exercise quote and UI
+boundaries; they do not establish a customer's completed swap. Completion requires
+an independently reconciled receipt and destination balance observation.
 
 ## Primary references
 
