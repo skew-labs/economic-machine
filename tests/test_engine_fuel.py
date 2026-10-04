@@ -47,6 +47,14 @@ class EngineFuelTests(unittest.TestCase):
         with self.assertRaisesRegex(MachineError, "IDEMPOTENCY"):
             self.fuel.propose({**self.request, "parent_action_hash": "cd"*32})
 
+    def test_owner_can_set_larger_policy_but_cannot_overspend_it(self):
+        policy=self.fuel.policy({'owner':TEST.address,'agent_ids':self.aids,'budget_atoms':100000000,
+            'max_fuel_atoms':20000000,'max_purchase_atoms':80000000,'expires_at':self.net.now+3600})
+        proposal={**self.request,'policy_id':policy['id'],'fuel_atoms':10000000,'purchase_atoms':1000000}
+        self.assertEqual(self.fuel.propose(proposal)['held_atoms'],11000000)
+        with self.assertRaisesRegex(MachineError,'POLICY_AMOUNT_EXCEEDED'):
+            self.fuel.propose({**proposal,'request_id':'larger','fuel_atoms':20000001})
+
     def test_mainnet_connector_pins_chain_token_and_finalized_height(self):
         from test_engine_workspace import FakeHTTP
         http = FakeHTTP()
@@ -150,7 +158,7 @@ class EngineFuelTests(unittest.TestCase):
                 proposed = agent.post("/api/engine/fuel/requests", json=self.request)
                 self.assertEqual(proposed.status_code, 200, proposed.text)
                 p = proposed.json(); path = "/api/engine/fuel/requests/" + p["id"]
-                self.assertEqual(p["wallet_review_url"], "/commerce/swap?fuel=" + p["id"])
+                self.assertEqual(p["wallet_review_url"], "/commerce/console?fuel=" + p["id"] + "#overview")
                 self.assertEqual(guest.get(path).status_code, 401)
                 self.assertEqual(agent.get(path).status_code, 200)
                 for suffix in ["order", "submit", "resume-review", "cancel-parent"]:

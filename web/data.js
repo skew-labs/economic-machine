@@ -95,8 +95,8 @@
       const product = panel(item.name, `${item.coverage.rows} public price observations · ${item.coverage.regions.length} APAC regions · ${stamp(item.as_of)}`);
       const links = C.el("div", "ops-actions");
       const atlas = C.el("a", "button secondary", "Explore Atlas ↗");
-      atlas.href = "https://skew-economic-machine.angus4314.chatgpt.site/atlas.html";
-      atlas.target = "_blank"; atlas.rel = "noreferrer";
+      atlas.href = "/commerce/atlas.html";
+
       links.append(atlas, action("Refresh release", refresh));
       product.append(C.el("p", "", "24-hour transferable access to an original derived report. Public prices do not establish available capacity."));
       const hashes = C.el("pre", "receipt-json", `Report ${item.version}\nTerms  ${item.terms_sha256}\nSources ${item.source_observation_root}`);

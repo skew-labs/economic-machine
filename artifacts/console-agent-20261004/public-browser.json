@@ -1,0 +1,25 @@
+{
+  "origin": "https://skew.deals",
+  "account_kind": "EPHEMERAL_UNFUNDED_AUTH_ONLY",
+  "authentication": true,
+  "live_model_trace": {
+    "latency_ms": 2503,
+    "model": "qwen3-32b",
+    "model_calls": 1,
+    "provider": "kiln",
+    "response_hash": "e1aadd718a55fd617f10e5737b62c96144cbe4b1d05c0fbfd3b2034c816bcfbb",
+    "source": "PROVIDER_RESPONSE",
+    "usage": {
+      "completion_tokens": 126,
+      "prompt_tokens": 388
+    }
+  },
+  "task_status": "READY_TO_PLAN",
+  "payment_authority": "NONE",
+  "reload_recovery": true,
+  "data_layout": true,
+  "evidence_page": true,
+  "logout_revokes_session": true,
+  "chain_writes": 0,
+  "javascript_errors": []
+}

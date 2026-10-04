@@ -4,6 +4,16 @@
   const RELAYER='0xc92e8bdf79f0507f65a392b0ab4667716bfe0110', SETTLEMENT='0x9008d19f58aabd9ed0d60971565aa8510560ab41';
   const eq=(a,b)=>typeof a==='string'&&typeof b==='string'&&a.toLowerCase()===b.toLowerCase();
   const fail=()=>{throw new Error('Swap differs from the reviewed amount, recipient or Arbitrum contracts.');};
+  function usdcAtoms(value) {
+    if(typeof value!=='string'||!/^(?:0|[1-9][0-9]{0,71})(?:\.[0-9]{1,6})?$/.test(value))throw new Error('Enter a positive USDC amount with up to six decimal places.');
+    const [whole,fraction='']=value.split('.'),atoms=BigInt(whole)*1000000n+BigInt(fraction.padEnd(6,'0'));
+    if(atoms<=0n||atoms>=(1n<<256n))throw new Error('USDC amount is outside the token format.');
+    return atoms.toString();
+  }
+  function formatUnits(value,decimals=6) {
+    const raw=BigInt(value).toString().padStart(decimals+1,'0'),fraction=raw.slice(-decimals).replace(/0+$/,'');
+    return raw.slice(0,-decimals)+(fraction?'.'+fraction:'');
+  }
   const fields=list=>list.map(([name,type])=>({name,type}));
   const domainFields=fields([['name','string'],['version','string'],['chainId','uint256'],['verifyingContract','address']]);
   const permitFields=fields([['owner','address'],['spender','address'],['value','uint256'],['nonce','uint256'],['deadline','uint256']]);
@@ -12,7 +22,7 @@
   function validBase(p,owner,amount){
     const now=Math.floor(Date.now()/1000);
     if(p.schema!=='skew-gas-swap-1'||p.chain_id!==42161||!eq(owner,p.owner)||
-       !/^[0-9]{7}$/.test(p.amount_atoms)||p.amount_atoms!==String(amount)||BigInt(p.amount_atoms)<1000000n||BigInt(p.amount_atoms)>3000000n||
+       typeof p.amount_atoms!=='string'||!/^[1-9][0-9]{0,77}$/.test(p.amount_atoms)||p.amount_atoms!==String(amount)||BigInt(p.amount_atoms)>=(1n<<256n)||
        !Number.isSafeInteger(p.valid_to)||p.valid_to<=now||p.valid_to>now+600||
        !/^[0-9a-f]{48}$/.test(p.id))fail();
     const t=p.permit;
@@ -66,6 +76,6 @@
     persist({id:p.id,owner,order_uid:p.order_uid,status:'UNKNOWN_RECONCILE_ONLY',valid_to:p.valid_to});
     return signature;
   }
-  const api={signPermit,signOrder,validateOrder,validBase};
+  const api={signPermit,signOrder,validateOrder,validBase,usdcAtoms,formatUnits};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.SkewSwapWallet=api;
 })(typeof window!=='undefined'?window:globalThis);

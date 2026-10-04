@@ -1,0 +1,14 @@
+{
+  "source": "Actual Chrome console accessibility and screenshot observation",
+  "origin": "https://skew.deals/commerce/console#overview",
+  "connected_wallet_display": "0x1c8F…41C5",
+  "amount_usdc": "10",
+  "estimated_eth": "0.003704019656938231",
+  "routing_cost_usdc": "0.014068",
+  "network": "Arbitrum One",
+  "visible_next_step": "1. Approve USDC in wallet",
+  "fresh_chain_error_on_this_quote": false,
+  "financial_signatures_requested_by_verifier": 0,
+  "orders_submitted_by_verifier": 0,
+  "customer_fill_proven": false
+}

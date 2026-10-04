@@ -1,0 +1,58 @@
+[
+  {
+    "request_id": "live-qwen-20261004-000",
+    "proposal": {
+      "reply": "Arbitrum에서 2 USDC를 ETH로 교환하려면, USDC에서 ETH로의 스왑 경로를 사용할 수 있습니다. 이는 가스비를 지불하는 데 사용할 수 있습니다. 계속 진행하시겠습니까?",
+      "action": "swap",
+      "amount": "2",
+      "task": null
+    },
+    "trace": {
+      "provider": "kiln",
+      "model": "qwen3-32b",
+      "latency_ms": 2071,
+      "usage": {
+        "prompt_tokens": 393,
+        "completion_tokens": 87
+      },
+      "response_hash": "b3d1f5ca6390cf114ab9910ef17792dcc107e3e8439ff1cde34569a6a85e4e69",
+      "model_calls": 1,
+      "source": "PROVIDER_RESPONSE"
+    },
+    "authority": "PROPOSE_ONLY",
+    "created": 1791097300
+  },
+  {
+    "request_id": "live-qwen-20261004-001",
+    "proposal": {
+      "action": "task",
+      "amount": null,
+      "reply": "CRM 세 곳을 가격과 연동 기능으로 비교하는 조사 요청을 확인했습니다. 예산은 10달러이며, 결과는 영어로 된 표 형식으로 제공됩니다. 조사 범위나 추가 제약 조건이 있습니까?",
+      "task": {
+        "kind": "vendor_comparison",
+        "title": "CRM 비교 조사",
+        "budget": "10",
+        "constraints": {
+          "output_language": "en",
+          "output_format": "table"
+        },
+        "preference_id": null
+      }
+    },
+    "trace": {
+      "provider": "kiln",
+      "model": "qwen3-32b",
+      "latency_ms": 2128,
+      "usage": {
+        "prompt_tokens": 522,
+        "completion_tokens": 125
+      },
+      "response_hash": "40efaae3025f53ee218674fb9eb0c9fdf252cfb947d5726afd4216e2fa56338e",
+      "model_calls": 1,
+      "source": "PROVIDER_RESPONSE"
+    },
+    "authority": "PROPOSE_ONLY",
+    "created": 1791097302,
+    "accepted_task_status": "NEEDS_INPUT"
+  }
+]

@@ -8,7 +8,7 @@
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!nav.hidden){closeMenu();menu.focus();}});
   document.addEventListener('click',e=>{if(!e.target.closest('.masthead'))closeMenu();});
   const products={
-    engine:{name:'Economic Machine',category:'Agent operations',note:'Open source · MIT',icon:'assets/app-engine.svg',description:'Your APIs, agents and shared budgets in one open-source console.',features:['Connect exchange, wallet, data and AI APIs','Give agents budgets and approval rules','Follow execution, failures and receipts'],label:'Open Engine',url:'https://machine.148-113-153-116.nip.io/commerce/console',type:'operate'},
+    engine:{name:'Economic Machine',category:'Agent operations',note:'Open source · MIT',icon:'assets/app-engine.svg',description:'Your APIs, agents and shared budgets in one open-source console.',features:['Connect exchange, wallet, data and AI APIs','Give agents budgets and approval rules','Follow execution, failures and receipts'],label:'Open Engine',url:'https://skew.deals/commerce/console',type:'operate'},
     atlas:{name:'Atlas',category:'Compute intelligence',note:'Public list-price research',icon:'assets/app-atlas.svg',description:'Compare source-bound compute prices across APAC cloud regions.',features:['Explore official public price observations','Compare regions, providers and hardware','Inspect source provenance and update times'],label:'Explore Atlas',url:'atlas.html',type:'data'},
     datapass:{name:'DataPass',category:'Data access',note:'Arbitrum Sepolia',icon:'assets/app-data-pass.svg',description:'Versioned data licenses with wallet-owned access and delivery verification.',features:['Bind access to an exact report version','Verify the current license before delivery','Transfer the remaining access period'],label:'Explore DataPass',url:'data-pass.html',type:'data'},
     sitelens:{name:'SiteLens',category:'Capacity planning',note:'Scenario model',icon:'assets/app-site-lens.svg',description:'Translate facility power and cooling assumptions into GPU capacity scenarios.',features:['Set facility power and operating assumptions','Compare usable GPU capacity scenarios','Inspect the inputs behind each estimate'],label:'Open SiteLens',url:'site-lens.html',type:'data'}
@@ -19,6 +19,6 @@
   function filterTools(){const query=$('tool-search').value.trim().toLowerCase();let shown=0;for(const row of rows){const p=products[row.dataset.product],match=(filter==='all'||p.type===filter)&&[p.name,p.category,p.description].join(' ').toLowerCase().includes(query);row.hidden=!match;if(match)shown++;}$('tool-count').textContent=shown+' tool'+(shown===1?'':'s');$('no-results').hidden=shown!==0;const first=rows.find(r=>!r.hidden);if(first&&rows.find(r=>r.dataset.product===selected).hidden)select(first.dataset.product);}
   $('tool-search').addEventListener('input',filterTools);
   for(const button of document.querySelectorAll('[data-filter]'))button.addEventListener('click',()=>{filter=button.dataset.filter;for(const other of document.querySelectorAll('[data-filter]'))other.setAttribute('aria-pressed',String(other===button));filterTools();});
-  if(location.hash==='#engine')location.replace('https://machine.148-113-153-116.nip.io/commerce/console');
-  if(location.hash==='#evidence')location.replace('evidence.html#evidence');
+  if(location.hash==='#engine')location.replace('https://skew.deals/commerce/console');
+  if(location.hash==='#evidence')location.replace('/commerce/evidence.html');
 })();

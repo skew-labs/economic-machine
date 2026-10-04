@@ -1,0 +1,37 @@
+{
+  "status": "PERMIT_REQUIRED",
+  "amount_atoms": "10000000",
+  "preview_buy_wei": "3707943503951904",
+  "preview_fee_atoms": "11395",
+  "price_guard": {
+    "source": "CHAINLINK_ARBITRUM",
+    "max_shortfall_bps": 500,
+    "observations": [
+      {
+        "rpc": "ARBITRUM_PRIMARY",
+        "block": "0x1e7d9c1b",
+        "eth_usd_8": "269167214376",
+        "usdc_usd_8": "99994303",
+        "fair_eth_wei": "3714951066080352",
+        "block_timestamp": 1791099246,
+        "checked_at": 1791099248
+      },
+      {
+        "rpc": "ARBITRUM_VERIFIER",
+        "block": "0x1e7d9c1e",
+        "eth_usd_8": "269167214376",
+        "usdc_usd_8": "99994303",
+        "fair_eth_wei": "3714951066080352",
+        "block_timestamp": 1791099247,
+        "checked_at": 1791099248
+      }
+    ]
+  },
+  "rpc_credentials_exposed": false,
+  "latency_ms": 6223,
+  "rpc_reads": 30,
+  "quote_requests": 1,
+  "signatures": 0,
+  "order_submissions": 0,
+  "chain_writes": 0
+}

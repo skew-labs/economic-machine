@@ -1,0 +1,29 @@
+[
+  {
+    "width": 390,
+    "public_origin": "https://skew.deals",
+    "console": true,
+    "data_licenses": true,
+    "horizontal_overflow": false,
+    "javascript_errors": [],
+    "asset_responses_ok": 18
+  },
+  {
+    "width": 768,
+    "public_origin": "https://skew.deals",
+    "console": true,
+    "data_licenses": true,
+    "horizontal_overflow": false,
+    "javascript_errors": [],
+    "asset_responses_ok": 18
+  },
+  {
+    "width": 1440,
+    "public_origin": "https://skew.deals",
+    "console": true,
+    "data_licenses": true,
+    "horizontal_overflow": false,
+    "javascript_errors": [],
+    "asset_responses_ok": 18
+  }
+]

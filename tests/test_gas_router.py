@@ -1,7 +1,9 @@
 import copy
+import json
 import tempfile
 import time
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 from eth_abi import encode
@@ -12,6 +14,7 @@ from fastapi.testclient import TestClient
 
 from economic_machine.values import MachineError
 from machine_commerce.fuel_price import ETH_USD, SEQUENCER, USDC_USD
+from machine_commerce.fuel_rpc import configured_rpcs
 from machine_commerce.gas_portal import SwapStore, create_gas_portal
 from machine_commerce.gas_router import (
     API,
@@ -84,7 +87,7 @@ class FakeNetwork:
         self.calls.append((url, method, body))
         if url == API + "/quote":
             q = {"sellToken": USDC, "buyToken": ETH, "receiver": body["receiver"], "sellAmount": str(int(body["sellAmountBeforeFee"])-10000),
-                 "buyAmount": "740000000000000", "feeAmount": "10000", "validTo": body["validTo"],
+                 "buyAmount": str(int(body["sellAmountBeforeFee"])*370000000), "feeAmount": "10000", "validTo": body["validTo"],
                  "appData": body["appData"], "appDataHash": body["appDataHash"], "kind": "sell", "partiallyFillable": False,
                  "sellTokenBalance": "erc20", "buyTokenBalance": "erc20", "signingScheme": "eip712"}
             from datetime import datetime, timezone
@@ -135,7 +138,7 @@ class GasRouterTests(unittest.TestCase):
             self.router.submission(p, sign(p["order"]))
 
     def test_amount_fee_recipient_asset_and_hook_tampering_fail_closed(self):
-        for amount in (0, 999999, 3000001, True, "2000000"):
+        for amount in (0, -1, 1<<256, True, "2000000"):
             with self.subTest(amount=amount), self.assertRaises(MachineError): self.router.prepare(TEST.address, amount)
         for key, value in [("receiver", RELAYER), ("buyToken", USDC), ("sellToken", ETH),
                            ("feeAmount", "1000001"), ("sellAmount", "2000000"), ("buyAmount", "0"),
@@ -145,6 +148,84 @@ class GasRouterTests(unittest.TestCase):
                 return reply
             self.net.quote_change = change
             with self.subTest(key=key), self.assertRaises(MachineError): self.router.prepare(TEST.address, 2000000)
+
+    def test_amounts_above_pilot_cap_follow_wallet_balance(self):
+        for amount in [500000,3000001,10000000,27000000]:
+            p=self.router.prepare(TEST.address,amount)
+            self.assertEqual(p['permit']['message']['value'],str(amount))
+        with self.assertRaisesRegex(MachineError,'INSUFFICIENT_USDC'):
+            self.router.prepare(TEST.address,27000001)
+
+    def test_rpc_block_after_request_start_is_current_not_future(self):
+        original=self.net.read
+        def advancing(url,method,params):
+            if method=='eth_getBlockByNumber':self.net.now+=1
+            return original(url,method,params)
+        p=GasRouter(advancing,self.net.api,lambda:self.net.now).prepare(TEST.address,2000000)
+        observations=p['price_guard']['observations']
+        self.assertGreater(observations[1]['block_timestamp'],observations[0]['block_timestamp'])
+
+    def test_paid_rpc_secret_is_absent_from_quote_and_settlement_receipts(self):
+        endpoints=('https://paid.example/secret-fixture-token',RPCS[1])
+        with patch('machine_commerce.gas_router.RPCS',endpoints):
+            p=self.intent()
+            self.net.intent=p
+            self.net.provider_status='fulfilled'
+            result=self.router.status(p)
+            for payload in [p,result]:
+                self.assertNotIn('secret-fixture-token',json.dumps(payload))
+                self.assertNotIn('paid.example',json.dumps(payload))
+            self.assertEqual(p['observations'][0]['rpc'],'ARBITRUM_PRIMARY')
+            self.assertEqual(result['proofs'][1]['rpc'],'ARBITRUM_VERIFIER')
+            self.assertTrue(any(call[0]==endpoints[0] for call in self.net.calls))
+
+    def test_rpc_configuration_and_errors_never_echo_credentials(self):
+        import httpx
+        from machine_commerce.gas_router import rpc
+        token='secret-fixture-token'
+        good='https://paid.example/'+token
+        self.assertEqual(configured_rpcs({'SKEW_FUEL_RPC_PRIMARY':good})[0],good)
+        for bad in ['http://paid.example/'+token,'https://user:password@paid.example/'+token,
+                    'https://paid.example/#'+token,'https://paid.example:invalid/'+token]:
+            with self.subTest(url=bad),self.assertRaisesRegex(MachineError,'INVALID_FUEL_RPC_CONFIGURATION'):
+                configured_rpcs({'SKEW_FUEL_RPC_PRIMARY':bad})
+        with self.assertRaisesRegex(MachineError,'INDEPENDENT_FUEL_RPC_HOSTS_REQUIRED'):
+            configured_rpcs({'SKEW_FUEL_RPC_PRIMARY':good,'SKEW_FUEL_RPC_VERIFIER':'https://paid.example/different-token'})
+        with patch('machine_commerce.gas_router.RPCS',(good,RPCS[1])),patch(
+                'machine_commerce.gas_router.read_json',side_effect=httpx.ConnectError('failed '+good)):
+            with self.assertRaisesRegex(MachineError,'RPC_READ_UNAVAILABLE') as raised:
+                rpc(good,'eth_chainId',[])
+            self.assertNotIn(token,str(raised.exception))
+            self.assertTrue(raised.exception.__suppress_context__)
+
+    def test_large_http_amounts_preserve_exact_value_and_enforce_balance(self):
+        with tempfile.TemporaryDirectory() as folder:
+            store=SwapStore(Path(folder)/'swap.sqlite3',self.router)
+            with TestClient(create_gas_portal(store)) as client:
+                headers={'Origin':'https://machine.148-113-153-116.nip.io'}
+                body={'owner':TEST.address,'amount_atoms':'10000000'}
+                reply=client.post('/commerce/swap-api/quote',json=body,headers=headers)
+                self.assertEqual(reply.status_code,200)
+                self.assertEqual(reply.json()['permit']['message']['value'],'10000000')
+                for invalid in [10000000,'01','1e7',str(1<<256)]:
+                    self.assertEqual(client.post('/commerce/swap-api/quote',json={**body,'amount_atoms':invalid},headers=headers).status_code,409)
+                reply=client.post('/commerce/swap-api/quote',json={**body,'amount_atoms':'27000001'},headers=headers)
+                self.assertEqual(reply.json()['error'],'INSUFFICIENT_USDC')
+
+    def test_stale_future_and_aged_during_read_blocks_remain_rejected(self):
+        original=self.net.read
+        for offset in [-121,10]:
+            def changed(url,method,params):
+                value=original(url,method,params)
+                if method=='eth_getBlockByNumber':value={**value,'timestamp':hex(self.net.now+offset)}
+                return value
+            with self.subTest(offset=offset),self.assertRaisesRegex(MachineError,'FRESH_CHAIN_STATE'):
+                GasRouter(changed,self.net.api,lambda:self.net.now).prepare(TEST.address,2000000)
+        def slow(url,method,params):
+            if url==RPCS[1] and method=='eth_getBlockByNumber':self.net.now+=121
+            return original(url,method,params)
+        with self.assertRaisesRegex(MachineError,'FRESH_CHAIN_STATE'):
+            GasRouter(slow,self.net.api,lambda:self.net.now).prepare(TEST.address,2000000)
 
     def test_two_rpc_nonce_domain_and_relayer_agreement(self):
         original = self.net.read

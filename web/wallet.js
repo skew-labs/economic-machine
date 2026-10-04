@@ -19,9 +19,43 @@
     return {address: accounts[0], chain_id: chain};
   }
   function sameAccount(a, b) { return a.address.toLowerCase() === b.address.toLowerCase() && a.chain_id === b.chain_id; }
-  async function signIn(provider, request, progress = () => {}) {
+  async function ensureArbitrum(provider, progress = () => {}) {
+    if (!provider || typeof provider.request !== 'function') throw new Error('Select your wallet first.');
+    const accounts = await provider.request({method: 'eth_requestAccounts'});
+    if (!Array.isArray(accounts) || !ADDRESS.test(accounts[0])) throw new Error('No account selected.');
+    if (Number(await provider.request({method: 'eth_chainId'})) !== 42161) {
+      progress('Approve the switch to Arbitrum One in your wallet.');
+      try { await provider.request({method: 'wallet_switchEthereumChain', params: [{chainId: '0xa4b1'}]}); }
+      catch (error) {
+        if (Number(error.code) !== 4902) throw error;
+        await provider.request({method: 'wallet_addEthereumChain', params: [{chainId: '0xa4b1', chainName: 'Arbitrum One',
+          nativeCurrency: {name: 'Ether', symbol: 'ETH', decimals: 18}, rpcUrls: ['https://arb1.arbitrum.io/rpc'], blockExplorerUrls: ['https://arbiscan.io']} ]});
+        await provider.request({method: 'wallet_switchEthereumChain', params: [{chainId: '0xa4b1'}]});
+      }
+    }
+    const selected = await accountState(provider);
+    if (selected.chain_id !== 42161 || selected.address.toLowerCase() !== accounts[0].toLowerCase())
+      throw new Error('Wallet account changed during network selection. Connect again.');
+    return selected;
+  }
+  function connectionError(error) {
+    if (Number(error?.code) === -32002) return 'A wallet request is already open. Open MetaMask and finish or cancel it, then try again.';
+    if (Number(error?.code) === 4001) return 'Wallet request cancelled. Nothing was submitted. You can try again.';
+    return error?.message || 'Wallet connection failed. Open your wallet and try again.';
+  }
+  function rememberedProvider(providers, hint) {
+    if (!hint || typeof hint !== 'object') return null;
+    const exact = providers.filter(p => p.id === hint.id);
+    if (exact.length === 1) return exact[0];
+    // EIP-6963 UUIDs may change across page loads. Metadata is only a selection
+    // hint: the caller must still verify the selected wallet's current account.
+    if (!hint.rdns || !hint.name) return null;
+    const stable = providers.filter(p => p.rdns === hint.rdns && p.name === hint.name);
+    return stable.length === 1 ? stable[0] : null;
+  }
+  async function signIn(provider, request, progress = () => {}, options = {}) {
     progress('Choose an account in your wallet…');
-    const selected = await accountState(provider, true);
+    const selected = options.arbitrum ? await ensureArbitrum(provider, progress) : await accountState(provider, true);
     const challenge = await request('/api/auth/challenge', selected);
     if (!sameAccount(selected, await accountState(provider))) throw new Error('Your wallet changed. Connect again.');
     progress('Confirm the sign-in message in your wallet.');
@@ -110,18 +144,19 @@
       throw error;
     }
   }
-  const exported = {safeIcon, messageHex, accountState, signIn, signPayment, sendDataPassStep};
+  const exported = {safeIcon, messageHex, accountState, signIn, signPayment, sendDataPassStep, ensureArbitrum, connectionError, rememberedProvider};
   if (typeof module !== 'undefined' && module.exports) { module.exports = exported; return; }
   const providers = new Map(), subscribers = new Set();
   function publish() { for (const fn of subscribers) fn([...providers.values()]); }
   function announce(event) {
     const detail = event.detail;
     if (!detail || !detail.info || typeof detail.provider?.request !== 'function') return;
-    const {uuid, name, icon} = detail.info;
+    const {uuid, name, icon, rdns} = detail.info;
     if (typeof uuid !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(uuid)) return;
     if (typeof name !== 'string' || !name.trim() || name.length > 60 || /[\x00-\x1f]/.test(name)) return;
     if ([...providers.values()].some(p => p.provider === detail.provider)) return;
-    providers.set(uuid, {id: uuid, name: name.trim(), icon: safeIcon(icon), provider: detail.provider});
+    const stableId = typeof rdns === 'string' && /^[a-zA-Z0-9.-]{1,120}$/.test(rdns) ? rdns : null;
+    providers.set(uuid, {id: uuid, rdns: stableId, name: name.trim(), icon: safeIcon(icon), provider: detail.provider});
     publish();
   }
   root.addEventListener('eip6963:announceProvider', announce);
