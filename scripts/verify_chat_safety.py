@@ -58,9 +58,18 @@ async def main():
         await page.add_script_tag(path=str(ROOT/'web/assistant.js'))
         await page.evaluate('AssistantConsole.connected()')
         await page.get_by_text('Swap complete',exact=True).wait_for()
+        await page.evaluate('''() => {
+          MachineConsole.state.identity={address:'0x'+'2'.repeat(40)};
+          MachineConsole.api=async path=>path==='/api/engine/assistant'?await new Promise(resolve=>window.finishHistory=resolve):{};
+          AssistantConsole.connected();
+        }''')
+        await page.get_by_role('button',name='Clean business data',exact=True).click()
+        await page.get_by_label('CSV to clean').fill('name,email\nAlex,a@b.com')
+        await page.evaluate("finishHistory({turns:[]})")
+        assert await page.get_by_label('CSV to clean').input_value()=='name,email\nAlex,a@b.com'
         print(json.dumps({'fixture_only':True,'superseded_quote_rejected':True,'permit_button_consumed':True,
             'pending_swap_blocks_other_cards':True,'approval_not_obscured':True,'automatic_completion':True,
-            'reload_completion_restored':True,'submit_count':1,'real_signatures':0,'chain_writes':0}))
+            'reload_completion_restored':True,'late_history_preserves_new_work':True,'submit_count':1,'real_signatures':0,'chain_writes':0}))
         await browser.close()
 
 asyncio.run(main())

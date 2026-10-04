@@ -1,0 +1,48 @@
+{
+  "source_commit_base": "c01f1fd829d129546993993b1cfef030032833ec",
+  "pending_pr16_source_changes": [
+    "web/assistant.js"
+  ],
+  "matched_files": 32,
+  "files_sha256": {
+    "contracts/SkewArtifactMining.sol": "d277f22502d1b3b4adab65acc8c5cffbc453c273bc6be7ae71202e4a58249204",
+    "contracts/SkewLaunchBundle.sol": "089d558f83d91a460ab0dbbec322e26ff3fb19b52dda1c51a02c3d8b9663645f",
+    "scripts/compile_artifact_mining.py": "39ffd8eb2a61bce5fcfbcf108395667485041abc56bbb8518ae62df22cec14d5",
+    "scripts/prepare_datapass_launch.py": "71b83d7177da64e4857cb2a48af9a7040b7dcc766602647fb9f5a1f5b1c32c0e",
+    "scripts/verify_amazon_work_browser.py": "2db13e3a13c05d2d87798393f81291b6b9441a6b18b8e833cec857fbf0db0887",
+    "scripts/work_artifact.py": "b3d0dc8508bdeddcaab3827f459950bc8a564be9e799e36fba6b59111f91a118",
+    "src/machine_commerce/access.py": "0d37255c21bb614765bce92b145ea53a5ea2bff9190bd0cc904db130ae047c66",
+    "src/machine_commerce/api.py": "576ae42adb9c1e4df5f95933020cc20b6f5319ce9cbf91439d7ca036ab6e17d3",
+    "src/machine_commerce/datapass.py": "2c08df00cf34efae57d56aa3d3325a0ec8f82335f9cca703108adc32c5d4876b",
+    "src/machine_commerce/portal.py": "8772c47cdf639d332786001df4e32cefd4063e3065f05cd158d3b86c7b944f0b",
+    "src/machine_commerce/work_artifacts.py": "7228cc69454824c2c6e6135958878f4c508ab9ac8f9154c9b610b40194a20ae0",
+    "src/machine_engine/api.py": "ccc9a6939544e7386336886ba0164e43ea2b4163b62122481213aa4ff7085dd1",
+    "src/machine_engine/assistant.py": "1e76655a18f02d79014c4aa3abafb67420788faa89c46507af286c85d6ec8db3",
+    "src/machine_engine/assistant_routes.py": "921959f48e624262ab9b76161d81daa97459691fb3b640e7374add8a64a7f236",
+    "src/machine_engine/paypal.py": "e44ca2dff3fc1bac3e433cb27728e5d8647cd4e12f094ffafd15aaaab53ddee3",
+    "src/machine_engine/routes.py": "3a5452e78f6bd73d4d9ad05195127d48dec6ef65319d0a80948d17cc9316b33d",
+    "src/machine_engine/task_checkout.py": "9e2a68fe4a9af090e8383aa73bf3f2fc06f8baf2608cec07fc2ce411382b85cf",
+    "src/machine_engine/task_mcp.py": "8e6b36109411f6abfdf4aac7074508ea3278b090b3aa62d6c86c43bcc08b9f7d",
+    "src/machine_engine/task_recovery.py": "ecb714bbab610fa4ed9bdb75f25ad492e84db5581adde6b7d77479fb686db4b6",
+    "src/machine_engine/task_results.py": "594136637b420c0d5f5bee7b4e0c3443daf590a7d6c4c2cd203605bb4ff94b7c",
+    "src/machine_engine/task_routes.py": "c57d73a3ed2e8c7a9c6464e7f13907e055b18b83e6b45e1444c13e26c2ff5721",
+    "src/machine_engine/task_webhooks.py": "0e203d4d4cadf0abbfd4f89793b5c07efcb48d91c4de03cf4f7cbc6bc1aa94af",
+    "src/machine_engine/tasks.py": "351a6ce741a87c92ac8d023b56065944ad9ae0a4c1f714921eb2155e306ee1fa",
+    "web/assistant.css": "ede2e2278248800b8d0914af3bad77d35e58b905d1071767981ea2db54427d49",
+    "web/assistant.js": "ba4a6704f77b575a38b4225a16a363cd3b1843013adc9de78b1c4e1674ef265d",
+    "web/launch-wallet.js": "929153d2d409df670f4bb7b8a10ea98e42e30d13a0af2da795ad7c3fe5005a43",
+    "web/launch.css": "b7114fc234a16075cea4faa392b9edd6737b27a42bf0f4b4f087f2295b334d6d",
+    "web/launch.html": "9a55a6f89be9a663b5749d7a45c9511ccf8857d6ed4579ca63d063ae55564297",
+    "web/launch.js": "3cbbab832f4c9c88f5da99d4ea722e335965c7614e848ac82a706d48667eb0ee",
+    "web/mining.js": "2e2e1bae6b1d205c959885d5563590fc4858a64afd341ddcf75c327843989487",
+    "web/tasks.js": "a34a9d40e6720a4a7865c7bfe48538bf141ba72134d27de0b042da0223eecfee",
+    "web/wallet.js": "45f19bb87303d6a81cb327e7cb753fe14d2d03657cfd716fe91ff11a306572ae"
+  },
+  "mismatches": [],
+  "services": {
+    "machine-commerce-portal": "active",
+    "machine-commerce-sepolia-runtime": "active",
+    "machine-commerce-fuel": "active"
+  },
+  "broadcasts": 0
+}

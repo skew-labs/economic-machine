@@ -1,0 +1,22 @@
+{
+  "origin": "https://skew.deals",
+  "authentication": "disposable unfunded wallet, login signature only",
+  "public_workflow": "DELIVERED",
+  "result_sha256": "69601e142b8e9c9abb3a173f5768f61d25edfa2e02ef91bca9985da2e3ac10db",
+  "mcp_version": "2025-11-25",
+  "provider": {
+    "provider": "bedrock",
+    "status": "ORGANIZATION_DENY",
+    "fallback": false,
+    "model_response_verified": false
+  },
+  "bedrock_live_response": false,
+  "organization_gate_verified": true,
+  "qwen_fallback": false,
+  "reload_resumption": true,
+  "mobile_desktop_layout": true,
+  "chain_writes": 0,
+  "external_payments": 0,
+  "javascript_errors": [],
+  "logout_revocation": true
+}

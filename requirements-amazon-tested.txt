@@ -1,0 +1,5 @@
+# Verified on the Canadian builder on 2026-10-04, Python 3.12.
+# Install the project plus its Amazon extra before applying these SDK pins.
+strands-agents==1.57.2
+boto3==1.43.108
+botocore==1.43.108

@@ -10,7 +10,7 @@ Publisher-admitted work freezes integer routing inputs, licensed source rights, 
 
 Publication and legal rights are publisher attestations, not cryptographic proof of copyright. An operator can withhold admission or publication. This is not permissionless ORE-equivalent production or an independent security audit. The token has no established liquidity or value. Existing VRF solution research is separate and remains gated.
 
-Use the remote-only `scripts/compile_artifact_mining.py`, then `scripts/prepare_datapass_launch.py prepare --help`. A short-lived review binds initcode, owner, nonce, chain and gas cap. Only the owner wallet signs. On an ambiguous response retain the transaction hash and reconcile; never automatically deploy again. Reconciliation verifies finalized creation and deployed code/configuration with two RPCs. Review gas is capped at 0.0005 ETH; no USDC is spent deploying.
+Use the remote-only `scripts/compile_artifact_mining.py`, then `scripts/prepare_datapass_launch.py --help`. A short-lived review binds initcode, owner, nonce, chain and gas cap. Only the owner wallet signs. On an ambiguous response retain the transaction hash and reconcile; never automatically deploy again. Reconciliation verifies finalized creation and deployed code/configuration with two RPCs. Review gas is capped at 0.0005 ETH; no USDC is spent deploying.
 
 ## Acceptance evidence
 
