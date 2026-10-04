@@ -37,10 +37,12 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     engine = CommerceEngine(store, workers or Workers(clock))
     market = Market(store)
     settings = (settings or Settings.environment()).validate()
-    payments = Payments(store, market, settings.resources, payment_transport, payment_chain)
+    payments = Payments(store, market, settings.resources, payment_transport, payment_chain,
+                        public_network=os.environ.get("MACHINE_PUBLIC_CHECKOUT_NETWORK"))
     plan_file = os.environ.get("MACHINE_SUBSCRIPTIONS_FILE")
     checkout = Checkout(store, market, payments, subscription_plans if subscription_plans is not None
-                        else config_file(plan_file) if plan_file else DEFAULT_PLANS)
+                        else config_file(plan_file) if plan_file else DEFAULT_PLANS,
+                        public_network=os.environ.get("MACHINE_PUBLIC_CHECKOUT_NETWORK"))
     from .merchant import HostedMerchant
     merchant = HostedMerchant(checkout, merchant_config if merchant_config is not None else
         config_file(os.environ.get("MACHINE_MERCHANTS_FILE")), merchant_transport)
@@ -241,6 +243,10 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
     def data_catalog(sid=Depends(buyer)):
         return data_products.catalog()
 
+    @app.get("/api/data/release-status")
+    def data_release_status(sid=Depends(buyer)):
+        return data_products.chain.release_status(data_products.version())
+
     @app.get("/api/data/licenses/{token_id}/delivery")
     def data_delivery(token_id: int, version: str | None = None, sid=Depends(buyer)):
         try:
@@ -275,11 +281,13 @@ def create_app(db_path=None, clock=now_seconds, workers=None, settings=None, pay
 
     @app.post("/api/data/deployment-plan")
     def data_deployment(request: Request, sid=Depends(buyer), approved=Depends(engine_owner)):
-        from .datapass import CHAIN_ID, deployment_draft
+        from .datapass import deployment_draft
         identity = wallet_auth.identity(sid)
-        if not identity or identity.get("chain_id") != CHAIN_ID:
-            raise HTTPException(403, "authenticated Arbitrum Sepolia wallet required")
-        return deployment_draft(identity["address"])
+        if data_products.chain.contract:
+            raise HTTPException(409, "DataPass is already configured; reuse the existing contract")
+        if not identity or identity.get("chain_id") != data_products.chain.chain_id:
+            raise HTTPException(403, "authenticate on the configured Arbitrum network")
+        return deployment_draft(identity["address"], chain_id=data_products.chain.chain_id)
 
     def bind_order(request, policy_id):
         try:

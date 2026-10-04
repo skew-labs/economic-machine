@@ -52,6 +52,7 @@ function credits(value) {
   return Number(value).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 6});
 }
 function paymentLabel(network, asset) {
+  if (network === 'eip155:42161' && asset?.toLowerCase() === '0xaf88d065e77c8cc2239327c5edb3a432268e5831') return 'USDC';
   return network === 'eip155:421614' && asset?.toLowerCase() === '0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d' ? 'test USDC' : 'tokens';
 }
 function date(value) {
@@ -254,9 +255,9 @@ function renderActivity() {
       $('order-detail').replaceChildren(el('pre', 'receipt-json', JSON.stringify(payment, null, 2)));
       $('order-dialog').showModal();
     }));
-    if (payment.network === 'eip155:421614' && /^0x[0-9a-fA-F]{64}$/.test(payment.tx_hash || '')) {
+    if (['eip155:421614','eip155:42161'].includes(payment.network) && /^0x[0-9a-fA-F]{64}$/.test(payment.tx_hash || '')) {
       const receiptLink = el('a', 'quiet', 'View receipt');
-      receiptLink.href = `https://sepolia.arbiscan.io/tx/${payment.tx_hash}`;
+      receiptLink.href = `https://${payment.network==='eip155:42161'?'arbiscan.io':'sepolia.arbiscan.io'}/tx/${payment.tx_hash}`;
       receiptLink.target = '_blank'; receiptLink.rel = 'noopener';
       row.append(receiptLink);
     }
@@ -642,9 +643,7 @@ async function connectWallet(item) {
   state.busy = 'login-dialog'; formError('login-error');
   for (const option of $('wallet-options').querySelectorAll('button')) option.disabled = true;
   try {
-    // Keep the existing Sepolia DataPass path usable; other networks switch to One.
-    const sepolia = Number(await item.provider.request({method:'eth_chainId'})) === 421614;
-    const result = await WalletBridge.signIn(item.provider, walletRequest, message => { $('wallet-progress').textContent = message; }, {arbitrum:!sepolia});
+    const result = await WalletBridge.signIn(item.provider, walletRequest, message => { $('wallet-progress').textContent = message; }, {arbitrum:true});
     if (activeWallet?.removeListener) { activeWallet.removeListener('accountsChanged', changedWallet); activeWallet.removeListener('chainChanged', changedWallet); }
     activeWallet = item.provider;
     sessionStorage.setItem('skew-wallet-provider', item.id);

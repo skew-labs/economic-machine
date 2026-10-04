@@ -214,6 +214,14 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
 
     @app.get("/demo/datapass/deployment")
     async def datapass_deployment_proof():
+        from .datapass import DataProducts
+        configured = DataProducts().chain
+        if configured.chain_id == 42161:
+            from .token_market import deployment
+            proof = deployment()
+            if not proof or proof["contracts"]["SkewDataPass"].lower() != (configured.contract or "").lower():
+                return JSONResponse({"error": "Configured mainnet deployment proof unavailable"}, status_code=503)
+            return JSONResponse(proof, headers={"Cache-Control": "no-store", "Access-Control-Allow-Origin": "*"})
         from economic_machine.values import digest
         path = ROOT / "artifacts/arbitrum-sepolia/datapass-deployment.json"
         try:

@@ -2,6 +2,7 @@ import json
 import re
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -66,6 +67,19 @@ class PortalHTTP(unittest.TestCase):
     def tearDown(self):
         self.client.close()
         self.directory.cleanup()
+
+    def test_mainnet_datapass_proof_never_returns_legacy_testnet_contract(self):
+        from machine_commerce.token_market import deployment
+        proof = deployment()
+        with patch.dict("os.environ", {"DATAPASS_CHAIN_ID": "42161", "DATAPASS_CONTRACT": proof["contracts"]["SkewDataPass"],
+                "DATAPASS_RUNTIME_SHA256": proof["runtime_sha256"]["SkewDataPass"]}):
+            response = self.client.get("/demo/datapass/deployment")
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json()["chain_id"], 42161)
+            self.assertEqual(response.json()["contracts"]["SkewDataPass"], proof["contracts"]["SkewDataPass"])
+        with patch.dict("os.environ", {"DATAPASS_CHAIN_ID": "42161", "DATAPASS_CONTRACT": "0x"+"1"*40,
+                "DATAPASS_RUNTIME_SHA256": "0"*64}):
+            self.assertEqual(self.client.get("/demo/datapass/deployment").status_code, 503)
 
     def test_live_scenario_and_cross_origin_without_credentials(self):
         response = self.client.post("/demo/run", json={"scenario": "standard"}, headers={"Origin": "https://example.com"})
