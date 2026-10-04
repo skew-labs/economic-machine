@@ -23,10 +23,10 @@ flowchart TD
   X --> J
 ```
 
-`E` and `V` are explicit interfaces in the portable kernel. This release does not install a live generic
-exchange executor or wallet signer. The separate commerce runtime has a completed public-testnet x402
-path; its recorded authorization, settlement and delivery are joined in the public Engine view.
-The kernel is chain-independent. Arbitrum is the currently demonstrated external settlement network.
+`E` and `V` are explicit interfaces in the portable kernel. Concrete adapters own external
+execution and verification. The commerce runtime connects payment authorization, settlement
+and delivery; a recorded example remains separate from an authenticated account.
+The kernel is chain-independent; the supplied chain integrations target Arbitrum.
 
 ## Execution semantics
 
@@ -58,13 +58,13 @@ a user's exchange API trades through the commerce payment network.
 
 ## Current boundaries
 
-Wallet reader: Arbitrum Sepolia ETH and Circle test USDC. Exchange readers: Binance Spot balances/open
+Wallet readers: native ETH and configured USDC on supported Arbitrum networks. Exchange readers: Binance Spot balances/open
 orders and USD-M derivative balances, positions and orders. Data reader: bounded JSON fingerprint.
 AI reader: model catalog with no inference side effect. Durable, lease-based read scheduling and
 venue order recovery run server-side. Hosted wallet identities own separate private workspaces.
 
 The unified console and first live-capable order adapter are described in
 [UNIFIED_ENGINE.md](UNIFIED_ENGINE.md). Spot LIMIT and one-way reduce-only USD-M LIMIT compile to
-hash-bound owner-approved plans. The hosted service's transmission gate stays disabled.
-Additional venues, new leveraged positions, generic wallet signing, provider invoices and a new
-browser-signed purchase remain unimplemented. No private exchange account was supplied for live validation.
+hash-bound owner-approved plans. Transmission requires the operator gate in addition to
+owner approval. These venue primitives do not provide new leveraged positions, generic
+withdrawals or provider invoice reconciliation. Wallet signing is an external adapter boundary.

@@ -15,3 +15,11 @@ Keep PRs focused: state the observable change, link affected tests and report li
 Do not add credentials, private journals, owner configuration, internal roadmaps, test logs or
 generated recordings. Archive generated artifacts separately; preserve fixtures explicitly used
 by tests. No CI job should receive production signing keys or submit transactions.
+
+Public documentation explains current interfaces, architecture, installation and
+verification. It does not contain competition scripts, internal PR plans, meeting
+notes, deployment diaries or personal server inventories. `docs/` uses an explicit
+Git allowlist; add a reusable technical guide deliberately, not with `git add -f`.
+The public-tree checker rejects generated artifacts and internal document names
+even if they were force-added. Keep such records in an operator archive outside
+the repository.

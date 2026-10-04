@@ -13,6 +13,7 @@ BASE = "https://raw.githubusercontent.com/ethereum/solc-bin/gh-pages/linux-amd64
 
 
 def main():
+    (ROOT / "artifacts").mkdir(parents=True, exist_ok=True)
     parser = argparse.ArgumentParser()
     parser.add_argument("--only", choices=["TestEIP3009Token"])
     args = parser.parse_args()

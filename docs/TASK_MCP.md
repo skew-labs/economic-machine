@@ -10,4 +10,4 @@ Every tool resolves the authenticated workspace. Request IDs replay saved drafts
 
 Specification: https://modelcontextprotocol.io/specification/2025-11-25/basic/transports
 
-Remote tests exercise initialization, discovery, tool calls, notifications, protocol errors, missing auth, hostile Origin, scope rejection, restart resumption, cross-workspace reads and payment boundaries. These are actual HTTP protocol tests against the app with fixture payment adapters; they do not establish Alexa runtime registration.
+Protocol tests exercise initialization, discovery, tool calls, notifications, protocol errors, missing auth, hostile Origin, scope rejection, restart resumption, cross-workspace reads and payment boundaries. The suite uses fixture payment adapters; external platform registration and live payment verification are separate integration steps.

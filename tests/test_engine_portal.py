@@ -15,7 +15,7 @@ class EnginePortal(unittest.TestCase):
         self.directory = tempfile.TemporaryDirectory()
         self.site = Path(self.directory.name)
         self.evidence = self.site / "completed-trade.json"
-        self.evidence.write_bytes((ROOT / "artifacts/submission/completed-trade.json").read_bytes())
+        self.evidence.write_bytes((ROOT / "tests/fixtures/engine-settlement.json").read_bytes())
         self.client = TestClient(create_portal(self.site, evidence_path=self.evidence))
 
     def tearDown(self):

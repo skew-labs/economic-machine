@@ -294,7 +294,7 @@ class LocalEngineHTTP(unittest.TestCase):
         self.assertEqual(self.work.runtime.db_path.stat().st_mode & 0o777, 0o600)
 
     def test_public_demo_is_bound_to_actual_trade_not_fake_live_accounts(self):
-        bundle = json.loads((ROOT / "artifacts/submission/completed-trade.json").read_text())
+        bundle = json.loads((ROOT / "tests/fixtures/engine-settlement.json").read_text())
         result = recorded_overview(bundle)
         self.assertTrue(result["read_only"])
         self.assertEqual(result["mode"], "RECORDED")

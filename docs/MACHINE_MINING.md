@@ -65,14 +65,16 @@ python scripts/mining_cli.py reveal --secret-file private-reveal.json
 
 Transaction requests are **unsigned offline drafts**. The client does not currently authenticate an on-chain job or broadcast a transaction: read the frozen job/edges, code/token, deadlines and bond from the actual deployment, match the downloaded input, approve only the exact bond and sign with your own wallet. Do not treat an offline digest as a confirmed commitment, reward or receipt.
 
-The console's Mining screen supports owner-scoped drafts, native search, result/download and restart persistence. Draft reward amounts are denominated in six-decimal test USDC for the planned Arbitrum Sepolia deployment. It displays zero confirmed earnings until actual chain evidence exists. No paid model call, GPU workload or token issuance occurs when clicking the native solver.
+The console's Mining screen supports owner-scoped drafts, native search, result/download and restart persistence. Draft reward amounts are denominated in six-decimal test USDC in the Arbitrum Sepolia configuration. It displays zero confirmed earnings until actual chain evidence exists. No paid model call, GPU workload or token issuance occurs when clicking the native solver.
 
-## Demonstration and release evidence
+## Deployment tooling and verifier scope
 
-All compile/tests/browser work runs on the authorized Canadian server. `artifacts/mining` contains the pinned Solidity compiler/source hashes, immutable native library hash, sanitizer evidence, changed-code tests and actual UI checks. Compiled bytecode running in Py-EVM proves the mathematical contest/escrow behavior in a local EVM; it does not prove a public-chain deployment.
+`prepare_mining_deployment.py --owner ADDRESS` reads two Arbitrum Sepolia RPCs,
+checks chain/token/nonces, estimates deployment gas and writes an unsigned review.
+It never reads a signing key. Deployment and participant transactions require a
+separate signer and independent receipt, code and token-state reconciliation.
 
-`prepare_mining_deployment.py --owner ADDRESS` reads two Arbitrum Sepolia RPCs, checks chain/token/nonces, estimates deployment gas and writes a source-bound **unsigned** deployment review. It never reads a signing key. A new public deployment requires owner authorization and independently reconciled inclusion/finality/code/token observations before changing the release's deployment status.
-
-Existing DataPass deployment and x402 test-USDC transfer evidence are separate. They cannot be relabeled as a Machine Mining escrow, commitment or reward transaction. The next competition evidence is a new public mining deployment followed by one funded job, two participant commitments/reveals, finalization, exact reward withdrawal and independent RPC readback. Final HackQuest receipt/video are separately required.
-
-Future task kinds can add execution bundling, deterministic transforms or constraint optimization, each with its own immutable input and bounded verifier. Free-form forecasts, subjective writing, arbitrary GPU usage, paid model-call loops, full EVM execution plans and token emission are deliberately unsupported in V1 rather than silently accepted by the route verifier.
+The bounded verifier supports the frozen route model above. It does not accept
+free-form forecasts, subjective writing, arbitrary GPU usage, paid model-call
+counts or general EVM execution plans. A new task kind needs its own immutable
+input format and bounded verifier.

@@ -51,7 +51,7 @@ Example bound-key task:
 
 ```json
 {
-  "request_id": "watch-sync-20261003-001",
+  "request_id": "watch-sync-001",
   "operation": "SYNC_CONNECTION",
   "connection_id": "connection-owner-defined-id",
   "payload": {}
@@ -80,7 +80,7 @@ unimplemented. AI connectors currently list model catalogs and accept reported u
 invoke models. Hosted live trading stays disabled. External x402 purchases keep existing mandates;
 own exchange trades do not pass through commerce payment.
 
-## Reproduce on an authorized remote host
+## Tests
 
 ```sh
 PYTHONPATH=src:tests .venv/bin/python -m unittest -v \
@@ -96,21 +96,3 @@ exchange order, signature or chain transaction is part of these tests.
 For browser verification, `tests/agent_console_fixture.py` starts a disposable loopback server at 8803,
 forwarded to 18803. It uses a known test-only owner token and labels the UI **Disposable UI fixture**.
 There are no live vendor keys, network trades or real holdings. Stop the process after inspection.
-
-## Release validation
-
-The initial changed-code and connection suite passed 93 tests on the Canada host. The final
-status-consistency correction adds one case; the final focused suite passed 17 agent cases and
-5 portal integration cases. Together these cover 94 distinct related cases. Four wallet-client
-checks and JavaScript syntax checks also passed; no unchanged native model benchmark was rerun.
-
-Browser actions in the disposable fixture created TEAM (15 USDT), ALPHA and VAULT, then prepared
-an ALPHA order reserving 10 USDT. A VAULT order under its separate venue policy was denied because
-only 5 USDT remained. Review order navigated to the same venue order. Independent current-source
-SQLite readback checked IDs, reservations, journal integrity and consistent EXPIRED_UNSENT status.
-These are isolated-adapter integration facts, not live venue fills or customer balances.
-
-Evidence is retained in `artifacts/atlas-release/agent-control-validation.json`,
-`agent-control-tests.log`, `agent-focused-tests.log` and the `screenshots/agent-*.png` captures.
-The release manifest hashes source and evidence; rerun it after a fresh GitHub checkout to check
-consistency. File hashes attest consistency, not economic correctness or production certification.
