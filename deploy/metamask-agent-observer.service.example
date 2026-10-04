@@ -1,0 +1,19 @@
+[Unit]
+Description=SKEW MetaMask Agent Wallet read-only observer
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=skew-mm
+Group=skew-wallet-observe
+EnvironmentFile=/etc/machine-commerce/metamask-observer.env
+ExecStart=/usr/bin/python3 ${MACHINE_MM_OBSERVER} --node ${MACHINE_MM_NODE} --cli ${MACHINE_MM_CLI} --output ${MACHINE_MM_STATUS_OUTPUT}
+TimeoutStartSec=110
+UMask=0027
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/srv/skew/private-metamask-agent /var/lib/machine-commerce-wallet-observer
+RestrictSUIDSGID=yes
+LockPersonality=yes
