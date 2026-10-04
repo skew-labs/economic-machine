@@ -336,7 +336,7 @@ class TaskCheckout:
     def reconcile(self, pid):
         with self.work.runtime.connect() as db:
             row = self._row(db, pid)
-            if row["status"] in {"PAID", "DELIVERED", "PLANNED", "REVOKED", "CREATING", "CREATE_UNKNOWN"}:
+            if row["status"] not in {"AWAITING_APPROVAL", "CAPTURING", "CAPTURE_UNKNOWN"}:
                 return self._public(row)
         plan = self._plan(row)
         try:
@@ -347,7 +347,7 @@ class TaskCheckout:
         with self.work.runtime.connect() as db:
             db.execute("BEGIN IMMEDIATE")
             current = self._row(db, pid)
-            if current["status"] not in {"PAID", "DELIVERED"}:
+            if current["status"] in {"AWAITING_APPROVAL", "CAPTURING", "CAPTURE_UNKNOWN"}:
                 db.execute(
                     "UPDATE engine_task_purchases SET status='PAID',capture_id=? WHERE id=?",
                     (capture_id, pid),

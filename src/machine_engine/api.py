@@ -44,9 +44,11 @@ def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:880
         worker = asyncio.create_task(work.scheduler.loop())
         async def reconcile_orders():
             from .fuel import recover_fuel
+            from .task_recovery import TaskRecovery
             while True:
                 try:
                     await asyncio.to_thread(recover_fuel, work)
+                    await asyncio.to_thread(TaskRecovery(work).tick)
                     await asyncio.to_thread(work.control.recover_once)
                     for oid in work.trading.pending_ids():
                         await asyncio.to_thread(work.trading.reconcile, oid)

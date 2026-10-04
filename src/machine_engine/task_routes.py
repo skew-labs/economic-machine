@@ -39,6 +39,16 @@ def task_routes(workspace_dependency, *, require_owner=None):
         require_keys(raw, set(), "purchase fulfillment")
         return work.task_checkout.fulfill(pid)
 
+    @router.post('/task-purchases/{pid}/cancel', dependencies=owner)
+    def cancel_purchase(pid: str, raw: dict, work=Depends(workspace_dependency)):
+        from .task_recovery import TaskRecovery
+        return TaskRecovery(work).cancel(pid,raw)
+
+    @router.post('/task-purchases/{pid}/refund', dependencies=owner)
+    def refund_purchase(pid: str, raw: dict, work=Depends(workspace_dependency)):
+        from .task_recovery import TaskRecovery
+        return TaskRecovery(work).refund(pid,raw)
+
     @router.get("/task-purchases/{pid}/delivery", dependencies=owner)
     def delivery(pid: str, work=Depends(workspace_dependency)):
         result = work.task_checkout.delivery(pid)
