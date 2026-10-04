@@ -1,0 +1,15 @@
+{
+  "commit": "19644d2eabc03548343efd7f5f63e7a464858f22",
+  "github_sources_verified": [
+    "src/machine_engine/solution_setup.py",
+    "src/machine_engine/solution_signer.py",
+    "scripts/solution_setup.py",
+    "scripts/validate_solution_release.py",
+    "tests/test_solution_setup.py",
+    "tests/test_solution_signer.py",
+    "tests/test_solution_mainnet.py",
+    "contracts/SkewSolutionMining.sol"
+  ],
+  "count": 8,
+  "public_transactions": 0
+}

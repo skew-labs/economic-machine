@@ -164,6 +164,28 @@ class OwnerOutbox:
     def close(self):
         self.db.close()
 
+    def _predecessors(self, nonce):
+        pending = self.db.execute(
+            "SELECT id,tx_hash,payload,state FROM signed WHERE nonce < ? AND state NOT IN ('CONFIRMED','REVERTED')",
+            (nonce,),
+        ).fetchall()
+        working = self.reader.anchor(working=True) if pending else None
+        for prior_id, prior_hash, prior_payload, state in pending:
+            if state in {"SIGNED", "HELD", "ORPHANED"}:
+                raise MachineError("SOLUTION_SIGNER_UNSETTLED_NONCE")
+            outcome = self.reader.outcome(prior_hash, json.loads(prior_payload))
+            if (
+                outcome["state"] not in {"CONFIRMED", "REVERTED", "PENDING_FINALITY", "PENDING_REVERT"}
+                or outcome["block"] > working["number"]
+            ):
+                raise MachineError("SOLUTION_SIGNER_UNSETTLED_NONCE")
+            self.db.execute(
+                "UPDATE signed SET state=?,outcome=? WHERE id=?",
+                (outcome["state"], json.dumps(outcome), prior_id),
+            )
+        if working is not None:
+            self.reader.check_anchor(working)
+
     def sign(self, payload, fees, private_key, *, now=None):
         now = int(time.time()) if now is None else now
         if (
@@ -194,27 +216,14 @@ class OwnerOutbox:
             previous = self.db.execute("SELECT MAX(nonce) FROM signed").fetchone()[0]
             if previous is not None and fees["nonce"] != previous + 1:
                 raise MachineError("SOLUTION_SIGNER_NONCE_PROGRESSION")
-            pending = self.db.execute(
-                "SELECT id,tx_hash,payload,state FROM signed WHERE state NOT IN ('CONFIRMED','REVERTED')"
-            ).fetchall()
-            if len(pending) >= 32:
-                raise MachineError("SOLUTION_SIGNER_OUTSTANDING_LIMIT")
-            working = self.reader.anchor(working=True) if pending else None
-            for prior_id, prior_hash, prior_payload, state in pending:
-                if state in {"SIGNED", "HELD", "ORPHANED"}:
-                    raise MachineError("SOLUTION_SIGNER_UNSETTLED_NONCE")
-                outcome = self.reader.outcome(prior_hash, json.loads(prior_payload))
-                if (
-                    outcome["state"] not in {"CONFIRMED", "REVERTED", "PENDING_FINALITY", "PENDING_REVERT"}
-                    or outcome["block"] > working["number"]
-                ):
-                    raise MachineError("SOLUTION_SIGNER_UNSETTLED_NONCE")
+            if (
                 self.db.execute(
-                    "UPDATE signed SET state=?,outcome=? WHERE id=?",
-                    (outcome["state"], json.dumps(outcome), prior_id),
-                )
-            if working is not None:
-                self.reader.check_anchor(working)
+                    "SELECT count(*) FROM signed WHERE state NOT IN ('CONFIRMED','REVERTED')"
+                ).fetchone()[0]
+                >= 32
+            ):
+                raise MachineError("SOLUTION_SIGNER_OUTSTANDING_LIMIT")
+            self._predecessors(fees["nonce"])
             latest_day = self.db.execute("SELECT MAX(day) FROM spend").fetchone()[0]
             if latest_day is not None and day < latest_day:
                 raise MachineError("SOLUTION_SIGNER_CLOCK_ROLLBACK")
@@ -259,17 +268,24 @@ class OwnerOutbox:
 
     def broadcast(self, identifier, send_raw, *, approved_hash):
         row = self.db.execute(
-            "SELECT tx_hash,raw,payload,state FROM signed WHERE id=?", (identifier,)
+            "SELECT tx_hash,raw,payload,state,nonce FROM signed WHERE id=?", (identifier,)
         ).fetchone()
         if not row or approved_hash != row[0] or row[3] != "SIGNED":
             raise MachineError("SOLUTION_SIGNER_EXACT_HASH_APPROVAL_REQUIRED")
         validate_intent(json.loads(row[2]), self.reader)
         # Persist UNKNOWN *before* the network call. A crash/timeout can never enable a retry.
-        changed = self.db.execute(
-            "UPDATE signed SET state='UNKNOWN' WHERE id=? AND state='SIGNED'", (identifier,)
-        ).rowcount
-        if changed != 1:
-            raise MachineError("SOLUTION_SIGNER_ALREADY_SUBMITTED")
+        self.db.execute("BEGIN IMMEDIATE")
+        try:
+            self._predecessors(row[4])
+            changed = self.db.execute(
+                "UPDATE signed SET state='UNKNOWN' WHERE id=? AND state='SIGNED'", (identifier,)
+            ).rowcount
+            if changed != 1:
+                raise MachineError("SOLUTION_SIGNER_ALREADY_SUBMITTED")
+            self.db.execute("COMMIT")
+        except BaseException:
+            self.db.execute("ROLLBACK")
+            raise
         try:
             returned = send_raw("0x" + bytes(row[1]).hex())
         except Exception:  # noqa: BLE001 - Every transport failure leaves submission uncertain.

@@ -248,6 +248,34 @@ class OwnerSigner(unittest.TestCase):
             "PENDING_FINALITY",
         )
 
+    def test_reorg_after_signing_blocks_next_broadcast_without_retry(self):
+        first = self.sign()
+        self.broadcast(first, lambda raw: hx(self.f.w3.eth.send_raw_transaction(raw)))
+        self.f.tester.mine_blocks(8)
+        original = self.reader.outcome
+
+        def pending(tx_hash, payload):
+            result = original(tx_hash, payload)
+            if result["state"] == "CONFIRMED":
+                result["state"] = "PENDING_FINALITY"
+            return result
+
+        self.reader.outcome = pending
+        data = keccak(text="commit(uint256,uint8,bytes32)")[:4] + encode(
+            ["uint256", "uint8", "bytes32"], [1, 1, b"y" * 32]
+        )
+        payload = {"transaction": self.payload["transaction"] | {"data": hx(data)}}
+        self.now = self.f.w3.eth.get_block("latest").timestamp
+        second = self.sign(payload, self.fees | {"nonce": 1})
+        for state in ["ORPHANED", "UNKNOWN"]:
+            self.reader.outcome = lambda *_, observed_state=state: {"state": observed_state}
+            with self.subTest(state=state), self.assertRaises(MachineError):
+                self.broadcast(second, lambda raw: self.fail("No transmission after predecessor uncertainty"))
+            self.assertEqual(
+                self.outbox.db.execute("SELECT state FROM signed WHERE id=?", (second["id"],)).fetchone()[0],
+                "SIGNED",
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -16,6 +16,12 @@ Source-bound tests and actual mainnet **read-only** network evidence are in
 `artifacts/solution-mainnet/`. Our mining contract is not deployed on mainnet and public issuance
 remains closed pending owner deployment/VRF configuration and production qualification.
 
+The [deployment and security review packet](docs/SOLUTION_RELEASE_REVIEW.md) adds exact
+unsigned VRF administration, dual-RPC gas/nonce checks and predecessor revalidation
+immediately before miner transmission. Its 23 focused cases passed. Slither reported
+7 Medium and 11 Low findings; independent review, actual owner deployment and LINK
+funding remain pending. Evidence is in `artifacts/solution-release/`.
+
 The unified console keeps wallet login, API keys, payment limits and activity alongside accounts,
 positions, execution, program validation and API usage. Signed-in owners have isolated, durable
 workspaces. The public recorded view shows the completed Arbitrum Sepolia purchase.
