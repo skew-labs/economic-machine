@@ -150,7 +150,7 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-        if request.url.path in {"/console", "/submission", "/engine"}:
+        if request.url.path in {"/console", "/submission", "/engine", "/launch"}:
             response.headers["Content-Security-Policy"] = (
                 "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
                 "connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
@@ -378,46 +378,75 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
     async def submission():
         return HTMLResponse((ROOT / "web/submission.html").read_text(), headers={"Cache-Control": "no-store"})
 
+    @app.get("/launch", response_class=HTMLResponse)
+    async def launch():
+        return HTMLResponse((ROOT / "web/launch.html").read_text(), headers={"Cache-Control": "no-store"})
+
+    @app.get("/demo/mainnet-launch")
+    async def launch_review():
+        path = ROOT / "artifacts/datapass-mining/latest-launch-review.json"
+        if not path.is_file() or path.is_symlink() or path.stat().st_size > 128000:
+            return JSONResponse({"status": "NO_REVIEW"}, status_code=503)
+        return JSONResponse(json.loads(path.read_text()), headers={"Cache-Control": "no-store"})
+
     @app.get("/console", response_class=HTMLResponse)
     async def console():
         html = (ROOT / "web/index.html").read_text()
         html = html.replace('  <link rel="stylesheet" href="/operations.css?v=wallet-20261002-3">', '')
         html = html.replace('  <link rel="stylesheet" href="/workspace.css?v=wallet-20261002-3">', '')
         version = hashlib.sha256(b"".join((ROOT / "web" / name).read_bytes() for name in
-            ["index.html", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "data.js", "workspace.css", "commerce.js", "commerce.css", "assets/app-engine.svg", "assets/ui-icons.svg"])).hexdigest()[:16]
+            ["index.html", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "assistant.js", "assistant.css", "swap-wallet.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "assets/app-engine.svg", "assets/ui-icons.svg"])).hexdigest()[:16]
+        html = html.replace('  <link rel="stylesheet" href="/assistant.css?v=console-20261004">', '')
         html = html.replace("Machine Market | Console", "skew | Console")
         html = html.replace('href="/" aria-label="Economic Machine console"', 'href="/commerce/" aria-label="Economic Machine console"')
         html = html.replace("<span>Machine<small>Economic infrastructure</small></span>", "<span>skew<small>Economic Machine</small></span>")
-        html = html.replace("</head>", '<meta name="machine-api-prefix" content="/commerce"><link rel="stylesheet" href="/commerce/console-theme.css?v=wallet-20261002-3"><link rel="stylesheet" href="/commerce/operations.css?v=wallet-20261002-3"><link rel="stylesheet" href="/commerce/workspace.css?v=wallet-20261002-3"></head>')
+        html = html.replace("</head>", '<meta name="machine-api-prefix" content="/commerce"><link rel="stylesheet" href="/commerce/console-theme.css?v=wallet-20261002-3"><link rel="stylesheet" href="/commerce/operations.css?v=wallet-20261002-3"><link rel="stylesheet" href="/commerce/workspace.css?v=wallet-20261002-3"><link rel="stylesheet" href="/commerce/assistant.css?v=wallet-20261002-3"></head>')
         html = html.replace('href="/app.css', 'href="/commerce/app.css').replace('src="/app.js', 'src="/commerce/app.js')
         html = html.replace('src="/wallet.js', 'src="/commerce/wallet.js')
         html = html.replace('src="/agents.js', 'src="/commerce/agents.js')
         html = html.replace('src="/operations.js', 'src="/commerce/operations.js').replace('href="/operations.css', 'href="/commerce/operations.css')
+        html = html.replace('src="/tasks.js', 'src="/commerce/tasks.js').replace('href="/tasks.css', 'href="/commerce/tasks.css')
+        html = html.replace('src="/mining.js', 'src="/commerce/mining.js')
         html = html.replace('src="/data.js', 'src="/commerce/data.js')
         html = html.replace('src="/commerce.js', 'src="/commerce/commerce.js').replace('href="/commerce.css', 'href="/commerce/commerce.css')
         html = html.replace('href="/assets/ui-icons.svg', 'href="/commerce/assets/ui-icons.svg')
         html = html.replace('src="/assets/app-', 'src="/commerce/assets/app-').replace('href="/assets/app-', 'href="/commerce/assets/app-')
+        for asset in ("assistant.js", "swap-wallet.js", "swap-crypto.js"):
+            html = html.replace('src="/' + asset, 'src="/commerce/' + asset)
+        html = html.replace("console-20261004", version)
         html = html.replace("wallet-20261002-3", version)
         html = html.replace("control-20261003", version)
         html = html.replace("atlas-20261003", version)
+        html = html.replace("tasks-pr1-20261003", version)
+        html = html.replace("mining-20261004", version)
+        html = html.replace("production-paths-20261003", version)
         html = html.replace('<body>', '<body><div class="portal-bar"><a href="/commerce/">← skew</a><a href="/commerce/console?preview=1">Recorded evidence</a></div>')
         return HTMLResponse(html, headers={"Cache-Control": "no-store"})
 
     @app.get("/{asset:path}")
     async def files(asset):
+        # Explicit brand exports, not a directory-wide static mount: runtime
+        # journals and deployment files must remain outside this public route.
+        brand_assets = {f"assets/brand/skew-{kind}-{color}.{extension}"
+                        for kind in ("mark", "wordmark") for color in ("ink", "white", "blue")
+                        for extension in ("svg", "png")}
+        if asset in {"brand.html", "brand.css", "assets/brand/skew-brand-kit.zip", *brand_assets}:
+            target = site / asset
+            return FileResponse(target) if target.is_file() else JSONResponse({"error": "Not found"}, status_code=404)
         tool_pages = {"tools": "tools.html", "tools/atlas": "atlas.html", "tools/site-lens": "site-lens.html", "tools/data-pass": "data-pass.html", "tools/engine": "engine-product.html"}
         if asset.rstrip("/") in tool_pages:
             return HTMLResponse((site / tool_pages[asset.rstrip("/")]).read_text().replace('<head>', '<head><base href="/commerce/">'))
-        if asset in {"landing.css", "landing.js", "tools.css", "tools.js", "tools.html", "atlas.html", "site-lens.html", "data-pass.html", "engine-product.html", "atlas.json", "evidence.html"}:
+        if asset in {"landing.css", "landing.js", "tools.css", "tools.js", "tools.html", "atlas.html", "site-lens.html", "data-pass.html", "engine-product.html", "atlas.json", "evidence.html", "evidence.css", "evidence.js"}:
             target = site / asset
             return FileResponse(target) if target.is_file() else JSONResponse({"error": "Not found"}, status_code=404)
-        if asset in {"app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "data.js", "workspace.css", "commerce.js", "commerce.css", "submission.css", "submission.js"}:
+        if asset in {"swap-crypto.js", "assistant.js", "assistant.css", "swap-wallet.js", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "submission.css", "submission.js", "launch.js", "launch-wallet.js", "launch.css"}:
             return FileResponse(ROOT / "web" / asset)
-        if asset in {"assets/phantom-wallet.png", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/icon-provenance.json", "assets/app-engine.svg", "assets/app-atlas.svg", "assets/app-site-lens.svg", "assets/app-data-pass.svg"}:
+        if asset in {"assets/phantom-wallet.png", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/icon-provenance.json", "assets/app-engine.svg", "assets/app-atlas.svg", "assets/app-site-lens.svg", "assets/app-data-pass.svg", "assets/app-mining.svg", "assets/app-fuel.svg"}:
             return FileResponse(ROOT / "web" / asset)
         if asset in {"", "index.html"}:
             return HTMLResponse((site / "index.html").read_text().replace('<head>', '<head><base href="/commerce/">'))
         if asset not in {"style.css", "site.js", "favicon.svg", "evidence.json", "assets/nvidia-logo.svg",
+                         "assets/nvidia-inception-badge.svg", "assets/nvidia-inception-provenance.json",
                          "assets/arbitrum-logo.svg", "assets/provider-orbit.svg", "assets/provider-relay.svg",
                          "assets/provider-archive.svg", "assets/provider-prism.svg", "assets/provider-signal.svg",
                          "assets/provider-scope.svg"}:

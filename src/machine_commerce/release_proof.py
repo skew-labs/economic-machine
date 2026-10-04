@@ -40,7 +40,7 @@ def file_evidence(root, relative):
 def verify_manifest(raw, root=ROOT):
     require_keys(raw, {"schema", "created_at", "files", "claims", "assurance", "manifest_sha256"}, "release proof")
     if (raw["schema"] != "machine-release-proof-1" or not isinstance(raw["files"], list)
-            or not 1 <= len(raw["files"]) <= 500 or type(raw["created_at"]) is not int):
+            or not 1 <= len(raw["files"]) <= 1000 or type(raw["created_at"]) is not int):
         raise MachineError("PROOF_MANIFEST_SCHEMA")
     body = {k: v for k, v in raw.items() if k != "manifest_sha256"}
     if digest(body) != raw["manifest_sha256"]:

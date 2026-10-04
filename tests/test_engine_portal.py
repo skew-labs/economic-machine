@@ -29,7 +29,7 @@ class EnginePortal(unittest.TestCase):
         response = self.client.get("/console")
         self.assertEqual(response.status_code, 200)
         self.assertIn('name="machine-api-prefix" content="/commerce"', response.text)
-        for asset in ["operations.css", "operations.js", "agents.js", "workspace.css", "commerce.js", "commerce.css", "assets/app-engine.svg", "assets/ui-icons.svg"]:
+        for asset in ["operations.css", "operations.js", "agents.js", "tasks.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "assets/app-engine.svg", "assets/ui-icons.svg"]:
             self.assertIn("/commerce/" + asset, response.text)
             self.assertEqual(self.client.get("/" + asset).status_code, 200)
         self.assertEqual(response.text.count('/commerce/workspace.css?v='), 1)

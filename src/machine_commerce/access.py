@@ -170,16 +170,28 @@ class Access:
         parts = path.strip("/").split("/")
         scope = None
         if path.startswith("/api/engine/"):
-            if len(parts) in {4, 5, 6} and parts[2] == "agents" and (
+            if path == "/api/engine/mcp" and method in {"GET","POST","DELETE"}:
+                scope = "engine:read"
+            elif method == "POST" and path == "/api/engine/fuel/requests":
+                scope = "engine:write"
+            elif method == "GET" and len(parts) == 5 and parts[2:4] == ["fuel", "requests"]:
+                scope = "engine:read"
+            elif method == "POST" and len(parts) == 6 and parts[2:4] == ["fuel", "requests"] and parts[5] == "reconcile":
+                scope = "engine:write"
+            elif method == "POST" and len(parts) == 6 and parts[2:4] == ["fuel", "requests"] and parts[5] == "watch":
+                scope = "engine:read"
+            elif len(parts) in {4, 5, 6} and parts[2] == "agents" and (
                     (method == "GET" and (len(parts) == 4 or (len(parts) == 6 and parts[4] == "runs")))
                     or (method == "POST" and len(parts) == 5 and parts[4] == "runs")):
                 if principal.engine_agent_id != parts[3]:
                     raise PermissionError("API key is bound to another engine agent")
                 scope = "agents:run"
-            elif method == "GET" and (path in {"/api/engine/overview", "/api/engine/profiles", "/api/engine/control", "/api/engine/economics"}
+            elif method == "GET" and (path in {"/api/engine/overview", "/api/engine/profiles", "/api/engine/control", "/api/engine/economics", "/api/engine/tasks", "/api/engine/task-checkout"}
+                    or (len(parts) == 4 and parts[2] in {"tasks", "task-purchases"})
                     or (len(parts) == 5 and parts[2:4] == ["trade", "orders"])):
                 scope = "engine:read"
-            elif method == "POST" and (path in {"/api/engine/trade/orders", "/api/engine/usage", "/api/engine/programs/compile", "/api/engine/native/evaluate", "/api/engine/native/programs/compile", "/api/engine/native/programs/evaluate", "/api/engine/economics/evaluate"}
+            elif method == "POST" and (path in {"/api/engine/trade/orders", "/api/engine/usage", "/api/engine/programs/compile", "/api/engine/native/evaluate", "/api/engine/native/programs/compile", "/api/engine/native/programs/evaluate", "/api/engine/economics/evaluate", "/api/engine/tasks"}
+                    or (len(parts) == 5 and parts[2] == "tasks" and parts[4] == "revise")
                     or (len(parts) == 6 and parts[2:4] == ["trade", "orders"] and parts[5] == "reconcile")
                     or (len(parts) == 5 and parts[2] == "connections" and parts[4] == "sync")):
                 scope = "engine:write"

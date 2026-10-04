@@ -26,6 +26,8 @@ PROFILES = {
         "fields": ["symbol"], "operations": ["READ_MARKET"], "network": "binance-public"},
     "arbitrum-sepolia-wallet": {"kind": "wallet", "name": "Arbitrum Sepolia", "credentials": [],
         "fields": ["address"], "operations": ["READ_BALANCES"], "network": "eip155:421614"},
+    "arbitrum-one-wallet": {"kind": "wallet", "name": "Arbitrum One", "credentials": [],
+        "fields": ["address"], "operations": ["READ_BALANCES"], "network": "eip155:42161"},
     "binance-spot": {"kind": "exchange", "name": "Binance Spot", "credentials": ["api_key_env", "api_secret_env"],
         "fields": [], "operations": ["READ_BALANCES", "READ_OPEN_ORDERS"], "network": "binance-spot"},
     "binance-usdm": {"kind": "exchange", "name": "Binance USD-M", "credentials": ["api_key_env", "api_secret_env"],
@@ -117,7 +119,7 @@ class Connectors:
         if profile in MARKETS:
             from .live import read_market
             result = read_market(self.http, connection["config"]["symbol"], self.clock(), profile=profile)
-        elif profile == "arbitrum-sepolia-wallet":
+        elif profile in {"arbitrum-sepolia-wallet", "arbitrum-one-wallet"}:
             result = self.wallet(connection)
         elif profile in {"binance-spot", "binance-spot-testnet"}:
             result = self.binance(connection)
@@ -135,29 +137,33 @@ class Connectors:
                 raise MachineError("CREDENTIAL_ECHO_BLOCKED")
         return result | {"observed_at": int(self.clock()), "source_hash": digest(result), "read_only": True}
 
-    def rpc(self, method, params):
-        result = self.http.request(RPC, method="POST", body={"jsonrpc": "2.0", "id": 1, "method": method, "params": params})
+    def rpc(self, method, params, *, url=RPC):
+        result = self.http.request(url, method="POST", body={"jsonrpc": "2.0", "id": 1, "method": method, "params": params})
         if not isinstance(result, dict) or result.get("id") != 1 or "error" in result or "result" not in result:
             raise MachineError("CHAIN_READ_UNAVAILABLE")
         return result["result"]
 
     def wallet(self, connection):
         owner = connection["config"]["address"]
-        if integer(self.rpc("eth_chainId", [])) != 421614:
+        mainnet = connection["profile"] == "arbitrum-one-wallet"
+        chain, token, url = (42161, "0xaf88d065e77c8cc2239327c5edb3a432268e5831", "https://arb1.arbitrum.io/rpc") if mainnet else (421614, USDC, RPC)
+        def rpc(method, params):
+            return self.rpc(method, params, url=url)
+        if integer(rpc("eth_chainId", [])) != chain:
             raise MachineError("WRONG_CHAIN")
-        block = self.rpc("eth_getBlockByNumber", ["finalized", False])
+        block = rpc("eth_getBlockByNumber", ["finalized", False])
         height = block["number"]
         integer(height)
-        eth = integer(self.rpc("eth_getBalance", [owner, height]))
+        eth = integer(rpc("eth_getBalance", [owner, height]))
         call = "0x70a08231" + owner[2:].rjust(64, "0")
-        usdc = integer(self.rpc("eth_call", [{"to": USDC, "data": call}, height]))
+        usdc = integer(rpc("eth_call", [{"to": token, "data": call}, height]))
         with localcontext() as context:
             context.prec = 96
             assets = [{"symbol": "ETH", "quantity": decstr(Decimal(eth) / Decimal(10 ** 18)), "decimals": 18},
                       {"symbol": "USDC", "quantity": decstr(Decimal(usdc) / Decimal(10 ** 6)), "decimals": 6}]
         return {"assets": assets,
                 "positions": [], "orders": [], "address": owner, "block_number": integer(height),
-                "assurance": "RPC_FINALIZED_TAG", "network": "eip155:421614"}
+                "assurance": "RPC_FINALIZED_TAG", "network": f"eip155:{chain}"}
 
     def binance(self, connection):
         from .broker import VENUES

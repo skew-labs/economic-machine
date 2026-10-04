@@ -17,3 +17,9 @@ secrets/
 artifacts/contracts.json
 tools/
 .ruff_cache/
+
+# Generated evidence stays in the operator archive; tracked replay fixtures remain.
+artifacts/
+# Internal release plans belong outside the public toolkit.
+docs/submission/
+docs/*_20*.md

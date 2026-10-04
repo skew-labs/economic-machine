@@ -8,6 +8,8 @@
     "overview",
     "connections",
     "agents",
+    "tasks",
+    "mining",
     "execution",
     "playground",
     "usage",
@@ -920,7 +922,10 @@
   }
   function render(view) {
     if (!views.has(view)) return;
-    ({ overview, connections, agents, execution, usage })[view]?.();
+    if(view === "overview" && window.AssistantConsole) window.AssistantConsole.render();
+    else ({ overview, connections, agents, execution, usage })[view]?.();
+    if (view === "tasks") window.TasksConsole?.render(byId("ops-tasks"), record, {request, refresh, writable});
+    if (view === "mining") window.MiningConsole?.render(byId("ops-mining"), record, {request, refresh, writable});
     if (view === "playground")
       byId("ops-compile").disabled = !writable() && API_PREFIX !== "/commerce";
   }

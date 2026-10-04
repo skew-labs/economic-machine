@@ -46,7 +46,29 @@ def main():
     for path in (ROOT / "artifacts/atlas-release/screenshots").iterdir():
         if path.suffix in {".png", ".jpg"}:
             paths.add(str(path.relative_to(ROOT)))
+    paths.update({"docs/TASKS_PR2_20261003.md", "deploy/paypal-sandbox.example.json"})
+    for path in (ROOT / "artifacts/tasks-pr2").iterdir():
+        if path.is_file() and path.suffix in {".json", ".log", ".jpg", ".txt"} and path.name != "manifest-verification.json":
+            paths.add(str(path.relative_to(ROOT)))
     paths.add("deploy/native-economics.conf")
+    paths.add("docs/MACHINE_MINING.md")
+    paths.add("docs/ARBITRUM_SUBMISSION.md")
+    paths.add("deploy/native-mining.conf")
+    paths.update({"docs/SOLUTION_MINING.md", "deploy/native-solution.conf"})
+    paths.update({"docs/SOLUTION_OPERATIONS.md", "deploy/solution-miner.service.example", "deploy/native-solution-pipeline.conf"})
+    paths.update({"docs/SOLUTION_LAUNCH.md", "deploy/solution-qualification.service.example"})
+    for path in (ROOT / "artifacts/solution-launch").glob('*'):
+        if path.is_file() and path.suffix in {".json", ".log"} and path.name != "manifest-verification.json":
+            paths.add(str(path.relative_to(ROOT)))
+    for path in (ROOT / "artifacts/solution-operations").iterdir():
+        if path.is_file() and path.suffix in {".json", ".log"} and path.name != "manifest-verification.json":
+            paths.add(str(path.relative_to(ROOT)))
+    for path in (ROOT / "artifacts/solution").iterdir():
+        if path.is_file() and path.suffix in {".json", ".log", ".jpg", ".txt"} and path.name != "manifest-verification.json":
+            paths.add(str(path.relative_to(ROOT)))
+    for path in (ROOT / "artifacts/mining").iterdir():
+        if path.is_file() and path.suffix in {".json", ".log", ".jpg", ".txt"} and path.name != "manifest-verification.json":
+            paths.add(str(path.relative_to(ROOT)))
     paths.update({"deploy/compute.conf", "docs/PRODUCTION_PATHS_20261003.md"})
     for path in (ROOT / "artifacts/production-paths").iterdir():
         if path.is_file() and path.suffix in {".json", ".log", ".jpg"} and path.name != "manifest-verification.json":
@@ -69,6 +91,10 @@ def main():
                  "commerce-recovery-tests.log", "commerce-wallet-tests.log", "commerce-native-tests.log",
                  "commerce-wallet-native-tests.log", "commerce-cache-tests.log", "commerce-live-check.json", "commerce-browser.json"]:
         paths.add("artifacts/atlas-release/" + name)
+    paths.update({"docs/TASKS_PR1_20261003.md", "docs/AMAZON_PAYPAL_PLAN_20261003.md", "deploy/portal-concurrency.conf"})
+    for path in (ROOT / "artifacts/tasks-pr1").iterdir():
+        if path.is_file() and path.suffix in {".json", ".log", ".jpg", ".txt"} and path.name != "manifest-verification.json":
+            paths.add(str(path.relative_to(ROOT)))
     files = [file_evidence(ROOT, path) for path in sorted(paths)]
     report = json.loads((ROOT / "artifacts/atlas-release/atlas.json").read_text())
     audit = json.loads((ROOT / "artifacts/atlas-release/source-audit.json").read_text())
@@ -100,6 +126,25 @@ def main():
                        "engine_implementation_nonblank": lines["engine_implementation"]["nonblank"],
                        "target_30000_engine_nonblank_reached": lines["target_30000_engine_nonblank_reached"],
                        "native_authority": "CANDIDATE_ONLY", "agent_control": "SAME_ENGINE_DATABASE_SHARED_USDT_TURNOVER", "raw_archives_publicly_resold": False,
+                       "tasks_pr1": {"work_types": 5, "payment_authority": "NONE",
+                           "automatic_execution": False, "language_interpretation_installed": False,
+                           "paypal_installed": False, "completed_deliverables": 0},
+                       "tasks_pr2": {"paypal_sandbox_adapter_installed": True,
+                           "actual_paypal_sandbox_transactions": 0, "public_paypal_configured": False,
+                           "worker": "BUSINESS_CSV_CLEANUP", "fixture_deliverable_only": True,
+                           "owner_approval_required": True, "live_money_enabled": False},
+                       "machine_mining": {"model": "SNAPSHOT_ROUTE_V1", "authority": "CANDIDATE_ONLY",
+                           "public_mining_deployment": None, "new_mining_chain_transactions": 0,
+                           "new_emission_tokens": 0, "input_assurance": "REQUESTER_DECLARED_FROZEN_MODEL"},
+                       "solution_mining": {"model": "MAXCUT_V1_RESEARCH", "public_emission": False,
+                           "public_vrf_configured": False, "public_deployment": None,
+                           "gpu_comparison": "NOT_RUN", "ai_comparison": "NOT_RUN",
+                           "admission_gate": "GLOBAL_SLOT_CAP_REMOVED_OTHER_CONGESTION_RISKS_REMAIN", "authority": "NONE",
+                           "local_operations": "DUAL_RPC_WORKING_STATE_FINALIZED_EFFECTS_PRIVATE_WAL_UNSIGNED_HANDOFF",
+                           "native_pipeline": "CAPACITY_EIGHT_SPSC_SEARCH_VERIFY_OPTIONAL_CPU_AFFINITY",
+                           "recovery": "ENCRYPTED_JOURNAL_AND_SALT_PACK_RESTORED_STATE_HELD",
+                           "launch_validation": "artifacts/solution-launch/validation.json",
+                           "long_qualification": "OBSERVED_CHECKPOINT_NOT_COMPLETION_CERTIFICATE"},
                        "production_paths": {"distinct_changed_boundary_tests": 121,
                            "actual_public_market_native_profiles": 4, "new_customer_payments": 0,
                            "new_paid_inference_jobs": 0, "new_venue_orders": 0,

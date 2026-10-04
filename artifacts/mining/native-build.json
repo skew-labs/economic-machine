@@ -1,0 +1,16 @@
+{
+  "abi": 1,
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "sources": {
+    "native/src/mining.cpp": "1f4b0b92a16c16fd71f26ffc04c3c89f3f04360f0380a61e3d768b05439dba21",
+    "native/tests/mining.cpp": "fd1e3ff5afc5c453087a3192cd8a54439cceb5fe9486731d7c7e12485220bf69",
+    "native/include/machine/economics/amm.hpp": "7937673ce450993816d66f631fbd7866770566ecf104b57829a668fcc2e9a5cc",
+    "native/include/machine/economics/value.hpp": "390287301d6ecc06451f52003a203596a2775dcd2bae049ea91c2b73d6dbb248"
+  },
+  "library_sha256": "5f5ec94bd00c55ab3a0e4be9f4d534cf59a6de81543c5f98c4918a7ac47fa9ad",
+  "library_path": "/srv/skew/economic-machine-commerce-20261002/build/mining-pr1/build/mining/libmachine_mining-5f5ec94bd00c55ab3a0e4be9f4d534cf59a6de81543c5f98c4918a7ac47fa9ad.so",
+  "authority": "CANDIDATE_ONLY",
+  "sanitizers": "ADDRESS_UNDEFINED",
+  "sanitizer_result": "MINING_NATIVE_BOUNDARIES_AND_DENSE_GRAPH_PASS expansions=3656",
+  "arithmetic": "INTEGER_CEIL_INPUT_FEE_CONSTANT_PRODUCT_FROZEN_MODEL"
+}

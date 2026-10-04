@@ -6,8 +6,19 @@ from economic_machine.compiler import compile_program
 from economic_machine.values import require_keys
 
 
-def engine_routes(workspace_dependency, *, require_owner=None):
+def engine_routes(workspace_dependency, *, require_owner=None, mcp_origin=None):
+    from .task_routes import task_routes
+
     router = APIRouter(prefix="/api/engine")
+    from .task_mcp import mcp_routes
+    router.include_router(mcp_routes(workspace_dependency, origin=mcp_origin))
+    from .assistant_routes import assistant_routes
+    router.include_router(assistant_routes(workspace_dependency, require_owner=require_owner))
+    router.include_router(task_routes(workspace_dependency, require_owner=require_owner))
+    from .fuel_routes import fuel_routes
+    router.include_router(fuel_routes(workspace_dependency, require_owner=require_owner))
+    from .mining_routes import mining_routes
+    router.include_router(mining_routes(workspace_dependency, require_owner=require_owner))
     owner = [Depends(require_owner)] if require_owner else []
 
     @router.get("/control")
@@ -213,6 +224,8 @@ class HostedWorkspaces:
 
     def cycle(self):
         from .workspace import Workspace
+        from .fuel import recover_fuel
+        from .task_recovery import TaskRecovery
 
         # Bound each pass. No unbounded tasks or implicit financial dispatch.
         count = 0
@@ -220,6 +233,8 @@ class HostedWorkspaces:
             work = Workspace(
                 path, clock=self.clock, credential_prefix="ENGINE_" + path.stem[:20].upper() + "_"
             )
+            recover_fuel(work)
+            TaskRecovery(work).tick()
             work.scheduler.run_once()
             work.control.recover_once()
             for oid in work.trading.pending_ids(limit=1):

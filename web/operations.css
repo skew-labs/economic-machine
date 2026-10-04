@@ -432,3 +432,13 @@
 .agent-budget-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}.agent-budget-stats>div{display:grid;gap:6px}.agent-budget-stats small{font-size:11px;color:#6b7380}.agent-budget-stats strong{font-size:17px}
 .agent-roster{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.agent-setup{margin-top:16px;border-top:1px solid #e3e7ec;padding-top:16px}.agent-setup summary{font-size:13px;font-weight:600;cursor:pointer;margin-bottom:16px}.agent-picks{border:1px solid #e3e7ec;padding:16px;border-radius:8px;margin:10px 0}.agent-picks legend{font-size:12px;color:#6b7380}.agent-picks label{display:flex;gap:9px;align-items:center;margin:8px 0;font-size:13px}.agent-picks input{width:auto}.agent-setup pre{overflow-x:auto;white-space:pre-wrap;word-break:break-word}
 @media(max-width:700px){.agent-summary{gap:16px;flex-wrap:wrap}.agent-summary .button{margin-left:0}.agent-roster{grid-template-columns:1fr}.agent-budget-stats{grid-template-columns:repeat(2,1fr)}}
+
+/* Mining shares the existing console grid and keeps exact hashes readable. */
+#ops-mining .ops-facts {display:grid;grid-template-columns:minmax(100px,1fr) minmax(0,2fr);gap:8px;font-size:13px}
+#ops-mining .ops-facts dd {margin:0;overflow-wrap:anywhere}
+#ops-mining code {display:block;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}
+#ops-mining .task-row {display:grid;text-align:left;gap:6px;white-space:normal}
+#ops-mining .task-row small {opacity:.65;font-weight:400}
+#ops-mining details {min-width:0}
+#ops-mining textarea {width:100%;box-sizing:border-box;font-family:monospace;font-size:12px}
+#ops-mining summary {cursor:pointer;font-size:13px;padding:8px 0}

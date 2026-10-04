@@ -30,7 +30,7 @@ def now_iso(at):
 
 
 class Workspace:
-    def __init__(self, db_path, *, readers=None, clock=time.time, credential_prefix=None, broker_factory=None, live_enabled=None):
+    def __init__(self, db_path, *, readers=None, clock=time.time, credential_prefix=None, broker_factory=None, live_enabled=None, task_provider=None):
         path = Path(db_path)
         path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         new_database = not path.exists()
@@ -55,6 +55,14 @@ class Workspace:
         self.economics = EconomicLibrary(self)
         from .live import LiveDecisions
         self.live = LiveDecisions(self)
+        from .tasks import Tasks
+        self.tasks = Tasks(self)
+        from .task_checkout import TaskCheckout
+        self.task_checkout = TaskCheckout(self, provider=task_provider)
+        from .mining import Mining
+        self.mining = Mining(self)
+        from .solution import SolutionLab
+        self.solution = SolutionLab()
 
     def event(self, db, kind, value):
         fingerprint = journal_fingerprint(db)
@@ -205,5 +213,8 @@ class Workspace:
             "capital_aggregation": "NO_CROSS_ASSET_VALUATION_WITHOUT_PRICE_EVIDENCE",
             "credential_namespace": self.credential_prefix,
             "sync_jobs": self.scheduler.status(), "trading": self.trading.status(), "live": self.live.status(), "native": self.native.status(),
-            "control": self.control.status(), "economics": self.economics.status(),
+            "control": self.control.status(), "economics": self.economics.status(), "tasks": self.tasks.status(),
+            "mining": self.mining.status(),
+            "solution": self.solution.status(),
+            "task_checkout": self.task_checkout.status(),
             "product": "USER_OWNED_AGENT_OPERATIONS_CONSOLE"}

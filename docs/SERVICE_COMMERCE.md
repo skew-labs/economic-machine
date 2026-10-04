@@ -184,7 +184,7 @@ immutable 10-USDC offers and refreshes them without extending human logins or
 changing an in-flight quote. On 2026-10-03 the owner requested creation of a new
 receiver. Atlas Monthly now uses `0xD432a628a9860A8d0Be98c1782B2a0cD136Da00e`
 on Arbitrum One and is available for customer-approved 10-USDC checkout.
-See [receiver custody and unsigned live evidence](SUBSCRIPTION_RECEIVER_20261003.md).
+The operator configures the receiver separately; source code does not provision custody or authorize receipt of customer funds.
 The root-only encrypted key is outside the API service; no paid customer
 subscription was executed during setup verification.
 

@@ -1,25 +1,17 @@
 # Contributing
 
-Add a concrete economic primitive or adapter with bounded inputs, explicit authority, deterministic
-failure behavior and a receipt that can be replayed. Keep model proposals separate from executable
-programs. Keep read-only account access separate from order placement, wallet signing and settlement.
+Start with the [tool index](products/README.md) and [architecture](docs/ARCHITECTURE.md).
+Use a source checkout and the installation steps in the root README.
 
-Preserve the versioned ISA, canonical fixed-point values and historical receipt identities. A semantic
-change needs a versioned compatibility decision and negative coverage, not a silent rewrite of fixtures.
-Tests should exercise stale state, incomplete information, concurrency, duplicate events, journal
-corruption and ambiguous external outcomes where relevant. Generated repetitions and line-count padding
-are not contributions.
+Keep money quantities typed and exact. Preserve reservations on unknown outcomes, bind approval
+to the exact plan, and separate candidate generation from signing. Changes to contracts,
+settlement or recovery need adversarial tests for the affected boundary.
 
-Use Python 3.11 or later in an isolated environment. The maintainers run verification on their authorized
-remote host. Contributor environments can run their own tests without accessing maintainer services:
+Run targeted Python tests with `python -m unittest discover -s tests -p 'test_<module>.py'`.
+The C++ entry point is CMake; CTest keeps assertions enabled in Release builds. Contract suites
+require artifacts from the matching compiler scripts. Old build receipts do not verify new code.
 
-```sh
-python -m unittest tests.test_economic_machine tests.test_economic_spec tests.test_economic_inference
-python -m unittest tests.test_engine_workspace tests.test_engine_portal tests.test_submission_evidence
-node --check web/engine.js
-```
-
-New network adapters need deterministic fixture tests. Live public reads must be documented separately;
-live money movement or signing is not part of the routine test suite. Do not commit secrets, live owner
-databases, personal account snapshots or unredacted provider responses. Include the validation scope
-and distinguish newly checked behavior from historical evidence in your pull request.
+Keep PRs focused: state the observable change, link affected tests and report limitations.
+Do not add credentials, private journals, owner configuration, internal roadmaps, test logs or
+generated recordings. Archive generated artifacts separately; preserve fixtures explicitly used
+by tests. No CI job should receive production signing keys or submit transactions.

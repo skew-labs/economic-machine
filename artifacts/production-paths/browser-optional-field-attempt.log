@@ -1,7 +1,0 @@
-Traceback (most recent call last):
-  File "/srv/skew/economic-machine-commerce-20261002/scripts/verify_paths_browser.py", line 98, in <module>
-    main()
-  File "/srv/skew/economic-machine-commerce-20261002/scripts/verify_paths_browser.py", line 45, in main
-    assert quoted['payment'] is None
-           ~~~~~~^^^^^^^^^^^
-KeyError: 'payment'

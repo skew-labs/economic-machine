@@ -1,7 +1,0 @@
-{
-  "agreed_total": "0.4",
-  "llm_calls": 0,
-  "old_version_rejected": true,
-  "payment_status": "NOT_REQUESTED",
-  "latency_ms": 11.005
-}

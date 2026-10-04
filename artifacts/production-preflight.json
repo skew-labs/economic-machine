@@ -1,8 +1,0 @@
-{
-  "ready": false,
-  "signing_authority": "NONE",
-  "checks": [],
-  "assurance": "Read-only configuration, journal and token interface checks. Not a live payment or an audit.",
-  "error_class": "ValueError",
-  "reason": "PRODUCTION_MODE_REQUIRED"
-}

@@ -7,8 +7,7 @@ x402 is a separate option for purchasing external data or computing services.
 
 ## Linux setup
 
-Use an owner-controlled Linux host or your remote development environment. This repository's maintainers
-build and test on the authorized Canada host. No production DB, credentials or wallet files belong in Git.
+Use an owner-controlled Linux host or your remote development environment. No production DB, credentials or wallet files belong in Git.
 
 ```sh
 git clone https://github.com/skew-labs/economic-machine.git
@@ -93,7 +92,7 @@ Program revisions supersede unsent intents while preserving locked capital. Paus
 release an ambiguous submitted execution lock. Finality, post-state and exception verification are explicit
 external interfaces. Binance Spot LIMIT and one-way USD-M reduce-only LIMIT now have an execution
 adapter; a generic wallet signer and additional venue adapters remain unimplemented.
-The original commerce runtime's proven x402 purchase is exposed independently in the public recorded view.
+The commerce runtime exposes historical x402 fixtures independently in its recorded view.
 Do not report a kernel receipt or local lock as an exchange fill or a new chain transaction.
 
 ## Scheduled synchronization and venue execution
@@ -116,9 +115,7 @@ Fees are explicitly marked unreconciled; they are never fabricated as zero.
 Order transmission is disabled unless the user's own service starts with
 `ENGINE_ALLOW_LIVE_TRADING=1`. Enabling this gate does not replace exact per-order
 owner approval. A trading API key should have no withdrawal permission and use
-venue-side IP restrictions where supported. The published Canada services keep
-the gate disabled. No live order, customer signature or mainnet transfer was
-performed in this release.
+venue-side IP restrictions where supported. Keep the transmission gate disabled until your adapters, credentials and approval flow are configured.
 
 The hosted console uses existing wallet login and stable wallet-owned databases.
 Its profile response provides `credential_namespace`, such as

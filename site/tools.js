@@ -1,5 +1,5 @@
 "use strict";
-const PORTAL = "https://machine.148-113-153-116.nip.io/commerce";
+const PORTAL = "https://skew.deals/commerce";
 const $ = (id) => document.getElementById(id);
 const node = (tag, text, klass) => {
   const element = document.createElement(tag);

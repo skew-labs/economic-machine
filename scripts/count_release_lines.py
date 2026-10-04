@@ -29,7 +29,7 @@ def main():
     implementation += records(ROOT / "web", {".js", ".html", ".css"})
     implementation += records(ROOT / "native", {".hpp", ".cpp"}, ("tests",))
     contracts = records(ROOT / "contracts", {".sol"})
-    fixtures = {"TestCommerceToken.sol", "TestEIP3009Token.sol", "DataPassAdversaries.sol"}
+    fixtures = {"TestCommerceToken.sol", "TestEIP3009Token.sol", "DataPassAdversaries.sol", "MiningAdversary.sol", "SolutionVRFMock.sol", "SkewVRFMock.sol"}
     implementation += [row for row in contracts if Path(row["path"]).name not in fixtures]
     tests = records(ROOT / "tests", {".py", ".cjs"}, ("fixtures", "__pycache__"))
     tests += records(ROOT / "native/tests", {".cpp"})

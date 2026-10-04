@@ -20,8 +20,8 @@ from .connections import PROFILES
 from .workspace import Workspace, now_iso
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSETS = {"app.js", "app.css", "wallet.js", "console-theme.css", "operations.js", "operations.css", "workspace.css", "commerce.js", "commerce.css",
-          "agents.js", "data.js", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/app-engine.svg"}
+ASSETS = {"assistant.js", "assistant.css", "swap-wallet.js", "swap-crypto.js","app.js", "app.css", "wallet.js", "console-theme.css", "operations.js", "operations.css", "workspace.css", "commerce.js", "commerce.css",
+          "agents.js", "data.js", "tasks.js", "mining.js", "tasks.css", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/app-engine.svg"}
 
 
 def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:8800", workspace=None, clock=time.time):
@@ -43,8 +43,12 @@ def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:880
     async def lifespan(_app):
         worker = asyncio.create_task(work.scheduler.loop())
         async def reconcile_orders():
+            from .fuel import recover_fuel
+            from .task_recovery import TaskRecovery
             while True:
                 try:
+                    await asyncio.to_thread(recover_fuel, work)
+                    await asyncio.to_thread(TaskRecovery(work).tick)
                     await asyncio.to_thread(work.control.recover_once)
                     for oid in work.trading.pending_ids():
                         await asyncio.to_thread(work.trading.reconcile, oid)
@@ -197,9 +201,9 @@ def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:880
         return HTMLResponse(html)
 
     from .routes import engine_routes
-    router = engine_routes(lambda: work)
-    existing = {route.path for route in app.routes}
-    router.routes = [route for route in router.routes if route.path not in existing]
+    router = engine_routes(lambda: work, mcp_origin=origin)
+    existing = {route.path for route in app.routes if hasattr(route, "path")}
+    router.routes = [route for route in router.routes if getattr(route, "path", None) not in existing]
     app.include_router(router)
 
     @app.get("/{asset:path}")
