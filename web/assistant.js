@@ -1,0 +1,189 @@
+(function () {
+  'use strict';
+  const C = window.MachineConsole, {el,button} = C;
+  const root = document.getElementById('ops-overview');
+  let ready=false, busy=false, pending='', historyOwner=null, turns=[], quoteVersion=0, boundShown=false;
+  const prefix=C.API_PREFIX || '', storedKey=()=> 'skew-console-swap-'+(C.state.identity?.address?.toLowerCase()||'');
+  const api=(path,body)=>C.api('/api/engine'+path,body);
+  const friendly = error => ({FRESH_CHAIN_STATE_REQUIRED:'The chain data could not be verified as current. Request a fresh quote; no order was sent.',INSUFFICIENT_USDC:'This amount exceeds the USDC available in your wallet.',ASSISTANT_BEDROCK_NOT_CONFIGURED:'Amazon Bedrock needs to be connected by the workspace operator. You can use the actions below in the meantime.',ASSISTANT_BEDROCK_CREDENTIALS_REQUIRED:'AWS sign-in is required for the assistant. Your workspace actions are still available.',ASSISTANT_BEDROCK_UNAVAILABLE_OR_INVALID:'Amazon Bedrock could not finish this request. No transaction was sent.',ASSISTANT_PROVIDER_NOT_CONFIGURED:'Your assistant is not connected yet. Your workspace tools are still available.',
+    ASSISTANT_PROVIDER_UNAVAILABLE_OR_INVALID:'The assistant could not finish this request. No transaction was sent. Try a shorter request.',
+    ASSISTANT_DAILY_LIMIT_REACHED:'Today’s conversation limit is reached. You can still use the workspace tools.',
+    ASSISTANT_REQUEST_IN_PROGRESS:'Your previous message is still being processed.',
+    DO_NOT_SEND_PRIVATE_KEYS_OR_API_SECRETS:'Keep private keys and API secrets out of chat. Add a connection through Connections.'}[error.message] || WalletBridge.connectionError(error));
+  function add(role,text,content) {
+    const row=el('article','chat-message '+role), label=el('span','chat-speaker',role==='user'?'You':'Skew');
+    row.append(label,el('p','chat-text',text)); if(content)row.append(content);
+    document.getElementById('conversation').append(row);
+    document.getElementById('chat-welcome').hidden=true;
+    row.scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+    return row;
+  }
+  const go=(label,view)=>button(label,'button secondary',()=>C.setView(view));
+  function action(label,fn) {
+    const b=button(label,'button primary',async()=>{
+      if(busy)return;busy=true;b.disabled=true;
+      try{if(await fn()===true)b.dataset.completed='true';}catch(e){add('assistant',friendly(e));}
+      finally{busy=false;b.disabled=b.dataset.completed==='true';}
+    });return b;
+  }
+  function card(title,note) {const n=el('section','chat-action');n.append(el('h3','',title));if(note)n.append(el('p','muted',note));return n;}
+  function details(node,pairs) {const dl=el('dl','chat-facts');for(const[k,v]of pairs){dl.append(el('dt','',k),el('dd','',String(v)));}node.append(dl);}
+  async function fetchSwap(path,body) {
+    const r=await fetch(prefix+'/swap-api/'+path,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const data=await r.json();if(!r.ok)throw new Error(data.error||data.detail||'Swap service unavailable.');return data;
+  }
+  function savedSwap(){try{return JSON.parse(localStorage.getItem(storedKey())||'null');}catch{throw new Error('Saved swap needs recovery. Do not send a replacement.');}}
+  function saveSwap(value){localStorage.setItem(storedKey(),JSON.stringify(value));}
+  async function wallet() {
+    if(!C.getWallet()){C.signIn();throw new Error('Reconnect your signing wallet, then continue this action.');}
+    const state=await WalletBridge.accountState(C.getWallet());
+    if(state.chain_id!==42161 || state.address.toLowerCase()!==C.state.identity?.address?.toLowerCase())throw new Error('Reconnect the reviewed wallet on Arbitrum One.');
+    return state.address;
+  }
+  async function reconcileSwap(node) {
+    const held=savedSwap();if(!held?.id)throw new Error('No saved swap is available.');
+    const result=await swapStep('status',{id:held.id},held.fuel_id);
+    const state=result.chain_verified?'FILLED_FINALIZED':result.safe_to_retry?'EXPIRED_UNFILLED':result.status;
+    saveSwap({...held,status:state});
+    const receipt=card(result.chain_verified?'ETH received':'Swap status',result.chain_verified?'Settlement and recipient balance verified on two RPCs.':state.replaceAll('_',' ').toLowerCase());
+    for(const tx of result.tx_hashes||[]){if(/^0x[0-9a-f]{64}$/i.test(tx)){const a=el('a','text-link','View transaction');a.href='https://arbiscan.io/tx/'+tx;a.target='_blank';a.rel='noopener noreferrer';receipt.append(a);}}
+    if(!result.chain_verified&&!result.safe_to_retry)receipt.append(action('Check again',()=>reconcileSwap(receipt)));
+    add('assistant',result.chain_verified?'The original swap is finalized.':result.safe_to_retry?'The order expired without a fill. You can request a new quote.':'The original order is being tracked. No replacement has been sent.',receipt);
+    if(node)node.querySelectorAll('button').forEach(b=>b.disabled=true);
+  }
+  async function swapStep(step,body,fuelId) {
+    if(!fuelId)return fetchSwap(step,body);
+    const r=await api('/fuel/requests/'+fuelId+'/'+(step==='status'?'reconcile':step),body.signature?{signature:body.signature}:{});
+    return step==='status'?r.settlement:r;
+  }
+  function checkPending() {
+    const held=savedSwap();
+    if(held&&!['USER_REJECTED','FILLED_FINALIZED','EXPIRED_UNFILLED'].includes(held.status))
+      throw new Error('A swap is already pending. Check the original settlement before signing another.');
+  }
+  function reviewSwap(reviewed,owner,atoms,fuelId=null) {
+    SkewSwapWallet.validBase(reviewed,owner,atoms);
+    const version=++quoteVersion, raw=SkewSwapWallet.formatUnits(atoms);
+    const current=()=>{checkPending();if(version!==quoteVersion)throw new Error('A newer quote is open. Review that quote before signing.');};
+    const quote=card('Review your quote','No ETH is required for the two wallet signatures.');
+    details(quote,[['You spend',raw+' USDC'],['Estimated receipt',SkewSwapWallet.formatUnits(reviewed.preview_buy_wei,18)+' ETH'],['Routing cost',SkewSwapWallet.formatUnits(reviewed.preview_fee_atoms)+' USDC'],['Network','Arbitrum One']]);
+    async function finalReview(approved,signedPermit) {
+      SkewSwapWallet.validateOrder(approved,owner,atoms,signedPermit,SkewSwapCrypto);
+      const final=card('Confirm swap','The next signature authorizes this trade.');
+      details(final,[['Maximum spend',raw+' USDC'],['Minimum receipt',SkewSwapWallet.formatUnits(approved.minimum_buy_wei,18)+' ETH'],['Receive at',owner]]);
+      final.append(action('2. Sign and submit swap',async()=>{
+        current();await wallet();
+        const persist=value=>saveSwap({...value,fuel_id:fuelId});
+        const signature=await SkewSwapWallet.signOrder(C.getWallet(),approved,owner,atoms,signedPermit,SkewSwapCrypto,persist);
+        const result=await swapStep('submit',{id:approved.id,signature},fuelId);
+        saveSwap({...savedSwap(),status:result.status});
+        final.replaceChildren(el('h3','','Order submitted'),el('p','','Your order is recorded. Check settlement before making another swap.'),action('Check settlement',()=>reconcileSwap(final)));
+        return true;
+      }));
+      add('assistant','The route was simulated. Review the final minimum before signing.',final);
+    }
+    quote.append(action(reviewed.order?'Review existing approval':'1. Approve USDC in wallet',async()=>{
+      current();await wallet();
+      const signedPermit=reviewed.order?SkewSwapCrypto.signatureFromHook(reviewed.app_data):await SkewSwapWallet.signPermit(C.getWallet(),reviewed,owner,atoms,SkewSwapCrypto);
+      const approved=reviewed.order?reviewed:await swapStep('order',{id:reviewed.id,signature:signedPermit},fuelId);
+      await finalReview(approved,signedPermit);return true;
+    }));
+    add('assistant','A live route is ready for your review.',quote);
+  }
+  function offerSwap(amount) {
+    const node=card('Get ETH for gas','Pay with USDC on Arbitrum One. Your wallet approves the exact amount.');
+    const label=el('label','','USDC to swap'),input=el('input');input.type='text';input.inputMode='decimal';input.value=amount||'';input.placeholder='USDC amount';input.setAttribute('aria-label','USDC to swap');label.append(input);node.append(label);
+    node.append(action('Get live quote',async()=>{
+      const owner=await wallet(), previous=savedSwap();
+      if(previous&&!['USER_REJECTED','FILLED_FINALIZED','EXPIRED_UNFILLED'].includes(previous.status))return reconcileSwap();
+      const atoms=SkewSwapWallet.usdcAtoms(input.value.trim());
+      const reviewed=await fetchSwap('quote',{owner,amount_atoms:atoms});reviewSwap(reviewed,owner,atoms);
+    }));
+    const held=savedSwap();if(held?.id)node.append(action('Check previous swap',()=>reconcileSwap()));
+    return node;
+  }
+  function boundRequest() {
+    const fid=new URLSearchParams(location.search).get('fuel');
+    if(boundShown||!/^fuel-[0-9a-f]{24}$/.test(fid||''))return;
+    boundShown=true;
+    const n=card('Review agent gas request','This request keeps the original shared budget and purchase reservation.');
+    n.append(action('Load agent request',async()=>{
+      const owner=await wallet(), bound=await api('/fuel/requests/'+fid), reviewed=bound.swap;
+      if(owner.toLowerCase()!==reviewed.owner.toLowerCase())throw new Error('Connect the wallet assigned to this request.');
+      const held=savedSwap();
+      if(held&&!['USER_REJECTED','FILLED_FINALIZED','EXPIRED_UNFILLED'].includes(held.status)&&held.id!==reviewed.id)return reconcileSwap();
+      if(['SUBMITTED','UNKNOWN_RECONCILE_ONLY','FILLED_FINALIZED','EXPIRED_UNFILLED'].includes(reviewed.status)||held?.id===reviewed.id){
+        saveSwap({...held,id:reviewed.id,owner,status:reviewed.status,fuel_id:fid});return reconcileSwap();
+      }
+      reviewSwap(reviewed,owner,reviewed.amount_atoms,fid);return true;
+    }));add('assistant','An agent is requesting gas. Review it here with your wallet.',n);
+  }
+  function proposal(result, accepted) {
+    const p=result.proposal;let n;
+    if(p.action==='swap')n=offerSwap(p.amount);
+    else if(p.action==='task'&&p.task?.budget!==null){
+      n=card(p.task.title,'Review the task before adding it to your workspace. Purchases require a separate approval.');
+      details(n,[['Budget cap',p.task.budget+' USD'],['Work',p.task.kind.replaceAll('_',' ')],['Conditions',p.task.preference_id?'Use last confirmed conditions':Object.entries(p.task.constraints).map(([k,v])=>k.replaceAll('_',' ')+': '+v).join(' · ')||'Needs clarification']]);
+      if(!accepted)n.append(action('Create this task',async()=>{const task=await api('/assistant/'+result.request_id+'/task',{});n.replaceChildren(el('h3','','Task created'),el('p','',task.id||'Saved to your workspace'),go('Open tasks','tasks'));}));
+      else n.append(go('Open saved task','tasks'));
+    }else if(p.action==='status'){
+      n=card('Your workspace');n.append(action('Check connected accounts',async()=>{
+        const live=await api('/overview');n.replaceChildren(el('h3','','Account overview'));
+        for(const conn of live.connections||[]){n.append(el('p','',`${conn.name||conn.id} · ${conn.status}`));}
+        if(!live.connections?.length)n.append(el('p','','No accounts connected yet.'));
+        n.append(go('Manage connections','connections'),go('Orders and positions','execution'));
+      }));
+    }else if(p.action==='mining'){
+      n=card('Mining','Check available jobs, search results and reward status.');
+      n.append(action('Check mining jobs',async()=>{
+        const m=await api('/mining');n.replaceChildren(el('h3','','Your mining jobs'));
+        n.append(el('p','',`${m.jobs.length} saved jobs · confirmed reward ${m.confirmed_reward}`));
+        for(const j of m.jobs.slice(0,4)){n.append(el('p','',j.snapshot?.title||j.id),action('Search this job',async()=>{
+          const r=await api('/mining/jobs/'+j.id+'/solve',{budget:10000});
+          const proof=card('Search result','Local candidate verification. This is not an on-chain token reward.');
+          proof.append(el('pre','receipt-json',JSON.stringify(r,null,2)));add('assistant','The engine completed the bounded search.',proof);
+        }));}n.append(go('Mining controls','mining'));
+      }));
+    }else if(p.action==='data'){n=card('Data licenses');n.append(go('Browse data','data'),go('Buy services','market'));}
+    else if(p.action==='connections'){n=card('Connect your tools');n.append(go('Manage connections','connections'));}
+    const row=add('assistant',p.reply,n);
+    const meta=el('small','chat-trace',`${result.trace.model} · ${result.trace.latency_ms} ms · proposal`);
+    row.append(meta);
+  }
+  async function send(text) {
+    if(busy||!text.trim())return;
+    if(!C.state.identity&&!C.LOCAL_ENGINE){pending=text;C.signIn();return;}
+    busy=true;const input=document.getElementById('chat-input'),submit=document.getElementById('chat-send');
+    input.value='';submit.disabled=true;add('user',text);
+    const indicator=add('assistant','Working on your request…');indicator.classList.add('chat-pending');
+    try{const result=await api('/assistant',{request_id:crypto.randomUUID(),message:text});indicator.remove();proposal(result);}
+    catch(e){indicator.querySelector('.chat-text').textContent=friendly(e);indicator.classList.remove('chat-pending');}
+    finally{busy=false;submit.disabled=false;input.focus();}
+  }
+  function init() {
+    if(ready)return;ready=true;root.replaceChildren();
+    const welcome=el('div','chat-welcome');welcome.id='chat-welcome';
+    welcome.append(el('span','chat-wordmark','skew'),el('h1','','What would you like to get done?'),el('p','','Your accounts, agents and work. One conversation.'));
+    const suggestions=el('div','chat-suggestions');
+    for(const [label,prompt]of [['Get ETH for gas','Swap 2 USDC to ETH for gas on Arbitrum One.'],['Check my accounts','Check my balances, positions and recent orders.'],['Run a mining job','Show my mining jobs and help me run a bounded search.'],['Create a work task','Help me prepare a vendor comparison for my team.']])suggestions.append(button(label,'chat-suggestion',()=>{document.getElementById('chat-input').value=prompt;document.getElementById('chat-input').focus();}));
+    const conversation=el('div','conversation');conversation.id='conversation';conversation.setAttribute('aria-live','polite');conversation.setAttribute('aria-label','Conversation');
+    const composer=el('form','chat-composer');composer.id='chat-composer';
+    const input=el('textarea');input.id='chat-input';input.rows=2;input.maxLength=1800;input.placeholder='Ask Skew to plan, check or do something…';input.setAttribute('aria-label','Message Skew');
+    const bar=el('div','composer-bar'),hint=el('span','composer-hint','You approve spending. Skew tracks the rest.');
+    const submit=button('Send','chat-send');submit.type='submit';submit.id='chat-send';
+    bar.append(hint,submit);composer.append(input,bar);composer.onsubmit=e=>{e.preventDefault();send(input.value);};
+    input.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();send(input.value);}};
+    root.append(welcome,suggestions,conversation,composer);boundRequest();
+  }
+  async function connected() {
+    init();const owner=C.state.identity?.address;
+    if(owner&&owner!==historyOwner){historyOwner=owner;
+      try{const h=await api('/assistant');turns=h.turns;document.getElementById('conversation').replaceChildren();for(const t of turns){add('user',t.message);if(t.result)proposal(t.result,t.action_result);else add('assistant',t.status==='RUNNING'?'This request is pending. Check again before retrying.':'This request did not complete. No transaction was sent.');}}catch(e){C.notify(friendly(e),true);}
+    }
+    boundShown=false;boundRequest();
+    if(pending){const value=pending;pending='';await send(value);}
+  }
+  window.AssistantConsole={render:()=>{init();document.body.dataset.view='overview';if(C.state.identity&&historyOwner!==C.state.identity.address)connected();},connected,
+    fuel:()=>{C.setView('overview');init();add('assistant','Choose how much USDC to exchange for gas.',offerSwap(null));}};
+  document.addEventListener('click',e=>{if(e.target.closest('[data-fuel]'))window.AssistantConsole.fuel();});
+})();

@@ -10,6 +10,8 @@ def engine_routes(workspace_dependency, *, require_owner=None):
     from .task_routes import task_routes
 
     router = APIRouter(prefix="/api/engine")
+    from .assistant_routes import assistant_routes
+    router.include_router(assistant_routes(workspace_dependency, require_owner=require_owner))
     router.include_router(task_routes(workspace_dependency, require_owner=require_owner))
     from .fuel_routes import fuel_routes
     router.include_router(fuel_routes(workspace_dependency, require_owner=require_owner))

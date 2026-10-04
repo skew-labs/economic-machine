@@ -1,0 +1,171 @@
+{
+  "isolated_source_files_verified": 48,
+  "runtime_files": [
+    {
+      "path": "site/atlas.html",
+      "sha256": "c52b6373dfb9f14bff45eff6425e32622ebc1739bd65523c66bd61a5fd8ecb04",
+      "live_matches": true
+    },
+    {
+      "path": "site/data-pass.html",
+      "sha256": "34146d51994819122b3e14d464b43f73f959c89c2e2aefaa9fd6c8f8e69f708b",
+      "live_matches": true
+    },
+    {
+      "path": "site/engine-product.html",
+      "sha256": "9152fcf7ebe2b304ff69db61ef2054cdcd935c5b47e7c6f291857e65787a1588",
+      "live_matches": true
+    },
+    {
+      "path": "site/evidence.css",
+      "sha256": "8d4f171495bcfa91355b2da91af9a7cb69030fa8c1b25e749469f3a0209d2df2",
+      "live_matches": true
+    },
+    {
+      "path": "site/evidence.html",
+      "sha256": "43d980f5bb3a5438f5b1fcbb29ed319256aa9f365c86e6866a0575ab7b6d3cf2",
+      "live_matches": true
+    },
+    {
+      "path": "site/evidence.js",
+      "sha256": "425d6d406a1b0727003c5720e49a2ea3b11438e03348ede233a9e07306725509",
+      "live_matches": true
+    },
+    {
+      "path": "site/index.html",
+      "sha256": "fe1b4a20292afb7fdb17610b614f624e6f79b29acc38cdf22d8800a017eefa2a",
+      "live_matches": true
+    },
+    {
+      "path": "site/landing.js",
+      "sha256": "b9ce282faf971e4fd1a987b203aa70e2d6653420123cefd3924f01faf079f590",
+      "live_matches": true
+    },
+    {
+      "path": "site/site-lens.html",
+      "sha256": "9a8385621bac19ab0038c4975ec352694a10eab1a29d415a119a07c663461241",
+      "live_matches": true
+    },
+    {
+      "path": "site/site.js",
+      "sha256": "7ec410bdb025817638b38cde38509bcadcb054a62db515b9b132727e7407eca4",
+      "live_matches": true
+    },
+    {
+      "path": "site/tools.html",
+      "sha256": "3289293172ce7ca13ceedcf23df0beeb879d758202f1db31a467bf490206e31c",
+      "live_matches": true
+    },
+    {
+      "path": "site/tools.js",
+      "sha256": "ba2181f78b93e6e9d7eb3bd084cc0477d10b8c4e06b61b0c1d8569a5defe3d40",
+      "live_matches": true
+    },
+    {
+      "path": "src/machine_commerce/fuel_price.py",
+      "sha256": "87aa2033ed351b47bb698faabdfdec3a33c6d3e5a055899ffc60a5b2f031833b",
+      "live_matches": true
+    },
+    {
+      "path": "src/machine_commerce/fuel_rpc.py",
+      "sha256": "444fb2da238e4224465eb0e6ba76c584a5350c154dfa96a8b04f77c67003de97",
+      "live_matches": true
+    },
+    {
+      "path": "src/machine_commerce/gas_portal.py",
+      "sha256": "a174dc114b25c03ac4f5dc8c8ab63c6bd91f7ee932bd88a7bf21c31843478f7d",
+      "live_matches": true
+    },
+    {
+      "path": "src/machine_commerce/gas_router.py",
+      "sha256": "e9172ca1cb479aea6bf5a170d01d62591f44c63e190e4c746c7cdac4c798fb06",
+      "live_matches": true
+    },
+    {
+      "path": "src/machine_commerce/portal.py",
+      "sha256": "50cc403072c6a8c25448ebf38d88a848dcdc559ee219726c11cc7f29437c901a",
+      "live_matches": true
+    },
+    {
+      "path": "src/machine_engine/api.py",
+      "sha256": "18c70c73b29abb2d300b17bbcdaf228c6bbe8833ebc4603cd2f9ce63b3d03e22",
+      "live_matches": true
+    },
+    {
+      "path": "src/machine_engine/assistant.py",
+      "sha256": "ef69c63651f2cce3875cc2395b4a41764255850b1d3e1fc09c5e0a29d4dfb221",
+      "live_matches": true
+    },
+    {
+      "path": "src/machine_engine/assistant_routes.py",
+      "sha256": "c8ec6988f7f04315d96c38a6612aa18cf414336ebc4eb93246512b7578d70fe7",
+      "live_matches": true
+    },
+    {
+      "path": "src/machine_engine/fuel.py",
+      "sha256": "e2a095f6e2000bc86a701445ec738509d3594a9e6d286fa32e620a550bf77640",
+      "live_matches": true
+    },
+    {
+      "path": "src/machine_engine/fuel_routes.py",
+      "sha256": "b4f12e70c61c3258f3e6770a49c08b332a761f2fc19a15ff79fe4ba9a935a0ff",
+      "live_matches": true
+    },
+    {
+      "path": "src/machine_engine/routes.py",
+      "sha256": "caa83941a54c1f01088a8dac0dc326fda5d6b7147d26669849a7067be81eb00a",
+      "live_matches": true
+    },
+    {
+      "path": "web/app.js",
+      "sha256": "ce36ce032057b43778ad2b72b5828e93d4080ace51f83f987de31b1c05a41c30",
+      "live_matches": true
+    },
+    {
+      "path": "web/assistant.css",
+      "sha256": "bfca92339d1424c6c9b2bd2b9b2ccb8c736a737a5d60a6fed40b5d9635e84e90",
+      "live_matches": true
+    },
+    {
+      "path": "web/assistant.js",
+      "sha256": "fe45a193a9d7a47e87811bd8d90e48930ecf8b0ffaff0eb6c8f6ab38b6db6db5",
+      "live_matches": true
+    },
+    {
+      "path": "web/data.js",
+      "sha256": "f96a21f1b92169b18299c9a214fed6243fad8d7092579877f73887f42183ae7e",
+      "live_matches": true
+    },
+    {
+      "path": "web/index.html",
+      "sha256": "76f8dfd9b983323ad4f42b82e95520e09d71d2659ac39147d8f7116516612fc7",
+      "live_matches": true
+    },
+    {
+      "path": "web/operations.js",
+      "sha256": "75d2f1db6e3b3ea305b0d814196e1aa447371f5796ed307482a7a3664fcc1071",
+      "live_matches": true
+    },
+    {
+      "path": "web/swap-wallet.js",
+      "sha256": "dcde65871257b49e917742e4967cb8fcc7e65165f72c9e562ff67e6873bdb739",
+      "live_matches": true
+    },
+    {
+      "path": "web/swap.html",
+      "sha256": "fb59f70791e3b2be3ec3caf7a967a6397a6b49dfbd82046a49c7ac80aee749f0",
+      "live_matches": true
+    },
+    {
+      "path": "web/swap.js",
+      "sha256": "a117847e21cb80c6a839901ccc4b4b90d25c49d2442961a8975a9b33254d82a1",
+      "live_matches": true
+    },
+    {
+      "path": "web/wallet.js",
+      "sha256": "0140a54c1dcab36b8847b290bfd39752fd8a9d4526457946833d0252a7943ca7",
+      "live_matches": true
+    }
+  ],
+  "mismatches": []
+}

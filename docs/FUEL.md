@@ -6,11 +6,11 @@ sending an approval transaction. A CoW solver pays the settlement transaction's
 gas and recovers its costs through the quote. SKEW does not supply free gas,
 hold customer keys, or operate the CoW solver network.
 
-Public entry: https://machine.148-113-153-116.nip.io/commerce/swap
+Public entry: https://skew.deals/commerce/console#overview
 
 ## Product flow
 
-1. Connect an Arbitrum One wallet and choose 1–3 USDC (default 2).
+1. Connect an Arbitrum One wallet and enter a positive USDC amount (six decimal places; default 2).
 2. Read balances, permit nonce and contract domains through two pinned RPCs.
 3. Review an indicative route, then sign a ten-minute EIP-2612 USDC permit for
    exactly the selected amount to the existing CoW vault relayer.
@@ -55,8 +55,7 @@ and agent, then creates a Fuel policy. `POST /api/engine/fuel/policies` accepts:
 ```
 
 Replace `expires_at` with a Unix timestamp between 10 minutes and one day ahead.
-One USDC is 1,000,000 atoms. The current pilot caps each policy at 27 USDC, fuel
-at 3 USDC, and any signed order at ten minutes. No unlimited permit is generated.
+One USDC is 1,000,000 atoms. There is no fixed dollar cap. The owner sets the policy budget and per-action limits; wallet inventory and existing reservations must cover them. Engine policy amounts use exact safe JSON integers (at most 2^53-1 atoms); direct quote amounts are decimal strings within uint256. Signed orders expire within ten minutes. Every permit covers only the reviewed amount.
 
 A hosted engine API key with `engine:write` can propose:
 
@@ -171,3 +170,14 @@ evidence yet. It does not demonstrate mining rewards or DataPass delivery.
 - [Chainlink sequencer behavior](https://docs.chain.link/data-feeds/l2-sequencer-feeds)
 - [ETH/USD reference feed](https://data.chain.link/feeds/arbitrum/mainnet/eth-usd)
 - [USDC/USD reference feed](https://data.chain.link/feeds/arbitrum/mainnet/usdc-usd)
+## RPC configuration
+
+Operators may set `SKEW_FUEL_RPC_PRIMARY` and `SKEW_FUEL_RPC_VERIFIER` in a
+server-only environment file. Both must use HTTPS and different hosts. Keep
+paid RPC credentials out of browser configuration, Git and public receipts.
+Returned observations contain source roles, not endpoint URLs. Read failures
+are sanitized; a missing verification source does not silently skip checks.
+
+The price guard samples the local clock after each latest-block response and
+rechecks all block ages at completion. A block mined while the preceding RPC
+was being read is valid; genuinely stale or future-dated state remains blocked.

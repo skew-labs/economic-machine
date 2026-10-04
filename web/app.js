@@ -10,7 +10,7 @@ const state = {view: 'overview', snapshot: null, keys: [], offers: [], expires: 
 const names = {'csv-normalize': 'CSV normalization', 'arbitrum-state': 'Arbitrum state data', 'apac-compute-brief': 'Atlas APAC Compute Brief'};
 const scopeNames = {read: 'Read', 'demands:write': 'Demand', 'supplies:write': 'Supply', 'orders:write': 'Orders', 'payments:request': 'Payment requests', 'agents:run': 'Bound agent tasks'};
 const headings = {
-  overview: ['Overview', 'Your accounts and agents, working under one set of rules.', null],
+  overview: ['Assistant', 'Your accounts and agents, working under one set of rules.', null],
   connections: ['Connections', 'Connect your APIs. See balances, positions and usage in one place.', null],
   tasks: ['Tasks', 'Save work briefs, budgets and conditions. Keep each task easy to review.', null],
   mining: ['Machine Mining', 'Submit useful work. Verify the result. Earn funded rewards.', null],
@@ -123,6 +123,7 @@ function connection(ok, label) {
 function setView(view) {
   if (!(view in headings)) return;
   state.view = view;
+  document.body.dataset.view = view;
   if (location.hash !== '#' + view) history.replaceState(null, '', '#' + view);
   for (const name of Object.keys(headings)) $(`${name}-view`).hidden = name !== view;
   for (const node of document.querySelectorAll('[data-view]')) {
@@ -577,15 +578,30 @@ $('mandate-form').addEventListener('submit', async (event) => {
   finally { state.busy = null; $('mandate-submit').disabled = false; }
 });
 let activeWallet = null;
+let availableWallets = [];
+async function restoreSigningWallet() {
+  if (activeWallet || !state.identity) return;
+  try {
+    const hint = JSON.parse(sessionStorage.getItem('skew-wallet-hint') || 'null') || {id:sessionStorage.getItem('skew-wallet-provider')};
+    const item = WalletBridge.rememberedProvider(availableWallets, hint);
+    if (!item) return;
+    const selected = await WalletBridge.accountState(item.provider);
+    if (selected.address.toLowerCase() !== state.identity?.address?.toLowerCase()) return;
+    if (selected.chain_id !== state.identity.chain_id || activeWallet) return;
+    activeWallet = item.provider;
+    if (activeWallet.on) { activeWallet.on('accountsChanged', changedWallet); activeWallet.on('chainChanged', changedWallet); }
+  } catch { /* A locked wallet is reconnected explicitly, never requested on load. */ }
+}
 function showWalletIdentity(identity) {
   state.identity = identity;
   $('wallet-account-label').textContent = PREVIEW ? 'Recorded workspace' : identity ? `${identity.address.slice(0, 6)}…${identity.address.slice(-4)}` : 'Connect wallet';
   $('wallet-account').disabled = PREVIEW;
   $('wallet-logout').hidden = PREVIEW || !identity;
   if (identity) $('mandate-payer').value = identity.address;
+  if (identity) restoreSigningWallet();
 }
 function walletError(error) {
-  return Number(error.code) === 4001 ? 'Sign-in cancelled. You can connect again.' : error.message || 'Wallet connection failed. Try again.';
+  return WalletBridge.connectionError(error);
 }
 async function walletRequest(path, body) {
   const response = await fetch(API_PREFIX + path, {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json', Accept: 'application/json'}, body: JSON.stringify(body)});
@@ -620,13 +636,18 @@ async function connectWallet(item) {
   state.busy = 'login-dialog'; formError('login-error');
   for (const option of $('wallet-options').querySelectorAll('button')) option.disabled = true;
   try {
-    const result = await WalletBridge.signIn(item.provider, walletRequest, message => { $('wallet-progress').textContent = message; });
+    // Keep the existing Sepolia DataPass path usable; other networks switch to One.
+    const sepolia = Number(await item.provider.request({method:'eth_chainId'})) === 421614;
+    const result = await WalletBridge.signIn(item.provider, walletRequest, message => { $('wallet-progress').textContent = message; }, {arbitrum:!sepolia});
     if (activeWallet?.removeListener) { activeWallet.removeListener('accountsChanged', changedWallet); activeWallet.removeListener('chainChanged', changedWallet); }
     activeWallet = item.provider;
+    sessionStorage.setItem('skew-wallet-provider', item.id);
+    sessionStorage.setItem('skew-wallet-hint', JSON.stringify({id:item.id,rdns:item.rdns,name:item.name}));
     if (activeWallet.on) { activeWallet.on('accountsChanged', changedWallet); activeWallet.on('chainChanged', changedWallet); }
     showWalletIdentity(result.identity);
     state.busy = null; closeDialog('login-dialog'); notify('');
     state.offers = (await api('/api/catalog')).offers; await refresh();
+    window.AssistantConsole?.connected();
   } catch (error) { formError('login-error', walletError(error)); }
   finally {
     state.busy = null; $('wallet-progress').textContent = '';
@@ -639,7 +660,7 @@ $('wallet-logout').addEventListener('click', async () => {
   try { await walletRequest('/api/auth/logout', {}); location.reload(); }
   catch (error) { notify(error.message, true); $('wallet-logout').disabled = false; }
 });
-WalletBridge.subscribe(renderWallets);
+WalletBridge.subscribe(providers => { availableWallets = providers; renderWallets(providers); restoreSigningWallet(); });
 showWalletIdentity(null);
 window.MachineConsole = {api, state, notify, el, uiIcon, button, setView, API_PREFIX, PREVIEW, LOCAL_ENGINE,
   refresh, openKey, signIn: () => $('wallet-account').click(),

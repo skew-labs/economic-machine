@@ -14,11 +14,15 @@
   <link rel="stylesheet" href="/tasks.css?v=tasks-pr1-20261003">
   <script src="/operations.js?v=production-paths-20261003" defer></script>
   <script src="/data.js?v=atlas-20261003" defer></script>
+  <script src="/assistant.js?v=console-20261004" defer></script>
+  <script src="/swap-crypto.js?v=console-20261004" defer></script>
+  <script src="/swap-wallet.js?v=console-20261004" defer></script>
   <script src="/commerce.js?v=production-paths-20261003" defer></script>
   <link rel="stylesheet" href="/operations.css?v=wallet-20261002-3">
   <link rel="stylesheet" href="/workspace.css?v=wallet-20261002-3">
   <link rel="stylesheet" href="/commerce.css?v=wallet-20261002-3">
   <link rel="icon" href="/assets/app-engine.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assistant.css?v=console-20261004">
 </head>
 <body>
   <div class="shell">
@@ -28,14 +32,14 @@
         <span>Engine<small>by skew</small></span>
       </a>
       <div class="workspace"><span class="workspace-icon"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#fingerprint"></use></svg></span><div>Personal workspace<small>Economic runtime</small></div></div>
-      <nav aria-label="Console navigation"><span class="nav-group">Workspace</span><button type="button" data-view="overview"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#stack"></use></svg>Overview</button>
+      <nav aria-label="Console navigation"><span class="nav-group">Workspace</span><button type="button" data-view="overview"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#stack"></use></svg>Assistant</button>
 <button type="button" data-view="connections"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#plugs-connected"></use></svg>Connections</button>
 <button type="button" data-view="tasks"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg#receipt"></use></svg>Tasks</button>
 <button type="button" data-view="mining"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg#stack"></use></svg>Mining</button>
 <button type="button" data-view="agents"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#shield-check"></use></svg>Agents &amp; limits</button>
 <button type="button" data-view="execution"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#arrows-clockwise"></use></svg>Order desk</button>
 <button type="button" data-view="activity"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#receipt"></use></svg>Activity</button><span class="nav-group">Services</span><button type="button" data-view="market"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg#stack"></use></svg>Buy services</button><button type="button" data-view="subscriptions"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg#arrows-clockwise"></use></svg>Subscriptions</button><button type="button" data-view="data"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg#database"></use></svg>Data licenses</button>
-<button type="button" data-view="funds"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#wallet"></use></svg>Service payments</button><a class="button secondary" href="/commerce/swap">Fuel · Get ETH with USDC</a><button type="button" data-view="usage"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#chart-line-up"></use></svg>API usage</button>
+<button type="button" data-view="funds"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#wallet"></use></svg>Service payments</button><button type="button" data-fuel><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg#wallet"/></svg>Get ETH for gas</button><button type="button" data-view="usage"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#chart-line-up"></use></svg>API usage</button>
 
         <span class="nav-group">Developer</span><button type="button" data-view="playground"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#code"></use></svg>Developer lab</button><button type="button" data-view="keys"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#key"></use></svg>API keys</button>
 
@@ -44,7 +48,7 @@
       <div class="sidebar-bottom"><div><span id="connection-dot" class="connection-dot"></span><span id="connection-label">Connecting</span></div><small>Economic Machine API</small><button class="quiet" id="copy-workspace" type="button">Copy workspace ID</button></div>
     </aside>
     <main>
-      <header class="topbar"><button id="navigation-toggle" class="navigation-toggle" type="button" aria-label="Open navigation" aria-controls="console-navigation" aria-expanded="false"><span></span><span></span><span></span></button><span class="mobile-brand"><img src="/assets/app-engine.svg" width="25" height="25" alt="">Engine</span><div class="breadcrumb">Console <span>/</span> <span id="breadcrumb-current">Overview</span></div><div class="topbar-right"><button type="button" class="help-shortcut" id="help-shortcut">Help</button><button id="balance-shortcut" class="balance-shortcut" type="button"><span id="top-balance">—</span> credits available</button><span class="mode-badge" id="mode-badge">Test mode</span><button type="button" class="wallet-account" id="wallet-account"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#wallet"></use></svg><span id="wallet-account-label">Connect wallet</span></button><button type="button" class="quiet" id="wallet-logout" hidden>Sign out</button></div></header>
+      <header class="topbar"><button id="navigation-toggle" class="navigation-toggle" type="button" aria-label="Open navigation" aria-controls="console-navigation" aria-expanded="false"><span></span><span></span><span></span></button><span class="mobile-brand"><img src="/assets/app-engine.svg" width="25" height="25" alt="">Engine</span><div class="breadcrumb">Console <span>/</span> <span id="breadcrumb-current">Overview</span></div><div class="topbar-right"><button type="button" class="help-shortcut" id="help-shortcut">Help</button><button id="balance-shortcut" class="balance-shortcut" type="button"><span id="top-balance">—</span> credits available</button><span class="mode-badge" id="mode-badge">Connecting</span><button type="button" class="wallet-account" id="wallet-account"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#wallet"></use></svg><span id="wallet-account-label">Connect wallet</span></button><button type="button" class="quiet" id="wallet-logout" hidden>Sign out</button></div></header>
       <div class="content">
         <div id="notice" class="notice" role="status" hidden></div>
         <section class="page-heading"><div><h1 id="page-title">Overview</h1><p id="page-description">Give your agents access. Keep control of what they can spend.</p></div><div class="heading-actions"><button class="button secondary icon-button" id="refresh" type="button" aria-label="Refresh console"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#arrows-clockwise"></use></svg></button><button class="button primary" id="primary-action" type="button" disabled><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#plus"></use></svg> Create API key</button></div></section>

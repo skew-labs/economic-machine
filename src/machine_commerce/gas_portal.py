@@ -40,8 +40,9 @@ class SwapStore:
             db.execute("PRAGMA synchronous=FULL")
             db.execute("BEGIN IMMEDIATE")
             if action == "quote":
-                if set(body) != {"owner", "amount_atoms"} or not re.fullmatch(r"[0-9]{7}", str(body["amount_atoms"])):
-                    raise MachineError("OWNER_AND_1_TO_3_USDC_REQUIRED")
+                if (set(body) != {"owner", "amount_atoms"} or not isinstance(body["amount_atoms"], str)
+                        or not re.fullmatch(r"[1-9][0-9]{0,77}", body["amount_atoms"])):
+                    raise MachineError("OWNER_AND_EXACT_USDC_ATOMS_REQUIRED")
                 if db.execute("SELECT count(*) FROM swaps").fetchone()[0] >= 10000:
                     raise MachineError("SWAP_STORE_CAPACITY")
                 p = self.router.prepare(body["owner"], int(body["amount_atoms"]))
@@ -128,7 +129,8 @@ def create_gas_portal(store=None):
     def health():
         return {"status": "ok", "version": "fuel-1", "chain_id": 42161,
                 "signing_authority": "USER_WALLET_ONLY", "route": "COW_PERMIT_INTENT",
-                "server_wallet_keys": False, "max_usdc_atoms": 3000000}
+                "server_wallet_keys": False, "max_usdc_atoms": None,
+                "amount_limit": "WALLET_BALANCE_AND_OWNER_POLICY"}
 
     @app.get("/commerce/swap-assets/{asset}")
     def static(asset: str):

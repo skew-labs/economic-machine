@@ -1,0 +1,37 @@
+{
+  "origin": "https://skew.deals",
+  "http_status": 200,
+  "amount_atoms": "10000000",
+  "status": "PERMIT_REQUIRED",
+  "preview_buy_wei": "3705763736868338",
+  "preview_fee_atoms": "14033",
+  "price_guard": {
+    "source": "CHAINLINK_ARBITRUM",
+    "max_shortfall_bps": 500,
+    "observations": [
+      {
+        "rpc": "ARBITRUM_PRIMARY",
+        "block": "0x1e7d9dd0",
+        "eth_usd_8": "269401731467",
+        "usdc_usd_8": "99995021",
+        "fair_eth_wei": "3711743813058928",
+        "block_timestamp": 1791099368,
+        "checked_at": 1791099369
+      },
+      {
+        "rpc": "ARBITRUM_VERIFIER",
+        "block": "0x1e7d9dd2",
+        "eth_usd_8": "269401731467",
+        "usdc_usd_8": "99995021",
+        "fair_eth_wei": "3711743813058928",
+        "block_timestamp": 1791099368,
+        "checked_at": 1791099370
+      }
+    ]
+  },
+  "rpc_credentials_exposed": false,
+  "latency_ms": 7292,
+  "signatures": 0,
+  "order_submissions": 0,
+  "chain_writes": 0
+}

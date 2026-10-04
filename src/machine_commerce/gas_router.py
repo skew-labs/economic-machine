@@ -18,15 +18,18 @@ from economic_machine.values import MachineError
 
 from .datapass import address, call_data
 from .fuel_price import price_floor
+from .fuel_rpc import configured_rpcs, source_label
 
 CHAIN = 42161
 USDC = "0xaf88d065e77c8cc2239327c5edb3a432268e5831"
 ETH = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 SETTLEMENT = "0x9008d19f58aabd9ed0d60971565aa8510560ab41"
 RELAYER = "0xc92e8bdf79f0507f65a392b0ab4667716bfe0110"
-RPCS = ("https://arb1.arbitrum.io/rpc", "https://arbitrum-one-rpc.publicnode.com")
+RPCS = configured_rpcs()
 API = "https://api.cow.fi/arbitrum_one/api/v1"
-MAX_ATOMS = 3_000_000
+# ABI representability, not a product spending limit. Wallet balance and owner
+# policy determine spendable capital; amounts remain exact integer strings.
+MAX_ATOMS = (1 << 256) - 1
 SLIPPAGE_BPS = 50
 DOMAIN_FIELDS = [{"name": k, "type": t} for k, t in
                  [("name", "string"), ("version", "string"), ("chainId", "uint256"),
@@ -90,7 +93,11 @@ def rpc(url, method, params):
     if url not in RPCS or method not in {"eth_chainId", "eth_getBalance", "eth_call", "eth_getCode",
             "eth_getBlockByNumber", "eth_getTransactionReceipt"}:
         raise MachineError("READ_ONLY_ARBITRUM_RPC_REQUIRED")
-    result = read_json("POST", url, {"jsonrpc": "2.0", "id": 1, "method": method, "params": params})
+    try:
+        result = read_json("POST", url, {"jsonrpc": "2.0", "id": 1, "method": method, "params": params})
+    except httpx.HTTPError:
+        # HTTP exceptions include the full URL, which may contain a paid RPC token.
+        raise MachineError("RPC_READ_UNAVAILABLE") from None
     if result.get("id") != 1 or "error" in result or "result" not in result:
         raise MachineError("RPC_READ_OR_SIMULATION_FAILED")
     return result["result"]
@@ -102,7 +109,7 @@ class GasRouter:
 
     def balances(self, owner):
         rows = []
-        for url in RPCS:
+        for index, url in enumerate(RPCS):
             if int(self.reader(url, "eth_chainId", []), 16) != CHAIN:
                 raise MachineError("WRONG_CHAIN")
             def call(token, data, url=url):
@@ -122,7 +129,7 @@ class GasRouter:
             actual_relayer = decode(["address"], bytes.fromhex(call(SETTLEMENT, call_data("vaultRelayer()", [], []))[2:]))[0]
             if actual_relayer.lower() != RELAYER:
                 raise MachineError("RELAYER_MISMATCH")
-            rows.append({"rpc": url, "usdc_atoms": str(balance), "eth_wei": str(native), "nonce": str(nonce)})
+            rows.append({"rpc": source_label(index), "usdc_atoms": str(balance), "eth_wei": str(native), "nonce": str(nonce)})
         if len({r["nonce"] for r in rows}) != 1:
             raise MachineError("PERMIT_NONCE_DISAGREEMENT")
         return rows
@@ -162,15 +169,15 @@ class GasRouter:
         # Sell the exact total, including fees, following the current CoW SDK flow.
         # The chain enforces this ETH floor even if an upstream estimate is wrong.
         minimum = int(q["buyAmount"]) * (10000-int(fee_bps)) // 10000 * (10000-SLIPPAGE_BPS) // 10000
-        anchor = price_floor(self.reader, RPCS, int(self.clock()), amount, minimum)
+        anchor = price_floor(self.reader, RPCS, self.clock, amount, minimum)
         if expiry <= self.clock() + 10:
             raise MachineError("QUOTE_EXPIRED_DURING_PRICE_CHECK")
         return {"reply": reply, "app": app, "app_hash": app_hash, "minimum": str(minimum), "expires": expiry, "price_guard": anchor}
 
     def prepare(self, owner, amount):
         owner = address(owner)
-        if type(amount) is not int or not 1_000_000 <= amount <= MAX_ATOMS:
-            raise MachineError("CHOOSE_1_TO_3_USDC")
+        if type(amount) is not int or not 1 <= amount <= MAX_ATOMS:
+            raise MachineError("POSITIVE_UINT256_USDC_ATOMS_REQUIRED")
         rows = self.balances(owner)
         if min(int(row["usdc_atoms"]) for row in rows) < amount:
             raise MachineError("INSUFFICIENT_USDC")
@@ -256,7 +263,7 @@ class GasRouter:
         result["tx_hashes"] = hashes
         topic = "0x" + keccak(text="Trade(address,address,address,uint256,uint256,uint256,bytes)").hex()
         proofs = []
-        for url in RPCS:
+        for index, url in enumerate(RPCS):
             if int(self.reader(url, "eth_chainId", []), 16) != CHAIN:
                 raise MachineError("WRONG_CHAIN")
             receipt = self.reader(url, "eth_getTransactionReceipt", hashes)
@@ -284,7 +291,7 @@ class GasRouter:
             before = max(int(r["eth_wei"]) for r in intent["observations"])
             if after < before + int(intent["minimum_buy_wei"]):
                 return {**result, "status": "BALANCE_RECONCILIATION_REQUIRED"}
-            proofs.append({"rpc": url, "block_hash": receipt["blockHash"], "buy_wei": str(values[3]),
+            proofs.append({"rpc": source_label(index), "block_hash": receipt["blockHash"], "buy_wei": str(values[3]),
                            "sell_atoms": str(values[2]), "eth_balance_wei": str(after)})
         if proofs[0]["block_hash"] != proofs[1]["block_hash"] or proofs[0]["buy_wei"] != proofs[1]["buy_wei"]:
             raise MachineError("RPC_SETTLEMENT_DISAGREEMENT")

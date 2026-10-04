@@ -23,7 +23,7 @@ def fuel_routes(workspace_dependency, *, require_owner=None):
     def propose(raw: dict, work=Depends(workspace_dependency)):
         result = Fuel(work).propose(raw)
         if result.get("id"):
-            result["wallet_review_url"] = "/commerce/swap?fuel=" + result["id"]
+            result["wallet_review_url"] = "/commerce/console?fuel=" + result["id"] + "#overview"
         return result
 
     @router.get("/fuel/requests/{fid}")

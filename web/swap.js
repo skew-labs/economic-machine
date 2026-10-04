@@ -17,12 +17,12 @@
   }
   function rows(values){$('details').replaceChildren();for(const[k,v]of values){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=k;dd.textContent=v;$('details').append(dt,dd);}$('review').hidden=false;}
   async function run(fn){if(busy)return;busy=true;controls();try{await fn();}catch(e){text(e.message||'Wallet request failed.');}finally{busy=false;controls();}}
-  WalletBridge.subscribe(wallets=>{const box=$('wallets');box.replaceChildren();for(const wallet of wallets){const b=document.createElement('button');b.textContent='Connect '+wallet.name;b.onclick=()=>run(async()=>{const accounts=await wallet.provider.request({method:'eth_requestAccounts'});if(Number(await wallet.provider.request({method:'eth_chainId'}))!==42161)throw new Error('Select Arbitrum One in your wallet, then connect again.');provider=wallet.provider;owner=accounts[0];intent=null;$('account').textContent=owner;text('Choose an amount to get a live quote.');
+  WalletBridge.subscribe(wallets=>{const box=$('wallets');box.replaceChildren();for(const wallet of wallets){const b=document.createElement('button');b.textContent='Connect '+wallet.name;b.onclick=()=>run(async()=>{const selected=await WalletBridge.ensureArbitrum(wallet.provider,text);provider=wallet.provider;owner=selected.address;intent=null;$('account').textContent=owner;text('Choose an amount to get a live quote.');
       if(fuelId){
         await WalletBridge.signIn(provider,(path,body)=>api('/commerce'+path,body),text);
         const bound=await api('/commerce/api/engine/fuel/requests/'+fuelId);intent=bound.swap;
-        $('amount').value=String(Number(intent.amount_atoms)/1e6);$('quote').hidden=true;
-        rows([['Reserved USDC',String(bound.held_atoms/1e6)],['Gas acquisition',String(Number(intent.amount_atoms)/1e6)+' USDC'],['Parent purchase',String(bound.request.purchase_atoms/1e6)+' USDC'],['Policy','Shared engine budget']]);
+        $('amount').value=SkewSwapWallet.formatUnits(intent.amount_atoms);$('quote').hidden=true;
+        rows([['Reserved USDC',String(bound.held_atoms/1e6)],['Gas acquisition',SkewSwapWallet.formatUnits(intent.amount_atoms)+' USDC'],['Parent purchase',String(bound.request.purchase_atoms/1e6)+' USDC'],['Policy','Shared engine budget']]);
         if(['SUBMITTED','UNKNOWN_RECONCILE_ONLY','FILLED_FINALIZED','EXPIRED_UNFILLED'].includes(intent.status)){
           persist({id:intent.id,owner,order_uid:intent.order_uid,status:intent.status,valid_to:intent.valid_to});$('trade').hidden=true;$('permit').hidden=true;text('Existing fuel request loaded. Check the original settlement.');return;
         }
@@ -33,11 +33,10 @@
     });box.append(b);}});
   $('quote').onclick=()=>run(async()=>{
     if(held())throw new Error('Reconcile the existing order first.');
-    const raw=$('amount').value.trim();if(!/^[1-3](?:\.\d{1,6})?$/.test(raw))throw new Error('Enter 1 to 3 USDC.');
-    const [whole,fraction='']=raw.split('.'),atoms=(BigInt(whole)*1000000n+BigInt(fraction.padEnd(6,'0'))).toString();
+    const atoms=SkewSwapWallet.usdcAtoms($('amount').value.trim());
     text('Checking two Arbitrum RPCs and requesting a CoW route…');
     intent=await request('quote',{owner,amount_atoms:atoms});SkewSwapWallet.validBase(intent,owner,atoms);
-    rows([['You spend',`${Number(atoms)/1e6} USDC`],['Estimated ETH',`${(Number(intent.preview_buy_wei)/1e18).toFixed(8)} ETH`],['Estimated routing cost',`${Number(intent.preview_fee_atoms)/1e6} USDC`],['Network','Arbitrum One']]);
+    rows([['You spend',`${SkewSwapWallet.formatUnits(atoms)} USDC`],['Estimated ETH',`${(Number(intent.preview_buy_wei)/1e18).toFixed(8)} ETH`],['Estimated routing cost',`${Number(intent.preview_fee_atoms)/1e6} USDC`],['Network','Arbitrum One']]);
     $('permit').hidden=false;$('trade').hidden=true;text('Quote received. First sign a short-lived approval for exactly this USDC amount.');
   });
   $('permit').onclick=()=>run(async()=>{
@@ -46,7 +45,7 @@
     text('Checking the signed permit and simulating the final route…');
     intent=await request('order',{id:intent.id,signature:permitSignature});
     SkewSwapWallet.validateOrder(intent,owner,intent.amount_atoms,permitSignature,SkewSwapCrypto);
-    rows([['Total USDC limit',`${Number(intent.amount_atoms)/1e6} USDC`],['Minimum you receive',`${(Number(intent.minimum_buy_wei)/1e18).toFixed(8)} ETH`],['Recipient',owner],['Final route','Simulation verified']]);
+    rows([['Total USDC limit',`${SkewSwapWallet.formatUnits(intent.amount_atoms)} USDC`],['Minimum you receive',`${(Number(intent.minimum_buy_wei)/1e18).toFixed(8)} ETH`],['Recipient',owner],['Final route','Simulation verified']]);
     $('permit').hidden=true;$('trade').hidden=false;text('Review the minimum ETH above. The next signature authorizes and submits this swap.');
   });
   $('trade').onclick=()=>run(async()=>{

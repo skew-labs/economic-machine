@@ -10,7 +10,10 @@ import secrets
 from economic_machine.values import MachineError, canonical, digest, ident, require_keys
 from machine_commerce.datapass import address
 from machine_commerce.gas_portal import SwapStore
-from machine_commerce.gas_router import CHAIN, MAX_ATOMS, USDC, GasRouter
+from machine_commerce.gas_router import CHAIN, USDC, GasRouter
+
+# JSON integer precision and SQLite accounting representation, not a USD policy.
+MAX_LEDGER_ATOMS = (1 << 53) - 1
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS engine_fuel_policies (
@@ -57,10 +60,10 @@ class Fuel:
     def policy(self, raw):
         require_keys(raw, {"owner", "budget_atoms", "max_fuel_atoms", "max_purchase_atoms", "agent_ids", "expires_at"}, "fuel policy")
         owner = address(raw["owner"])
-        budget = atoms(raw["budget_atoms"], 27_000_000)
-        maximum = atoms(raw["max_fuel_atoms"], MAX_ATOMS)
+        budget = atoms(raw["budget_atoms"], MAX_LEDGER_ATOMS)
+        maximum = atoms(raw["max_fuel_atoms"], budget)
         purchase = atoms(raw["max_purchase_atoms"], budget)
-        if maximum < 1_000_000 or maximum + purchase > budget:
+        if maximum < 1 or maximum + purchase > budget:
             raise MachineError("FUEL_AND_PURCHASE_MUST_FIT_SHARED_BUDGET")
         if type(raw["expires_at"]) is not int or not self.work.clock() + 600 < raw["expires_at"] <= self.work.clock() + 86400:
             raise MachineError("FUEL_POLICY_LIFETIME_REQUIRED")
@@ -113,8 +116,8 @@ class Fuel:
             ident(raw[key], key)
         if not isinstance(raw["parent_action_hash"], str) or not re.fullmatch(r"[0-9a-f]{64}", raw["parent_action_hash"]):
             raise MachineError("PARENT_ACTION_HASH_REQUIRED")
-        atoms(raw["purchase_atoms"], 27_000_000)
-        atoms(raw["fuel_atoms"], MAX_ATOMS)
+        atoms(raw["purchase_atoms"], MAX_LEDGER_ATOMS)
+        atoms(raw["fuel_atoms"], MAX_LEDGER_ATOMS)
         if not 0 < atoms(raw["required_eth_wei"], 10**16):
             raise MachineError("BOUNDED_PARENT_GAS_REQUIREMENT")
         with self.work.runtime.connect() as db:
@@ -127,7 +130,7 @@ class Fuel:
             self._agent_wallet(db, raw["agent_id"], policy["owner"])
             if raw["agent_id"] not in policy["agent_ids"]:
                 raise MachineError("FUEL_AGENT_NOT_AUTHORIZED")
-            if not 1_000_000 <= raw["fuel_atoms"] <= policy["max_fuel_atoms"] or raw["purchase_atoms"] > policy["max_purchase_atoms"]:
+            if not 1 <= raw["fuel_atoms"] <= policy["max_fuel_atoms"] or raw["purchase_atoms"] > policy["max_purchase_atoms"]:
                 raise MachineError("FUEL_POLICY_AMOUNT_EXCEEDED")
         # No lock is held over external calls. Every authority/budget is rechecked below.
         prepared = self.router.prepare(policy["owner"], raw["fuel_atoms"])
