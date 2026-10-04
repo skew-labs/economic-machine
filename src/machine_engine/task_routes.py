@@ -9,6 +9,21 @@ def task_routes(workspace_dependency, *, require_owner=None):
     router = APIRouter()
     owner = [Depends(require_owner)] if require_owner else []
 
+    @router.post('/tasks/{tid}/local-plans', dependencies=owner)
+    def local_plans(tid: str, raw: dict, work=Depends(workspace_dependency)):
+        from .task_results import LocalWork
+        return LocalWork(work).plans(tid,raw)
+
+    @router.post('/local-work/{lid}/run', dependencies=owner)
+    def local_run(lid: str, raw: dict, work=Depends(workspace_dependency)):
+        from .task_results import LocalWork
+        return LocalWork(work).run(lid,raw)
+
+    @router.get('/local-work/{lid}/result', dependencies=owner)
+    def local_result(lid: str, work=Depends(workspace_dependency)):
+        from .task_results import LocalWork
+        return LocalWork(work).result(lid)
+
     @router.get("/task-checkout")
     def checkout(work=Depends(workspace_dependency)):
         return work.task_checkout.status()

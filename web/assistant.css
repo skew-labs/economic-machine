@@ -8,3 +8,7 @@ body[data-view=overview] .page-heading{display:none}body[data-view=overview] .co
 
 body[data-view=overview] .footer{display:none}
 .chat-message{scroll-margin-bottom:220px}
+
+.chat-action textarea{display:block;width:100%;min-height:120px;border:1px solid var(--line);border-radius:8px;padding:12px;font:inherit;resize:vertical}.chat-action .chat-action{background:#fff}.composer-bar{flex-wrap:wrap}
+
+.chat-plan-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}.chat-plan-grid .chat-action{margin:0;padding:16px}.chat-plan-grid h3{line-height:1.4}.chat-plan-grid .chat-facts{grid-template-columns:1fr;gap:5px}.chat-plan-grid dd{margin-bottom:8px}@media(max-width:650px){.chat-plan-grid{grid-template-columns:1fr}}

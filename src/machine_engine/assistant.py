@@ -96,6 +96,8 @@ class BedrockIntake:
         self.region = os.environ.get("AWS_REGION", "")
 
     def complete(self, messages):
+        if os.environ.get("SKEW_BEDROCK_ACCESS_STATUS") == "ORGANIZATION_DENY":
+            raise MachineError("ASSISTANT_BEDROCK_ORGANIZATION_DENY")
         if not self.model or not self.region or os.environ.get("SKEW_BEDROCK_ENABLED") != "1":
             raise MachineError("ASSISTANT_BEDROCK_NOT_CONFIGURED")
         try:
@@ -139,18 +141,29 @@ class BedrockIntake:
                 values = [dict(r) for r in db.execute("SELECT kind,name,body FROM engine_task_preferences WHERE status='CONFIRMED' AND expires>? ORDER BY created DESC LIMIT 5", (int(work.clock()),))]
             return {"preferences": values, "spending_authority": "NONE"}
 
+        @tool
+        def get_task_progress() -> dict:
+            """Read persisted task, delivery and payment progress. Never spends or executes."""
+            if len(used_tools) >= 4:
+                raise MachineError("ASSISTANT_TOOL_CALL_BOUND")
+            used_tools.append("get_task_progress")
+            from .task_results import LocalWork
+            return {"tasks": [{"id":t["id"],"title":t["brief"]["title"],"status":t["status"]} for t in work.tasks.status()["tasks"][:10]],
+                    "purchases": [{"id":p["id"],"status":p["status"],"result_hash":p["result_hash"]} for p in work.task_checkout.status()["purchases"][:10]],
+                    "local_jobs": LocalWork(work).status()["jobs"][:10],"authority":"NONE"}
+
         started = time.monotonic()
         try:
             session = boto3.Session(region_name=self.region)
             if not os.environ.get("AWS_BEARER_TOKEN_BEDROCK") and session.get_credentials() is None:
                 raise MachineError("ASSISTANT_BEDROCK_CREDENTIALS_REQUIRED")
-            model = BedrockModel(model_id=self.model, boto_session=session, region_name=self.region,
+            model = BedrockModel(model_id=self.model, boto_session=session,
                 boto_client_config=Config(connect_timeout=5, read_timeout=12, retries={"total_max_attempts":1}),
                 max_tokens=600, temperature=0, streaming=False)
             system = "\n".join(m["content"] for m in messages if m["role"] == "system")
             conversation = [{"role":m["role"], "content":[{"text":m["content"]}]} for m in messages if m["role"] != "system"]
             agent = Agent(model=model, system_prompt=system, messages=conversation[:-1],
-                tools=[get_workspace_status,get_confirmed_preferences], hooks=[BoundedCalls()],
+                tools=[get_workspace_status,get_confirmed_preferences,get_task_progress], hooks=[BoundedCalls()],
                 callback_handler=None, retry_strategy=None, load_tools_from_directory=False)
             response = agent(conversation[-1]["content"])
             content = re.sub(r"^```(?:json)?\s*|\s*```$", "", str(response).strip())
@@ -164,7 +177,10 @@ class BedrockIntake:
         except MachineError:
             raise
         except Exception as exc:
-            raise MachineError("ASSISTANT_BEDROCK_UNAVAILABLE_OR_INVALID") from exc
+            detail = str(exc).lower()
+            if "explicit deny" in detail and "service control policy" in detail:
+                raise MachineError("ASSISTANT_BEDROCK_ORGANIZATION_DENY") from None
+            raise MachineError("ASSISTANT_BEDROCK_UNAVAILABLE_OR_INVALID") from None
 
 
 class QwenIntake:
@@ -226,7 +242,7 @@ class Assistant:
             raise MachineError("ASSISTANT_REQUEST_ID_REQUIRED")
         if not isinstance(message, str) or not 1 <= len(message.strip()) <= 1800:
             raise MachineError("ASSISTANT_MESSAGE_BOUND")
-        if re.search(r"(?:sk-[A-Za-z0-9_-]{20,}|0x[0-9a-fA-F]{64}\b|BEGIN .*PRIVATE KEY)", message):
+        if re.search(r"(?:ABSK[A-Za-z0-9+/=]{20,}|sk-[A-Za-z0-9_-]{20,}|0x[0-9a-fA-F]{64}\b|BEGIN .*PRIVATE KEY)", message):
             raise MachineError("DO_NOT_SEND_PRIVATE_KEYS_OR_API_SECRETS")
         at, fingerprint = int(self.work.clock()), digest(raw)
         with self.work.runtime.connect() as db:
