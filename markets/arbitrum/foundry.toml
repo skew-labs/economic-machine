@@ -1,0 +1,22 @@
+[profile.default]
+src = 'src'
+test = 'test'
+out = 'out'
+cache_path = 'cache'
+solc_version = '0.8.30'
+evm_version = 'cancun'
+optimizer = true
+optimizer_runs = 10000
+via_ir = true
+bytecode_hash = 'none'
+
+[profile.default.fuzz]
+runs = 512
+
+[profile.default.invariant]
+runs = 128
+depth = 256
+fail_on_revert = false
+
+[profile.arbitrum]
+test = 'fork'

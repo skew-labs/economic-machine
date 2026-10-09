@@ -50,3 +50,20 @@ docs/*.md
 **/PR[0-9]*.md
 internal/
 planning/
+
+# Market builds and private operation stay outside the public source snapshot.
+markets/**/target/
+markets/**/out/
+markets/**/cache/
+markets/**/evidence/
+markets/**/*.log
+
+# Pinned headers are intentional source, distinct from operator runtime state.
+!markets/runtime/
+!markets/runtime/include/
+!markets/runtime/include/machine/
+!markets/runtime/include/machine/economics/
+!markets/runtime/include/LICENSE
+!markets/runtime/include/PROVENANCE.md
+!markets/runtime/include/machine/*.hpp
+!markets/runtime/include/machine/economics/*.hpp

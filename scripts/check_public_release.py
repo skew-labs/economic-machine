@@ -26,6 +26,8 @@ def publication_issues(root, paths):
                        rb'(?:sk-bk-|sk-proj-|xai-|ghp_|github_pat_)[A-Za-z0-9_-]{24,}',
                        rb'ABSK[A-Za-z0-9+/=]{80,}', rb'https://[^\s/]+\.quiknode\.pro/[A-Za-z0-9]{25,}']
     secret_patterns.extend([rb'ory_rt_[A-Za-z0-9_-]{20,}',
+                            rb'sk-or-v1-[A-Za-z0-9_-]{24,}',
+                            rb'[?&](?:api-key|api_key|token)=[A-Za-z0-9_-]{24,}',
                             rb'eyJ[A-Za-z0-9_-]{30,}\.[A-Za-z0-9_-]{30,}\.'])
     for name in paths:
         file = root / name

@@ -15,6 +15,7 @@ Economic Machine handles policy, approval, payment recovery and receipts. Your k
 | --- | --- |
 | [src/economic_machine](src/economic_machine/) | Typed state, ISA, compiler, invariants and deterministic runtime |
 | [native](native/) | C++ kernel, financial primitives, search and sandboxed workers |
+| [markets](markets/) | Agent-native Solana/Arbitrum perpetual orderbooks, native execution and versioned research policies |
 | [contracts](contracts/) | Solidity DataPass, commerce, mining and token contracts |
 | [src/machine_engine](src/machine_engine/) | Accounts, shared budgets, agent policies and execution recovery |
 | [src/machine_commerce](src/machine_commerce/) | Service discovery, payment adapters, licensing and delivery |
@@ -72,6 +73,13 @@ Linux additionally builds the sandboxed worker pipeline. Native outputs are cand
 they do not authorize signatures or transactions.
 
 ## How it fits
+
+The [perpetual-market adapters](markets/) separate frozen-model policy search,
+native event execution and authoritative chain accounting. Solana v6 has devnet
+verification, v7 is an undeployed candidate, and Arbitrum has a bounded mainnet
+pilot. The [research companion](https://github.com/skew-labs/economic-machine-research)
+reports strategy comparisons, loss incidence, CU/gas and finality with their
+measurement limits.
 
 ```mermaid
 flowchart LR

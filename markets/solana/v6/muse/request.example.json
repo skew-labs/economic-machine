@@ -1,0 +1,24 @@
+{
+  "adapter_template_version": 1,
+  "default_model_candidate": "muse-spark-1.3-contributor",
+  "enabled_by_default": false,
+  "endpoint": "https://api.meta.ai/v1/chat/completions",
+  "required_notice_version": "contributor-public-market-2026-10-07-v1",
+  "data_scope": "public-market-v1",
+  "public_frame": {
+    "market": "SOL-PERP-EXAMPLE",
+    "source_slot": 1234,
+    "observed_monotonic_ns": 10000000000,
+    "valid": true,
+    "features": {
+      "spread_ticks": 4,
+      "imbalance_bps": 200,
+      "microprice_offset_ticks": 0,
+      "volatility_bps": 12,
+      "depth_lots_l1": 50,
+      "depth_lots_l4": 200,
+      "depth_lots_l16": 800,
+      "oracle_age_ms": 120
+    }
+  }
+}

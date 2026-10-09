@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MachinePerpsPublicPolicyV1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "frame_id": {"type": "string"},
+    "mode": {"type": "string", "enum": ["QUOTE", "HOLD", "HALT"]},
+    "target_inventory_lots": {"type": "integer", "enum": [0]},
+    "half_spread_ticks": {"type": "integer"},
+    "alpha_ticks": {"type": "integer"},
+    "inventory_skew_ticks": {"type": "integer", "enum": [0]},
+    "clip_lots": {"type": "integer"},
+    "levels_per_side": {"type": "integer"},
+    "reprice_threshold_ticks": {"type": "integer"},
+    "ttl_ms": {"type": "integer"},
+    "reason_code": {
+      "type": "string",
+      "enum": ["BALANCED", "INVENTORY", "VOLATILITY", "ADVERSE_SELECTION", "NO_EDGE", "BAD_DATA", "RISK_LIMIT", "RECONCILING"]
+    }
+  },
+  "required": ["frame_id", "mode", "target_inventory_lots", "half_spread_ticks", "alpha_ticks", "inventory_skew_ticks", "clip_lots", "levels_per_side", "reprice_threshold_ticks", "ttl_ms", "reason_code"]
+}

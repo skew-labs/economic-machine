@@ -1,0 +1,45 @@
+{
+  "frame_id": "synthetic-example-001",
+  "market": "SOL-PERP-EXAMPLE",
+  "risk_version": 1,
+  "policy_version": 1,
+  "source_slot": 1234,
+  "source_fork": "synthetic-fork",
+  "observed_monotonic_ns": 10000000000,
+  "valid": true,
+  "reconciled": true,
+  "features": {
+    "spread_ticks": 4,
+    "imbalance_bps": 200,
+    "microprice_offset_ticks": 0,
+    "volatility_bps": 12,
+    "depth_lots_l1": 50,
+    "depth_lots_l4": 200,
+    "depth_lots_l16": 800,
+    "markout_bps_100ms": -1,
+    "markout_bps_1s": -2,
+    "position_lots": 3,
+    "free_margin_atoms": 100000000,
+    "oracle_age_ms": 120,
+    "hedge_cost_bps": 3
+  },
+  "bounds": {
+    "allowed_modes": [
+      "QUOTE",
+      "REDUCE",
+      "HOLD",
+      "HALT"
+    ],
+    "target_inventory_min_lots": -5,
+    "target_inventory_max_lots": 5,
+    "max_clip_lots": 2,
+    "max_levels_per_side": 2,
+    "max_half_spread_ticks": 20,
+    "max_abs_alpha_ticks": 2,
+    "max_inventory_skew_ticks": 10,
+    "max_reprice_threshold_ticks": 4,
+    "max_abs_position_lots": 10,
+    "max_oracle_age_ms": 1000,
+    "max_ttl_ms": 5000
+  }
+}
