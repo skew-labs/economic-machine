@@ -1,0 +1,14 @@
+{
+  "name": "skew-wallet-connectors",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {"build": "node build.mjs"},
+  "dependencies": {
+    "@privy-io/react-auth": "3.47.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "viem": "2.47.10"
+  },
+  "devDependencies": {"esbuild": "0.25.10"}
+}

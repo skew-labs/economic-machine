@@ -7,7 +7,7 @@ Wants=network-online.target
 Type=simple
 DynamicUser=yes
 WorkingDirectory=/srv/skew/economic-machine-commerce-20261002
-Environment=MACHINE_SITE_DIR=/srv/skew/economic-machine-site-20261002/dist
+Environment=MACHINE_SITE_DIR=/srv/skew/economic-machine-commerce-20261002/site
 Environment=PYTHONDONTWRITEBYTECODE=1
 ExecStart=/srv/skew/economic-machine-commerce-20261002/.venv/bin/uvicorn machine_commerce.portal:app --host 127.0.0.1 --port 4270 --workers 1 --limit-concurrency 16 --backlog 16 --timeout-keep-alive 5 --no-access-log
 Restart=on-failure

@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "chain_id": 42161,
+  "status": "MAINNET_DEPLOYED_FINALIZED",
+  "transaction_hash": "0x8cd5b55c64ae0f3449ed3015ceed8ea663f9a5e927b6385aba5624e3d9a0946b",
+  "owner": "0x1c8F822682DDAbFF7dA1A7D5D881bdA96c8F41C5",
+  "contracts": {
+    "SkewLaunchBundle": "0xC91099fE8dCE8aB6f2dDb2BBC8F0a55b2aA65B30",
+    "SkewDataPass": "0x6a834FF24eD4a59c17960a4fBCcd46Cfd558833a",
+    "SkewArtifactMining": "0xe14c04A933eBd276d9bfb236Ce2FEED3474B05dE",
+    "SkewSolutionToken": "0x6cEE6a99aF671900001469a41dA46e2921D18678"
+  },
+  "runtime_sha256": {
+    "SkewLaunchBundle": "9d19749e6bb9f25304ceada001fe9048fb82aa75bea87fd268a37bf06f345d26",
+    "SkewDataPass": "69242720ea6acba099914b2c24584925dcecbfd377b1fb3685253574f30880ad",
+    "SkewArtifactMining": "34ca59ae9235cc86b564aa433b76c430632fc2b5a5033194b66bfa646ba7e3ef",
+    "SkewSolutionToken": "1efc0f195632ca0260c94bf7db49821b7fb3cdbed7d1223560efecb8619d53f6"
+  },
+  "verification": {
+    "method": "Two RPCs: receipt, canonical inclusion, finalized state, runtime bytecode and cross-contract configuration",
+    "deployment_block": 511589755,
+    "deployment_block_hash": "0xb1b9adc24a8394ce7ed2c85b64d42294eb6ae9a1b656eb93658ddd2b475641e9",
+    "state_block": 511618385,
+    "state_block_hash": "0xe37083b4f9a183dc31ac1d26e9213451b9c351a1a99a66a15102b392266fa21a",
+    "total_supply_at_state_block": "0",
+    "actual_fee_wei": "221952593040000"
+  },
+  "token": {
+    "name": "Skew Solution",
+    "symbol": "SKEW",
+    "decimals": 18,
+    "maximum_supply": "160000",
+    "reward_per_accepted_job": "1",
+    "initial_supply": "0"
+  },
+  "scope": "Contract deployment only. No reward mint, customer purchase, liquidity pool or market valuation is asserted."
+}

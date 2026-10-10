@@ -368,9 +368,9 @@
       root.append(intro);
       return;
     }
-    const split = el("div", "ops-split");
-    split.append(
-      table(
+    window.ManagedWallets?.agentPanel(root, refresh);
+    const split = el("div", "ops-split connections-layout");
+    const accounts = table(
         "Account connections",
         ["Source", "State", "Last read", "Synchronization"],
         record.connections.map((c) => {
@@ -429,8 +429,15 @@
           ];
         }),
         "No account connections yet.",
-      ),
-    );
+      );
+    accounts.classList.add("connection-accounts");
+    // Preserve the column context when rows become cards on small screens.
+    for (const row of accounts.querySelectorAll("tbody tr")) {
+      [...row.cells].forEach((cell, index) => {
+        cell.dataset.label = ["Source", "State", "Last read", "Synchronization"][index];
+      });
+    }
+    split.append(accounts);
     const panel = el("section", "ops-section"),
       head = el("div", "ops-section-head");
     head.append(el("h2", "", "Add a connection"));
@@ -445,7 +452,7 @@
     const name = labeled(form, "Account name", "connection-name");
     name.maxLength = 60;
     name.required = true;
-    const fields = el("div");
+    const fields = el("div", "connection-fields");
     form.append(fields);
     function updateFields() {
       fields.replaceChildren();
@@ -922,7 +929,7 @@
   }
   function render(view) {
     if (!views.has(view)) return;
-    if(view === "overview" && window.AssistantConsole) window.AssistantConsole.render();
+    if(view === "overview" && window.AssistantConsole) {window.AssistantConsole.render();window.WorkspaceVisuals?.observe(byId("ops-overview"),record);}
     else ({ overview, connections, agents, execution, usage })[view]?.();
     if (view === "tasks") window.TasksConsole?.render(byId("ops-tasks"), record, {request, refresh, writable});
     if (view === "mining") window.MiningConsole?.render(byId("ops-mining"), record, {request, refresh, writable});

@@ -8,8 +8,11 @@
   <link rel="stylesheet" href="/app.css?v=wallet-20261002-3">
   <script src="/wallet.js?v=wallet-20261002-3" defer></script>
   <script src="/app.js?v=wallet-20261002-3" defer></script>
+  <script src="/wallet-connectors.js?v=wallet-20261002-3" defer></script>
   <script src="/agents.js?v=control-20261003" defer></script>
   <script src="/tasks.js?v=tasks-pr1-20261003" defer></script>
+  <script src="/token-market.js?v=visual-1" defer></script>
+  <script src="/workspace-visuals.js?v=visual-1" defer></script>
   <script src="/mining.js?v=mining-20261004" defer></script>
   <link rel="stylesheet" href="/tasks.css?v=tasks-pr1-20261003">
   <script src="/operations.js?v=production-paths-20261003" defer></script>
@@ -23,6 +26,8 @@
   <link rel="stylesheet" href="/commerce.css?v=wallet-20261002-3">
   <link rel="icon" href="/assets/app-engine.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assistant.css?v=console-20261004">
+  <link rel="stylesheet" href="/token-market.css?v=visual-1">
+  <link rel="stylesheet" href="/workspace-visuals.css?v=visual-1">
 </head>
 <body>
   <div class="shell">
@@ -93,6 +98,7 @@
     <div class="dialog-heading"><div class="wallet-brand"><svg viewBox="0 0 34 30" aria-hidden="true"><path d="M11 2h8L10 28H2zM25 2h7l-9 26h-7z" fill="currentColor"/></svg><span>skew</span></div><button class="close-dialog" type="button" data-close="login-dialog" aria-label="Close sign-in"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#x"></use></svg></button></div>
     <h2 id="login-title">Connect your wallet.</h2><p class="wallet-intro">Your workspace. Your agents. Your limits.</p>
     <div id="wallet-options" class="wallet-options" aria-label="Available wallets"></div>
+    <button id="privy-login" class="wallet-option" type="button" hidden><span class="wallet-provider-logo" aria-hidden="true">@</span><span>Email or another wallet</span><span class="wallet-option-arrow" aria-hidden="true">→</span></button>
     <div id="wallet-empty" class="wallet-empty" hidden><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#wallet"></use></svg><strong>No wallet detected</strong><p>Open this page in your Ethereum wallet’s browser, or enable its browser extension.</p></div>
     <p id="wallet-progress" class="wallet-progress" role="status" aria-live="polite"></p><p id="login-error" class="form-error" role="alert" hidden></p>
     <div class="wallet-signature-note"><svg class="ui-icon" viewBox="0 0 256 256" aria-hidden="true"><use href="/assets/ui-icons.svg?v=wallet-20261002-3#shield-check"></use></svg><span>Sign a message to log in.<small>No transaction or token approval.</small></span></div>

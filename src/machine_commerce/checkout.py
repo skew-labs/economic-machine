@@ -63,8 +63,11 @@ def validate_plans(raw, profiles):
 
 
 class Checkout:
-    def __init__(self, store, market, payments, plans=None):
+    def __init__(self, store, market, payments, plans=None, *, public_network=None):
         self.store, self.market, self.payments = store, market, payments
+        if public_network is not None and public_network not in USDC_ASSETS:
+            raise MachineError("approved public checkout network required")
+        self.public_network = public_network
         self.plans = validate_plans(plans or {}, payments.profiles)
         with store.connect() as db:
             for statement in SCHEMA.split(";"):
@@ -95,6 +98,10 @@ class Checkout:
         products = []
         with self.store.connect() as db:
             for rid, profile in self.payments.profiles.items():
+                # Retain historical resources for reconciliation, never relabel
+                # their signed authorizations as a different chain.
+                if self.public_network and profile["network"] != self.public_network:
+                    continue
                 kind = ("subscription" if profile["data_type"].startswith("subscription.") else
                         "compute" if profile["data_type"].startswith("compute.") else "data")
                 offers = self._offers(db, rid, profile, now)
@@ -122,6 +129,8 @@ class Checkout:
         profile = self.payments.profiles.get(raw["resource_id"])
         if not profile:
             raise MachineError("approved payment resource required")
+        if self.public_network and profile["network"] != self.public_network:
+            raise MachineError("resource is historical; new checkout requires the public network")
         plan = None
         if raw["plan_id"] is not None:
             identifier(raw["plan_id"], "plan ID")

@@ -54,6 +54,22 @@ class CheckoutTests(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
+    def test_mainnet_cutover_preserves_history_but_blocks_new_testnet_checkout(self):
+        old = self.prepared()
+        self.checkout.public_network = "eip155:42161"
+        self.payments.public_network = "eip155:42161"
+        self.assertEqual(self.checkout.catalog()["products"], [])
+        with self.assertRaisesRegex(MachineError, "historical"):
+            self.checkout.quote(self.buyer, self.raw | {"idempotency_key": "after-cutover"})
+        self.assertEqual(self.checkout.get(self.buyer, old["id"])["payment_id"], old["payment_id"])
+        self.assertEqual(self.payments.get(self.buyer, old["payment_id"])["network"], "eip155:421614")
+
+    def test_direct_payment_preparation_cannot_bypass_cutover(self):
+        quote = self.checkout.quote(self.buyer, self.raw)
+        self.payments.public_network = "eip155:42161"
+        with self.assertRaisesRegex(MachineError, "historical"):
+            self.checkout.prepare(self.buyer, quote["id"], self.mandate["id"])
+
     def prepared(self, key="checkout-test"):
         quote = self.checkout.quote(self.buyer, self.raw | {"idempotency_key": key})
         return self.checkout.prepare(self.buyer, quote["id"], self.mandate["id"])
@@ -215,8 +231,12 @@ class CheckoutTests(unittest.TestCase):
                 self.assertEqual(client.get(url, headers=headers).status_code, 403)
 
     def test_subscribed_delivery_checks_paid_access_and_expiry(self):
+        from test_atlas import sample_report
+        report = Path(self.tmp.name) / "atlas.json"
+        report.write_text(json.dumps(sample_report()))
         order = self.prepared()
-        app = create_app(self.path, lambda: self.now, settings=Settings(resources={"atlas-monthly": self.profile}))
+        with patch.dict("os.environ", {"MACHINE_ATLAS_RELEASE": str(report)}):
+            app = create_app(self.path, lambda: self.now, settings=Settings(resources={"atlas-monthly": self.profile}))
         with TestClient(app) as client:
             headers = {"Authorization": "Bearer " + self.token}
             path = "/api/commerce/subscriptions/atlas-monthly/delivery"

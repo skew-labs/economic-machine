@@ -170,3 +170,58 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; }
 }
+
+/* Connections owns its layout so later shared theme rules cannot squeeze it. */
+#ops-connections .connections-layout {
+  grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr);
+  align-items: start;
+  gap: 20px;
+}
+#ops-connections .ops-section-head { padding: 20px; }
+#ops-connections .connection-wallet-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px 24px;
+  padding: 20px;
+}
+#ops-connections .connection-wallet-body p { margin: 0; }
+#ops-connections .connection-wallet-body .button { justify-self: end; }
+#ops-connections .wallet-address-wrap { overflow-wrap: anywhere; }
+#ops-connections .connection-wallet-note { grid-column: 1 / -1; }
+#ops-connections .ops-table { white-space: normal; }
+#ops-connections .ops-table th,
+#ops-connections .ops-table td { padding: 14px 16px; overflow-wrap: anywhere; }
+#ops-connections .ops-row-actions { gap: 8px; }
+#ops-connections .ops-row-actions > * { min-height: 36px; }
+#ops-connections .ops-row-actions select { width: auto; flex: 0 1 112px; }
+#ops-connections .connection-fields { padding-top: 14px; }
+#ops-connections .ops-form input,
+#ops-connections .ops-form select { min-height: 42px; }
+#ops-connections .ops-form > .ops-note { margin: 16px 0 0; }
+@media (max-width: 1280px) {
+  #ops-connections .connections-layout { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 680px) {
+  #ops-connections .ops-section-head { padding: 18px; }
+  #ops-connections .connection-wallet-body { grid-template-columns: minmax(0, 1fr); padding: 18px; }
+  #ops-connections .connection-wallet-body .button { justify-self: start; }
+  #ops-connections .ops-form { padding: 18px; }
+  #ops-connections .connection-accounts .ops-table,
+  #ops-connections .connection-accounts tbody { display: block; }
+  #ops-connections .connection-accounts thead {
+    position: absolute; width: 1px; height: 1px; padding: 0;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+  #ops-connections .connection-accounts tr { display: block; padding: 12px 18px; }
+  #ops-connections .connection-accounts tr + tr { border-top: 1px solid var(--line); }
+  #ops-connections .connection-accounts td {
+    display: grid; grid-template-columns: 92px minmax(0, 1fr);
+    gap: 12px; align-items: start; padding: 8px 0; border: 0;
+  }
+  #ops-connections .connection-accounts td::before {
+    content: attr(data-label); color: var(--muted); font-size: 11px; line-height: 1.6;
+  }
+  #ops-connections .connection-accounts td > * { min-width: 0; justify-self: start; }
+  #ops-connections .connection-accounts td:last-child { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+}
