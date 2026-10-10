@@ -76,7 +76,7 @@ class Workspace:
         # Each transaction still reads and fingerprints the entire stored log.
         self._verified_journal_fingerprint = fingerprint.hexdigest()
 
-    def connect(self, raw):
+    def connect(self, raw, *, reuse=False):
         body = normalize_connection(raw)
         if self.credential_prefix and any(not body["config"][key].startswith(self.credential_prefix)
             for key in PROFILES[body["profile"]]["credentials"]):
@@ -84,6 +84,12 @@ class Workspace:
         at, cid = int(self.clock()), "connection-" + secrets.token_hex(12)
         with self.runtime.connect() as db:
             db.execute("BEGIN IMMEDIATE")
+            if reuse:
+                existing = db.execute("SELECT id,status FROM engine_connections WHERE body=? AND status!='DISCONNECTED'",
+                                      (canonical(body).decode(),)).fetchone()
+                if existing:
+                    return {"id": existing["id"], "status": existing["status"], "read_only": True,
+                            "secret_storage": "USER_ENVIRONMENT_ONLY"}
             if db.execute("SELECT COUNT(*) FROM engine_connections WHERE status!='DISCONNECTED'").fetchone()[0] >= 32:
                 raise MachineError("CONNECTION_LIMIT_REACHED")
             db.execute("INSERT INTO engine_connections VALUES (?,?,1,'CONFIGURED',?,?,NULL,NULL)",

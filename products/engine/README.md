@@ -6,6 +6,7 @@ Named agents use common connections and a shared budget. Approval binds to an ex
 ambiguous execution keeps its reservation.
 
 [Install](../../docs/SELF_HOSTING.md) · [Kernel architecture](../../docs/ENGINE_ARCHITECTURE.md)
+· [Privy and MetaMask Agent Wallet](../../docs/wallet-connectors.md)
 
 | Area | Source |
 | --- | --- |
