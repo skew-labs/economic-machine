@@ -1,0 +1,20 @@
+{
+  "schema": "economic-machine.pump-core-trace-protocol.v1",
+  "objective": "Audit every original provider ATH candidate against all rows of the approved core tables, then investigate creator and early-participant funding associations without converting gaps into clean history.",
+  "core_tables": ["token_metadata", "arkm_funding", "pump_event_default"],
+  "candidate_universe": "original 1000-row provider snapshot; not verified all-time ranking",
+  "early_window_seconds": 60,
+  "trace_depth": 4,
+  "trace_node_limit_per_candidate": 5000,
+  "trace_branch_limit": 32,
+  "early_wallet_seed_limit_per_candidate": 512,
+  "boundary": "Any third-party labeled source or more than 32 observed inbound counterparties stops reverse traversal. Labels are not verified ownership.",
+  "causality": "Reverse funding paths strictly precede launch and the next downstream edge. Equal-time ambiguous edges are not ordered by guesswork.",
+  "history_is_complete": false,
+  "bundle_membership_proven_by_same_slot": false,
+  "current_balances_verified": false,
+  "profitability_proven": false,
+  "exit_policy": "UNESTABLISHED: core event table lacks full reserve, historical fee, complete transfer, failed-transaction, and execution-state coverage.",
+  "model_calls": 0,
+  "trade_authority": false
+}

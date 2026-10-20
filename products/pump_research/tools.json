@@ -1,0 +1,12 @@
+{
+  "schema": "economic-machine.research-tools.v1",
+  "service": "http://127.0.0.1:19436",
+  "tools": [
+    {"name": "pump.search", "method": "GET", "path": "/search", "parameters": {"q": "name, symbol, mint or creator address"}, "effect": "read_only"},
+    {"name": "pump.token", "method": "GET", "path": "/token", "parameters": {"mint": "Solana mint"}, "effect": "read_only"},
+    {"name": "pump.funding_trace", "method": "GET", "path": "/trace", "parameters": {"wallet": "public Solana account", "depth": "1..8", "before": "optional causal slot ceiling"}, "effect": "read_only"},
+    {"name": "pump.coverage", "method": "GET", "path": "/status", "parameters": {}, "effect": "read_only"},
+    {"name": "pump.strategy_research", "method": "GET", "path": "/strategy", "parameters": {}, "effect": "read_only"}
+  ],
+  "semantic_limits": ["association is not ownership", "same slot is not bundle proof", "an observed balance is not a verified current balance", "absence in a partial index is not clean history", "provider ATH ranking is not independently verified", "no automatic entry, exit or trading authority"]
+}

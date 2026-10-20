@@ -67,3 +67,13 @@ markets/**/*.log
 !markets/runtime/include/PROVENANCE.md
 !markets/runtime/include/machine/*.hpp
 !markets/runtime/include/machine/economics/*.hpp
+
+# Research source is public; runtime records and the private desk stay local.
+evidence/
+**/evidence/
+**/*.log
+products/pump_research/web/
+products/**/*.service
+products/**/*.timer
+products/**/REPORT*.md
+products/**/OPERATOR-RUNBOOK.md

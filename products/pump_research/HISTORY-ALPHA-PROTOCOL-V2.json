@@ -1,0 +1,30 @@
+{
+  "version": "historical-alpha-v2",
+  "purpose": "Exploratory temporal replication on a third-party event-triggered price dataset; not a live trading policy",
+  "supersedes": "v1 preserved; purge overlapping train observations and outcomes at the chronological boundary; no new signal tuning",
+  "training_fraction": 0.6,
+  "split": "Chronological by first observed snapshot; identical timestamps stay in the same partition",
+  "training_embargo_ms": 85200,
+  "decision_minimum_age_ms": 3000,
+  "decision_maximum_age_ms": 15000,
+  "entry_delays_ms": [800, 3200],
+  "entry_maximum_wait_ms": 2000,
+  "hold_ms": [30000, 60000],
+  "exit_maximum_wait_ms": 5000,
+  "simultaneous_timestamps": "Use last id at a timestamp for observation; require a strictly later entry timestamp",
+  "signals": ["all_eligible", "volume_per_trade_top_quartile", "wallet_breadth_top_quartile", "positive_price_gain_per_trade_top_quartile"],
+  "thresholds": "Derived only from eligible decisions in the earlier partition after purging the final 85.2 seconds, fixed before later partition evaluation; no best-variant selection",
+  "quote_cost_sensitivity": {
+    "notional_sol": 0.05,
+    "fee_each_side_bps": 125,
+    "adverse_each_side_bps": 25,
+    "network_each_side_lamports": 100000,
+    "unrecovered_rent_lamports": 2039280,
+    "is_verified_historical_fee": false
+  },
+  "missing": "Keep absent decision/entry/exit separately; report full-loss sensitivity for missing exits, never fill forward prices",
+  "excluded_features": ["peak_price_all_time", "peak_multiplier", "final_multiplier", "whole_lifetime_volume", "whole_lifetime_creator_reputation", "future_creator_history"],
+  "acceptance": "No promotion from this dataset: event-triggered sampling, unverified reserve/fill availability, missing signed receipts and incomplete source coverage",
+  "validated_pnl": null,
+  "live_trading_enabled": false
+}
