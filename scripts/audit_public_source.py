@@ -11,6 +11,7 @@ PATTERNS = [
     re.compile(rb"(?:sk-bk-|sk-proj-|xai-|ghp_|github_pat_)[A-Za-z0-9_-]{24,}"),
     re.compile(rb"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
     re.compile(rb"em_live_[A-Za-z0-9_-]{32,}"),
+    re.compile(rb"(?:sk-or-v1-|baze_)[A-Za-z0-9_-]{24,}"),
 ]
 
 

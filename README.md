@@ -23,6 +23,21 @@ Economic Machine handles policy, approval, payment recovery and receipts. Your k
 | [web](web/) / [site](site/) | Console and public tool interfaces |
 | [docs](docs/) / [products](products/) | Architecture, integration references and tool guides |
 
+## Muse and public-evidence research
+
+The source snapshot now includes the [fifty-lane Muse research pool](products/research_pool/README.md),
+[Muse policy and receipt adapters](products/pacifica_muse/README.md),
+[resident workers](products/resident/README.md),
+[Solana evidence indexing](products/pump_research/README.md) and
+[EVM extraction and wallet search](products/arbitrum_research/README.md), including
+[Robinhood adapters](products/robinhood_research/README.md).
+
+These are source and fixture tests. Historical research grants retain their
+expired deadlines and fixed authority checks. No running agents, private desk,
+credentials, raw datasets or operator journals are included, and publication
+does not resume a previous job. Complete wallet coverage, internal traces,
+independent consensus finality and profitable trading are not claimed.
+
 Build outputs, operational records, private configuration and internal planning are
 not part of the public toolkit. See [contributing](CONTRIBUTING.md).
 
