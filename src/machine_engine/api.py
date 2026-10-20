@@ -20,7 +20,7 @@ from .connections import PROFILES
 from .workspace import Workspace, now_iso
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSETS = {"assistant.js", "assistant.css", "swap-wallet.js", "swap-crypto.js","app.js", "app.css", "wallet.js", "console-theme.css", "operations.js", "operations.css", "workspace.css", "commerce.js", "commerce.css",
+ASSETS = {"workspace-visuals.js", "workspace-visuals.css", "token-market.js", "token-market.css", "assets/skew-token.svg", "assets/app-mining.svg", "assets/app-atlas.svg", "assets/app-data-pass.svg", "assets/app-fuel.svg", "wallet-connectors.js", "assistant.js", "assistant.css", "swap-wallet.js", "swap-crypto.js","app.js", "app.css", "wallet.js", "console-theme.css", "operations.js", "operations.css", "workspace.css", "commerce.js", "commerce.css",
           "agents.js", "data.js", "tasks.js", "mining.js", "tasks.css", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/app-engine.svg"}
 
 
@@ -205,6 +205,13 @@ def create_engine_app(db_path, *, admin_token=None, origin="http://127.0.0.1:880
     existing = {route.path for route in app.routes if hasattr(route, "path")}
     router.routes = [route for route in router.routes if getattr(route, "path", None) not in existing]
     app.include_router(router)
+
+    from machine_commerce.token_market import TokenMarket
+    market_feed = TokenMarket()
+
+    @app.get("/market/skew")
+    async def skew_market():
+        return JSONResponse(await market_feed.snapshot(), headers={"Cache-Control": "no-store"})
 
     @app.get("/{asset:path}")
     def assets(asset):

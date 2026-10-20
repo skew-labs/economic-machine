@@ -23,6 +23,7 @@ from .domain import DEFAULT_REQUESTS, money_atoms, money_string
 from .evidence import replay_policy, validate_bundle
 from .market import Market, negotiate, normalize_demand, normalize_supply
 from .store import Store
+from .wallet_connectors import public_wallet_config, wallet_csp, privy_asset
 
 ROOT = Path(__file__).resolve().parents[2]
 SCENARIOS = {"standard", "tight", "fresh", "budget", "recovery"}
@@ -151,13 +152,19 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         if request.url.path in {"/console", "/submission", "/engine", "/launch"}:
-            response.headers["Content-Security-Policy"] = (
-                "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
-                "connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
+            response.headers["Content-Security-Policy"] = wallet_csp(
+                privy=request.url.path == "/console" and bool(public_wallet_config()["privy"]))
         if request.url.path == "/demo/run":
             response.headers["Access-Control-Allow-Origin"] = "*"
             response.headers["Cache-Control"] = "no-store"
         return response
+
+    from .token_market import TokenMarket
+    market_feed = TokenMarket()
+
+    @app.get("/market/skew")
+    async def skew_market():
+        return JSONResponse(await market_feed.snapshot(), headers={"Cache-Control": "no-store"})
 
     @app.options("/demo/run")
     async def preflight():
@@ -207,6 +214,14 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
 
     @app.get("/demo/datapass/deployment")
     async def datapass_deployment_proof():
+        from .datapass import DataProducts
+        configured = DataProducts().chain
+        if configured.chain_id == 42161:
+            from .token_market import deployment
+            proof = deployment()
+            if not proof or proof["contracts"]["SkewDataPass"].lower() != (configured.contract or "").lower():
+                return JSONResponse({"error": "Configured mainnet deployment proof unavailable"}, status_code=503)
+            return JSONResponse(proof, headers={"Cache-Control": "no-store", "Access-Control-Allow-Origin": "*"})
         from economic_machine.values import digest
         path = ROOT / "artifacts/arbitrum-sepolia/datapass-deployment.json"
         try:
@@ -389,13 +404,15 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
             return JSONResponse({"status": "NO_REVIEW"}, status_code=503)
         return JSONResponse(json.loads(path.read_text()), headers={"Cache-Control": "no-store"})
 
+    @app.head("/console", response_class=HTMLResponse)
     @app.get("/console", response_class=HTMLResponse)
     async def console():
         html = (ROOT / "web/index.html").read_text()
         html = html.replace('  <link rel="stylesheet" href="/operations.css?v=wallet-20261002-3">', '')
         html = html.replace('  <link rel="stylesheet" href="/workspace.css?v=wallet-20261002-3">', '')
         version = hashlib.sha256(b"".join((ROOT / "web" / name).read_bytes() for name in
-            ["index.html", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "assistant.js", "assistant.css", "swap-wallet.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "assets/app-engine.svg", "assets/ui-icons.svg"])).hexdigest()[:16]
+            ["workspace-visuals.js", "workspace-visuals.css", "token-market.js", "token-market.css", "assets/skew-token.svg", "assets/app-atlas.svg", "assets/app-mining.svg", "assets/app-fuel.svg", "assets/app-data-pass.svg", "index.html", "app.css", "app.js", "wallet.js", "wallet-connectors.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "assistant.js", "assistant.css", "swap-wallet.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "assets/app-engine.svg", "assets/ui-icons.svg"])
+            + ((ROOT / "web/privy/entry.js").read_bytes() if (ROOT / "web/privy/entry.js").is_file() else b"")).hexdigest()[:16]
         html = html.replace('  <link rel="stylesheet" href="/assistant.css?v=console-20261004">', '')
         html = html.replace("Machine Market | Console", "skew | Console")
         html = html.replace('href="/" aria-label="Economic Machine console"', 'href="/commerce/" aria-label="Economic Machine console"')
@@ -403,6 +420,7 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         html = html.replace("</head>", '<meta name="machine-api-prefix" content="/commerce"><link rel="stylesheet" href="/commerce/console-theme.css?v=wallet-20261002-3"><link rel="stylesheet" href="/commerce/operations.css?v=wallet-20261002-3"><link rel="stylesheet" href="/commerce/workspace.css?v=wallet-20261002-3"><link rel="stylesheet" href="/commerce/assistant.css?v=wallet-20261002-3"></head>')
         html = html.replace('href="/app.css', 'href="/commerce/app.css').replace('src="/app.js', 'src="/commerce/app.js')
         html = html.replace('src="/wallet.js', 'src="/commerce/wallet.js')
+        html = html.replace('src="/wallet-connectors.js', 'src="/commerce/wallet-connectors.js')
         html = html.replace('src="/agents.js', 'src="/commerce/agents.js')
         html = html.replace('src="/operations.js', 'src="/commerce/operations.js').replace('href="/operations.css', 'href="/commerce/operations.css')
         html = html.replace('src="/tasks.js', 'src="/commerce/tasks.js').replace('href="/tasks.css', 'href="/commerce/tasks.css')
@@ -411,8 +429,14 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         html = html.replace('src="/commerce.js', 'src="/commerce/commerce.js').replace('href="/commerce.css', 'href="/commerce/commerce.css')
         html = html.replace('href="/assets/ui-icons.svg', 'href="/commerce/assets/ui-icons.svg')
         html = html.replace('src="/assets/app-', 'src="/commerce/assets/app-').replace('href="/assets/app-', 'href="/commerce/assets/app-')
-        for asset in ("assistant.js", "swap-wallet.js", "swap-crypto.js"):
+        for asset in ("assistant.js", "swap-wallet.js", "swap-crypto.js", "token-market.js", "workspace-visuals.js"):
             html = html.replace('src="/' + asset, 'src="/commerce/' + asset)
+        html = html.replace('href="/token-market.css', 'href="/commerce/token-market.css').replace('href="/workspace-visuals.css', 'href="/commerce/workspace-visuals.css')
+        # Visual overrides load after the shared console theme, in every hosting mode.
+        for sheet in ("token-market.css", "workspace-visuals.css"):
+            tag = '<link rel="stylesheet" href="/commerce/' + sheet + '?v=visual-1">'
+            html = html.replace(tag, '').replace('</head>', tag + '</head>')
+        html = html.replace("visual-1", version)
         html = html.replace("console-20261004", version)
         html = html.replace("wallet-20261002-3", version)
         html = html.replace("control-20261003", version)
@@ -422,6 +446,19 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         html = html.replace("production-paths-20261003", version)
         html = html.replace('<body>', '<body><div class="portal-bar"><a href="/commerce/">← skew</a><a href="/commerce/console?preview=1">Recorded evidence</a></div>')
         return HTMLResponse(html, headers={"Cache-Control": "no-store"})
+
+    @app.get("/wallet-config")
+    async def wallet_config():
+        return JSONResponse(public_wallet_config(), headers={"Cache-Control": "no-store"})
+
+    @app.get("/privy/{asset}")
+    async def managed_wallet_asset(asset):
+        target = privy_asset(ROOT / "web", asset)
+        return FileResponse(target, headers={"Cache-Control": "no-cache"}) if target else JSONResponse({"error": "Not found"}, status_code=404)
+
+    @app.get("/wallet-connectors.js")
+    async def wallet_connectors_script():
+        return FileResponse(ROOT / "web/wallet-connectors.js")
 
     @app.get("/{asset:path}")
     async def files(asset):
@@ -439,10 +476,10 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         if asset in {"landing.css", "landing.js", "tools.css", "tools.js", "tools.html", "atlas.html", "site-lens.html", "data-pass.html", "engine-product.html", "atlas.json", "evidence.html", "evidence.css", "evidence.js"}:
             target = site / asset
             return FileResponse(target) if target.is_file() else JSONResponse({"error": "Not found"}, status_code=404)
-        if asset in {"swap-crypto.js", "assistant.js", "assistant.css", "swap-wallet.js", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "submission.css", "submission.js", "launch.js", "launch-wallet.js", "launch.css"}:
-            return FileResponse(ROOT / "web" / asset)
-        if asset in {"assets/phantom-wallet.png", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/icon-provenance.json", "assets/app-engine.svg", "assets/app-atlas.svg", "assets/app-site-lens.svg", "assets/app-data-pass.svg", "assets/app-mining.svg", "assets/app-fuel.svg"}:
-            return FileResponse(ROOT / "web" / asset)
+        if asset in {"workspace-visuals.js", "workspace-visuals.css", "token-market.js", "token-market.css", "swap-crypto.js", "assistant.js", "assistant.css", "swap-wallet.js", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "submission.css", "submission.js", "launch.js", "launch-wallet.js", "launch.css"}:
+            return FileResponse(ROOT / "web" / asset, headers={"Cache-Control": "no-cache"})
+        if asset in {"assets/skew-token.svg", "assets/phantom-wallet.png", "assets/ui-icons.svg", "assets/PHOSPHOR-LICENSE.txt", "assets/icon-provenance.json", "assets/app-engine.svg", "assets/app-atlas.svg", "assets/app-site-lens.svg", "assets/app-data-pass.svg", "assets/app-mining.svg", "assets/app-fuel.svg"}:
+            return FileResponse(ROOT / "web" / asset, headers={"Cache-Control": "no-cache"})
         if asset in {"", "index.html"}:
             return HTMLResponse((site / "index.html").read_text().replace('<head>', '<head><base href="/commerce/">'))
         if asset not in {"style.css", "site.js", "favicon.svg", "evidence.json", "assets/nvidia-logo.svg",

@@ -278,6 +278,9 @@ class LocalEngineHTTP(unittest.TestCase):
         self.assertIn('content="SELF_HOSTED"', page.text)
         self.assertNotIn(OWNER_TOKEN, page.text)
         self.assertIn("frame-ancestors 'none'", page.headers["content-security-policy"])
+        wallet_loader = self.client.get("/wallet-connectors.js")
+        self.assertEqual(wallet_loader.status_code, 200)
+        self.assertIn("ManagedWallets", wallet_loader.text)
 
     def test_weak_or_non_loopback_configuration_does_not_start(self):
         with self.assertRaises(ValueError):

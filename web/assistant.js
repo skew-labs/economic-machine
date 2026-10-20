@@ -18,6 +18,7 @@
     row.append(label,el('p','chat-text',text)); if(content)row.append(content);
     document.getElementById('conversation').append(row);
     document.getElementById('chat-welcome').hidden=true;
+    for(const n of root.querySelectorAll('.work-launcher,.workspace-path'))n.hidden=true;
     row.scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
     return row;
   }
@@ -236,9 +237,9 @@
   function init() {
     if(ready)return;ready=true;root.replaceChildren();
     const welcome=el('div','chat-welcome');welcome.id='chat-welcome';
-    welcome.append(el('span','chat-wordmark','skew'),el('h1','','What would you like to get done?'),el('p','','Your accounts, agents and work. One conversation.'));
+    welcome.append(el('span','chat-wordmark','skew'),el('h1','','What are we working on?'),el('p','','Ask your agent, or choose a tool below. You approve every spend.'));
     const suggestions=el('div','chat-suggestions');
-    for(const [label,prompt]of [['Get ETH for gas','Swap 2 USDC to ETH for gas on Arbitrum One.'],['Check my accounts','Check my balances, positions and recent orders.'],['Run a mining job','Show my mining jobs and help me run a bounded search.'],['Create a work task','Help me prepare a vendor comparison for my team.']])suggestions.append(button(label,'chat-suggestion',()=>{document.getElementById('chat-input').value=prompt;document.getElementById('chat-input').focus();}));
+    for(const [label,prompt]of [['Check my accounts','Check my balances, positions and recent orders.'],['Plan a task','Help me prepare a vendor comparison for my team.']])suggestions.append(button(label,'chat-suggestion',()=>{document.getElementById('chat-input').value=prompt;document.getElementById('chat-input').focus();}));
     suggestions.append(button('Clean business data','chat-suggestion',()=>officeWork()),button('Resume my work','chat-suggestion',()=>workProgress().catch(e=>C.notify(friendly(e),true))));
     const conversation=el('div','conversation');conversation.id='conversation';conversation.setAttribute('aria-live','polite');conversation.setAttribute('aria-label','Conversation');
     const composer=el('form','chat-composer');composer.id='chat-composer';
@@ -256,7 +257,8 @@
     });voice.title='Browser voice input. Review the transcript before sending. This is not an Alexa device connection.';bar.append(voice);}
     bar.append(hint,submit);composer.append(input,bar);composer.onsubmit=e=>{e.preventDefault();send(input.value);};
     input.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();send(input.value);}};
-    root.append(welcome,suggestions,conversation,composer);boundRequest();
+    root.append(welcome,suggestions,conversation,composer);
+    if(window.WorkspaceVisuals)root.append(window.WorkspaceVisuals.launcher());boundRequest();
   }
   async function connected() {
     init();const owner=C.state.identity?.address;

@@ -10,3 +10,7 @@
 dialog {border-radius:22px;border-color:var(--line)}
 .receipt-json {font-size:12px}
 @media(max-width:800px){.portal-bar{padding:0 20px}.sidebar{height:auto;position:static}.shell{min-height:calc(100vh - 48px)}}
+/* Connector addresses remain readable on narrow screens. */
+.wallet-address-wrap { overflow-wrap: anywhere; }
+#privy-login { width: 100%; margin-top: 10px; }
+#privy-login[hidden] { display: none; }

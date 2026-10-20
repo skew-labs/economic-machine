@@ -2,6 +2,7 @@ import hashlib
 import json
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 from eth_abi import encode
@@ -15,6 +16,7 @@ from machine_commerce.datapass import (
     USDC,
     DataPassChain,
     DataProducts,
+    ReleaseMissing,
     bytes32,
     release_identity,
 )
@@ -34,6 +36,7 @@ class Reader:
         self.wrong_release = False
         self.purchase_token = 0
         self.asset = USDC
+        self.release_missing = False
     def __call__(self, url, method, params):
         self.calls.append((method, params))
         if method == "eth_chainId": return hex(self.chain)
@@ -55,6 +58,8 @@ class Reader:
             if selector == keccak(text="sales(uint256)")[:4].hex():
                 return "0x" + encode(["address", "uint128", "uint64", "uint64"], [SELLER, self.price, NOW + 90, 3]).hex()
             report = sample_report()
+            if self.release_missing:
+                raise ReleaseMissing("RELEASE_NOT_REGISTERED")
             return "0x" + encode(["(address,address,bytes32,bytes32,bytes32,uint128,uint64,uint64,bool,bool,string)"],
                 [(SELLER, self.asset, bytes32(self.content), bytes32(report["terms_sha256"]),
                   bytes32(report["derived"]["source_observation_root"]), self.price, 86400,
@@ -150,6 +155,7 @@ class DataPassReaderTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "atlas.json"; path.write_text(json.dumps(self.report))
             service = DataProducts(path, self.chain)
+            self.reader.release_missing = True
             plan = service.registration({"address": SELLER, "chain_id": CHAIN_ID}, 10000, 86400)
             function, args = Web3().eth.contract(abi=abi).decode_function_input(plan["data"])
             self.assertEqual(function.fn_name, "registerRelease")
@@ -159,6 +165,43 @@ class DataPassReaderTests(unittest.TestCase):
             self.reader.accepted = False
             with self.assertRaisesRegex(MachineError, "PUBLISHER"):
                 service.registration({"address": SELLER, "chain_id": CHAIN_ID}, 10000, 86400)
+
+    def test_publication_requires_missing_release_on_both_verified_rpc(self):
+        self.reader.release_missing = True
+        result = self.chain.release_status(self.report)
+        self.assertEqual(result["status"], "NOT_REGISTERED")
+        self.assertEqual(result["evidence"]["finality"], "TWO_RPC_FINALIZED_L2")
+        original = self.reader
+        def disputed(url, method, params):
+            original.release_missing = url == RPCS[0]
+            return original(url, method, params)
+        self.chain.reader = disputed
+        with self.assertRaisesRegex(MachineError, "DISAGREEMENT"):
+            self.chain.release_status(self.report)
+
+    def test_registered_release_cannot_be_republished(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "atlas.json"; path.write_text(json.dumps(self.report))
+            with self.assertRaisesRegex(MachineError, "ALREADY_REGISTERED"):
+                DataProducts(path, self.chain).registration({"address": SELLER, "chain_id": CHAIN_ID},10000,86400)
+
+    def test_rpc_outage_is_not_an_unregistered_release(self):
+        def failed(*args): raise MachineError("RPC_READ_UNAVAILABLE")
+        self.chain.reader = failed
+        with self.assertRaisesRegex(MachineError, "RPC_READ_UNAVAILABLE"):
+            self.chain.release_status(self.report)
+
+    def test_rpc_wrapper_retains_missing_release_and_wraps_transport_failure(self):
+        from machine_commerce.datapass import rpc_read
+        with patch("machine_commerce.datapass._rpc_read", side_effect=ReleaseMissing("RELEASE_NOT_REGISTERED")):
+            with self.assertRaises(ReleaseMissing): rpc_read(RPCS[0], "eth_call", [])
+        with patch("machine_commerce.datapass._rpc_read", side_effect=ValueError("bad response")):
+            with self.assertRaisesRegex(MachineError, "RPC_READ_UNAVAILABLE"): rpc_read(RPCS[0], "eth_call", [])
+
+    def test_unavailable_result_cannot_bypass_entitlement(self):
+        self.reader.release_missing = True
+        with self.assertRaisesRegex(MachineError, "ONLY_FOR_RELEASE"):
+            self.chain.read_many(["0x12345678"], allow_missing_release=True)
 
     def test_historical_version_is_retained_when_current_release_changes(self):
         with tempfile.TemporaryDirectory() as folder:

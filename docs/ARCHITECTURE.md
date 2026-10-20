@@ -65,6 +65,27 @@ an oracle of legal ownership.
 DataPass and x402 are distinct payment rails. Access must not be billed through both for the same sale.
 Atlas can supply a report to a publisher, but a report hash grants no additional data rights.
 
+## Arbitrum deployment boundaries
+
+The [Arbitrum One manifest](../contracts/deployments/arbitrum-one.json) identifies the deployed
+DataPass, ArtifactMining and SKEW contracts, created by one launch bundle. Contract deployment,
+product registration, a paid license and delivered bytes are separate observable states.
+The native DataPass route uses exact native-USDC allowance and a version-bound purchase;
+the x402 route uses a separately bound EIP-3009 authorization. Neither route needs a second
+copy of the escrow or research-mining contracts.
+
+`deploy/datapass-mainnet.conf` binds both the public portal and authenticated runtime to the
+same mainnet contract and bytecode. Apply it after other DataPass environment overrides.
+`MACHINE_PUBLIC_CHECKOUT_NETWORK` restricts new commerce checkouts and payment preparation;
+historical Sepolia profiles remain available for original-payment reconciliation. Browser
+purchase journals are scoped to the chain, contract and buyer. Old receipts retain their
+original network and explorer.
+
+A publisher reviews the content, license, seller, USDC price and sale period before wallet
+submission. Both RPC providers must confirm absence before a registration plan is prepared.
+After an ambiguous submission the UI only allows reconciliation, not another submission.
+The separate VRF research protocol and test payment tokens are not the SKEW production rail.
+
 ## Native execution boundary
 
 The C++20 libraries use bounded input structs, checked arithmetic and fixed-capacity queues.

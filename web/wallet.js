@@ -144,7 +144,63 @@
       throw error;
     }
   }
-  const exported = {safeIcon, messageHex, accountState, signIn, signPayment, sendDataPassStep, ensureArbitrum, connectionError, rememberedProvider};
+  function dataPassStorageKey(owner, chain, contract) {
+    if (!ADDRESS.test(owner || '') || !ADDRESS.test(contract || '') || ![42161,421614].includes(chain))
+      throw new Error('A chain-bound DataPass workspace is required.');
+    return `machine_datapass_purchase_${chain}_${contract.toLowerCase()}_${owner.toLowerCase()}`;
+  }
+  function publicationData(plan) {
+    const hash = x => typeof x === 'string' && /^[0-9a-f]{64}$/.test(x);
+    const now = Math.floor(Date.now()/1000);
+    const asset = {42161:'0xaf88d065e77c8cc2239327c5edb3a432268e5831',421614:'0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d'}[plan?.chain_id];
+    if (plan?.schema !== 'skew-datapass-publication-1' || !asset || !ADDRESS.test(plan.from || '') ||
+        !ADDRESS.test(plan.to || '') || /^0x0{40}$/i.test(plan.to) || plan.asset?.toLowerCase() !== asset ||
+        plan.value !== '0x0' || plan.status !== 'UNSIGNED_NOT_BROADCAST' || plan.signing_authority !== 'CUSTOMER_WALLET_ONLY' ||
+        !hash(plan.report_sha256) || !hash(plan.terms_sha256) || !hash(plan.provenance_root) || !/^0x[0-9a-f]{64}$/.test(plan.release_id || '') ||
+        !/^[1-9][0-9]{0,6}$/.test(plan.price_atoms || '') || BigInt(plan.price_atoms) > 1000000n ||
+        !Number.isSafeInteger(plan.duration_seconds) || plan.duration_seconds !== 86400 || plan.transferable !== true ||
+        !Number.isSafeInteger(plan.sale_ends) || plan.sale_ends <= now || plan.sale_ends > now+2592000 ||
+        !Number.isSafeInteger(plan.expires_at) || plan.expires_at <= now || plan.expires_at > now+300 ||
+        plan.metadata_uri !== 'https://skew.deals/commerce/demo/atlas?version='+plan.report_sha256)
+      throw new Error('A current, exact DataPass publication review is required.');
+    const word = x => BigInt(x).toString(16).padStart(64,'0');
+    const addr = x => x.slice(2).toLowerCase().padStart(64,'0');
+    const uri = Array.from(new TextEncoder().encode(plan.metadata_uri),b=>b.toString(16).padStart(2,'0')).join('');
+    const tuple = addr(plan.from)+addr(plan.asset)+plan.report_sha256+plan.terms_sha256+plan.provenance_root+
+      word(plan.price_atoms)+word(plan.duration_seconds)+word(plan.sale_ends)+word(1)+word(1)+word(352)+
+      word(uri.length/2)+uri.padEnd(Math.ceil(uri.length/64)*64,'0');
+    const data = '0xa7d64b29'+plan.release_id.slice(2)+word(64)+tuple;
+    if (plan.data?.toLowerCase() !== data) throw new Error('Publication calldata differs from its displayed seller, price, terms or content.');
+    return data;
+  }
+  async function sendDataPassRelease(provider, plan, contract, persist) {
+    let attempted=false;
+    try {
+      const data=publicationData(plan);
+      if (plan.to.toLowerCase() !== contract?.toLowerCase() || typeof persist !== 'function')
+        throw new Error('Use the configured DataPass contract and durable submission record.');
+      const selected=await accountState(provider);
+      if (selected.chain_id !== plan.chain_id || selected.address.toLowerCase() !== plan.from.toLowerCase())
+        throw new Error('Select the reviewed publisher on its Arbitrum network.');
+      const tx={from:selected.address,to:plan.to,data,value:'0x0'};
+      const estimate=await provider.request({method:'eth_estimateGas',params:[tx]});
+      if (!/^0x[0-9a-f]+$/i.test(estimate || '') || BigInt(estimate)<=0n) throw new Error('Publication simulation did not succeed.');
+      if (!sameAccount(selected,await accountState(provider))) throw new Error('Wallet changed before publication.');
+      if (plan.expires_at<=Math.floor(Date.now()/1000)) throw new Error('Refresh the publication review.');
+      persist({status:'UNKNOWN_RECONCILE_ONLY',chain_id:plan.chain_id,contract:plan.to,release_id:plan.release_id});
+      attempted=true;
+      const txHash=await provider.request({method:'eth_sendTransaction',params:[tx]});
+      if (!/^0x[0-9a-fA-F]{64}$/.test(txHash || '')) throw new Error('No transaction hash. Check publication before retrying.');
+      persist({status:'SUBMITTED',chain_id:plan.chain_id,contract:plan.to,release_id:plan.release_id,tx_hash:txHash});
+      return {tx_hash:txHash};
+    } catch(cause) {
+      const error=cause instanceof Error?cause:new Error('Publication failed.');
+      if (attempted && Number(error.code)===4001) persist({status:'USER_REJECTED'});
+      error.submission_uncertain=attempted && Number(error.code)!==4001;
+      throw error;
+    }
+  }
+  const exported = {safeIcon, messageHex, accountState, signIn, signPayment, sendDataPassStep, sendDataPassRelease, publicationData, dataPassStorageKey, ensureArbitrum, connectionError, rememberedProvider};
   if (typeof module !== 'undefined' && module.exports) { module.exports = exported; return; }
   const providers = new Map(), subscribers = new Set();
   function publish() { for (const fn of subscribers) fn([...providers.values()]); }

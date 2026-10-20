@@ -30,6 +30,11 @@ NETWORKS = {
             "rpcs": configured_rpcs()},
 }
 ROOT = Path(__file__).resolve().parents[2]
+RELEASE_TYPE = "(address,address,bytes32,bytes32,bytes32,uint128,uint64,uint64,bool,bool,string)"
+
+
+class ReleaseMissing(MachineError):
+    """The pinned DataPass releaseInfo call reverted with Unavailable()."""
 
 
 def address(value):
@@ -74,6 +79,11 @@ def _rpc_read(url, method, params):
             if len(payload) > 512000:
                 raise MachineError("RPC_RESPONSE_LIMIT")
     result = json.loads(payload)
+    if (method == "eth_call" and result.get("id") == 1 and result.get("jsonrpc") == "2.0"
+            and params[0].get("data", "").startswith(call_data("releaseInfo(bytes32)", [], []))
+            and isinstance(result.get("error"), dict) and result["error"].get("code") == 3
+            and result["error"].get("data") == "0x" + keccak(text="Unavailable()")[:4].hex()):
+        raise ReleaseMissing("RELEASE_NOT_REGISTERED")
     if result.get("id") != 1 or result.get("jsonrpc") != "2.0" or "error" in result or "result" not in result:
         raise MachineError("RPC_READ_UNAVAILABLE")
     return result["result"]
@@ -82,6 +92,8 @@ def _rpc_read(url, method, params):
 def rpc_read(url, method, params):
     try:
         return _rpc_read(url, method, params)
+    except ReleaseMissing:
+        raise
     except (httpx.HTTPError, ValueError):
         raise MachineError("RPC_READ_UNAVAILABLE") from None
 
@@ -101,6 +113,8 @@ class DataPassChain:
 
     def status(self):
         return {"chain_id": self.chain_id, "contract": self.contract,
+                "network_name": "Arbitrum One" if self.chain_id == 42161 else "Arbitrum Sepolia",
+                "asset": address(self.asset), "mainnet": self.chain_id == 42161,
                 "status": "CONFIGURED_REQUIRES_RPC_VERIFICATION" if self.contract else "NOT_DEPLOYED",
                 "runtime_sha256": self.code_hash, "signing_authority": "NONE",
                 "payment_mode": "ERC20_PURCHASE_ALTERNATIVE_TO_X402_NOT_DOUBLE_PAYMENT"}
@@ -109,12 +123,14 @@ class DataPassChain:
         values, evidence = self.read_many([calldata])
         return values[0], evidence
 
-    def read_many(self, calldatas):
+    def read_many(self, calldatas, *, allow_missing_release=False):
         if not self.contract:
             raise MachineError("DATAPASS_NOT_DEPLOYED")
         if (not isinstance(calldatas, list) or not 1 <= len(calldatas) <= 8
                 or any(not isinstance(data, str) or not re.fullmatch(r"0x(?:[0-9a-fA-F]{2}){4,2048}", data) for data in calldatas)):
             raise MachineError("BOUNDED_READ_ONLY_CALLDATA_REQUIRED")
+        if allow_missing_release and (len(calldatas) != 1 or not calldatas[0].startswith(call_data("releaseInfo(bytes32)", [], []))):
+            raise MachineError("MISSING_RESULT_ONLY_FOR_RELEASE_INFO")
         heads = []
         for source in self.rpcs:
             if int(self.reader(source, "eth_chainId", []), 16) != self.chain_id:
@@ -140,7 +156,13 @@ class DataPassChain:
                 raise MachineError("DATAPASS_RUNTIME_MISMATCH")
             results = []
             for calldata in calldatas:
-                result = self.reader(source, "eth_call", [{"to": self.contract, "data": calldata}, block])
+                try:
+                    result = self.reader(source, "eth_call", [{"to": self.contract, "data": calldata}, block])
+                except ReleaseMissing:
+                    if not allow_missing_release:
+                        raise
+                    results.append(None)
+                    continue
                 if not isinstance(result, str) or not re.fullmatch(r"0x(?:[0-9a-fA-F]{2})*", result):
                     raise MachineError("INVALID_ENTITLEMENT_RESULT")
                 results.append(result.lower())
@@ -149,10 +171,31 @@ class DataPassChain:
         if (observations[0]["block_hash"] != observations[1]["block_hash"]
                 or observations[0]["results"] != observations[1]["results"]):
             raise MachineError("ENTITLEMENT_RPC_DISAGREEMENT")
-        return [bytes.fromhex(value[2:]) for value in observations[0]["results"]], {
+        return [None if value is None else bytes.fromhex(value[2:]) for value in observations[0]["results"]], {
             "block_number": int(block, 16), "block_hash": observations[0]["block_hash"],
             "block_timestamp": observations[0]["timestamp"], "sources": [source_label(i) for i in range(len(self.rpcs))], "finality": "TWO_RPC_FINALIZED_L2",
             "checked_at": int(self.clock()), "runtime_sha256": self.code_hash, "calls_at_same_block": len(calldatas)}
+
+    def release_status(self, report):
+        rid = release_identity(report["report_sha256"], report["terms_sha256"])
+        values, evidence = self.read_many([call_data("releaseInfo(bytes32)", ["bytes32"], [rid])], allow_missing_release=True)
+        body = {"chain_id": self.chain_id, "contract": self.contract, "release_id": "0x" + rid.hex(),
+                "report_sha256": report["report_sha256"], "evidence": evidence}
+        if values[0] is None:
+            return body | {"status": "NOT_REGISTERED"}
+        try:
+            release = decode([RELEASE_TYPE], values[0])[0]
+        except Exception as exc:
+            raise MachineError("INVALID_RELEASE_ABI") from exc
+        seller, asset, content, terms, source, price, duration, ends, transferable, active, uri = release
+        if (content != bytes32(report["report_sha256"]) or terms != bytes32(report["terms_sha256"])
+                or source != bytes32(report["derived"]["source_observation_root"])
+                or asset.lower() != self.asset.lower() or duration != report["terms"]["duration_seconds"]
+                or transferable != report["terms"]["transferable"]):
+            raise MachineError("ONCHAIN_RELEASE_TERMS_MISMATCH")
+        return body | {"status": "REGISTERED", "seller": address(seller), "price_atoms": str(price),
+                       "sale_ends": ends, "active": active, "metadata_uri": uri,
+                       "sale_window_open": active and int(self.clock()) < ends}
 
     def entitled(self, token_id, holder, report_hash, terms_hash):
         token_id = token_number(token_id)
@@ -353,18 +396,25 @@ class DataProducts:
         if decode(["bool"], authorized)[0] is not True:
             raise MachineError("ONCHAIN_PUBLISHER_AUTHORIZATION_REQUIRED")
         report = self.version()
+        publication = self.chain.release_status(report)
+        if publication["status"] != "NOT_REGISTERED":
+            raise MachineError("RELEASE_ALREADY_REGISTERED")
         release_id = keccak(canonical({"report": report["report_sha256"], "terms": report["terms_sha256"]}))
         end = int(self.chain.clock()) + sale_duration_seconds
-        uri = "https://machine.148-113-153-116.nip.io/commerce/demo/atlas?version=" + report["report_sha256"]
-        release_type = "(address,address,bytes32,bytes32,bytes32,uint128,uint64,uint64,bool,bool,string)"
+        uri = "https://skew.deals/commerce/demo/atlas?version=" + report["report_sha256"]
+        release_type = RELEASE_TYPE
         signature = "registerRelease(bytes32," + release_type + ")"
         data = call_data(signature,
             ["bytes32", release_type],
             [release_id, (holder, address(self.chain.asset), bytes32(report["report_sha256"]), bytes32(report["terms_sha256"]),
              bytes32(report["derived"]["source_observation_root"]), price_atoms, report["terms"]["duration_seconds"],
              end, report["terms"]["transferable"], True, uri)])
-        body = {"chain_id": self.chain.chain_id, "from": holder, "to": self.chain.contract, "data": data, "value": "0x0",
+        body = {"schema": "skew-datapass-publication-1", "chain_id": self.chain.chain_id, "from": holder, "to": self.chain.contract, "data": data, "value": "0x0",
                 "release_id": "0x" + release_id.hex(), "report_sha256": report["report_sha256"],
+                "terms_sha256": report["terms_sha256"], "provenance_root": report["derived"]["source_observation_root"],
+                "asset": address(self.chain.asset), "duration_seconds": report["terms"]["duration_seconds"],
+                "transferable": report["terms"]["transferable"], "metadata_uri": uri,
+                "expires_at": int(self.chain.clock()) + 300, "publication_evidence": publication,
                 "price_atoms": str(price_atoms), "sale_ends": end, "evidence": evidence,
                 "status": "UNSIGNED_NOT_BROADCAST", "signing_authority": "CUSTOMER_WALLET_ONLY"}
         return body | {"plan_sha256": digest(body)}

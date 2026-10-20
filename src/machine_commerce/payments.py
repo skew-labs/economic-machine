@@ -104,9 +104,12 @@ def validate_signature(header, body, now):
 
 
 class Payments:
-    def __init__(self, store, market, profiles=None, transport=None, chain=None):
+    def __init__(self, store, market, profiles=None, transport=None, chain=None, *, public_network=None):
         self.store, self.market = store, market
         self.profiles = validate_profiles(profiles or {})
+        if public_network is not None and public_network not in {"eip155:42161", "eip155:421614"}:
+            raise MachineError("approved public payment network required")
+        self.public_network = public_network
         urls = {url for profile in self.profiles.values() for url in [profile["url"], profile["rpc_url"]]}
         self.transport = transport or HTTPS(urls)
         self.chain = chain or Chain(self.transport)
@@ -158,6 +161,8 @@ class Payments:
                 raise MachineError("this agreement already has a payment; reconcile its existing record")
             mandate = db.execute("SELECT * FROM payment_mandates WHERE id=? AND owner=?", (raw["mandate_id"], sid)).fetchone()
             profile = self.profiles.get(raw["resource_id"])
+            if profile and self.public_network and profile["network"] != self.public_network:
+                raise MachineError("historical payment resource; only reconciliation remains available")
             if (not mandate or mandate["expires"] <= now or not profile
                     or raw["resource_id"] not in json.loads(mandate["resources"])):
                 raise MachineError("active owned mandate and approved resource required")

@@ -113,6 +113,12 @@ def reconcile(review, tx_hash):
     expected = review["transaction"]
     if hashlib.sha256(bytes.fromhex(expected["data"][2:])).hexdigest() != review["initcode_sha256"]:
         raise MachineError("REVIEW_CHANGED")
+    # A pruned RPC may retain the deployment receipt but not its old state trie.
+    # Verify runtime/configuration at one shared finalized block, not two moving
+    # `latest` states. Deployment inclusion and source-bound calldata stay checked.
+    final_blocks = [rpc(url, "eth_getBlockByNumber", ["finalized", False])
+                    for url in NETWORKS[42161]["rpcs"]]
+    state_at = hex(min(int(block["number"], 16) for block in final_blocks))
     observations = []
     for index, url in enumerate(NETWORKS[42161]["rpcs"]):
         if int(rpc(url, "eth_chainId", []), 16) != 42161:
@@ -131,10 +137,13 @@ def reconcile(review, tx_hash):
         block = rpc(url, "eth_getBlockByNumber", [receipt["blockNumber"], False])
         if block["hash"].lower() != receipt["blockHash"].lower():
             raise MachineError("DEPLOYMENT_REORG")
-        if int(final["number"], 16) < int(receipt["blockNumber"], 16):
+        if min(int(final["number"], 16), int(state_at, 16)) < int(receipt["blockNumber"], 16):
             return {"status": "INCLUDED_AWAITING_FINALITY", "tx_hash": tx_hash, "safe_to_retry": False}
         bundle = address(receipt["contractAddress"])
-        at = receipt["blockNumber"]
+        at = state_at
+        state_block = rpc(url, "eth_getBlockByNumber", [at, False])
+        if int(state_block["number"], 16) != int(at, 16):
+            raise MachineError("STATE_BLOCK_MISMATCH")
         def call(target, signature, types, url=url, at=at):
             raw = rpc(url, "eth_call", [{"to": target, "data": call_data(signature, [], [])}, at])
             return decode(types, bytes.fromhex(raw[2:]))[0]
@@ -165,9 +174,12 @@ def reconcile(review, tx_hash):
         actual = int(receipt["gasUsed"], 16) * int(receipt["effectiveGasPrice"], 16)
         if actual > int(review["owner_cap_wei"]):
             raise MachineError("ACTUAL_FEE_EXCEEDS_CAP")
+        if rpc(url, "eth_getBlockByNumber", [at, False])["hash"] != state_block["hash"]:
+            raise MachineError("FINALIZED_STATE_CHANGED")
         observations.append({"rpc": source_label(index), "block_hash": block["hash"], "addresses": addresses,
-                             "runtime_sha256": runtime, "actual_gas_wei": str(actual)})
-    if any(observations[0][k] != observations[1][k] for k in ["block_hash", "addresses", "runtime_sha256", "actual_gas_wei"]):
+                             "runtime_sha256": runtime, "actual_gas_wei": str(actual),
+                             "state_block_number": int(at, 16), "state_block_hash": state_block["hash"]})
+    if any(observations[0][k] != observations[1][k] for k in ["block_hash", "addresses", "runtime_sha256", "actual_gas_wei", "state_block_number", "state_block_hash"]):
         raise MachineError("RPC_DEPLOYMENT_DISAGREEMENT")
     return {"status": "MAINNET_DEPLOYED_FINALIZED", "tx_hash": tx_hash, "observations": observations,
             "tokens_minted": "0", "purchase_completed": False, "broadcasts_by_script": 0}

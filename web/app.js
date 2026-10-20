@@ -13,7 +13,7 @@ const headings = {
   overview: ['Assistant', 'Your accounts and agents, working under one set of rules.', null],
   connections: ['Connections', 'Connect your APIs. See balances, positions and usage in one place.', null],
   tasks: ['Tasks', 'Save work briefs, budgets and conditions. Keep each task easy to review.', null],
-  mining: ['Machine Mining', 'Submit useful work. Verify the result. Earn funded rewards.', null],
+  mining: ['Mining', 'Search useful work and follow it from verification to publication.', null],
   agents: ['Agents & limits', 'Give each agent a job. Choose what it can do and spend.', null],
   execution: ['Order desk', 'Prepare an order, review the plan and track its outcome.', null],
   playground: ['Developer lab', 'Test a program with sample inputs. No account access or transactions.', null],
@@ -52,6 +52,7 @@ function credits(value) {
   return Number(value).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 6});
 }
 function paymentLabel(network, asset) {
+  if (network === 'eip155:42161' && asset?.toLowerCase() === '0xaf88d065e77c8cc2239327c5edb3a432268e5831') return 'USDC';
   return network === 'eip155:421614' && asset?.toLowerCase() === '0x75faf114eafb1bdbe2f0316df893fd58ce46aa4d' ? 'test USDC' : 'tokens';
 }
 function date(value) {
@@ -146,6 +147,10 @@ function setView(view) {
   $('navigation-toggle').setAttribute('aria-label', 'Open navigation');
   window.scrollTo({top: 0});
 }
+window.addEventListener('hashchange', () => {
+  const view=location.hash.slice(1);
+  if (headings[view] && state.view !== view) setView(view);
+});
 function empty(title, description, action, actionText = '', icon = 'key') {
   const node = el('div', 'empty');
   const mark = el('div', 'empty-icon');
@@ -250,9 +255,9 @@ function renderActivity() {
       $('order-detail').replaceChildren(el('pre', 'receipt-json', JSON.stringify(payment, null, 2)));
       $('order-dialog').showModal();
     }));
-    if (payment.network === 'eip155:421614' && /^0x[0-9a-fA-F]{64}$/.test(payment.tx_hash || '')) {
+    if (['eip155:421614','eip155:42161'].includes(payment.network) && /^0x[0-9a-fA-F]{64}$/.test(payment.tx_hash || '')) {
       const receiptLink = el('a', 'quiet', 'View receipt');
-      receiptLink.href = `https://sepolia.arbiscan.io/tx/${payment.tx_hash}`;
+      receiptLink.href = `https://${payment.network==='eip155:42161'?'arbiscan.io':'sepolia.arbiscan.io'}/tx/${payment.tx_hash}`;
       receiptLink.target = '_blank'; receiptLink.rel = 'noopener';
       row.append(receiptLink);
     }
@@ -583,7 +588,9 @@ async function restoreSigningWallet() {
   if (activeWallet || !state.identity) return;
   try {
     const hint = JSON.parse(sessionStorage.getItem('skew-wallet-hint') || 'null') || {id:sessionStorage.getItem('skew-wallet-provider')};
-    const item = WalletBridge.rememberedProvider(availableWallets, hint);
+    const item = hint?.rdns === 'io.privy'
+      ? await window.ManagedWallets?.restore(hint)
+      : WalletBridge.rememberedProvider(availableWallets, hint);
     if (!item) return;
     const selected = await WalletBridge.accountState(item.provider);
     if (selected.address.toLowerCase() !== state.identity?.address?.toLowerCase()) return;
@@ -636,9 +643,7 @@ async function connectWallet(item) {
   state.busy = 'login-dialog'; formError('login-error');
   for (const option of $('wallet-options').querySelectorAll('button')) option.disabled = true;
   try {
-    // Keep the existing Sepolia DataPass path usable; other networks switch to One.
-    const sepolia = Number(await item.provider.request({method:'eth_chainId'})) === 421614;
-    const result = await WalletBridge.signIn(item.provider, walletRequest, message => { $('wallet-progress').textContent = message; }, {arbitrum:!sepolia});
+    const result = await WalletBridge.signIn(item.provider, walletRequest, message => { $('wallet-progress').textContent = message; }, {arbitrum:true});
     if (activeWallet?.removeListener) { activeWallet.removeListener('accountsChanged', changedWallet); activeWallet.removeListener('chainChanged', changedWallet); }
     activeWallet = item.provider;
     sessionStorage.setItem('skew-wallet-provider', item.id);
@@ -657,7 +662,7 @@ async function connectWallet(item) {
 $('wallet-account').addEventListener('click', () => { if (!PREVIEW && !$('login-dialog').open) { formError('login-error'); $('login-dialog').showModal(); } });
 $('wallet-logout').addEventListener('click', async () => {
   $('wallet-logout').disabled = true;
-  try { await walletRequest('/api/auth/logout', {}); location.reload(); }
+  try { await walletRequest('/api/auth/logout', {}); await window.ManagedWallets?.logout(); sessionStorage.removeItem('skew-wallet-hint'); location.reload(); }
   catch (error) { notify(error.message, true); $('wallet-logout').disabled = false; }
 });
 WalletBridge.subscribe(providers => { availableWallets = providers; renderWallets(providers); restoreSigningWallet(); });
@@ -675,6 +680,6 @@ window.MachineConsole = {api, state, notify, el, uiIcon, button, setView, API_PR
     }
   },
   showSecret: secret => { $('key-secret').value = secret; $('copy-secret').textContent = 'Copy key'; $('secret-dialog').showModal(); },
-  getWallet: () => activeWallet,
+  getWallet: () => activeWallet, connectWallet, restoreSigningWallet,
   unlock: async token => {localOwnerToken = token; await api('/api/engine/overview'); await refresh();}};
 window.addEventListener('DOMContentLoaded', initialize, {once: true});
