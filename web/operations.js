@@ -368,6 +368,7 @@
       root.append(intro);
       return;
     }
+    window.ManagedWallets?.agentPanel(root, refresh);
     const split = el("div", "ops-split");
     split.append(
       table(

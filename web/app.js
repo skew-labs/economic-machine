@@ -583,7 +583,9 @@ async function restoreSigningWallet() {
   if (activeWallet || !state.identity) return;
   try {
     const hint = JSON.parse(sessionStorage.getItem('skew-wallet-hint') || 'null') || {id:sessionStorage.getItem('skew-wallet-provider')};
-    const item = WalletBridge.rememberedProvider(availableWallets, hint);
+    const item = hint?.rdns === 'io.privy'
+      ? await window.ManagedWallets?.restore(hint)
+      : WalletBridge.rememberedProvider(availableWallets, hint);
     if (!item) return;
     const selected = await WalletBridge.accountState(item.provider);
     if (selected.address.toLowerCase() !== state.identity?.address?.toLowerCase()) return;
@@ -657,7 +659,7 @@ async function connectWallet(item) {
 $('wallet-account').addEventListener('click', () => { if (!PREVIEW && !$('login-dialog').open) { formError('login-error'); $('login-dialog').showModal(); } });
 $('wallet-logout').addEventListener('click', async () => {
   $('wallet-logout').disabled = true;
-  try { await walletRequest('/api/auth/logout', {}); location.reload(); }
+  try { await walletRequest('/api/auth/logout', {}); await window.ManagedWallets?.logout(); sessionStorage.removeItem('skew-wallet-hint'); location.reload(); }
   catch (error) { notify(error.message, true); $('wallet-logout').disabled = false; }
 });
 WalletBridge.subscribe(providers => { availableWallets = providers; renderWallets(providers); restoreSigningWallet(); });
@@ -675,6 +677,6 @@ window.MachineConsole = {api, state, notify, el, uiIcon, button, setView, API_PR
     }
   },
   showSecret: secret => { $('key-secret').value = secret; $('copy-secret').textContent = 'Copy key'; $('secret-dialog').showModal(); },
-  getWallet: () => activeWallet,
+  getWallet: () => activeWallet, connectWallet, restoreSigningWallet,
   unlock: async token => {localOwnerToken = token; await api('/api/engine/overview'); await refresh();}};
 window.addEventListener('DOMContentLoaded', initialize, {once: true});

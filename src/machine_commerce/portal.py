@@ -23,6 +23,7 @@ from .domain import DEFAULT_REQUESTS, money_atoms, money_string
 from .evidence import replay_policy, validate_bundle
 from .market import Market, negotiate, normalize_demand, normalize_supply
 from .store import Store
+from .wallet_connectors import public_wallet_config, wallet_csp, privy_asset
 
 ROOT = Path(__file__).resolve().parents[2]
 SCENARIOS = {"standard", "tight", "fresh", "budget", "recovery"}
@@ -151,9 +152,8 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         if request.url.path in {"/console", "/submission", "/engine", "/launch"}:
-            response.headers["Content-Security-Policy"] = (
-                "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
-                "connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
+            response.headers["Content-Security-Policy"] = wallet_csp(
+                privy=request.url.path == "/console" and bool(public_wallet_config()["privy"]))
         if request.url.path == "/demo/run":
             response.headers["Access-Control-Allow-Origin"] = "*"
             response.headers["Cache-Control"] = "no-store"
@@ -389,13 +389,15 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
             return JSONResponse({"status": "NO_REVIEW"}, status_code=503)
         return JSONResponse(json.loads(path.read_text()), headers={"Cache-Control": "no-store"})
 
+    @app.head("/console", response_class=HTMLResponse)
     @app.get("/console", response_class=HTMLResponse)
     async def console():
         html = (ROOT / "web/index.html").read_text()
         html = html.replace('  <link rel="stylesheet" href="/operations.css?v=wallet-20261002-3">', '')
         html = html.replace('  <link rel="stylesheet" href="/workspace.css?v=wallet-20261002-3">', '')
         version = hashlib.sha256(b"".join((ROOT / "web" / name).read_bytes() for name in
-            ["index.html", "app.css", "app.js", "wallet.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "assistant.js", "assistant.css", "swap-wallet.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "assets/app-engine.svg", "assets/ui-icons.svg"])).hexdigest()[:16]
+            ["index.html", "app.css", "app.js", "wallet.js", "wallet-connectors.js", "console-theme.css", "operations.css", "operations.js", "agents.js", "assistant.js", "assistant.css", "swap-wallet.js", "data.js", "tasks.js", "mining.js", "tasks.css", "workspace.css", "commerce.js", "commerce.css", "assets/app-engine.svg", "assets/ui-icons.svg"])
+            + ((ROOT / "web/privy/entry.js").read_bytes() if (ROOT / "web/privy/entry.js").is_file() else b"")).hexdigest()[:16]
         html = html.replace('  <link rel="stylesheet" href="/assistant.css?v=console-20261004">', '')
         html = html.replace("Machine Market | Console", "skew | Console")
         html = html.replace('href="/" aria-label="Economic Machine console"', 'href="/commerce/" aria-label="Economic Machine console"')
@@ -403,6 +405,7 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         html = html.replace("</head>", '<meta name="machine-api-prefix" content="/commerce"><link rel="stylesheet" href="/commerce/console-theme.css?v=wallet-20261002-3"><link rel="stylesheet" href="/commerce/operations.css?v=wallet-20261002-3"><link rel="stylesheet" href="/commerce/workspace.css?v=wallet-20261002-3"><link rel="stylesheet" href="/commerce/assistant.css?v=wallet-20261002-3"></head>')
         html = html.replace('href="/app.css', 'href="/commerce/app.css').replace('src="/app.js', 'src="/commerce/app.js')
         html = html.replace('src="/wallet.js', 'src="/commerce/wallet.js')
+        html = html.replace('src="/wallet-connectors.js', 'src="/commerce/wallet-connectors.js')
         html = html.replace('src="/agents.js', 'src="/commerce/agents.js')
         html = html.replace('src="/operations.js', 'src="/commerce/operations.js').replace('href="/operations.css', 'href="/commerce/operations.css')
         html = html.replace('src="/tasks.js', 'src="/commerce/tasks.js').replace('href="/tasks.css', 'href="/commerce/tasks.css')
@@ -422,6 +425,19 @@ def create_portal(site_dir=None, proof_path=None, evidence_path=None):
         html = html.replace("production-paths-20261003", version)
         html = html.replace('<body>', '<body><div class="portal-bar"><a href="/commerce/">← skew</a><a href="/commerce/console?preview=1">Recorded evidence</a></div>')
         return HTMLResponse(html, headers={"Cache-Control": "no-store"})
+
+    @app.get("/wallet-config")
+    async def wallet_config():
+        return JSONResponse(public_wallet_config(), headers={"Cache-Control": "no-store"})
+
+    @app.get("/privy/{asset}")
+    async def managed_wallet_asset(asset):
+        target = privy_asset(ROOT / "web", asset)
+        return FileResponse(target, headers={"Cache-Control": "no-cache"}) if target else JSONResponse({"error": "Not found"}, status_code=404)
+
+    @app.get("/wallet-connectors.js")
+    async def wallet_connectors_script():
+        return FileResponse(ROOT / "web/wallet-connectors.js")
 
     @app.get("/{asset:path}")
     async def files(asset):

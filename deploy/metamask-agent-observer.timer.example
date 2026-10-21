@@ -1,0 +1,10 @@
+[Unit]
+Description=Refresh SKEW Agent Wallet observation
+
+[Timer]
+OnBootSec=20
+OnUnitInactiveSec=60
+Unit=machine-commerce-agent-wallet.service
+
+[Install]
+WantedBy=timers.target
